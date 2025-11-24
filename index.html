@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIVEKANANDA YOGA TRAINING CENTER Prototype - BAHA Interactive</title>
+    <style>
+        /* CSS for the Prototype */
+        :root {
+            --primary-color: #ff9800; /* Deep Orange/Amber (Energetic/Spiritual) */
+            --secondary-color: #4a148c; /* Dark Purple (Wisdom/Focus) */
+            --accent-color: #4CAF50; /* Green (Health/Nature) */
+            --background-light: #fff8e1; /* Off-White/Cream */
+            --text-dark: #333333;
+            --font-stack: 'Roboto', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+        }
+
+        /* --- Header Section (Logo and Name) --- */
+        .header {
+            background-color: #ffffff;
+            border-bottom: 3px solid var(--primary-color);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Styling for the actual logo image */
+        .site-logo {
+            width: 50px; /* Adjust size as needed */
+            height: 50px;
+            object-fit: contain; /* Ensures the image scales correctly without distortion */
+            margin-right: 15px;
+        }
+
+        .site-title h1 {
+            color: var(--secondary-color);
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        /* --- Hero Section (Video and Button) --- */
+        .hero-section {
+            padding: 50px 5%;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.2em;
+        }
+
+        /* Video Container Styling */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #cccccc;
+            margin: 0 auto 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container::after {
+            content: "ADD Video Play Here |>";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8em;
+            color: var(--text-dark);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Registration Button Styling */
+        .reg-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: background-color 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .reg-button:hover {
+            background-color: #388e3c; /* Darker Green */
+        }
+
+        /* --- Contact Details Section --- */
+        .contact-section {
+            background-color: #ffffff;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+        }
+
+        .contact-section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .contact-details {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            padding: 15px;
+            min-width: 200px;
+        }
+
+        .contact-item h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .whatsapp-link {
+            display: block;
+            margin-top: 10px;
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--text-dark);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.8em;
+        }
+
+        .footer span {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-area">
+            <img src="photo_2025-11-23_19-53-01.jpg" alt="VIVEKANANDA YOGA TRAINING CENTER Logo" class="site-logo">
+            <div class="site-title">
+                <h1>VIVEKANANDA YOGA TRAINING CENTER (Tamluk , Purba Medinipur)</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-section">
+        <h2>Register Your Classes Today</h2>
+        
+        <div class="video-container">
+            </div>
+
+        <a href="#registration-form-redirect" class="reg-button">Register Now for Classes</a>
+        <p style="margin-top: 20px; font-size: 1.1em; color: var(--secondary-color);">*Clicking "Register Now" redirects you to the enrollment form (Google Form).</p>
+    </div>
+    
+    <div class="contact-section">
+        <h2>Reach Out for Information</h2>
+        <div class="contact-details">
+            <div class="contact-item">
+                <h3>Call or WhatsApp</h3>
+                <p>+91 [Your Contact Number]</p>
+                <a href="https://wa.me/[YourNumber]" class="whatsapp-link">Chat on WhatsApp (wa.me/number)</a>
+            </div>
+            <div class="contact-item">
+                <h3>Our Location</h3>
+                <p>Simple address line here, City Name, India</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        PROTOTYPE ONLY - Designed by <span>BAHA Interactive</span> | &copy; 2025 VIVEKANANDA YOGA TRAINING CENTER
+    </div>
+
+</body>
+</html>
