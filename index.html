@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vivekananda Yoga Training Center - Online Classes</title>
+    <title>Vivekananda Yoga Training Center</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         /* --- CSS VARIABLES & RESET --- */
@@ -339,6 +339,23 @@
             .brand-name { font-size: 1rem; }
             .logo-img { height: 40px; }
         }
+
+        .google-form-container {
+            width: 100%;
+            max-width: 640px; /* Prevents it from getting too wide on desktop */
+            margin: 0 auto; /* Centers the form */
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Adds a nice shadow */
+            overflow: hidden;
+        }
+
+/* Optional: Hides the inner scrollbar in some browsers for a cleaner look */
+iframe {
+    width: 100%;
+    border: none;
+}
     </style>
 </head>
 <body>
@@ -427,7 +444,8 @@
             <div class="price-tag">₹0,000 <span class="price-sub">/ month</span></div>
             <div class="price-sub">Regular Offline/Online Class</div>
         </div>
-        <button class="enroll-btn" onclick="window.location.href='#registration'">Enroll Now <i class="fas fa-chevron-right" style="margin-left:5px;"></i></button>
+        <!--Link to registration page-->
+        <button class="enroll-btn" onclick="window.location.href='registration.html'">Enroll Now <i class="fas fa-chevron-right" style="margin-left:5px;"></i></button>
     </div>
 
 </body>

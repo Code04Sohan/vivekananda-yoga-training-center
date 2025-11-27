@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Vivekananda Yoga Training Center</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* --- COPYING THEME VARIABLES FOR CONSISTENCY --- */
+        :root {
+            --primary-brand: #0277bd;
+            --secondary-brand: #26c6da;
+            --bg-color: #f0f8ff;
+            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            margin: 0; padding: 0;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            background-color: #fff;
+            padding: 10px 5%;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--secondary-brand);
+        }
+        .logo-img { height: 45px; width: auto; }
+        .brand-name { font-weight: 800; color: var(--primary-brand); text-transform: uppercase; font-size: 1.1rem; }
+
+        /* --- BACK BUTTON --- */
+        .back-container {
+            max-width: 800px; margin: 20px auto 0; padding: 0 20px;
+        }
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--primary-brand); font-weight: bold; text-decoration: none;
+            padding: 10px 20px; background: white; border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .back-btn:hover { background: #f5f5f5; }
+
+        /* --- FORM CONTAINER --- */
+        .form-wrapper {
+            max-width: 800px;
+            margin: 20px auto 50px;
+            padding: 0 20px;
+        }
+        
+        .google-form-container {
+            width: 100%;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: 1200px; /* Default height */
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { padding: 15px; }
+            .brand-name { font-size: 0.9rem; }
+            .logo-img { height: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <nav class="navbar">
+        <img src="photo_2025-11-23_19-53-01.jpg" alt="Logo" class="logo-img"> 
+        <div class="brand-name">Registration</div>
+    </nav>
+
+    <!-- BACK BUTTON -->
+    <div class="back-container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <!-- GOOGLE FORM EMBED -->
+    <div class="form-wrapper">
+        <div class="google-form-container">
+            <!-- PASTE YOUR GOOGLE FORM EMBED CODE BELOW -->
+            <!-- REPLACE THE src="" LINK WITH YOUR OWN FORM LINK -->
+            <iframe 
+                src="https://docs.google.com/forms/d/e/1FAIpQLSfWW5O6ie0hgm_upOhZXslpVFKqdlQoXB4mXY-RsVJmomqZNw/viewform?usp=sharing&ouid=111555066381528215790" 
+                width="100%" 
+                height="1200" 
+                frameborder="0" 
+                marginheight="0" 
+                marginwidth="0">
+                Loading…
+            </iframe>
+        </div>
+    </div>
+
+</body>
+</html>
