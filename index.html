@@ -4,449 +4,636 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vivekananda Yoga Training Center</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        /* --- CSS VARIABLES & RESET --- */
+        /* =========================================
+           1. MODERN THEME & RESET
+           ========================================= */
         :root {
-            /* Updated Theme Colors - Blue Theme */
-            --primary-brand: #0277bd; /* Ocean Blue */
-            --secondary-brand: #26c6da; /* Cyan/Turquoise for accents */
-            --primary-light: #e1f5fe; /* Soft Blue tint for backgrounds */
+            /* Core Brand Colors */
+            --primary: #0277bd;       /* Ocean Blue */
+            --primary-dark: #01579b;  /* Deep Blue */
+            --primary-light: #e1f5fe; /* Very Light Blue */
+            --accent: #26c6da;        /* Cyan Accent */
             
-            --text-dark: #37474f; /* Blue Grey Dark */
-            --text-light: #ffffff;
-            --accent-green: #2e7d32; /* WhatsApp Green */
-            --bg-color: #f0f8ff; /* Alice Blue / Very Light Cool White */
-            --border-color: #b3e5fc;
-            --shadow-card: 0 4px 15px rgba(2, 119, 189, 0.1); /* Cool shadow */
-            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            /* Social Colors */
+            --whatsapp: #25D366;
+            --facebook: #1877F2;
+            --youtube: #FF0000;
+
+            /* UI Colors */
+            --bg-body: #f0f4f8;       /* Very light cool grey/blue */
+            --bg-card: #ffffff;
+            --text-main: #1e293b;     /* Slate Dark */
+            --text-muted: #64748b;    /* Slate Grey */
+            
+            /* Spacing & Effects */
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --shadow-soft: 0 10px 30px -10px rgba(0,0,0,0.08);
+            --shadow-hover: 0 20px 40px -10px rgba(0,0,0,0.12);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; /* Enables smooth scrolling */ }
 
         body {
-            font-family: var(--font-main);
-            color: var(--text-dark);
-            background-color: var(--bg-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             line-height: 1.6;
-            padding-bottom: 80px; /* Space for sticky footer */
+            padding-bottom: 100px; /* Space for footer */
         }
 
-        a { text-decoration: none; color: inherit; }
-        ul { list-style: none; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        img { display: block; max-width: 100%; }
 
-        /* --- HEADER --- */
+        /* =========================================
+           2. CLEAN NAVBAR WITH NAV BUTTONS
+           ========================================= */
         .navbar {
-            background-color: #fff;
-            padding: 10px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: var(--bg-card);
+            padding: 12px 5%;
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 3px solid var(--secondary-brand); /* Gold bottom border */
+            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space out Logo and Nav */
+            border-bottom: 2px solid var(--accent);
+            flex-wrap: wrap; /* Allow wrapping on mobile */
+            gap: 15px;
         }
 
-        .logo-container {
+        .brand {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .logo-img {
-            height: 55px; /* Slightly larger for visibility */
-            width: auto;
+        .brand-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             object-fit: contain;
+            border: 2px solid var(--bg-body);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .brand-name {
-            font-size: 1.3rem;
+        .brand-text h2 {
+            font-size: 1.1rem;
             font-weight: 800;
-            color: var(--primary-brand);
+            color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            line-height: 1.2;
+            line-height: 1.1;
+            margin: 0;
         }
 
-        .nav-icons {
-            font-size: 1.4rem;
-            color: var(--primary-brand);
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        
-        .nav-icons:hover {
-            color: var(--secondary-brand);
+        .brand-text p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin: 0;
         }
 
-        /* --- HERO SECTION --- */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-brand), #01579b); /* Blue Gradient */
-            color: white;
-            padding: 40px 5%;
+        /* Nav Buttons Style */
+        .nav-links {
             display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 30px;
+            gap: 10px;
         }
 
-        .hero-content {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .hero-title {
-            font-size: 2.4rem;
+        .nav-btn {
+            font-size: 0.85rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            line-height: 1.2;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            padding: 8px 16px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            background: var(--bg-body);
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
 
-        .hero-schedule {
-            background: rgba(255,255,255,0.15);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 5px solid var(--secondary-brand); /* Cyan accent */
-            backdrop-filter: blur(5px);
+        .nav-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .hero-schedule p {
-            margin-bottom: 8px;
-            font-size: 1.05rem;
+        /* =========================================
+           3. MAIN LAYOUT
+           ========================================= */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr; 
+            gap: 40px;
+            align-items: start;
         }
 
-        .hero-schedule i {
-            color: var(--secondary-brand);
-            margin-right: 8px;
-        }
-
-        /* --- VIDEO CONTAINER --- */
-        .video-wrapper {
-            flex: 1;
-            min-width: 300px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-            background: #000;
-            border: 2px solid rgba(255,255,255,0.2);
+        /* --- Video Section --- */
+        .video-box {
+            background: var(--bg-card);
+            padding: 15px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            height: 100%; 
         }
 
         .video-container {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%; /* 16:9 */
             height: 0;
+            border-radius: var(--radius-md);
             overflow: hidden;
+            background: #000;
         }
 
         .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
         }
 
-        /* --- CONTENT CONTAINER --- */
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
+        /* --- Trainer Profile Cards --- */
+        .trainers-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
         }
 
-        /* --- PROGRAM DETAILS --- */
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--primary-brand);
-            margin-bottom: 25px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background-color: var(--secondary-brand);
+        .section-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: -10px;
+            display: block;
         }
 
-        .program-card {
-            background: white;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: var(--shadow-card);
-            margin-bottom: 40px;
-            border-top: 4px solid var(--primary-brand);
+        .trainer-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(255,255,255,0.5);
+            display: flex;
+            gap: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .program-desc {
-            margin-bottom: 25px;
-            color: #444;
-            font-size: 1.1rem;
+        .trainer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
 
-        .feature-list li {
-            position: relative;
-            padding-left: 35px;
-            margin-bottom: 15px;
-            color: #555;
-            font-size: 1.05rem;
+        .trainer-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            flex-shrink: 0;
         }
 
-        .feature-list li::before {
-            content: '\f00c'; /* FontAwesome Check */
-            font-family: "Font Awesome 6 Free";
-            font-weight: 900;
-            position: absolute;
-            left: 0;
-            color: var(--primary-brand);
-            font-size: 1.1rem;
-        }
-
-        /* --- GUIDELINES & SCHEDULE --- */
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .info-box {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid var(--primary-light);
-            box-shadow: var(--shadow-card);
-        }
-
-        .info-box h3 {
-            color: var(--primary-brand);
-            margin-bottom: 20px;
+        .trainer-details h3 {
+            color: var(--primary);
             font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-box h3 i {
-            color: var(--secondary-brand);
+            margin-bottom: 4px;
         }
 
-        .schedule-list li {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px dashed var(--border-color);
-        }
-
-        .schedule-list li:last-child { border-bottom: none; }
-
-        .time-badge {
-            background: var(--primary-light);
-            color: var(--primary-brand);
+        .trainer-role {
+            display: inline-block;
+            background: var(--bg-body);
+            color: var(--primary-dark);
+            font-size: 0.75rem;
+            font-weight: 700;
             padding: 4px 10px;
             border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
         }
 
-        /* --- STICKY FOOTER CTA --- */
+        .trainer-bio {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            border-left: 3px solid var(--accent);
+            padding-left: 12px;
+        }
+
+        /* =========================================
+           4. PAMPHLET & INFO
+           ========================================= */
+        .info-section {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 20px;
+            scroll-margin-top: 100px; /* Offset for sticky nav */
+        }
+
+        .glass-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-soft);
+            text-align: center;
+        }
+
+        .glass-panel h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .pamphlet-img {
+            border-radius: var(--radius-md);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+        }
+
+        /* =========================================
+           5. GALLERY SLIDER SECTION
+           ========================================= */
+        .gallery-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+            position: relative;
+            scroll-margin-top: 100px; /* Offset for sticky nav */
+        }
+
+        .gallery-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .gallery-header h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .gallery-header p { color: var(--text-muted); }
+
+        .slider-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-track {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 5px; /* Space for shadow */
+            scrollbar-width: none; /* Firefox */
+        }
+        .slider-track::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+        .gallery-item {
+            min-width: 300px;
+            height: 220px;
+            background: #ddd;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            flex-shrink: 0;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover { transform: scale(1.02); }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Slider Nav Buttons */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #eee;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: var(--primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 2;
+            display: flex; justify-content: center; align-items: center;
+            transition: 0.2s;
+        }
+        .slider-btn:hover { background: var(--primary); color: white; }
+        .slider-left { left: -15px; }
+        .slider-right { right: -15px; }
+
+        /* =========================================
+           6. FLOATING SOCIAL BUTTONS
+           ========================================= */
+        .social-dock {
+            position: fixed;
+            z-index: 999;
+            display: flex;
+            gap: 15px;
+            transition: 0.3s;
+        }
+
+        .s-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .s-btn:hover { transform: scale(1.15); }
+        
+        .fb { background: var(--facebook); }
+        .yt { background: var(--youtube); }
+        .wa { background: var(--whatsapp); }
+
+        @media (min-width: 769px) {
+            .social-dock {
+                flex-direction: column;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .social-dock {
+                bottom: 90px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(255,255,255,0.8);
+                backdrop-filter: blur(8px);
+                padding: 10px 20px;
+                border-radius: 50px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                gap: 20px;
+            }
+            .s-btn { width: 40px; height: 40px; font-size: 1.1rem; }
+        }
+
+        /* =========================================
+           7. STICKY FOOTER
+           ========================================= */
         .sticky-footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: white;
-            padding: 15px 5%;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            border-top: 1px solid rgba(0,0,0,0.05);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 900;
-            border-top: 1px solid var(--border-color);
+            justify-content: center;
+            gap: 15px;
+            z-index: 1000;
         }
 
-        .price-tag {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary-brand);
-        }
-        
-        .price-sub {
-            font-size: 0.9rem;
-            color: #777;
-            font-weight: normal;
-        }
-
-        .enroll-btn {
-            background: linear-gradient(to right, var(--primary-brand), #0288d1);
-            color: white;
-            padding: 14px 35px;
+        .action-btn {
+            flex: 1;
+            max-width: 250px;
+            height: 48px;
             border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: all 0.3s;
             border: none;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(2, 119, 189, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.2s;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .enroll-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(2, 119, 189, 0.5);
+        .btn-renew {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
         }
+        .btn-renew:hover { background: #e3f2fd; }
 
-        /* --- WHATSAPP FLOAT --- */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 95px; /* Above the sticky footer */
-            right: 25px;
-            background-color: var(--accent-green);
+        .btn-enroll {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 35px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: transform 0.3s;
+            box-shadow: 0 4px 15px rgba(2, 119, 189, 0.3);
+        }
+        .btn-enroll:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(2, 119, 189, 0.4);
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.1);
+        /* =========================================
+           8. RESPONSIVE
+           ========================================= */
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .video-section { order: -1; } /* FORCE VIDEO TO TOP ON MOBILE */
+            
+            .navbar { justify-content: center; flex-direction: column; gap: 10px; }
+            .nav-links { width: 100%; justify-content: center; overflow-x: auto; padding-bottom: 5px; }
+            .nav-btn { font-size: 0.75rem; white-space: nowrap; padding: 6px 12px; }
+            
+            .brand-text h2 { font-size: 1rem; }
+            
+            .slider-left { left: 0; }
+            .slider-right { right: 0; }
         }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .hero { flex-direction: column; padding: 30px 20px; }
-            .hero-title { font-size: 1.8rem; }
-            .navbar { padding: 15px 20px; }
-            .brand-name { font-size: 1rem; }
-            .logo-img { height: 40px; }
+        /* =========================================
+            9. FOOTER CREDIT
+            ========================================= */
+        .ba-credits {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 30px;
+            opacity: 0.8;
         }
-
-        .google-form-container {
-            width: 100%;
-            max-width: 640px; /* Prevents it from getting too wide on desktop */
-            margin: 0 auto; /* Centers the form */
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Adds a nice shadow */
-            overflow: hidden;
-        }
-
-/* Optional: Hides the inner scrollbar in some browsers for a cleaner look */
-iframe {
-    width: 100%;
-    border: none;
-}
+        .ba-credits strong { font-weight: 700; color: var(--primary); }
+        .ba-credits a { transition: color 0.3s; }
+        .ba-credits a:hover { color: var(--primary-dark); }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    <!-- 1. Navbar with Auto-Scroll Buttons -->
     <nav class="navbar">
-        <div class="logo-container">
-            <!-- Updated Logo Source to the uploaded file -->
-            <img src="photo_2025-11-23_19-53-01.jpg" alt="Vivekananda Yoga Logo" class="logo-img"> 
-            <div class="brand-name">VIVEKANANDA YOGA TRAINING CENTER<br><span style="font-size:0.7em; color:#666;">(Tamluk . Purba Medinipur)</span></div>
+        <div class="brand">
+            <img src="logo.jpg" alt="Logo" class="brand-logo">
+            <div class="brand-text">
+                <h2>Vivekananda Yoga Training Center</h2>
+                <p>Tamluk • Purba Medinipur</p>
+            </div>
         </div>
-        <div class="nav-icons">
-            <i class="fas fa-user-circle"></i>
+        
+        <!-- Navigation Buttons -->
+        <div class="nav-links">
+            <a href="#intro" class="nav-btn"><i class="fas fa-play"></i>Intro</a>
+            <a href="#trainers" class="nav-btn"><i class="fas fa-user-friends"></i>Trainers</a>
+            <a href="#schedule" class="nav-btn"><i class="far fa-calendar-alt"></i>Pamphlet</a>
+            <a href="#gallery" class="nav-btn"><i class="far fa-images"></i>Gallery</a>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Mr. Soumen Santra <br>(Yoga Trainer) <br>Online Live & Offline Sessions Available</h1>
-            
-            <div class="hero-schedule">
-                <p><strong><i class="far fa-calendar-alt"></i> Schedule:</strong> Not Added Yet</p>
-                <p><strong><i class="far fa-clock"></i> Batches:</strong> Not Added Yet</p>
-                <p style="margin-top:10px; font-size: 0.95em; color: var(--primary-light); font-style: italic;">*Weekend batches also available upon request.</p>
-            </div>
-        </div>
+    <!-- 2. Main Content Grid (Video + Trainers) -->
+    <div class="main-container">
         
-        <!-- VIDEO ADVERTISEMENT IN HERO -->
-        <div class="video-wrapper">
-            <div class="video-container">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/a5QbjDYrlAo?si=PeEB2s7tC9VrP81U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-    </section>
-
-    <!-- MAIN CONTENT -->
-    <div class="container">
-        
-        <!-- PROGRAM DETAILS -->
-        <div class="program-card">
-            <h2 class="section-title">Program Details</h2>
-            <p class="program-desc">
-                <strong>Not Added yet</strong>
-            </p>
-
-            <ul class="feature-list">
-                <li><strong>List 0</strong></li>
-            </ul>
+        <!-- Video Column (Placed first in HTML, so it's top on mobile) -->
+        <div class="video-section" id="intro">
+            <span class="section-label" style="margin-bottom: 15px;">Watch Introduction</span>
+            <div class="video-box">
+                <div class="video-container">
+                    <!-- Privacy enhanced link -->
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/a5QbjDYrlAo?si=-q2W7RDejBicMVZN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
+                    <i class="fas fa-play-circle"></i> Welcome To Vivekananda Yoga Training Center
+                </div>
+            </div>
         </div>
 
-        <!-- TWO COLUMN LAYOUT: GUIDELINES & SCHEDULE -->
-        <div class="info-grid">
+        <!-- Trainers Column -->
+        <div class="trainers-section" id="trainers">
+            <span class="section-label">Our Expert Trainers</span>
             
-            <!-- SCHEDULE -->
-            <div class="info-box">
-                <h3><i class="fas fa-sun"></i> Morning Batches</h3>
-                <ul class="schedule-list">
-                    <li>Batch 0 <span class="time-badge">Not Scheduled</span></li>
-                </ul>
-
-                <h3 style="margin-top: 30px;"><i class="fas fa-moon"></i> Evening Batches</h3>
-                <ul class="schedule-list">
-                    <li>Batch 0 <span class="time-badge">Not Scheduled</span></li>
-                </ul>
+            <!-- Trainer 1 -->
+            <div class="trainer-card">
+                <img src="soumen.jpg" alt="Trainer" class="trainer-img">
+                <div class="trainer-details">
+                    <h3>Mr. Soumen Santra</h3>
+                    <span class="trainer-role">Senior Yoga Trainer & Physiotherapist</span>
+                    <span class="trainer-role"><strong>Contact - 9734444092</strong></span>
+                    <div class="trainer-bio">
+                        Diploma in Yoga (T.P. & S.U)<br>
+                        Judges of (E.Y.J.T) Yoga Expert<br>
+                        Sports Master, International Judge<br>
+                        
+                    </div>
+                </div>
             </div>
 
-            <!-- GUIDELINES -->
-            <div class="info-box">
-                <h3><i class="fas fa-info-circle"></i> Important Guidelines</h3>
-                <ul class="feature-list">
-                    <li>"Not Added Yet"</li>
-                </ul>
+            <!-- Trainer 2 -->
+            <div class="trainer-card">
+                <img src="ranajoy.jpg" alt="Trainer" class="trainer-img">
+                <div class="trainer-details">
+                    <h3>Mrs. Ranajoy Das</h3>
+                    <span class="trainer-role">Yoga Guru</span>
+                    <div class="trainer-bio">
+                        M.Sc. in Yoga & N.Pathy(1st Class)<br>
+                        D.P.T/B.P.T.Gold Medalist<br>
+                        Dip. in Sports Medicine & D.Y.T (1st Class)<br>
+                        National Yoga Judge & Coach(N.Y.K- Tamluk)
+                    </div>
+                </div>
             </div>
+        </div>
 
+    </div>
+
+    <!-- 3. Pamphlet Section -->
+    <div class="info-section" id="schedule">
+        <div class="glass-panel">
+            <h2><i class="far fa-newspaper"></i>Pamphlets</h2>
+            <img src="pamphlets.jpg" alt="Class Schedule Pamphlet" class="pamphlet-img">
         </div>
     </div>
 
-    <!-- WHATSAPP FLOAT -->
-    <a href="https://wa.me/+919734444092" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <!-- 4. GALLERY SLIDER SECTION -->
+    <div class="gallery-section" id="gallery">
+        <div class="gallery-header">
+            <h2>Gallery</h2>
+            <p>Glimpses from our daily sessions and events</p>
+        </div>
+        
+        <div class="slider-container">
+            <button class="slider-btn slider-left" onclick="scrollGallery(-300)"><i class="fas fa-chevron-left"></i></button>
+            
+            <div class="slider-track" id="galleryTrack">
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item">
+                    <!-- Replace with real image later -->
+                    <img src="gallery1.jpg" alt="Yoga 1">
+                </div>
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item">
+                    <img src="gallery2.jpg" alt="Yoga 2">
+                </div>
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item">
+                    <img src="gallery3.png" alt="Yoga 3">
+                </div>
+                <!-- Gallery Item 4 -->
+                <div class="gallery-item">
+                    <img src="gallery4.jpg" alt="Yoga 4">
+                </div>
+                <!-- Gallery Item 5 -->
+                <div class="gallery-item">
+                    <img src="" alt="added later">
+                </div>
+            </div>
 
-    <!-- STICKY FOOTER CTA -->
+            <button class="slider-btn slider-right" onclick="scrollGallery(300)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- 5. BAHA Interactive Credit -->
+    <div class="ba-credits">
+        Developed and Deployed by <a href="#" onclick="alert('Contact developer: your.email@example.com')" style="color: var(--primary); text-decoration: none;"><strong>BAHA Interactive</strong></a><br>
+        <span style="cursor:pointer; text-decoration: underline;" onclick="alert('Contact developer: your.email@example.com')">Click here to contact with developer</span>
+    </div>
+
+    <!-- 5. Floating Social Dock -->
+    <div class="social-dock">
+        <a href="https://facebook.com/groups/3181203585491136/" target="_blank" class="s-btn fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://youtube.com/@vivekanandayogatrainingcen2562?si=QH-L5PwVKzlsfhBN" target="_blank" class="s-btn yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/+919734444092" target="_blank" class="s-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <!-- 6. Sticky Footer Action Bar -->
     <div class="sticky-footer">
-        <div>
-            <div class="price-tag">₹0,000 <span class="price-sub">/ month</span></div>
-            <div class="price-sub">Regular Offline/Online Class</div>
-        </div>
-        <!--Link to registration page-->
-        <button class="enroll-btn" onclick="window.location.href='registration.html'">Enroll Now <i class="fas fa-chevron-right" style="margin-left:5px;"></i></button>
+        <button class="action-btn btn-renew" onclick="alert('Renew feature coming soon!')">
+            <i class="fas fa-sync-alt"></i> Renew
+        </button>
+        <button class="action-btn btn-enroll" onclick="window.location.href='registration.html'">
+            Enroll Now <i class="fas fa-arrow-right"></i>
+        </button>
     </div>
+
+    <script>
+        // Simple script to handle horizontal scrolling
+        function scrollGallery(distance) {
+            const track = document.getElementById('galleryTrack');
+            track.scrollBy({
+                left: distance,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 
 </body>
 </html>
