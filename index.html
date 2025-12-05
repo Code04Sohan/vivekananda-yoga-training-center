@@ -571,7 +571,7 @@
             <img src="logo.jpg" alt="Logo" class="brand-logo">
             <div class="brand-text">
                 <h2>Vivekananda Yoga Training Center</h2>
-                <p>Tamluk • Purba Medinipur</p>
+                <p>Purba Medinipur . West Bengal . India</p>
             </div>
         </div>
         
@@ -593,7 +593,7 @@
             <div class="video-box">
                 <div class="video-container">
                     <!-- Privacy enhanced link -->
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/a5QbjDYrlAo?si=-q2W7RDejBicMVZN" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/CHZuHyPdeYU?si=Sftjp--6oQNde6rP&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
                 <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
                     <i class="fas fa-play-circle"></i> Welcome To Vivekananda Yoga Training Center
@@ -614,8 +614,8 @@
                     <span class="trainer-role"><strong>Contact - 9734444092</strong></span>
                     <div class="trainer-bio">
                         Diploma in Yoga (T.P. & S.U)<br>
-                        Judges of (E.Y.J.T) Yoga Expert<br>
-                        Sports Master, International Judge<br>
+                        Yoga Expert<br>
+                        Sports Master, International Judge(UCMAYPSF)<br>
                         
                     </div>
                 </div>
@@ -625,7 +625,7 @@
             <div class="trainer-card">
                 <img src="ranajoy.jpg" alt="Trainer" class="trainer-img">
                 <div class="trainer-details">
-                    <h3>Mrs. Ranajoy Das</h3>
+                    <h3>Mr. Ranajoy Das</h3>
                     <span class="trainer-role">Yoga Guru</span>
                     <div class="trainer-bio">
                         M.Sc. in Yoga & N.Pathy(1st Class)<br>
@@ -669,7 +669,7 @@
                 </div>
                 <!-- Gallery Item 3 -->
                 <div class="gallery-item" data-index="2">
-                    <img src="gallery3.png" alt="Yoga 3">
+                    <img src="gallery3.jpg" alt="Yoga 3">
                 </div>
                 <!-- Gallery Item 4 -->
                 <div class="gallery-item" data-index="3">
@@ -677,7 +677,43 @@
                 </div>
                 <!-- Gallery Item 5 -->
                 <div class="gallery-item" data-index="4">
-                    <img src="soumen.jpg" alt="Yoga 5">
+                    <img src="gallery5.jpg" alt="Yoga 5">
+                </div>
+                <!-- Gallery Item 6 -->
+                <div class="gallery-item" data-index="5">
+                    <img src="gallery6.jpg" alt="Yoga 6">
+                </div>
+                <!-- Gallery Item 7 -->
+                <div class="gallery-item" data-index="6">
+                    <img src="gallery7.jpg" alt="Yoga 7">
+                </div>
+                <!-- Gallery Item 8 -->
+                <div class="gallery-item" data-index="7">
+                    <img src="gallery8.jpg" alt="Yoga 8">
+                </div>
+                <!-- Gallery Item 9 -->
+                <div class="gallery-item" data-index="8">
+                    <img src="gallery9.jpg" alt="Yoga 9">
+                </div>
+                <!-- Gallery Item 10 -->
+                <div class="gallery-item" data-index="9">
+                    <img src="gallery10.jpg" alt="Yoga 10">
+                </div>
+                <!-- Gallery Item 11 -->
+                <div class="gallery-item" data-index="10">
+                    <img src="gallery11.jpg" alt="Yoga 11">
+                </div>
+                <!-- Gallery Item 12 -->
+                <div class="gallery-item" data-index="11">
+                    <img src="gallery12.jpg" alt="Yoga 12">
+                </div>
+                <!-- Gallery Item 13 -->
+                <div class="gallery-item" data-index="12">
+                    <img src="gallery13.jpg" alt="Yoga 13">
+                </div>
+                <!-- Gallery Item 14 -->
+                <div class="gallery-item" data-index="13">
+                    <img src="gallery14.jpg" alt="Yoga 14">
                 </div>
             </div>
 
@@ -691,13 +727,12 @@
         <span style="cursor:pointer; text-decoration: underline;" onclick="alert('Contact developer: your.email@example.com')">Click here to contact with developer</span><br>
         .<br>
         .<br>
-        .<br>
     </div>
 
     <!-- 6. Floating Social Dock -->
     <div class="social-dock">
-        <a href="https://facebook.com/groups/3181203585491136/" target="_blank" class="s-btn fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://youtube.com/@vivekanandayogatrainingcen2562?si=QH-L5PwVKzlsfhBN" target="_blank" class="s-btn yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.facebook.com/share/17sKYr7Qiy/" target="_blank" class="s-btn fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.youtube.com/@vivekanandayogatrainingcen2562" target="_blank" class="s-btn yt" title="YouTube"><i class="fab fa-youtube"></i></a>
         <a href="https://wa.me/+919734444092" target="_blank" class="s-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
 
@@ -829,6 +864,34 @@
                 }
             }
         }
+
+        // --- 5. Auto Scroll Logic ---
+        const track = document.getElementById('galleryTrack');
+        let autoScrollSpeed = 1; // Higher number = Faster
+        let isPaused = false;
+
+        // Pause scrolling when user hovers with mouse or touches screen
+        track.addEventListener('mouseenter', () => isPaused = true);
+        track.addEventListener('mouseleave', () => isPaused = false);
+        track.addEventListener('touchstart', () => isPaused = true);
+        track.addEventListener('touchend', () => setTimeout(() => isPaused = false, 2000)); // Resume after 2s
+
+        function autoScrollGallery() {
+            if (!isPaused) {
+                track.scrollLeft += autoScrollSpeed;
+
+                // Check if we reached the end of the scroll
+                // If (Current Position + Visible Width) >= Total Width
+                if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
+                    track.scrollLeft = 0; // Snap back to start
+                }
+            }
+            // Repeat this function for the next animation frame (approx 60 times/sec)
+            requestAnimationFrame(autoScrollGallery);
+        }
+
+        // Start the loop
+        autoScrollGallery();
     </script>
 
 </body>
