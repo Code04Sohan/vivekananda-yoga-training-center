@@ -305,6 +305,7 @@
             flex-shrink: 0;
             position: relative;
             transition: transform 0.3s;
+            cursor: pointer; /* Indicates clickable */
         }
         .gallery-item:hover { transform: scale(1.02); }
         
@@ -312,6 +313,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none; /* Let the div handle click */
         }
 
         /* Slider Nav Buttons */
@@ -336,7 +338,89 @@
         .slider-right { right: -15px; }
 
         /* =========================================
-           6. FLOATING SOCIAL BUTTONS
+           6. LIGHTBOX VIEWER (Full Screen)
+           ========================================= */
+        .lightbox {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 5000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 8px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+            object-fit: contain;
+            user-select: none;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: white;
+            font-size: 35px;
+            cursor: pointer;
+            z-index: 5001;
+            background: rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        .lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            transition: 0.3s;
+            z-index: 5001;
+        }
+        .lightbox-nav:hover { background: rgba(255, 255, 255, 0.4); }
+        .prev-btn { left: 20px; }
+        .next-btn { right: 20px; }
+
+        .swipe-hint {
+            position: absolute;
+            bottom: 30px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .swipe-hint { display: block; }
+            .lightbox-nav { display: none; /* Hide arrows on mobile to rely on swipe */ }
+        }
+
+        /* =========================================
+           7. FLOATING SOCIAL BUTTONS
            ========================================= */
         .social-dock {
             position: fixed;
@@ -390,7 +474,7 @@
         }
 
         /* =========================================
-           7. STICKY FOOTER
+           8. STICKY FOOTER
            ========================================= */
         .sticky-footer {
             position: fixed;
@@ -444,7 +528,7 @@
         }
 
         /* =========================================
-           8. RESPONSIVE
+           9. RESPONSIVE
            ========================================= */
         @media (max-width: 900px) {
             .main-container {
@@ -464,8 +548,8 @@
         }
 
         /* =========================================
-            9. FOOTER CREDIT
-            ========================================= */
+           10. FOOTER CREDIT
+           ========================================= */
         .ba-credits {
             text-align: center;
             padding: 20px;
@@ -567,33 +651,33 @@
     <div class="gallery-section" id="gallery">
         <div class="gallery-header">
             <h2>Gallery</h2>
-            <p>Glimpses from our daily sessions and events</p>
+            <p>Glimpses from our daily sessions and events. Tap to view full screen.</p>
         </div>
         
         <div class="slider-container">
             <button class="slider-btn slider-left" onclick="scrollGallery(-300)"><i class="fas fa-chevron-left"></i></button>
             
             <div class="slider-track" id="galleryTrack">
+                <!-- IMPORTANT: onclick events removed, JS handles it now -->
                 <!-- Gallery Item 1 -->
-                <div class="gallery-item">
-                    <!-- Replace with real image later -->
+                <div class="gallery-item" data-index="0">
                     <img src="gallery1.jpg" alt="Yoga 1">
                 </div>
                 <!-- Gallery Item 2 -->
-                <div class="gallery-item">
+                <div class="gallery-item" data-index="1">
                     <img src="gallery2.jpg" alt="Yoga 2">
                 </div>
                 <!-- Gallery Item 3 -->
-                <div class="gallery-item">
+                <div class="gallery-item" data-index="2">
                     <img src="gallery3.png" alt="Yoga 3">
                 </div>
                 <!-- Gallery Item 4 -->
-                <div class="gallery-item">
+                <div class="gallery-item" data-index="3">
                     <img src="gallery4.jpg" alt="Yoga 4">
                 </div>
                 <!-- Gallery Item 5 -->
-                <div class="gallery-item">
-                    <img src="" alt="added later">
+                <div class="gallery-item" data-index="4">
+                    <img src="soumen.jpg" alt="Yoga 5">
                 </div>
             </div>
 
@@ -610,14 +694,14 @@
         .<br>
     </div>
 
-    <!-- 5. Floating Social Dock -->
+    <!-- 6. Floating Social Dock -->
     <div class="social-dock">
         <a href="https://facebook.com/groups/3181203585491136/" target="_blank" class="s-btn fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
         <a href="https://youtube.com/@vivekanandayogatrainingcen2562?si=QH-L5PwVKzlsfhBN" target="_blank" class="s-btn yt" title="YouTube"><i class="fab fa-youtube"></i></a>
         <a href="https://wa.me/+919734444092" target="_blank" class="s-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
 
-    <!-- 6. Sticky Footer Action Bar -->
+    <!-- 7. Sticky Footer Action Bar -->
     <div class="sticky-footer">
         <button class="action-btn btn-renew" onclick="alert('Renew feature coming soon!')">
             <i class="fas fa-sync-alt"></i> Renew
@@ -627,14 +711,123 @@
         </button>
     </div>
 
+    <!-- 8. LIGHTBOX OVERLAY (Added for Full Screen View) -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
+        
+        <button class="lightbox-nav prev-btn" onclick="changeImage(-1)">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Full Screen View">
+        
+        <button class="lightbox-nav next-btn" onclick="changeImage(1)">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <div class="swipe-hint"><i class="fas fa-arrows-alt-h"></i> Swipe to navigate</div>
+    </div>
+
     <script>
-        // Simple script to handle horizontal scrolling
+        // --- 1. Gallery Horizontal Scroll Logic ---
         function scrollGallery(distance) {
             const track = document.getElementById('galleryTrack');
             track.scrollBy({
                 left: distance,
                 behavior: 'smooth'
             });
+        }
+
+        // --- 2. Lightbox & Swipe Logic ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const galleryItems = document.querySelectorAll('.gallery-item img'); // Get all images
+        
+        let currentIndex = 0;
+
+        // Initialize click events for gallery images
+        document.querySelectorAll('.gallery-item').forEach((item, index) => {
+            item.addEventListener('click', () => {
+                openLightbox(index);
+            });
+        });
+
+        function openLightbox(index) {
+            currentIndex = index;
+            // Handle potentially empty src
+            const src = galleryItems[currentIndex].getAttribute('src');
+            if(src) {
+                lightboxImg.src = src;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+
+        function changeImage(direction) {
+            currentIndex += direction;
+
+            // Loop logic
+            if (currentIndex >= galleryItems.length) {
+                currentIndex = 0;
+            } else if (currentIndex < 0) {
+                currentIndex = galleryItems.length - 1;
+            }
+
+            const src = galleryItems[currentIndex].getAttribute('src');
+            // If image source is empty (placeholder), skip to next
+            if (!src || src.trim() === "") {
+                 // Simple recursion to skip empty images, preventing infinite loop with max checks
+                 let safety = 0;
+                 while((!src || src.trim() === "") && safety < galleryItems.length) {
+                    currentIndex += direction;
+                    if (currentIndex >= galleryItems.length) currentIndex = 0;
+                    else if (currentIndex < 0) currentIndex = galleryItems.length - 1;
+                    safety++;
+                 }
+            }
+            lightboxImg.src = galleryItems[currentIndex].src;
+        }
+
+        // --- 3. Keyboard Navigation Support ---
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') changeImage(-1);
+            if (e.key === 'ArrowRight') changeImage(1);
+        });
+
+        // --- 4. Touch Swipe Logic (Mobile) ---
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const minSwipeDistance = 50; // Minimum pixel distance to count as a swipe
+
+        lightbox.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+
+        lightbox.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, {passive: true});
+
+        function handleSwipe() {
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > minSwipeDistance) {
+                if (swipeDistance > 0) {
+                    // Swiped Right -> Show Previous
+                    changeImage(-1);
+                } else {
+                    // Swiped Left -> Show Next
+                    changeImage(1);
+                }
+            }
         }
     </script>
 
