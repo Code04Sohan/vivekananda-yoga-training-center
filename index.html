@@ -6,572 +6,17 @@
     <title>Vivekananda Yoga Training Center</title>
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    
-    <style>
-        /* =========================================
-           1. MODERN THEME & RESET
-           ========================================= */
-        :root {
-            /* Core Brand Colors */
-            --primary: #0277bd;       /* Ocean Blue */
-            --primary-dark: #01579b;  /* Deep Blue */
-            --primary-light: #e1f5fe; /* Very Light Blue */
-            --accent: #26c6da;        /* Cyan Accent */
-            
-            /* Social Colors */
-            --whatsapp: #25D366;
-            --facebook: #1877F2;
-            --youtube: #FF0000;
-
-            /* UI Colors */
-            --bg-body: #f0f4f8;       /* Very light cool grey/blue */
-            --bg-card: #ffffff;
-            --text-main: #1e293b;     /* Slate Dark */
-            --text-muted: #64748b;    /* Slate Grey */
-            
-            /* Spacing & Effects */
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --shadow-soft: 0 10px 30px -10px rgba(0,0,0,0.08);
-            --shadow-hover: 0 20px 40px -10px rgba(0,0,0,0.12);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        html { scroll-behavior: smooth; /* Enables smooth scrolling */ }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding-bottom: 100px; /* Space for footer */
-        }
-
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        img { display: block; max-width: 100%; }
-
-        /* =========================================
-           2. CLEAN NAVBAR WITH NAV BUTTONS
-           ========================================= */
-        .navbar {
-            background: var(--bg-card);
-            padding: 12px 5%;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.04);
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Space out Logo and Nav */
-            border-bottom: 2px solid var(--accent);
-            flex-wrap: wrap; /* Allow wrapping on mobile */
-            gap: 15px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .brand-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: contain;
-            border: 2px solid var(--bg-body);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .brand-text h2 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--primary);
-            text-transform: uppercase;
-            line-height: 1.1;
-            margin: 0;
-        }
-
-        .brand-text p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin: 0;
-        }
-
-        /* Nav Buttons Style */
-        .nav-links {
-            display: flex;
-            gap: 10px;
-        }
-
-        .nav-btn {
-            font-size: 0.85rem;
-            font-weight: 700;
-            padding: 8px 16px;
-            border-radius: 50px;
-            color: var(--text-muted);
-            background: var(--bg-body);
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-
-        .nav-btn:hover {
-            background: var(--primary-light);
-            color: var(--primary);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* =========================================
-           3. MAIN LAYOUT
-           ========================================= */
-        .main-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1.3fr 1fr; 
-            gap: 40px;
-            align-items: start;
-        }
-
-        /* --- Video Section --- */
-        .video-box {
-            background: var(--bg-card);
-            padding: 15px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-soft);
-            height: 100%; 
-        }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 */
-            height: 0;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            background: #000;
-        }
-
-        .video-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
-        }
-
-        /* --- Trainer Profile Cards --- */
-        .trainers-section {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .section-label {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            font-weight: 700;
-            margin-bottom: -10px;
-            display: block;
-        }
-
-        .trainer-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 25px;
-            box-shadow: var(--shadow-soft);
-            border: 1px solid rgba(255,255,255,0.5);
-            display: flex;
-            gap: 20px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .trainer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .trainer-img {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--accent);
-            flex-shrink: 0;
-        }
-
-        .trainer-details h3 {
-            color: var(--primary);
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-        }
-
-        .trainer-role {
-            display: inline-block;
-            background: var(--bg-body);
-            color: var(--primary-dark);
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 20px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-        }
-
-        .trainer-bio {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-            border-left: 3px solid var(--accent);
-            padding-left: 12px;
-        }
-
-        /* =========================================
-           4. PAMPHLET & INFO
-           ========================================= */
-        .info-section {
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 0 20px;
-            scroll-margin-top: 100px; /* Offset for sticky nav */
-        }
-
-        .glass-panel {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 30px;
-            box-shadow: var(--shadow-soft);
-            text-align: center;
-        }
-
-        .glass-panel h2 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .pamphlet-img {
-            border-radius: var(--radius-md);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
-        }
-
-        /* =========================================
-           5. GALLERY SLIDER SECTION
-           ========================================= */
-        .gallery-section {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 0 20px;
-            position: relative;
-            scroll-margin-top: 100px; /* Offset for sticky nav */
-        }
-
-        .gallery-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .gallery-header h2 {
-            color: var(--primary);
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-        }
-        .gallery-header p { color: var(--text-muted); }
-
-        .slider-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .slider-track {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding: 20px 5px; /* Space for shadow */
-            scrollbar-width: none; /* Firefox */
-        }
-        .slider-track::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
-        .gallery-item {
-            min-width: 300px;
-            height: 220px;
-            background: #ddd;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-soft);
-            flex-shrink: 0;
-            position: relative;
-            transition: transform 0.3s;
-            cursor: pointer; /* Indicates clickable */
-        }
-        .gallery-item:hover { transform: scale(1.02); }
-        
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            pointer-events: none; /* Let the div handle click */
-        }
-
-        /* Slider Nav Buttons */
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            background: white;
-            border: 1px solid #eee;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            color: var(--primary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 2;
-            display: flex; justify-content: center; align-items: center;
-            transition: 0.2s;
-        }
-        .slider-btn:hover { background: var(--primary); color: white; }
-        .slider-left { left: -15px; }
-        .slider-right { right: -15px; }
-
-        /* =========================================
-           6. LIGHTBOX VIEWER (Full Screen)
-           ========================================= */
-        .lightbox {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 5000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .lightbox-img {
-            max-width: 90%;
-            max-height: 80vh;
-            border-radius: 8px;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
-            object-fit: contain;
-            user-select: none;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            color: white;
-            font-size: 35px;
-            cursor: pointer;
-            z-index: 5001;
-            background: rgba(255, 255, 255, 0.1);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .lightbox-close:hover { background: rgba(255, 255, 255, 0.3); }
-
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: none;
-            padding: 15px;
-            cursor: pointer;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            transition: 0.3s;
-            z-index: 5001;
-        }
-        .lightbox-nav:hover { background: rgba(255, 255, 255, 0.4); }
-        .prev-btn { left: 20px; }
-        .next-btn { right: 20px; }
-
-        .swipe-hint {
-            position: absolute;
-            bottom: 30px;
-            color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
-            display: none;
-        }
-        @media (max-width: 768px) {
-            .swipe-hint { display: block; }
-            .lightbox-nav { display: none; /* Hide arrows on mobile to rely on swipe */ }
-        }
-
-        /* =========================================
-           7. FLOATING SOCIAL BUTTONS
-           ========================================= */
-        .social-dock {
-            position: fixed;
-            z-index: 999;
-            display: flex;
-            gap: 15px;
-            transition: 0.3s;
-        }
-
-        .s-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .s-btn:hover { transform: scale(1.15); }
-        
-        .fb { background: var(--facebook); }
-        .yt { background: var(--youtube); }
-        .wa { background: var(--whatsapp); }
-
-        @media (min-width: 769px) {
-            .social-dock {
-                flex-direction: column;
-                right: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .social-dock {
-                bottom: 90px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: rgba(255,255,255,0.8);
-                backdrop-filter: blur(8px);
-                padding: 10px 20px;
-                border-radius: 50px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-                gap: 20px;
-            }
-            .s-btn { width: 40px; height: 40px; font-size: 1.1rem; }
-        }
-
-        /* =========================================
-           8. STICKY FOOTER
-           ========================================= */
-        .sticky-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 15px 20px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
-            border-top: 1px solid rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            z-index: 1000;
-        }
-
-        .action-btn {
-            flex: 1;
-            max-width: 250px;
-            height: 48px;
-            border-radius: 50px;
-            border: none;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-renew {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        .btn-renew:hover { background: #e3f2fd; }
-
-        .btn-enroll {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            box-shadow: 0 4px 15px rgba(2, 119, 189, 0.3);
-        }
-        .btn-enroll:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(2, 119, 189, 0.4);
-        }
-
-        /* =========================================
-           9. RESPONSIVE
-           ========================================= */
-        @media (max-width: 900px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .video-section { order: -1; } /* FORCE VIDEO TO TOP ON MOBILE */
-            
-            .navbar { justify-content: center; flex-direction: column; gap: 10px; }
-            .nav-links { width: 100%; justify-content: center; overflow-x: auto; padding-bottom: 5px; }
-            .nav-btn { font-size: 0.75rem; white-space: nowrap; padding: 6px 12px; }
-            
-            .brand-text h2 { font-size: 1rem; }
-            
-            .slider-left { left: 0; }
-            .slider-right { right: 0; }
-        }
-
-        /* =========================================
-           10. FOOTER CREDIT
-           ========================================= */
-        .ba-credits {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 30px;
-            opacity: 0.8;
-        }
-        .ba-credits strong { font-weight: 700; color: var(--primary); }
-        .ba-credits a { transition: color 0.3s; }
-        .ba-credits a:hover { color: var(--primary-dark); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <!-- 1. Navbar with Auto-Scroll Buttons -->
     <nav class="navbar">
         <div class="brand">
-            <img src="logo.jpg" alt="Logo" class="brand-logo">
+            <img src="resources/logo.jpg" alt="Logo" class="brand-logo">
             <div class="brand-text">
-                <h2>Vivekananda Yoga Training Center</h2>
-                <p>Purba Medinipur . West Bengal . India</p>
+                <h2>Vivekananda Yoga <br> Training Center</h2>
+                <p>Purba Medinipur • West Bengal • India</p>
             </div>
         </div>
         
@@ -579,7 +24,8 @@
         <div class="nav-links">
             <a href="#intro" class="nav-btn"><i class="fas fa-play"></i>Intro</a>
             <a href="#trainers" class="nav-btn"><i class="fas fa-user-friends"></i>Trainers</a>
-            <a href="#schedule" class="nav-btn"><i class="far fa-calendar-alt"></i>Pamphlet</a>
+            <a href="#about" class="nav-btn"><i class="far fa-calendar-alt"></i>about</a>
+            <a href="#pamphlet" class="nav-btn"><i class="far fa-images"></i>Pamphlet</a>
             <a href="#gallery" class="nav-btn"><i class="far fa-images"></i>Gallery</a>
         </div>
     </nav>
@@ -607,7 +53,7 @@
             
             <!-- Trainer 1 -->
             <div class="trainer-card">
-                <img src="soumen.jpg" alt="Trainer" class="trainer-img">
+                <img src="resources/soumen.jpg" alt="Trainer" class="trainer-img">
                 <div class="trainer-details">
                     <h3>Mr. Soumen Santra</h3>
                     <span class="trainer-role">Senior Yoga Trainer & Physiotherapist</span>
@@ -623,7 +69,7 @@
 
             <!-- Trainer 2 -->
             <div class="trainer-card">
-                <img src="ranajoy.jpg" alt="Trainer" class="trainer-img">
+                <img src="resources/ranajoy.jpg" alt="Trainer" class="trainer-img">
                 <div class="trainer-details">
                     <h3>Mr. Ranajoy Das</h3>
                     <span class="trainer-role">Yoga Guru</span>
@@ -639,11 +85,56 @@
 
     </div>
 
-    <!-- 3. Pamphlet Section -->
-    <div class="info-section" id="schedule">
-        <div class="glass-panel">
-            <h2><i class="far fa-newspaper"></i>Pamphlets</h2>
-            <img src="pamphlets.jpg" alt="Class Schedule Pamphlet" class="pamphlet-img">
+    <!-- 3. SPLIT SECTION: ABOUT & PAMPHLET -->
+    <div class="split-section">
+        <div class="split-container">
+            
+            <!-- About Content (Left on PC, Bottom on Mobile) -->
+            <div class="about-box" id="about">
+                <h2>Our Yoga Training Course</h2>
+                <div class="about-subhead"><i class="fas fa-spa"></i> What You Will Learn</div>
+                
+                <p><strong>Yoga Philosophy:</strong> Introduction, aim, meaning, and yogic practices.</p>
+                
+                <ul class="curriculum-list">
+                    <li>Origin, history, and development of yoga.</li>
+                    <li>Yogic etymology, definition, objectives, and miscommunications.</li>
+                    <li>Introduction to Sankhya yoga darshan.</li>
+                    <li>Streams of yoga (Jnana, Raja, Bhakti, and Karma yoga).</li>
+                    <li>Life and messages by spiritual masters.</li>
+                    <li>Three gunas – sattva, rajas, tamas.</li>
+                    <li>Maya, prakriti, brahman, avidya.</li>
+                    <li>Atman, parmataman, jiva.</li>
+                    <li>Four internal components: mind, intellect, subconscious, and ego.</li>
+                    <li>Bahiranga and Antaranga yoga of Maharshi Patanjali.</li>
+                    <li>Practicing Abhyasa and cultivating Vairagya (detachment) essential for spiritual development.</li>
+                </ul>
+
+                <div class="about-subhead"><i class="fas fa-spa"></i> Yoga Asanas</div>
+                <ul class="curriculum-list">
+                    <li>The basic structure of the introductory course.</li>
+                    <li>Surya namaskar</li>
+                    <li>Deep relaxation / Yoga Nidra</li>
+                    <li>Bandhas and mudras</li>
+                    <li>Meditation techniques and prayers</li>
+                    <li>Concept of Yoga asana, pranayama and kriyas</li>
+                    <li>Concept and principle of Sukshma vyayama, sthulavyayama and Surya namaskar.</li>
+                </ul>
+
+            </div>
+
+            <!-- Pamphlet Image (Right on PC, Top on Mobile) -->
+            <div class="pamphlet-box"id=pamphlet>
+                <h3><i class="far fa-newspaper"></i> Official Pamphlet</h3>
+                <img 
+                    src="resources/pamphlets.jpg" 
+                    alt="Class Schedule Pamphlet" 
+                    class="pamphlet-img" 
+                    onclick="openLightbox(this.src)" 
+                >
+                <p style="margin-top:10px; font-size:0.8rem; color:#888;">(Tap image to zoom)</p>
+            </div>
+
         </div>
     </div>
 
@@ -661,59 +152,59 @@
                 <!-- IMPORTANT: onclick events removed, JS handles it now -->
                 <!-- Gallery Item 1 -->
                 <div class="gallery-item" data-index="0">
-                    <img src="gallery1.jpg" alt="Yoga 1">
+                    <img src="resources/gallery1.jpg" alt="Yoga 1">
                 </div>
                 <!-- Gallery Item 2 -->
                 <div class="gallery-item" data-index="1">
-                    <img src="gallery2.jpg" alt="Yoga 2">
+                    <img src="resources/gallery2.jpg" alt="Yoga 2">
                 </div>
                 <!-- Gallery Item 3 -->
                 <div class="gallery-item" data-index="2">
-                    <img src="gallery3.jpg" alt="Yoga 3">
+                    <img src="resources/gallery3.jpg" alt="Yoga 3">
                 </div>
                 <!-- Gallery Item 4 -->
                 <div class="gallery-item" data-index="3">
-                    <img src="gallery4.jpg" alt="Yoga 4">
+                    <img src="resources/gallery4.jpg" alt="Yoga 4">
                 </div>
                 <!-- Gallery Item 5 -->
                 <div class="gallery-item" data-index="4">
-                    <img src="gallery5.jpg" alt="Yoga 5">
+                    <img src="resources/gallery5.jpg" alt="Yoga 5">
                 </div>
                 <!-- Gallery Item 6 -->
                 <div class="gallery-item" data-index="5">
-                    <img src="gallery6.jpg" alt="Yoga 6">
+                    <img src="resources/gallery6.jpg" alt="Yoga 6">
                 </div>
                 <!-- Gallery Item 7 -->
                 <div class="gallery-item" data-index="6">
-                    <img src="gallery7.jpg" alt="Yoga 7">
+                    <img src="resources/gallery7.jpg" alt="Yoga 7">
                 </div>
                 <!-- Gallery Item 8 -->
                 <div class="gallery-item" data-index="7">
-                    <img src="gallery8.jpg" alt="Yoga 8">
+                    <img src="resources/gallery8.jpg" alt="Yoga 8">
                 </div>
                 <!-- Gallery Item 9 -->
                 <div class="gallery-item" data-index="8">
-                    <img src="gallery9.jpg" alt="Yoga 9">
+                    <img src="resources/gallery9.jpg" alt="Yoga 9">
                 </div>
                 <!-- Gallery Item 10 -->
                 <div class="gallery-item" data-index="9">
-                    <img src="gallery10.jpg" alt="Yoga 10">
+                    <img src="resources/gallery10.jpg" alt="Yoga 10">
                 </div>
                 <!-- Gallery Item 11 -->
                 <div class="gallery-item" data-index="10">
-                    <img src="gallery11.jpg" alt="Yoga 11">
+                    <img src="resources/gallery11.jpg" alt="Yoga 11">
                 </div>
                 <!-- Gallery Item 12 -->
                 <div class="gallery-item" data-index="11">
-                    <img src="gallery12.jpg" alt="Yoga 12">
+                    <img src="resources/gallery12.jpg" alt="Yoga 12">
                 </div>
                 <!-- Gallery Item 13 -->
                 <div class="gallery-item" data-index="12">
-                    <img src="gallery13.jpg" alt="Yoga 13">
+                    <img src="resources/gallery13.jpg" alt="Yoga 13">
                 </div>
                 <!-- Gallery Item 14 -->
                 <div class="gallery-item" data-index="13">
-                    <img src="gallery14.jpg" alt="Yoga 14">
+                    <img src="resources/gallery14.jpg" alt="Yoga 14">
                 </div>
             </div>
 
@@ -723,8 +214,8 @@
 
     <!-- 5. BAHA Interactive Credit -->
     <div class="ba-credits">
-        Developed and Deployed by <a href="#" onclick="alert('Contact developer: your.email@example.com')" style="color: var(--primary); text-decoration: none;"><strong>BAHA Interactive</strong></a><br>
-        <span style="cursor:pointer; text-decoration: underline;" onclick="alert('Contact developer: your.email@example.com')">Click here to contact with developer</span><br>
+        Developed and Deployed by <a href="#" onclick="alert('Contact developer: sohanadhikari04+vytc@gmail.com')" style="color: var(--primary); text-decoration: none;"><strong>BAHA Interactive</strong></a><br>
+        <span style="cursor:pointer; text-decoration: underline;" onclick="alert('Contact developer: sohanadhikari04+vytc@gmail.com')">Click here to contact with developer</span><br>
         .<br>
         .<br>
     </div>
@@ -787,14 +278,29 @@
             });
         });
 
-        function openLightbox(index) {
-            currentIndex = index;
-            // Handle potentially empty src
-            const src = galleryItems[currentIndex].getAttribute('src');
-            if(src) {
-                lightboxImg.src = src;
+        // Function exposed to global scope for the Pamphlet onclick
+        function openLightbox(indexOrSrc) {
+            // Check if argument is a string (URL) or number (Index)
+            if (typeof indexOrSrc === 'string') {
+                // It's a URL (from Pamphlet onclick)
+                lightboxImg.src = indexOrSrc;
                 lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+                document.body.style.overflow = 'hidden'; 
+                // Hide navigation arrows for single image (pamphlet)
+                document.querySelector('.prev-btn').style.display = 'none';
+                document.querySelector('.next-btn').style.display = 'none';
+            } else {
+                // It's an index (from Gallery)
+                currentIndex = indexOrSrc;
+                const src = galleryItems[currentIndex].getAttribute('src');
+                if(src) {
+                    lightboxImg.src = src;
+                    lightbox.classList.add('active');
+                    document.body.style.overflow = 'hidden'; 
+                    // Show navigation arrows for gallery
+                    document.querySelector('.prev-btn').style.display = 'block';
+                    document.querySelector('.next-btn').style.display = 'block';
+                }
             }
         }
 
@@ -816,7 +322,6 @@
             const src = galleryItems[currentIndex].getAttribute('src');
             // If image source is empty (placeholder), skip to next
             if (!src || src.trim() === "") {
-                 // Simple recursion to skip empty images, preventing infinite loop with max checks
                  let safety = 0;
                  while((!src || src.trim() === "") && safety < galleryItems.length) {
                     currentIndex += direction;
@@ -840,7 +345,7 @@
         // --- 4. Touch Swipe Logic (Mobile) ---
         let touchStartX = 0;
         let touchEndX = 0;
-        const minSwipeDistance = 50; // Minimum pixel distance to count as a swipe
+        const minSwipeDistance = 50; 
 
         lightbox.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
@@ -856,10 +361,8 @@
             
             if (Math.abs(swipeDistance) > minSwipeDistance) {
                 if (swipeDistance > 0) {
-                    // Swiped Right -> Show Previous
                     changeImage(-1);
                 } else {
-                    // Swiped Left -> Show Next
                     changeImage(1);
                 }
             }
@@ -867,32 +370,25 @@
 
         // --- 5. Auto Scroll Logic ---
         const track = document.getElementById('galleryTrack');
-        let autoScrollSpeed = 1; // Higher number = Faster
+        let autoScrollSpeed = 1; 
         let isPaused = false;
 
-        // Pause scrolling when user hovers with mouse or touches screen
         track.addEventListener('mouseenter', () => isPaused = true);
         track.addEventListener('mouseleave', () => isPaused = false);
         track.addEventListener('touchstart', () => isPaused = true);
-        track.addEventListener('touchend', () => setTimeout(() => isPaused = false, 2000)); // Resume after 2s
+        track.addEventListener('touchend', () => setTimeout(() => isPaused = false, 2000)); 
 
         function autoScrollGallery() {
             if (!isPaused) {
                 track.scrollLeft += autoScrollSpeed;
-
-                // Check if we reached the end of the scroll
-                // If (Current Position + Visible Width) >= Total Width
                 if (track.scrollLeft + track.clientWidth >= track.scrollWidth - 1) {
-                    track.scrollLeft = 0; // Snap back to start
+                    track.scrollLeft = 0; 
                 }
             }
-            // Repeat this function for the next animation frame (approx 60 times/sec)
             requestAnimationFrame(autoScrollGallery);
         }
 
-        // Start the loop
         autoScrollGallery();
     </script>
-
 </body>
 </html>

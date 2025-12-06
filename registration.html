@@ -4,120 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Vivekananda Yoga Training Center</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        /* --- COPYING THEME VARIABLES FOR CONSISTENCY --- */
-        :root {
-            --primary-brand: #0277bd;
-            --secondary-brand: #26c6da;
-            --bg-color: #f0f8ff;
-            --font-main: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background-color: var(--bg-color);
-            margin: 0; padding: 0;
-        }
-
-        /* --- NAVBAR --- */
-        .navbar {
-            background-color: #fff;
-            padding: 10px 5%;
-            display: flex; align-items: center; gap: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--secondary-brand);
-        }
-        .logo-img { height: 45px; width: auto; }
-        .brand-name { font-weight: 800; color: var(--primary-brand); text-transform: uppercase; font-size: 1.1rem; }
-
-        /* --- BACK BUTTON --- */
-        .back-container {
-            max-width: 800px; margin: 20px auto 0; padding: 0 20px;
-        }
-        .back-btn {
-            display: inline-flex; align-items: center; gap: 8px;
-            color: var(--primary-brand); font-weight: bold; text-decoration: none;
-            padding: 10px 20px; background: white; border-radius: 50px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .back-btn:hover { background: #f5f5f5; }
-
-        /* --- FORM CONTAINER --- */
-        .form-wrapper {
-            max-width: 800px;
-            margin: 20px auto 50px;
-            padding: 0 20px;
-        }
-        
-        .google-form-container {
-            width: 100%;
-            background: white;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            height: 1200px; /* Default height */
-        }
-
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .navbar { padding: 15px; }
-            .brand-name { font-size: 0.9rem; }
-            .logo-img { height: 35px; }
-        }
-
-        /* =========================================
-            9. FOOTER CREDIT
-           ========================================= */
-        .ba-credits {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 30px;
-            opacity: 0.8;
-        }
-        .ba-credits strong { font-weight: 700; color: var(--primary); }
-        .ba-credits a { transition: color 0.3s; }
-        .ba-credits a:hover { color: var(--primary-dark); }
-    </style>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Link to the main stylesheet -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- HEADER -->
+    <!-- 1. Navbar -->
     <nav class="navbar">
-        <img src="logo.jpg" alt="Logo" class="logo-img"> 
-        <div class="brand-name">Registration on Vivekananda Yoga Training Center (Purba Medinipur . West Bengal . India)</div>
+        <div class="brand">
+            <img src="resources/logo.jpg" alt="Logo" class="brand-logo">
+            <div class="brand-text">
+                <h2>Vivekananda Yoga</h2>
+                <p>Training Center</p>
+            </div>
+        </div>
     </nav>
 
-    <!-- BACK BUTTON -->
+    <!-- 2. Back Button -->
     <div class="back-container">
         <a href="index.html" class="back-btn">
-            <i class="fas fa-arrow-left"></i> Back to Home
+            <i class="fas fa-chevron-left"></i> Back to Home
         </a>
     </div>
 
-    <!-- GOOGLE FORM EMBED -->
-    <div class="form-wrapper">
-        <div class="google-form-container">
-            <iframe 
-                src="https://docs.google.com/forms/d/e/1FAIpQLSfznQSOwQ4a4rFJExvxBeu5sry1vdh6C_b1mlEsppjnvSzV7g/viewform?usp=header" 
-                width="100%" 
-                height="1200" 
-                frameborder="0" 
-                marginheight="0" 
-                marginwidth="0">
-                Loading…
-            </iframe>
+    <!-- 3. COMPACT PRODUCT CARD -->
+    <div class="course-wrapper">
+        <div class="ecommerce-card">
+            
+            <!-- Sale Badge -->
+            <span class="badge-sale">Best Value</span>
+
+            <!-- Product Header (Image) -->
+            <div class="product-header">
+                <img src="resources/asan_dp.jpeg" alt="Yoga Course" class="product-logo">
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-body">
+                <h1 class="product-title">Regular Yoga Class</h1>
+                <span class="product-subtitle">Online & Offline (Men & Women)</span>
+
+                <!-- Quick Specs Icons -->
+                <div class="specs-row">
+                    <div class="spec-item">
+                        <i class="far fa-clock"></i>
+                        <span>00 Mins</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>0 Days/Wk</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-video"></i>
+                        <span>Hybrid</span>
+                    </div>
+                    <div class="spec-item">
+                        <i class="fas fa-language"></i>
+                        <span>Ben/Eng</span>
+                    </div>
+                </div>
+
+                <!-- Price Area (add later <span class="current-price">500/-</span>)-->
+                <div class="product-price">
+                    <span class="current-price"></span>
+                </div>
+
+                <!-- Register Button -->
+                <!-- Replace href with your Google Form Link -->
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSfznQSOwQ4a4rFJExvxBeu5sry1vdh6C_b1mlEsppjnvSzV7g/viewform" target="_blank" class="register-btn-animated">
+                    Register Now <i class="fas fa-chevron-right"></i>
+                </a>
+                <p class="secure-note"><i class="fas fa-shield-alt"></i> Secure Registration Form</p>
+            </div>
         </div>
     </div>
-    <!-- 5. BAHA Interactive Credit -->
+
+    <!-- 5. Footer Credits -->
     <div class="ba-credits">
-        Developed and Deployed by <a href="#" onclick="alert('Contact developer: your.email@example.com')" style="color: var(--primary); text-decoration: none;"><strong>BAHA Interactive</strong></a><br>
-        <span style="cursor:pointer; text-decoration: underline;" onclick="alert('Contact developer: your.email@example.com')">Click here to contact with developer</span>
+        Developed and Deployed by <a href="#" onclick="alert('Contact developer: your.email@example.com')"><strong>BAHA Interactive</strong></a>
     </div>
+
 </body>
 </html>
