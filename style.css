@@ -917,3 +917,46 @@ img { display: block; max-width: 100%; }
     align-items: center;
     gap: 5px;
 }
+
+
+/* =========================================
+   14. LIVE BADGE (NEW)
+   ========================================= */
+.live-badge-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 50px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    width: fit-content;
+}
+
+.live-icon {
+    color: #ff0000;
+    animation: blink 1.0s infinite;
+    font-size: 0.8rem;
+}
+
+.live-text {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--youtube);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.offline-text {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--facebook);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
