@@ -960,3 +960,161 @@ img { display: block; max-width: 100%; }
     50% { opacity: 0.4; }
     100% { opacity: 1; }
 }
+
+
+/* =========================================
+   14. LOCATIONS TABLE SECTION (UPDATED)
+   ========================================= */
+.locations-section {
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 0 20px;
+    scroll-margin-top: 100px;
+}
+
+.locations-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-soft);
+    border-top: 4px solid var(--accent);
+}
+
+.locations-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.locations-header h2 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+}
+
+.locations-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Grid Table Styling */
+.loc-grid {
+    display: grid;
+    /* Fixed layout: Name gets space, Address gets space */
+    grid-template-columns: 1fr 1fr; 
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.loc-row {
+    display: contents; /* Children become grid items */
+}
+
+/* Logic for hiding extra rows */
+.loc-row.hidden {
+    display: none; 
+}
+
+.loc-head {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 15px;
+    border-bottom: 2px solid #e0f2f1;
+    text-align: left;
+}
+
+.loc-cell {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    
+    /* ALIGNMENT FIX: Align to Top */
+    display: flex;
+    align-items: flex-start; 
+    
+    /* Text Wrapping Fixes */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+
+.loc-name {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.loc-name i {
+    margin-right: 10px;
+    color: var(--accent);
+    flex-shrink: 0; /* Prevents icon from getting squashed */
+    margin-top: 4px; /* Aligns icon with first line of text */
+}
+
+/* Hover Effect */
+.loc-row:hover .loc-cell {
+    background-color: #f8fdff;
+}
+
+/* Show More Button */
+.loc-toggle-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-top: none;
+    color: var(--primary);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border-radius: 0 0 8px 8px;
+    transition: background 0.2s;
+}
+
+.loc-toggle-btn:hover {
+    background: var(--primary-light);
+}
+
+/* Mobile Responsive: Cards */
+@media (max-width: 700px) {
+    .loc-grid {
+        display: flex;
+        flex-direction: column;
+        border: none;
+        gap: 15px;
+    }
+
+    .loc-head { display: none; } /* Hide headers on mobile */
+
+    .loc-row {
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    
+    /* Ensure hidden works on mobile */
+    .loc-row.hidden { display: none; }
+
+    .loc-cell {
+        padding: 5px 0;
+        border: none;
+        display: block; /* Stack internally if needed */
+    }
+
+    .loc-name {
+        font-size: 1rem;
+        margin-bottom: 5px;
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 8px;
+    }
+}
