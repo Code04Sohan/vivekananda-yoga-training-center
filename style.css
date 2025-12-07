@@ -512,15 +512,15 @@ img { display: block; max-width: 100%; }
 @keyframes pulse-glow {
     0% {
         /* Base shadow + No pulse ring */
-        box-shadow: 0 4px 15px rgba(231, 208, 2, 0.918), 0 0 0 0 rgba(231, 208, 2, 0.918);
+        box-shadow: 0 4px 15px rgba(231, 75, 2, 0.918), 0 0 0 0 rgba(2, 119, 189, 0);
     }
     70% {
         /* Base shadow + Expanded, fading pulse ring */
-        box-shadow: 0 4px 15px rgba(231, 208, 2, 0.918), 0 0 0 15px rgba(2, 119, 189, 0);
+        box-shadow: 0 4px 15px rgba(231, 67, 2, 0.918), 0 0 0 15px rgba(2, 119, 189, 0);
     }
     100% {
         /* Base shadow + Reset ring */
-        box-shadow: 0 4px 15px rgba(231, 208, 2, 0.918), 0 0 0 0 rgba(2, 119, 189, 0);
+        box-shadow: 0 4px 15px rgba(231, 67, 2, 0.918), 0 0 0 0 rgba(2, 119, 189, 0);
     }
 }
 
