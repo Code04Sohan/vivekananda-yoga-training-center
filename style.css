@@ -12,6 +12,7 @@
     --whatsapp: #25D366;
     --facebook: #1877F2;
     --youtube: #FF0000;
+    --phone: #00acc1;
 
     /* UI Colors */
     --bg-body: #f0f4f8;       /* Very light cool grey/blue */
@@ -438,7 +439,7 @@ img { display: block; max-width: 100%; }
 .fb { background: var(--facebook); }
 .yt { background: var(--youtube); }
 .wa { background: var(--whatsapp); }
-.call { background: #00acc1; }
+.call { background: var(--phone); }
 
 @media (min-width: 769px) {
     .social-dock {
