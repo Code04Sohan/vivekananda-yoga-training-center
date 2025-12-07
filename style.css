@@ -438,6 +438,7 @@ img { display: block; max-width: 100%; }
 .fb { background: var(--facebook); }
 .yt { background: var(--youtube); }
 .wa { background: var(--whatsapp); }
+.call { background: #00acc1; }
 
 @media (min-width: 769px) {
     .social-dock {
@@ -510,16 +511,21 @@ img { display: block; max-width: 100%; }
 @keyframes pulse-glow {
     0% {
         /* Base shadow + No pulse ring */
-        box-shadow: 0 4px 15px rgba(2, 119, 189, 0.3), 0 0 0 0 rgba(2, 119, 189, 0.7);
+        box-shadow: 0 4px 15px rgba(231, 208, 2, 0.918), 0 0 0 0 rgba(231, 208, 2, 0.918);
     }
     70% {
         /* Base shadow + Expanded, fading pulse ring */
-        box-shadow: 0 4px 15px rgba(2, 119, 189, 0.3), 0 0 0 15px rgba(2, 119, 189, 0);
+        box-shadow: 0 4px 15px rgba(231, 208, 2, 0.918), 0 0 0 15px rgba(2, 119, 189, 0);
     }
     100% {
         /* Base shadow + Reset ring */
-        box-shadow: 0 4px 15px rgba(2, 119, 189, 0.3), 0 0 0 0 rgba(2, 119, 189, 0);
+        box-shadow: 0 4px 15px rgba(231, 208, 2, 0.918), 0 0 0 0 rgba(2, 119, 189, 0);
     }
+}
+
+@keyframes arrow-nudge {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(7px); } /* Move right 5px */
 }
 
 .btn-enroll {
@@ -528,11 +534,24 @@ img { display: block; max-width: 100%; }
     /* Add a transition for smooth movement */
     transition: transform 0.1s ease, box-shadow 0.1s ease;
     /* Initial shadow */
-    box-shadow: 0 4px 15px rgba(2, 119, 189, 0.3);
+    box-shadow: 0 4px 15px rgb(236, 2, 73);
     
     /* ADDED: Constant Glowing Pulse Animation */
-    animation: pulse-glow 2s infinite;
+    animation: pulse-glow 0.8s infinite;
 }
+
+/* Target the icon inside the button */
+.btn-enroll i {
+    display: inline-block; /* Required for transform to work on inline elements */
+    margin-left: 5px;      /* Ensure some spacing */
+    animation: arrow-nudge 1s infinite ease-in-out; /* Continuous nudge */
+}
+
+.btn-enroll:hover i {
+    animation: arrow-nudge 0.5s infinite ease-in-out;
+}
+
+
 .btn-enroll:hover {
     transform: translateY(-2px);
     /* Pause animation on hover to focus on the click interaction */
