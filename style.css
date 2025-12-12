@@ -19,6 +19,7 @@
     --bg-card: #ffffff;
     --text-main: #1e293b;     /* Slate Dark */
     --text-muted: #64748b;    /* Slate Grey */
+    --text-credit: #1476ff;
     
     /* Spacing & Effects */
     --radius-lg: 16px;
@@ -587,8 +588,8 @@ img { display: block; max-width: 100%; }
 }
 
 /* =========================================
-   10. FOOTER CREDIT
-   ========================================= */
+   10. FOOTER CREDIT (Existing CSS)
+========================================= */
 .ba-credits {
     text-align: center;
     padding: 20px;
@@ -597,9 +598,19 @@ img { display: block; max-width: 100%; }
     margin-top: 30px;
     opacity: 0.8;
 }
-.ba-credits strong { font-weight: 700; color: var(--primary); }
-.ba-credits a { transition: color 0.3s; }
-.ba-credits a:hover { color: var(--primary-dark); }
+
+.ba-credits-logo {
+    color: var(--text-credit);
+    font-weight: bold;
+}
+
+.ba-credits .copyright-text {
+    /* Push the copyright line down slightly */
+    margin-top: 5px; 
+    /* Make the copyright text slightly smaller */
+    font-size: 0.7rem; 
+    opacity: 0.9;
+}
 
 
 /* =========================================

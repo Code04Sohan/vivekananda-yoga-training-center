@@ -161,3 +161,10 @@ function toggleLocations() {
         document.querySelector('.locations-section').scrollIntoView({ behavior: 'smooth' });
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const yearSpan = document.getElementById('current-year');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    });
