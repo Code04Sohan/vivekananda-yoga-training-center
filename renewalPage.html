@@ -80,7 +80,7 @@
             font-weight: bold;
             align-items: center;
             justify-content: center;
-            height: 40px; /* Space for the spinner */
+            height: 40px; 
         }
         .spinner {
             border: 4px solid rgba(0, 0, 0, 0.1);
@@ -138,7 +138,7 @@
 
         <form id="lookupForm">
             <label for="studentId" style="display: block; text-align: left; font-weight: bold;">Student ID:</label>
-            <input type="text" id="studentId" name="studentId" required placeholder="e.g., A001" autocomplete="off">
+            <input type="text" id="studentId" name="studentId" required placeholder="e.g., A0001" autocomplete="off">
             <button type="submit" id="submitButton">Continue to Renewal Form</button>
         </form>
 
@@ -160,10 +160,10 @@
     </div>
 
     <script>
-        // !! CRITICAL: REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL !!
+        // CRITICAL: FINAL, WORKING GOOGLE APPS SCRIPT API ENDPOINT
         const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbw_B4xbc6QJhEzeMxwAa4ttEjluRc8Q0e8TTMtg8VJUySBBq4ZvxANurjeiSh3Y7B1f/exec"; 
         
-        // NOTE: This URL should match the RENEWAL_FORM_URL_BASE in your Code.gs
+        // NOTE: This URL must match the RENEWAL_FORM_URL_BASE in your Code.gs
         const RENEWAL_FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe_IVVD6CuSSkxcIZonYGASs4Lz5KhxXaLon_mXh3vYisDytw/viewform?usp=pp_url";
 
         const studentIdInput = document.getElementById('studentId');
@@ -189,7 +189,7 @@
             failureMessage.style.display = 'none';
             loadingMessage.style.display = 'flex';
             
-            // 1. Construct the API URL: API_ENDPOINT + ?id=A001
+            // 1. Construct the API URL
             const apiUrlWithParam = `${API_ENDPOINT}?id=${encodeURIComponent(studentId)}`;
 
             // 2. Call the Google Apps Script API
@@ -219,17 +219,15 @@
                     }
                 })
                 .catch(error => {
-                    // UI State: Crash/Network Error
+                    // UI State: Crash/Network Error (This happens when running locally!)
                     loadingMessage.style.display = 'none';
-                    alert("A critical error occurred while contacting the server. Please try again.");
+                    alert("A critical error occurred while contacting the server. Please try again. (If running locally, deploy to a web server first.)");
                     console.error('Fetch operation failed:', error);
                 })
                 .finally(() => {
                     // Always re-enable controls on non-success paths
-                    if (window.location.href === window.location.origin + window.location.pathname) {
-                        submitButton.disabled = false;
-                        studentIdInput.disabled = false;
-                    }
+                    submitButton.disabled = false;
+                    studentIdInput.disabled = false;
                 });
         });
     </script>
