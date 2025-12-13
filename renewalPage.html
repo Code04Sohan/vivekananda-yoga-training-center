@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Renewal ID Lookup</title>
+    
+    <style>
+        /* --- BASE STYLES --- */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 { 
+            color: #38761d; 
+            font-size: 1.8em; 
+            margin-bottom: 5px;
+        }
+        p {
+            color: #555;
+            margin-bottom: 25px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        #submitButton { 
+            background-color: #38761d; 
+            color: white; 
+        }
+        #submitButton:hover:enabled { 
+            background-color: #275213; 
+        }
+        #manualButton { 
+            background-color: #007bff; 
+            color: white; 
+            margin-top: 5px;
+        }
+        #manualButton:hover {
+            background-color: #0056b3;
+        }
+
+        /* --- LOADING ANIMATION --- */
+        #loadingMessage { 
+            color: #38761d; 
+            margin-top: 15px; 
+            display: none; 
+            font-weight: bold;
+            align-items: center;
+            justify-content: center;
+            height: 40px; /* Space for the spinner */
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #38761d;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- FAILURE MESSAGE STYLES --- */
+        #failureMessage { 
+            border: 1px solid #dc3545; 
+            padding: 15px; 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border-radius: 5px; 
+            margin-top: 25px; 
+            display: none; 
+            text-align: left;
+        }
+        #failureMessage p {
+            margin: 5px 0;
+            color: #721c24;
+        }
+        #failureMessage a {
+            color: #721c24; 
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* --- RESPONSIVE ADJUSTMENTS --- */
+        @media (max-width: 600px) {
+            .container {
+                margin: 0 10px;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            button {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Course Renewal ID Lookup</h1>
+        <p>Please enter your unique Student ID to continue.</p>
+
+        <form id="lookupForm">
+            <label for="studentId" style="display: block; text-align: left; font-weight: bold;">Student ID:</label>
+            <input type="text" id="studentId" name="studentId" required placeholder="e.g., A001" autocomplete="off">
+            <button type="submit" id="submitButton">Continue to Renewal Form</button>
+        </form>
+
+        <div id="loadingMessage">
+            <div class="spinner"></div>
+            <span>Looking up ID... Please wait.</span>
+        </div>
+
+        <div id="failureMessage">
+            <p><strong>Database Error: ID Not Found.</strong></p>
+            <p>The Student ID you entered could not be found in our database.</p>
+            
+            <p style="margin-top: 10px;">Please contact us if you believe this is an error:</p>
+            <a href="https://www.soumenyoga.in" target="_blank" style="display: block; margin-bottom: 15px;">www.soumenyoga.in</a>
+            
+            <p>Alternatively, you may:</p>
+            <button id="manualButton" type="button">Continue with Manual Fill-up</button>
+        </div>
+    </div>
+
+    <script>
+        // !! CRITICAL: REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL !!
+        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbw_B4xbc6QJhEzeMxwAa4ttEjluRc8Q0e8TTMtg8VJUySBBq4ZvxANurjeiSh3Y7B1f/exec"; 
+        
+        // NOTE: This URL should match the RENEWAL_FORM_URL_BASE in your Code.gs
+        const RENEWAL_FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe_IVVD6CuSSkxcIZonYGASs4Lz5KhxXaLon_mXh3vYisDytw/viewform?usp=pp_url";
+
+        const studentIdInput = document.getElementById('studentId');
+        const submitButton = document.getElementById('submitButton');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const failureMessage = document.getElementById('failureMessage');
+        const lookupForm = document.getElementById('lookupForm');
+        const manualButton = document.getElementById('manualButton');
+
+        // Set up the manual button action
+        manualButton.addEventListener('click', () => {
+            window.location.href = RENEWAL_FORM_BASE_URL;
+        });
+
+        // Main form submission handler
+        lookupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const studentId = studentIdInput.value.trim();
+
+            // UI State: Loading
+            submitButton.disabled = true;
+            studentIdInput.disabled = true;
+            failureMessage.style.display = 'none';
+            loadingMessage.style.display = 'flex';
+            
+            // 1. Construct the API URL: API_ENDPOINT + ?id=A001
+            const apiUrlWithParam = `${API_ENDPOINT}?id=${encodeURIComponent(studentId)}`;
+
+            // 2. Call the Google Apps Script API
+            fetch(apiUrlWithParam)
+                .then(response => {
+                    if (!response.ok) {
+                        // Handle HTTP errors (e.g., 404, 500)
+                        throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.text(); // Get the response as plain text
+                })
+                .then(finalUrlText => {
+                    // UI State: Stop Loading
+                    loadingMessage.style.display = 'none';
+
+                    if (finalUrlText === "ID_NOT_FOUND") {
+                        // 3. API returned the error code
+                        failureMessage.style.display = 'block';
+                        studentIdInput.focus();
+                    } else if (finalUrlText.startsWith('http')) {
+                        // 4. API returned the success URL
+                        window.location.href = finalUrlText; // Redirect the user
+                    } else {
+                        // Handle unexpected response (e.g., internal script error message)
+                        alert("An unexpected error occurred. Please check the console for details.");
+                        console.error('API Response was unexpected:', finalUrlText);
+                    }
+                })
+                .catch(error => {
+                    // UI State: Crash/Network Error
+                    loadingMessage.style.display = 'none';
+                    alert("A critical error occurred while contacting the server. Please try again.");
+                    console.error('Fetch operation failed:', error);
+                })
+                .finally(() => {
+                    // Always re-enable controls on non-success paths
+                    if (window.location.href === window.location.origin + window.location.pathname) {
+                        submitButton.disabled = false;
+                        studentIdInput.disabled = false;
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
