@@ -138,7 +138,7 @@
 
         <form id="lookupForm">
             <label for="studentId" style="display: block; text-align: left; font-weight: bold;">Student ID:</label>
-            <input type="text" id="studentId" name="studentId" required placeholder="e.g., A0001" autocomplete="off">
+            <input type="text" id="studentId" name="studentId" required placeholder="e.g., A001" autocomplete="off">
             <button type="submit" id="submitButton">Continue to Renewal Form</button>
         </form>
 
@@ -149,7 +149,8 @@
 
         <div id="failureMessage">
             <p><strong>Database Error: ID Not Found.</strong></p>
-            <p>The Student ID you entered could not be found in our database.</p>
+            <p>The Student ID you entered could not be found in our database.</p><br>
+            <p>This API is Designed & Owned by BAHA Interactive</p>
             
             <p style="margin-top: 10px;">Please contact us if you believe this is an error:</p>
             <a href="https://www.soumenyoga.in" target="_blank" style="display: block; margin-bottom: 15px;">www.soumenyoga.in</a>
@@ -219,9 +220,9 @@
                     }
                 })
                 .catch(error => {
-                    // UI State: Crash/Network Error (This happens when running locally!)
+                    // UI State: Crash/Network Error 
                     loadingMessage.style.display = 'none';
-                    alert("A critical error occurred while contacting the server. Please try again. (If running locally, deploy to a web server first.)");
+                    alert("A critical error occurred while contacting the server. Please try again. (If you are running this locally, please use the live GitHub Pages link instead.)");
                     console.error('Fetch operation failed:', error);
                 })
                 .finally(() => {
