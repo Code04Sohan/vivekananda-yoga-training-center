@@ -1129,3 +1129,145 @@ img { display: block; max-width: 100%; }
         padding-bottom: 8px;
     }
 }
+
+/* =========================================
+   15. Renew Page Stype
+   ========================================= */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background-color: #f4f4f4;
+    margin: 0;
+    /* Flexbox for centering content on any screen size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 400px;
+    width: 100%; /* Ensures it fills the screen on mobile */
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 { 
+    color: #38761d; 
+    font-size: 1.8em; 
+    margin-bottom: 5px;
+}
+
+p {
+    color: #555;
+    margin-bottom: 25px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 15px 0;
+    box-sizing: border-box; /* Ensures padding doesn't increase total width */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+button {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    display: block;
+    width: 100%; /* Full width touch target */
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+#submitButton { 
+    background-color: #38761d; 
+    color: white; 
+}
+
+#submitButton:hover:enabled { 
+    background-color: #275213; 
+}
+
+#manualButton { 
+    background-color: #007bff; 
+    color: white; 
+    margin-top: 5px;
+}
+
+#manualButton:hover {
+    background-color: #0056b3;
+}
+
+/* --- LOADING ANIMATION --- */
+#loadingMessage { 
+    color: #38761d; 
+    margin-top: 15px; 
+    display: none; 
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    height: 40px; 
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #38761d;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- FAILURE MESSAGE STYLES --- */
+#failureMessage { 
+    border: 1px solid #dc3545; 
+    padding: 15px; 
+    background-color: #f8d7da; 
+    color: #721c24; 
+    border-radius: 5px; 
+    margin-top: 25px; 
+    display: none; 
+    text-align: left;
+}
+
+#failureMessage p {
+    margin: 5px 0;
+    color: #721c24;
+}
+
+#failureMessage a {
+    color: #721c24; 
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* --- RESPONSIVE ADJUSTMENTS (Mobile-specific fixes) --- */
+@media (max-width: 600px) {
+    .container {
+        margin: 0 10px; /* Adds space on the sides for very small screens */
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.6em;
+    }
+
+    button {
+        padding: 15px;
+    }
+}
