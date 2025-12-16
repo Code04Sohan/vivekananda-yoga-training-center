@@ -3,110 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student ID search engine</title>
+    <title>Vivekananda Yoga Training Center</title>
+    <link rel="icon" type="image/png" href="resources/logo.jpg">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Student ID search engine</h1>
-        <p>Please enter your unique Student ID to continue.</p>
-        <p>This API is designed & owned by BAHA Interactive</p>
-
-        <form id="lookupForm">
-            <label for="studentId" style="display: block; text-align: left; font-weight: bold;">Student ID:</label>
-            <input type="text" id="studentId" name="studentId" required placeholder="e.g., A001" autocomplete="off">
-            <button type="submit" id="submitButton">Search & Renewal</button>
-        </form>
-
-        <div id="loadingMessage">
-            <div class="spinner"></div>
-            <span>Looking up ID... Please wait.</span>
+    <nav class="navbar">
+        <div class="brand">
+            <img src="resources/logo.jpg" alt="Vivekananda Logo" class="brand-logo">
+            <div class="brand-text">
+                <h2>VIVEKANANDA YOGA TRAINING CENTER</h2>
+                <p>Purba Medinipur • West Bengal • India</p>
+            </div>
         </div>
+    </nav>
+    <!-- 2. Back Button -->
+    <div class="back-container">
+        <a href="index.html" class="back-btn">
+            <i class="fas fa-chevron-left"></i> Back to Home
+        </a>
+    </div>    
 
-        <div id="failureMessage">
-            <p><strong>Database Error: ID Not Found.</strong></p>
-            <p>The Student ID you entered could not be found in our database.</p><br>
-            
-            <p style="margin-top: 10px;">Please contact us if you believe this is an error:</p>
-            <a href="https://www.soumenyoga.in" target="_blank" style="display: block; margin-bottom: 15px;">www.soumenyoga.in</a>
-            
-            <p>Alternatively, you may:</p>
-            <button id="manualButton" type="button">Continue with Manual Fill-up</button>
-        </div>
+    <div class="renewal-page-wrapper">
+        
+        <div class="container renewal-lookup">
+            <h1>Course Renewal Portal </h1>
+            <p>Please enter your unique Student ID to continue.</p>
+
+            <form id="lookupForm">
+                <label for="studentId" style="display: block; text-align: left; font-weight: bold;">Enter Your Student ID:</label>
+                <input type="text" id="studentId" name="studentId" required placeholder="e.g., A001" autocomplete="off">
+                <button type="submit" id="submitButton">Search & Renewal</button>
+            </form>
+            <p>______________</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted);">This Search API engine is designed & owned by BAHA Interactive</p>
+
+            <div id="loadingMessage">
+                <div class="spinner"></div>
+                <span>Looking up ID... Please wait.</span>
+            </div>
+
+            <div id="failureMessage">
+                <p><strong>Database Error: ID Not Found.</strong></p>
+                <p>The Student ID you entered could not be found in our database.</p><br>
+                
+                <p style="margin-top: 10px;">Please contact us if you believe this is an error:</p>
+                <a href="https://www.soumenyoga.in" target="_blank" style="display: block; margin-bottom: 15px;">www.soumenyoga.in</a>
+                
+                <p>Alternatively, you may:</p>
+                <button id="manualButton" type="button">Continue with Manual Fill-up</button>
+            </div>
+        </div>      
+    </div>
+    <div class="ba-credits">
+    <a href="https://code04sohan.github.io/cv/" target="_blank">Developed and Deployed by<div class="ba-credits-logo">BAHA Interactive</div></a>
+    <p class="copyright-text">
+        &copy; <span id="current-year"></span> Vivekananda Yoga Training Center. All Rights Reserved. | Domain registered via GoDaddy (2025-2027) & Owned by BAHA Interactive.<br>______________<br>
+    </p>
     </div>
 
-    <!--Script part-->
-    <script>
-        //Rewnew Page logic 
-        // CRITICAL: FINAL, WORKING GOOGLE APPS SCRIPT API ENDPOINT
-        const API_ENDPOINT = "https://script.google.com/macros/s/AKfycbxfjqvZHGq9B30JQziq37Q_afwrJ6AV-1ScbHfgbUWHpdqTEsVOpopcLC_HdiDYmQtLEw/exec";
-
-        // NOTE: This URL must match the RENEWAL_FORM_URL_BASE in your Code.gs
-        const RENEWAL_FORM_BASE_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe_IVVD6CuSSkxcIZonYGASs4Lz5KhxXaLon_mXh3vYisDytw/viewform?usp=header";
-
-        const studentIdInput = document.getElementById('studentId');
-        const submitButton = document.getElementById('submitButton');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const failureMessage = document.getElementById('failureMessage');
-        const lookupForm = document.getElementById('lookupForm');
-        const manualButton = document.getElementById('manualButton');
-
-        // Set up the manual button action
-        manualButton.addEventListener('click', () => {
-            window.location.href = RENEWAL_FORM_BASE_URL;
-        });
-
-        // Main form submission handler
-        lookupForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const studentId = studentIdInput.value.trim();
-
-            // UI State: Loading
-            submitButton.disabled = true;
-            studentIdInput.disabled = true;
-            failureMessage.style.display = 'none';
-            loadingMessage.style.display = 'flex';
-
-            // 1. Construct the API URL
-            const apiUrlWithParam = `${API_ENDPOINT}?id=${encodeURIComponent(studentId)}`;
-
-            // 2. Call the Google Apps Script API
-            fetch(apiUrlWithParam)
-                .then(response => {
-                    if (!response.ok) {
-                        // Handle HTTP errors (e.g., 404, 500)
-                        throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
-                    }
-                    return response.text(); // Get the response as plain text
-                })
-                .then(finalUrlText => {
-                    // UI State: Stop Loading
-                    loadingMessage.style.display = 'none';
-
-                    if (finalUrlText === "ID_NOT_FOUND") {
-                        // 3. API returned the error code
-                        failureMessage.style.display = 'block';
-                        studentIdInput.focus();
-                    } else if (finalUrlText.startsWith('http')) {
-                        // 4. API returned the success URL
-                        window.location.href = finalUrlText; // Redirect the user
-                    } else {
-                        // Handle unexpected response (e.g., internal script error message)
-                        alert("An unexpected error occurred. Please check the console for details.");
-                        console.error('API Response was unexpected:', finalUrlText);
-                    }
-                })
-                .catch(error => {
-                    // UI State: Crash/Network Error 
-                    loadingMessage.style.display = 'none';
-                    alert("A critical error occurred while contacting the server. Please try again. (If you are running this locally, please use the live GitHub Pages link instead.)");
-                    console.error('Fetch operation failed:', error);
-                })
-                .finally(() => {
-                    // Always re-enable controls on non-success paths
-                    submitButton.disabled = false;
-                    studentIdInput.disabled = false;
-                });
-        });
-    </script>
+    <script src="student_search_API.js"></script>
 </body>
 </html>

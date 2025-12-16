@@ -46,6 +46,19 @@ img { display: block; max-width: 100%; }
 /* =========================================
    2. CLEAN NAVBAR WITH NAV BUTTONS
    ========================================= */
+.seo-hidden {
+    /* Critical for hiding the element completely from view */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px; /* Correctly hide margins */
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0); 
+    white-space: nowrap;
+    border: 0;
+}
+
 .navbar {
     background: var(--bg-card);
     padding: 12px 5%;
@@ -1128,4 +1141,166 @@ img { display: block; max-width: 100%; }
         border-bottom: 1px dashed #eee;
         padding-bottom: 8px;
     }
+}
+
+
+/* =========================================
+   15. RENEWAL ID LOOKUP PAGE STYLES (New Section)
+   ========================================= */
+
+/* --- BASE STYLES for the Centered Container --- */
+.container.renewal-lookup {
+    /* Overrides the global body padding/margins for centering the lookup box */
+    max-width: 400px;
+    width: 100%;
+    padding: 20px 30px;
+    background: var(--bg-card);
+    border-radius: var(--radius-md); /* Reusing variable from style.css */
+    box-shadow: var(--shadow-soft); /* Reusing variable from style.css */
+    text-align: center;
+    margin: 0 auto; /* Ensures centering within the body structure */
+}
+
+/* Ensure the lookup container is centered vertically and horizontally
+   This applies if the body styles in style.css are more complex than the simple centering used before */
+.renewal-page-wrapper {
+display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px); 
+    padding: 0; 
+    margin-top: 15px;
+}
+
+.container.renewal-lookup h1 { 
+    color: var(--primary); /* Use theme color */
+    font-size: 1.8em; 
+    margin-bottom: 5px;
+    font-weight: 800;
+}
+
+.container.renewal-lookup p {
+    color: var(--text-muted); /* Use theme color */
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.container.renewal-lookup input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 18px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.container.renewal-lookup button {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1em;
+    font-weight: 700;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#submitButton { 
+    background-color: var(--primary); 
+    color: white; 
+    box-shadow: 0 4px 10px rgba(2, 119, 189, 0.3);
+}
+
+#submitButton:hover:enabled { 
+    background-color: var(--primary-dark); 
+    transform: translateY(-1px);
+}
+
+#manualButton { 
+    background-color: var(--text-muted); 
+    color: white; 
+    margin-top: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#manualButton:hover {
+    background-color: #555;
+}
+
+/* --- LOADING ANIMATION --- */
+#loadingMessage { 
+    color: var(--primary); 
+    margin-top: 20px; 
+    display: none; 
+    font-weight: bold;
+    align-items: center;
+    justify-content: center;
+    height: 40px; 
+    font-size: 0.95rem;
+}
+
+.spinner {
+    border: 4px solid rgba(2, 119, 189, 0.2);
+    border-left-color: var(--primary);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* --- FAILURE MESSAGE STYLES --- */
+#failureMessage { 
+    border: 1px solid #ff5252; 
+    padding: 15px; 
+    background-color: #ffebee; 
+    color: #d32f2f; 
+    border-radius: 8px; 
+    margin-top: 25px; 
+    display: none; 
+    text-align: left;
+}
+
+#failureMessage p {
+    margin: 5px 0;
+    color: #d32f2f;
+}
+
+#failureMessage a {
+    color: var(--primary-dark); 
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* --- MOBILE ADJUSTMENTS --- */
+@media (max-width: 600px) {
+    .container.renewal-lookup {
+        margin: 0 10px;
+        padding: 15px 20px;
+    }
+    .container.renewal-lookup h1 {
+        font-size: 1.6em;
+    }
+}
+.spinner {
+    border: 4px solid rgba(2, 119, 189, 0.2);
+    border-left-color: var(--primary); /* Makes the animation visible */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite; /* Applies the rotation */
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }
