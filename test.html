@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initiating Payment...</title>
+    
+    <meta http-equiv="refresh" content="1; url=upi://pay?pa=soumensantra1994-2@okaxis&pn=VIVEKANANDA%20YOGA%20TRAINING%20CENTER&am=250.00&cu=INR&aid=uGICAgIDf_8znTw">
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+        }
+
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #0056b3; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* ----------------------- */
+        /* Text Styling */
+        /* ----------------------- */
+        .status-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        .help-text {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <div class="status-text">Initiating Payment...</div>
+    <div class="help-text">
+        Please wait. You are being redirected to your UPI payment app.
+        <br>
+        <strong> the app does not open, please check if you have a UPI app installed.</strong>
+    </div>
+</body>
+</html>
