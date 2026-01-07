@@ -168,3 +168,33 @@ document.addEventListener('DOMContentLoaded', function() {
             yearSpan.textContent = new Date().getFullYear();
         }
     });
+
+//Exam Portal Functions
+function switchView(viewName) {
+    // 1. Buttons
+    const btnJudge = document.getElementById('btn-judge');
+    const btnMonitor = document.getElementById('btn-monitor');
+
+    // 2. Views
+    const viewJudge = document.getElementById('view-judge');
+    const viewMonitor = document.getElementById('view-monitor');
+
+    if (viewName === 'judge') {
+        // Activate Judge
+        btnJudge.classList.add('active');
+        btnMonitor.classList.remove('active');
+
+        viewJudge.classList.remove('hidden-view');
+        viewMonitor.classList.add('hidden-view');
+    } else {
+        // Activate Monitor
+        btnMonitor.classList.add('active');
+        btnJudge.classList.remove('active');
+
+        viewMonitor.classList.remove('hidden-view');
+        viewJudge.classList.add('hidden-view');
+    }
+}
+
+// Set current year dynamically
+document.getElementById('current-year').textContent = new Date().getFullYear();
