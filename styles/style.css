@@ -1304,3 +1304,81 @@ display: flex;
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* =========================================
+   16. EXAM PORTAL STYLES (Judge App)
+   ========================================= */
+
+/* Wrapper to center the exam box on the screen */
+.exam-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Aligns to top with some padding */
+    min-height: 85vh; /* Takes up most of the screen */
+    padding: 20px;
+    margin-top: 10px;
+}
+
+/* The White Box containing the App */
+.exam-box {
+    width: 100%;
+    max-width: 500px; /* Limits width on PC like a mobile app */
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden; /* Rounds the corners of the iframe */
+    display: flex;
+    flex-direction: column;
+    /* On mobile, we might want it taller */
+    height: 80vh; 
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+/* Optional Text Header inside the box */
+.exam-header {
+    text-align: center;
+    padding: 15px;
+    background: #fafafa;
+    border-bottom: 1px solid #eee;
+}
+
+.exam-header h1 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin: 0;
+}
+
+.exam-header p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* The container that holds the actual Iframe */
+.iframe-holder {
+    flex: 1; /* Fills remaining height of the box */
+    width: 100%;
+    position: relative;
+    background: #fff;
+}
+
+.iframe-holder iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* --- Mobile Specific Tweaks --- */
+@media (max-width: 600px) {
+    .exam-page-wrapper {
+        padding: 10px; /* Less padding on phone */
+        margin-top: 0;
+        min-height: calc(100vh - 140px); /* Adjust for navbar/footer */
+    }
+    
+    .exam-box {
+        max-width: 100%;
+        height: 75vh; /* Give enough room for the keypad to open */
+    }
+}
