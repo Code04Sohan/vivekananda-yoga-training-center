@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purba Medinipur Yoga Competition 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #df8611;      
+            --primary-dark: #d1820b;
+            --text-dark: #1a1a1a;
+            --error: #e74c3c;
+            --success: #27ae60;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #333; /* Fallback color */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* --- UPDATED CONTAINER: TRANSPARENT --- */
+        .container {
+            /* Very low opacity white (Glass effect) */
+            background: rgba(255, 255, 255, 0.15); 
+            
+            /* Blur the background image slightly behind the container */
+            backdrop-filter: blur(8px);           
+            -webkit-backdrop-filter: blur(8px);   
+            
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            
+            /* Subtle white border to define edges */
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            /* Header also semi-transparent to match */
+            background: linear-gradient(135deg, rgba(222, 129, 9, 0.9), rgba(166, 30, 97, 0.9));
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        /* --- LOGO: CROP TO CIRCLE (FIXED) --- */
+        .logo-container {
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 15px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid white;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        #orgLogo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Ensures square image fills circle */
+            object-position: center;
+            display: block;
+        }
+
+        .header h2 { margin: 5px 0 5px 0; font-weight: 600; font-size: 1.4rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .header p { margin: 0; font-size: 0.9rem; opacity: 0.95; }
+
+        .form-body { padding: 30px; }
+        .form-group { margin-bottom: 18px; }
+        
+        /* Labels: Dark and bold for visibility on glass */
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            font-size: 0.95rem; 
+            color: #222; 
+            text-shadow: 0 0 10px rgba(255,255,255,0.8); /* Glow to separate from bg */
+        }
+
+        /* --- UPDATED INPUTS: SOLID WHITE --- */
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            font-family: inherit;
+            
+            /* SOLID WHITE BACKGROUND */
+            background: #ffffff; 
+            border: 2px solid transparent;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Lifted effect */
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.3);
+        }
+
+        input[readonly] {
+            background-color: #e9ecef; /* Light gray for read-only */
+            color: #555;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { background: #777; cursor: not-allowed; transform: none; }
+
+        .loader {
+            display: none;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #successView { display: none; text-align: center; padding: 50px 30px; background: rgba(255,255,255,0.9); }
+        
+        .sl-card {
+            background: #fff;
+            border: 2px dashed var(--success);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        #errorMsg {
+            background: #ffe6e6;
+            color: var(--error);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            border-left: 5px solid var(--error);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header">
+        <div class="logo-container">
+            <img id="orgLogo" src="" alt="Logo">
+        </div>
+        <h2>Yoga Competition 2026 (Purba Medinipur)</h2>
+        <p>Registration</p>
+    </div>
+
+    <div class="form-body" id="formView">
+        <div id="errorMsg"></div>
+        <form id="yogaForm">
+            
+            <div class="form-group">
+                <label>👤 Name of the Candidate</label>
+                <input type="text" name="name" required placeholder="Full Name">
+            </div>
+
+            <div class="form-group">
+                <label>⚧ Sex</label>
+                <select name="sex" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>📅 Date of Birth</label>
+                <input type="date" name="dob" id="dobField" required>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>🔴 Age</label>
+                    <input type="number" name="age" id="ageField" readonly placeholder="Auto">
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label>🔴 Group</label>
+                    <input type="text" name="group" id="groupField" readonly placeholder="Auto-Select">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>👕 T-Shirt Size (No.)</label>
+                <input type="number" name="tshirt" required placeholder="e.g. 32">
+            </div>
+
+            <div class="form-group">
+                <label>🔴 Coach Name</label>
+                <input type="text" name="coach" required>
+            </div>
+
+            <div class="form-group">
+                <label>📍 Center Name</label>
+                <input type="text" name="center" required>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn">
+                <span id="btnText">Submit Registration</span>
+                <div class="loader" id="btnLoader"></div>
+            </button>
+        </form>
+    </div>
+
+    <div id="successView">
+        <h2 style="color: #333;">Namaste!</h2>
+        <p style="color: #666;">Registration completed successfully.</p>
+        <div class="sl-card" id="slDisplay">SL NO: #00</div>
+        <button class="btn" onclick="resetForm()" style="background: #6c757d;">Register Another</button>
+    </div>
+</div>
+
+<script>
+    // =========================================================
+    // 1. CONFIGURATION (EDIT THIS SECTION)
+    // =========================================================
+    
+    const CONFIG = {
+        // 🔴 PASTE YOUR WEB APP URL HERE
+        scriptUrl: "https://script.google.com/macros/s/AKfycbwVOSKuYX6bUkN_ikRU43z7peYNMPn2mTq-rkrYaw-KSw-Twf7CXowitnMl5lvhGCuI/exec", 
+
+        // 🖼️ PASTE BACKGROUND IMAGE LINK
+        backgroundImage: "resources/yoga_background.jpg",
+
+        // 🛡️ PASTE LOGO LINK
+        logoImage: "resources/yoga_logo.png", 
+
+        // 👥 AGE GROUPS
+        ageGroups: [
+            { name: "Group A (Kids)",   min: 0,  max: 8 },
+            { name: "Group B (Junior)", min: 9,  max: 14 },
+            { name: "Group C (Senior)", min: 15, max: 25 },
+            { name: "Group D (Super)",  min: 26, max: 99 }
+        ]
+    };
+
+    // =========================================================
+    // 2. LOGIC (NO EDITING NEEDED)
+    // =========================================================
+
+    // Apply Config
+    document.body.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
+    document.getElementById('orgLogo').src = CONFIG.logoImage;
+
+    const form = document.getElementById('yogaForm');
+    const formView = document.getElementById('formView');
+    const successView = document.getElementById('successView');
+    const dobField = document.getElementById('dobField');
+    const ageField = document.getElementById('ageField');
+    const groupField = document.getElementById('groupField');
+    const errorMsg = document.getElementById('errorMsg');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const btnLoader = document.getElementById('btnLoader');
+    const slDisplay = document.getElementById('slDisplay');
+
+    // Age Calculation
+    dobField.addEventListener('change', function() {
+        errorMsg.style.display = 'none';
+        const dobDate = new Date(this.value);
+        const today = new Date();
+        if(!this.value) return;
+
+        let age = today.getFullYear() - dobDate.getFullYear();
+        if (today.getMonth() < dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() < dobDate.getDate())) {
+            age--;
+        }
+
+        if (age < 0) {
+            alert("Invalid Date: Future date selected.");
+            this.value = "";
+            return;
+        }
+
+        ageField.value = age;
+        
+        let group = "No Group Found";
+        let found = false;
+        CONFIG.ageGroups.forEach(g => {
+            if(age >= g.min && age <= g.max) {
+                group = g.name;
+                found = true;
+            }
+        });
+
+        groupField.value = group;
+        groupField.style.color = found ? "#333" : "var(--error)";
+    });
+
+    // Submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        errorMsg.style.display = 'none';
+
+        if(groupField.value.includes("No Group")) {
+            errorMsg.textContent = "⚠ Cannot submit: Age not in any group.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        submitBtn.disabled = true;
+        btnText.style.display = 'none';
+        btnLoader.style.display = 'block';
+
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => data[key] = value);
+
+        fetch(CONFIG.scriptUrl, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            if(result.result === 'success') {
+                formView.style.display = 'none';
+                successView.style.display = 'block';
+                slDisplay.textContent = "SL NO: " + result.sl;
+                window.scrollTo({top:0, behavior:'smooth'});
+            } else {
+                throw new Error(result.error);
+            }
+        })
+        .catch(err => {
+            errorMsg.textContent = "⚠ Error: " + err.message;
+            errorMsg.style.display = 'block';
+            window.scrollTo({top:0, behavior:'smooth'});
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            btnText.style.display = 'block';
+            btnLoader.style.display = 'none';
+        });
+    });
+
+    window.resetForm = function() {
+        form.reset();
+        ageField.value = "";
+        groupField.value = "";
+        formView.style.display = 'block';
+        successView.style.display = 'none';
+    };
+</script>
+
+</body>
+</html>
