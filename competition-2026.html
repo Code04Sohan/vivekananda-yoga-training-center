@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Purba Medinipur Yoga Competition 2026</title>
+    <title>UCMAYPSF Purba Medinipur District Chapter- 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary: #df8611;      
-            --primary-dark: #d1820b;
-            --text-dark: #1a1a1a;
+            --primary: #e37e19;      
+            --primary-dark: #ff613d;
+            --text-dark: #212121;
             --error: #e74c3c;
             --success: #27ae60;
         }
@@ -24,43 +24,34 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #333; /* Fallback color */
+            background-color: #333;
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
         }
 
-        /* --- UPDATED CONTAINER: TRANSPARENT --- */
         .container {
-            /* Very low opacity white (Glass effect) */
             background: rgba(255, 255, 255, 0.15); 
-            
-            /* Blur the background image slightly behind the container */
             backdrop-filter: blur(8px);           
             -webkit-backdrop-filter: blur(8px);   
-            
             width: 100%;
             max-width: 500px;
             border-radius: 20px;
-            
-            /* Subtle white border to define edges */
             border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            
             overflow: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
-            /* Header also semi-transparent to match */
-            background: linear-gradient(135deg, rgba(222, 129, 9, 0.9), rgba(166, 30, 97, 0.9));
+            background: linear-gradient(135deg, rgba(243, 151, 66, 0.9), rgba(237, 113, 12, 0.9));
             padding: 30px 20px;
             text-align: center;
             color: white;
-            position: relative;
         }
 
-        /* --- LOGO: CROP TO CIRCLE (FIXED) --- */
         .logo-container {
             width: 110px;
             height: 110px;
@@ -75,28 +66,26 @@
         #orgLogo {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Ensures square image fills circle */
+            object-fit: cover; 
             object-position: center;
             display: block;
         }
 
-        .header h2 { margin: 5px 0 5px 0; font-weight: 600; font-size: 1.4rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .header h2 { margin: 5px 0 5px 0; font-weight: 600; font-size: 1.2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.3); line-height: 1.4; }
         .header p { margin: 0; font-size: 0.9rem; opacity: 0.95; }
 
-        .form-body { padding: 30px; }
+        .form-body { padding: 30px; flex-grow: 1; }
         .form-group { margin-bottom: 18px; }
         
-        /* Labels: Dark and bold for visibility on glass */
         label { 
             display: block; 
             margin-bottom: 8px; 
             font-weight: 600; 
             font-size: 0.95rem; 
             color: #222; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.8); /* Glow to separate from bg */
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
-        /* --- UPDATED INPUTS: SOLID WHITE --- */
         input, select {
             width: 100%;
             padding: 12px 15px;
@@ -104,11 +93,9 @@
             font-size: 1rem;
             box-sizing: border-box;
             font-family: inherit;
-            
-            /* SOLID WHITE BACKGROUND */
             background: #ffffff; 
             border: 2px solid transparent;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Lifted effect */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
 
@@ -118,12 +105,7 @@
             box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.3);
         }
 
-        input[readonly] {
-            background-color: #e9ecef; /* Light gray for read-only */
-            color: #555;
-            cursor: default;
-            box-shadow: none;
-        }
+        input[readonly] { background-color: #e9ecef; color: #555; cursor: default; }
 
         .btn {
             width: 100%;
@@ -140,7 +122,7 @@
             transition: transform 0.2s;
         }
         .btn:hover { transform: translateY(-2px); }
-        .btn:disabled { background: #777; cursor: not-allowed; transform: none; }
+        .btn:disabled { background: #777; cursor: not-allowed; }
 
         .loader {
             display: none;
@@ -154,19 +136,31 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #successView { display: none; text-align: center; padding: 50px 30px; background: rgba(255,255,255,0.9); }
+        /* SUCCESS PAGE STYLES */
+        #successView { display: none; text-align: center; padding: 40px 20px; background: rgba(255,255,255,0.95); flex-grow: 1; }
         
         .sl-card {
-            background: #fff;
+            background: #e8f8f0;
             border: 2px dashed var(--success);
             padding: 15px;
             border-radius: 10px;
             margin: 20px 0;
             color: var(--success);
             font-weight: bold;
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
+
+        .map-container {
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #ddd;
+            height: 300px;
+            width: 100%;
+        }
+
+        iframe { width: 100%; height: 100%; border: 0; }
         
         #errorMsg {
             background: #ffe6e6;
@@ -178,6 +172,25 @@
             border-left: 5px solid var(--error);
             font-weight: 500;
         }
+
+        /* --- FOOTER CREDIT SECTION --- */
+        .footer-credit {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #444;
+            padding: 15px;
+            background: rgba(255,255,255,0.6);
+            border-top: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer-credit a {
+            color: var(--primary-dark);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .footer-credit a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -188,8 +201,8 @@
         <div class="logo-container">
             <img id="orgLogo" src="" alt="Logo">
         </div>
-        <h2>Yoga Competition 2026 (Purba Medinipur)</h2>
-        <p>Registration</p>
+        <h2>UCMAYPSF Purba Medinipur District Chapter- 2026</h2>
+        <p>Participant Registration</p>
     </div>
 
     <div class="form-body" id="formView">
@@ -197,7 +210,7 @@
         <form id="yogaForm">
             
             <div class="form-group">
-                <label>👤 Name of the Candidate</label>
+                <label>👤 Name of the Athlete</label>
                 <input type="text" name="name" required placeholder="Full Name">
             </div>
 
@@ -217,11 +230,11 @@
 
             <div style="display: flex; gap: 15px;">
                 <div class="form-group" style="flex: 1;">
-                    <label>🔴 Age</label>
+                    <label>👤 Age</label>
                     <input type="number" name="age" id="ageField" readonly placeholder="Auto">
                 </div>
                 <div class="form-group" style="flex: 2;">
-                    <label>🔴 Group</label>
+                    <label>🏆 Group</label>
                     <input type="text" name="group" id="groupField" readonly placeholder="Auto-Select">
                 </div>
             </div>
@@ -232,7 +245,7 @@
             </div>
 
             <div class="form-group">
-                <label>🔴 Coach Name</label>
+                <label>👤 Coach Name</label>
                 <input type="text" name="coach" required>
             </div>
 
@@ -249,42 +262,97 @@
     </div>
 
     <div id="successView">
-        <h2 style="color: #333;">Namaste!</h2>
-        <p style="color: #666;">Registration completed successfully.</p>
-        <div class="sl-card" id="slDisplay">SL NO: #00</div>
-        <button class="btn" onclick="resetForm()" style="background: #6c757d;">Register Another</button>
+        <h2 style="color: #27ae60; margin-bottom: 5px;">Namaste!</h2>
+        <p style="color: #555;">Registration completed successfully.</p>
+        
+        <div class="sl-card">
+            <div style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">CANDIDATE ID</div>
+            <span id="slDisplay">...</span>
+        </div>
+        
+        <p style="font-size: 0.9rem; font-weight: 600; color: #333; margin-top: 20px;">Competition Location</p>
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3379.319321886972!2d87.91926331035725!3d22.28654294331025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02946fbd2b3e3d%3A0xb9ad312fba8b407d!2sRajkumari%20Santanamoyee%20Girls'%20High%20School!5e1!3m2!1sen!2sin!4v1769878062861!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <button class="btn" onclick="resetForm()" style="background: #34495e; margin-top: 25px;">Register Another</button>
     </div>
+
+    <div class="footer-credit">
+        Technical Service fulfilled by <a href="https://code04sohan.github.io/cv/" target="_blank">BAHA Interactive</a>.<br>
+        Contact for support or digital services.
+    </div>
+
 </div>
 
 <script>
     // =========================================================
-    // 1. CONFIGURATION (EDIT THIS SECTION)
+    // 1. CONFIGURATION
     // =========================================================
     
     const CONFIG = {
         // 🔴 PASTE YOUR WEB APP URL HERE
         scriptUrl: "https://script.google.com/macros/s/AKfycbwVOSKuYX6bUkN_ikRU43z7peYNMPn2mTq-rkrYaw-KSw-Twf7CXowitnMl5lvhGCuI/exec", 
+        
+        backgroundImage: "resources/yoga_background.png",
+        logoImage: "resources/yoga_dp.jpeg", 
 
-        // 🖼️ PASTE BACKGROUND IMAGE LINK
-        backgroundImage: "resources/yoga_background.jpg",
-
-        // 🛡️ PASTE LOGO LINK
-        logoImage: "resources/yoga_logo.png", 
-
-        // 👥 AGE GROUPS
+        // 🟢 DETAILED AGE GROUPS
         ageGroups: [
-            { name: "Group A (Kids)",   min: 0,  max: 8 },
-            { name: "Group B (Junior)", min: 9,  max: 14 },
-            { name: "Group C (Senior)", min: 15, max: 25 },
-            { name: "Group D (Super)",  min: 26, max: 99 }
+            // 1. Euro Kids (Below 7) -> Code: EK
+            { min: 0,  max: 5,  name: "Euro Kids (Upto 5 Years)", code: "EK" },
+            { min: 6,  max: 7,  name: "Euro Kids (6-7 Years)",    code: "EK" },
+
+            // 2. Sub Junior (8-13) -> Code: SJ
+            { min: 8,  max: 9,  name: "Sub Junior (8-9 Years)",   code: "SJ" },
+            { min: 10, max: 11, name: "Sub Junior (10-11 Years)", code: "SJ" },
+            { min: 12, max: 13, name: "Sub Junior (12-13 Years)", code: "SJ" },
+
+            // 3. Junior (14-20) -> Code: JR
+            { min: 14, max: 15, name: "Junior (14-15 Years)",     code: "JR" },
+            { min: 16, max: 17, name: "Junior (16-17 Years)",     code: "JR" },
+            { min: 18, max: 20, name: "Junior (18-20 Years)",     code: "JR" },
+
+            // 4. Senior (21-40) -> Code: SN
+            { min: 21, max: 22, name: "Senior (21-22 Years)",     code: "SN" },
+            { min: 23, max: 24, name: "Senior (23-24 Years)",     code: "SN" },
+            { min: 25, max: 26, name: "Senior (25-26 Years)",     code: "SN" },
+            { min: 27, max: 28, name: "Senior (27-28 Years)",     code: "SN" },
+            { min: 29, max: 30, name: "Senior (29-30 Years)",     code: "SN" },
+            { min: 31, max: 32, name: "Senior (31-32 Years)",     code: "SN" },
+            { min: 33, max: 34, name: "Senior (33-34 Years)",     code: "SN" },
+            { min: 35, max: 36, name: "Senior (35-36 Years)",     code: "SN" },
+            { min: 37, max: 38, name: "Senior (37-38 Years)",     code: "SN" },
+            { min: 39, max: 40, name: "Senior (39-40 Years)",     code: "SN" },
+
+            // 5. Masters (41-60) -> Code: MS
+            { min: 41, max: 42, name: "Masters (41-42 Years)",    code: "MS" },
+            { min: 43, max: 44, name: "Masters (43-44 Years)",    code: "MS" },
+            { min: 45, max: 46, name: "Masters (45-46 Years)",    code: "MS" },
+            { min: 47, max: 48, name: "Masters (47-48 Years)",    code: "MS" },
+            { min: 49, max: 50, name: "Masters (49-50 Years)",    code: "MS" },
+            { min: 51, max: 52, name: "Masters (51-52 Years)",    code: "MS" },
+            { min: 53, max: 54, name: "Masters (53-54 Years)",    code: "MS" },
+            { min: 55, max: 56, name: "Masters (55-56 Years)",    code: "MS" },
+            { min: 57, max: 58, name: "Masters (57-58 Years)",    code: "MS" },
+            { min: 59, max: 60, name: "Masters (59-60 Years)",    code: "MS" },
+
+            // 6. Veterans (61+) -> Code: VT
+            { min: 61, max: 62, name: "Veterans (61-62 Years)",   code: "VT" },
+            { min: 63, max: 64, name: "Veterans (63-64 Years)",   code: "VT" },
+            { min: 65, max: 66, name: "Veterans (65-66 Years)",   code: "VT" },
+            { min: 67, max: 68, name: "Veterans (67-68 Years)",   code: "VT" },
+            { min: 69, max: 70, name: "Veterans (69-70 Years)",   code: "VT" },
+            { min: 71, max: 74, name: "Veterans (71-74 Years)",   code: "VT" },
+            { min: 75, max: 80, name: "Veterans (75-80 Years)",   code: "VT" },
+            { min: 81, max: 150, name: "Veterans (Above 81 Years)", code: "VT" }
         ]
     };
 
     // =========================================================
-    // 2. LOGIC (NO EDITING NEEDED)
+    // 2. LOGIC
     // =========================================================
 
-    // Apply Config
     document.body.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
     document.getElementById('orgLogo').src = CONFIG.logoImage;
 
@@ -300,7 +368,9 @@
     const btnLoader = document.getElementById('btnLoader');
     const slDisplay = document.getElementById('slDisplay');
 
-    // Age Calculation
+    let currentGroupCode = "";
+
+    // Age Calculation & Group Matching
     dobField.addEventListener('change', function() {
         errorMsg.style.display = 'none';
         const dobDate = new Date(this.value);
@@ -320,25 +390,30 @@
 
         ageField.value = age;
         
-        let group = "No Group Found";
+        let groupName = "No Group Found";
         let found = false;
+        
+        // Loop through detailed configuration
         CONFIG.ageGroups.forEach(g => {
             if(age >= g.min && age <= g.max) {
-                group = g.name;
+                groupName = g.name;
+                currentGroupCode = g.code; 
                 found = true;
             }
         });
 
-        groupField.value = group;
+        if(!found) currentGroupCode = "";
+
+        groupField.value = groupName;
         groupField.style.color = found ? "#333" : "var(--error)";
     });
 
-    // Submission
+    // Submission Logic
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         errorMsg.style.display = 'none';
 
-        if(groupField.value.includes("No Group")) {
+        if(groupField.value.includes("No Group") || currentGroupCode === "") {
             errorMsg.textContent = "⚠ Cannot submit: Age not in any group.";
             errorMsg.style.display = 'block';
             return;
@@ -351,6 +426,8 @@
         const formData = new FormData(form);
         const data = {};
         formData.forEach((value, key) => data[key] = value);
+        
+        data.groupCode = currentGroupCode;
 
         fetch(CONFIG.scriptUrl, {
             method: 'POST',
@@ -361,7 +438,7 @@
             if(result.result === 'success') {
                 formView.style.display = 'none';
                 successView.style.display = 'block';
-                slDisplay.textContent = "SL NO: " + result.sl;
+                slDisplay.textContent = result.candidateId; 
                 window.scrollTo({top:0, behavior:'smooth'});
             } else {
                 throw new Error(result.error);
@@ -383,6 +460,7 @@
         form.reset();
         ageField.value = "";
         groupField.value = "";
+        currentGroupCode = "";
         formView.style.display = 'block';
         successView.style.display = 'none';
     };
