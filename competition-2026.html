@@ -46,7 +46,7 @@
         }
 
         .header {
-            background: linear-gradient(135deg, rgba(243, 151, 66, 0.9), rgba(237, 113, 12, 0.9));
+            background: linear-gradient(135deg, rgba(247, 142, 51, 0.9), rgba(250, 72, 49, 0.9));
             padding: 30px 20px;
             text-align: center;
             color: white;
@@ -217,7 +217,7 @@
             <div class="form-group">
                 <label>⚧ Sex</label>
                 <select name="sex" required>
-                    <option value="">Select Gender</option>
+                    <option value="" disabled selected hidden>Select Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                 </select>
@@ -241,7 +241,23 @@
 
             <div class="form-group">
                 <label>👕 T-Shirt Size (No.)</label>
-                <input type="number" name="tshirt" required placeholder="e.g. 32">
+                <select name="tshirt" required>
+                    <option value="" disabled selected hidden >Select T-shirt size</option>
+                    <option value="22">22</option>
+                    <option value="24">24</option>
+                    <option value="26">26</option>
+                    <option value="28">28</option>
+                    <option value="30">30</option>
+                    <option value="32">32</option>
+                    <option value="34">34</option>
+                    <option value="36">36</option>
+                    <option value="38">38</option>
+                    <option value="40">40</option>
+                    <option value="42">42</option>
+                    <option value="44">44</option>
+                    <option value="46">46</option>
+                    <option value="48">48</option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -262,11 +278,11 @@
     </div>
 
     <div id="successView">
-        <h2 style="color: #27ae60; margin-bottom: 5px;">Namaste!</h2>
+        <h2 style="color: #27ae60; margin-bottom: 5px;">🙏 Namaste!</h2>
         <p style="color: #555;">Registration completed successfully.</p>
         
         <div class="sl-card">
-            <div style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">CANDIDATE ID</div>
+            <div style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">Your Track No</div>
             <span id="slDisplay">...</span>
         </div>
         
@@ -279,7 +295,7 @@
     </div>
 
     <div class="footer-credit">
-        Technical Service fulfilled by <a href="https://code04sohan.github.io/cv/" target="_blank">BAHA Interactive</a>.<br>
+        Technical Service hosted by <a href="https://www.soumenyoga.in/" target="_blank">soumenyoga.in</a> & fulfilled by <a href="https://code04sohan.github.io/cv/" target="_blank">BAHA Interactive</a>.<br>
         Contact for support or digital services.
     </div>
 
@@ -438,7 +454,7 @@
             if(result.result === 'success') {
                 formView.style.display = 'none';
                 successView.style.display = 'block';
-                slDisplay.textContent = result.candidateId; 
+                slDisplay.textContent = result.trackNo; 
                 window.scrollTo({top:0, behavior:'smooth'});
             } else {
                 throw new Error(result.error);
