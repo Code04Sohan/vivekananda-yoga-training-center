@@ -198,3 +198,30 @@ function switchView(viewName) {
 
 // Set current year dynamically
 document.getElementById('current-year').textContent = new Date().getFullYear();
+
+
+// --- Ad Modal Logic ---
+
+// Function to open the modal manually (e.g., clicking the top banner)
+function openAdModal() {
+    document.getElementById('adModal').style.display = 'flex';
+}
+
+// Function to close the modal
+function closeAdModal() {
+    document.getElementById('adModal').style.display = 'none';
+    // Optional: Save to storage so it doesn't show again in this session
+    sessionStorage.setItem('adSeen', 'true');
+}
+
+// Automatically show the ad when page loads
+window.onload = function() {
+    // 1. Check if user has already seen the ad in this session
+    if (!sessionStorage.getItem('adSeen')) {
+        // 2. Show ad after a small delay (1 second) for better user experience
+        setTimeout(openAdModal, 1000); 
+    }
+    
+    // Note: If you want the ad to show EVERY time they reload, 
+    // remove the 'if' condition and just keep the setTimeout line.
+};

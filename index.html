@@ -48,9 +48,13 @@
         </div>
     </nav>
 
+    <!-- TOP BANNER AD -->
+        <div class="competition-banner" id="topBanner">
+            <span>🔔 <strong>UPCOMING:</strong> UCMAYPSF Purba Medinipur District Chapter- 2026</span>
+            <button class="comp-btn-small" onclick="openAdModal()">View Details</button>
+        </div>
     <!-- 2. Main Content Grid (Video + Trainers) -->
     <div class="main-container">
-        
         <!-- Video Column (Placed first in HTML, so it's top on mobile) -->
         <div class="video-section" id="intro">
             <div class="live-badge-container">
@@ -455,6 +459,24 @@
         <div class="swipe-hint"><i class="fas fa-arrows-alt-h"></i> Swipe to navigate</div>
     </div>
 
+    <!-- FULL SCREEN AD POPUP -->
+    <div id="adModal" class="ad-modal">
+        <div class="ad-content">
+            <span class="close-ad" onclick="closeAdModal()">&times;</span>
+            <!-- Placeholder Image -->
+            <img src="resources\yoga_dp.jpeg"
+                alt="Competition Poster" class="ad-img">
+    
+            <h2 class="ad-title">UCMAYPSF Purba Medinipur District Chapter- 2026</h2>
+            <p class="ad-desc">Contact Soumen Santra (9734444092) for registration</p>
+    
+            <!-- Reusing your existing button style -->
+            <button class="action-btn btn-enroll" style="width:100%; margin: 0 auto;"
+                onclick="window.location.href='https:/wa.me/+919734444092'">
+                Contact Now
+            </button>
+        </div>
+    </div>
     <!-- Script Part-->
     <script src="scripts/script.js"></script>
 
