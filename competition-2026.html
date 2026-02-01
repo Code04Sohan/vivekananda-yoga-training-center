@@ -393,13 +393,12 @@
         const today = new Date();
         if(!this.value) return;
 
+        // Age only calculate from 01-01-currentYear/-
         let age = today.getFullYear() - dobDate.getFullYear();
-        if (today.getMonth() < dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() < dobDate.getDate())) {
-            age--;
-        }
-
+        
+        // Prevent negative age if they select a future year
         if (age < 0) {
-            alert("Invalid Date: Future date selected.");
+            alert("Invalid Date");
             this.value = "";
             return;
         }
