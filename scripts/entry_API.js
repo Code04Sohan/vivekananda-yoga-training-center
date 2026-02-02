@@ -69,7 +69,7 @@ const CONFIG = {
         "Indrajit Das" : "Indra Yoga Centre",
         "Santa Jana" : "Pranaba Nanda Yoga Siksha Kendra",
         "Sukumar Samanta" : "SadhanaYog Swasthya Mandir",
-        "Ruma Chakraborty" : "Chattopadhyay YOGANGAN"
+        "Ruma Chakraborty Chattopadhyay" : "YOGANGAN"
         // Add more lines here: "Coach Name": "Center Name",
     }
 };
