@@ -5,7 +5,7 @@
 const CONFIG = {
     // 🔴 PASTE YOUR WEB APP URL HERE
     scriptUrl: "https://script.google.com/macros/s/AKfycbwVOSKuYX6bUkN_ikRU43z7peYNMPn2mTq-rkrYaw-KSw-Twf7CXowitnMl5lvhGCuI/exec",
-
+    // 🔴 BACKGROUND IMAGE AND LOGO
     backgroundImage: "resources/yoga_background.png",
     logoImage: "resources/yoga_dp.jpeg",
 
@@ -58,7 +58,20 @@ const CONFIG = {
         { min: 71, max: 74, name: "Veterans (71-74 Years)", code: "VT" },
         { min: 75, max: 80, name: "Veterans (75-80 Years)", code: "VT" },
         { min: 81, max: 150, name: "Veterans (Above 81 Years)", code: "VT" }
-    ]
+    ],
+
+    // 🟢 Coach Database
+    coachDatabase: {
+        "SOUMEN SANTRA" : "VIVEKANANDA YOGA TRAINING CENTER",
+        "Nikhil Ghorai" : "Kshudiram Yogabyayam Prashikshan Kendra",
+        "Manasi Rani Mandal Jana " : "Nabankur Yoga Academy",
+        "Sabita paul" : "Joy Guru Yoga Training Center",
+        "Indrajit Das" : "Indra Yoga Centre",
+        "Santa Jana" : "Pranaba Nanda Yoga Siksha Kendra",
+        "Sukumar Samanta" : "SadhanaYog Swasthya Mandir",
+        "Ruma Chakraborty" : "Chattopadhyay YOGANGAN"
+        // Add more lines here: "Coach Name": "Center Name",
+    }
 };
 
 // =========================================================
@@ -147,6 +160,10 @@ form.addEventListener('submit', function (e) {
         .then(res => res.json())
         .then(result => {
             if (result.result === 'success') {
+                lastCoachVal = coachField.value;
+                lastCenterVal = centerField.value;
+                lastCoachNameSpan.textContent = lastCoachVal;
+                btnSameCoach.style.display = "block";
                 formView.style.display = 'none';
                 successView.style.display = 'block';
                 slDisplay.textContent = result.trackNo;
@@ -175,3 +192,55 @@ window.resetForm = function () {
     formView.style.display = 'block';
     successView.style.display = 'none';
 };
+
+
+// --- 1. POPULATE COACH LIST ON LOAD ---
+    const coachList = document.getElementById('coachList');
+    const coachField = document.getElementById('coachField');
+    const centerField = document.getElementById('centerField');
+    const btnSameCoach = document.getElementById('btnSameCoach');
+    const lastCoachNameSpan = document.getElementById('lastCoachName');
+    
+    // Store the last used details
+    let lastCoachVal = "";
+    let lastCenterVal = "";
+
+    // Fill the dropdown menu from Config
+    Object.keys(CONFIG.coachDatabase).forEach(coach => {
+        let option = document.createElement('option');
+        option.value = coach;
+        coachList.appendChild(option);
+    });
+
+    // --- 2. AUTO-FILL CENTER & VALIDATION ---
+    window.autoFillCenter = function() {
+        const selectedCoach = coachField.value;
+        const mappedCenter = CONFIG.coachDatabase[selectedCoach];
+
+        if (mappedCenter) {
+            // If coach exists in database, fill center and clear error
+            centerField.value = mappedCenter;
+            centerField.style.borderColor = "green"; // Visual cue
+            errorMsg.style.display = 'none';
+        } else {
+            // If typed name is NOT in database
+            centerField.value = ""; 
+            if(selectedCoach.length > 0) {
+                alert("Restricted: Please select a Coach from the list.");
+                coachField.value = ""; // Clear invalid input
+            }
+        }
+    };
+
+    // --- 3. APPLY NEXT AS SAME COACH ---
+    window.applySameCoach = function() {
+        resetForm(); // Clear the form first
+        
+        // Put the values back
+        coachField.value = lastCoachVal;
+        centerField.value = lastCenterVal;
+        centerField.style.borderColor = "green"; 
+        
+        // Scroll to top
+        window.scrollTo({top:0, behavior:'smooth'});
+    };

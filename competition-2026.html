@@ -85,13 +85,14 @@
             </div>
 
             <div class="form-group">
-                <label>👤 Coach Name</label>
-                <input type="text" name="coach" required>
+                <label>🧘 Coach Name</label>
+                <input type="text" name="coach" id="coachField" list="coachList" required placeholder="Type to search..." onchange="autoFillCenter()">
+                <datalist id="coachList"></datalist>
             </div>
 
             <div class="form-group">
                 <label>📍 Center Name</label>
-                <input type="text" name="center" required>
+                <input type="text" name="center" id="centerField" required readonly style="background-color: #e9ecef;">
             </div>
 
             <button type="submit" id="submitBtn" class="btn">
@@ -112,10 +113,16 @@
         
         <p style="font-size: 0.9rem; font-weight: 600; color: #333; margin-top: 20px;">Competition Location</p>
         <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3379.319321886972!2d87.91926331035725!3d22.28654294331025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02946fbd2b3e3d%3A0xb9ad312fba8b407d!2sRajkumari%20Santanamoyee%20Girls'%20High%20School!5e1!3m2!1sen!2sin!4v1769878062861!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3379.319321886972!2d87.91926331035725!3d22.28654294331025!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02946fbd2b3e3d%3A0xb9ad312fba8b407d!2sRajkumari%20Santanamoyee%20Girls'%20High%20School!5e1!3m2!1sen!2sin!4v1769878062861!5m2!1sen!2sin" width="450" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
-        <button class="btn" onclick="resetForm()" style="background: #34495e; margin-top: 25px;">Register Another</button>
+        <button class="btn" id="btnSameCoach" onclick="applySameCoach()" style="background: #2980b9; margin-top: 25px; display: none;">
+            Register Next as Coach: <span id="lastCoachName">Current Coach</span>
+        </button>
+
+        <button class="btn" onclick="resetForm()" style="background: #34495e; margin-top: 10px;">
+            Register Another (New Coach) 
+        </button>
     </div>
 
     <div class="footer-credit">
