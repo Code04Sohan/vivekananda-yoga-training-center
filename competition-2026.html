@@ -86,8 +86,11 @@
 
             <div class="form-group">
                 <label>🧘 Coach Name</label>
-                <input type="text" name="coach" id="coachField" list="coachList" required placeholder="Type to search..." onchange="autoFillCenter()">
-                <datalist id="coachList"></datalist>
+                <div class="autocomplete-wrapper">
+                    <input type="text" name="coach" id="coachField" required 
+                           placeholder="Tap to select or type to search..." autocomplete="off">
+                    <div id="suggestions" class="suggestions-list"></div>
+                </div>
             </div>
 
             <div class="form-group">

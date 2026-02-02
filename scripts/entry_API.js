@@ -194,53 +194,95 @@ window.resetForm = function () {
 };
 
 
-// --- 1. POPULATE COACH LIST ON LOAD ---
-    const coachList = document.getElementById('coachList');
-    const coachField = document.getElementById('coachField');
-    const centerField = document.getElementById('centerField');
-    const btnSameCoach = document.getElementById('btnSameCoach');
-    const lastCoachNameSpan = document.getElementById('lastCoachName');
-    
-    // Store the last used details
-    let lastCoachVal = "";
-    let lastCenterVal = "";
+// =========================================================
+// 3. SMART SEARCH DROPDOWN LOGIC
+// =========================================================
 
-    // Fill the dropdown menu from Config
-    Object.keys(CONFIG.coachDatabase).forEach(coach => {
-        let option = document.createElement('option');
-        option.value = coach;
-        coachList.appendChild(option);
+const coachField = document.getElementById('coachField');
+const suggestionsBox = document.getElementById('suggestions');
+const centerField = document.getElementById('centerField');
+const btnSameCoach = document.getElementById('btnSameCoach');
+const lastCoachNameSpan = document.getElementById('lastCoachName');
+
+// Store variables
+let lastCoachVal = "";
+let lastCenterVal = "";
+// Convert DB to array for easier searching: ["Rajib Das", "Sampa Roy"...]
+const coachNames = Object.keys(CONFIG.coachDatabase);
+
+// Function to render the list
+function renderSuggestions(filterText = "") {
+    suggestionsBox.innerHTML = ""; // Clear current list
+    const lowerFilter = filterText.toLowerCase();
+
+    // Filter logic (Case-insensitive)
+    const matches = coachNames.filter(name =>
+        name.toLowerCase().includes(lowerFilter)
+    );
+
+    if (matches.length === 0) {
+        suggestionsBox.style.display = "none";
+        return;
+    }
+
+    // Create list items
+    matches.forEach(name => {
+        const div = document.createElement('div');
+        div.className = "suggestion-item";
+        div.textContent = name;
+
+        // Click event for selection
+        div.onclick = function () {
+            selectCoach(name);
+        };
+        suggestionsBox.appendChild(div);
     });
 
-    // --- 2. AUTO-FILL CENTER & VALIDATION ---
-    window.autoFillCenter = function() {
-        const selectedCoach = coachField.value;
-        const mappedCenter = CONFIG.coachDatabase[selectedCoach];
+    suggestionsBox.style.display = "block";
+}
 
-        if (mappedCenter) {
-            // If coach exists in database, fill center and clear error
-            centerField.value = mappedCenter;
-            centerField.style.borderColor = "green"; // Visual cue
-            errorMsg.style.display = 'none';
-        } else {
-            // If typed name is NOT in database
-            centerField.value = ""; 
-            if(selectedCoach.length > 0) {
-                alert("Restricted: Please select a Coach from the list.");
-                coachField.value = ""; // Clear invalid input
-            }
-        }
-    };
+// Function when user selects a name
+function selectCoach(name) {
+    coachField.value = name;
+    suggestionsBox.style.display = "none"; // Hide list
 
-    // --- 3. APPLY NEXT AS SAME COACH ---
-    window.applySameCoach = function() {
-        resetForm(); // Clear the form first
-        
-        // Put the values back
-        coachField.value = lastCoachVal;
-        centerField.value = lastCenterVal;
-        centerField.style.borderColor = "green"; 
-        
-        // Scroll to top
-        window.scrollTo({top:0, behavior:'smooth'});
-    };
+    // Auto-fill Center logic
+    const mappedCenter = CONFIG.coachDatabase[name];
+    if (mappedCenter) {
+        centerField.value = mappedCenter;
+        centerField.style.borderColor = "var(--success)";
+        errorMsg.style.display = 'none';
+    }
+}
+
+// Event 1: When user clicks/taps the field -> Show ALL names
+coachField.addEventListener('focus', function () {
+    renderSuggestions(""); // Empty filter = Show all
+});
+
+// Event 2: When user types -> Filter the list
+coachField.addEventListener('input', function () {
+    renderSuggestions(this.value);
+
+    // Clear center if user deletes the name manually
+    if (this.value === "") centerField.value = "";
+});
+
+// Event 3: Hide list if clicking outside
+document.addEventListener('click', function (e) {
+    if (!coachField.contains(e.target) && !suggestionsBox.contains(e.target)) {
+        suggestionsBox.style.display = "none";
+    }
+});
+
+// --- BUTTON: APPLY NEXT AS SAME COACH ---
+window.applySameCoach = function () {
+    resetForm();
+
+    // Restore values
+    coachField.value = lastCoachVal;
+    centerField.value = lastCenterVal;
+    centerField.style.borderColor = "var(--success)";
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
