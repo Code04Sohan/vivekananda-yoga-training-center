@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoga Competition Results System</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --success: #10b981;
+            --gold: #fbbf24;
+            --silver: #9ca3af;
+            --bronze: #b45309;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 { margin: 0; font-size: 2rem; }
+        p.subtitle { opacity: 0.9; margin-top: 0.5rem; }
+
+        /* Controls Area */
+        .controls {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .checkbox-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background: #eef2ff;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .checkbox-item:hover { background: #e0e7ff; }
+        .checkbox-item input { margin-right: 8px; }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Class Cards */
+        .class-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .class-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .class-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Table Styling */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            background-color: #f9fafb;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        tr:hover td { background-color: #f9fafb; }
+
+        /* Badges */
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .rank-1 { background: var(--gold); box-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
+        .rank-2 { background: var(--silver); }
+        .rank-3 { background: var(--bronze); }
+        .rank-other { background: #e5e7eb; color: var(--text-light); font-size: 0.8rem; width: 28px; height: 28px; }
+
+        .score-pill {
+            background: #e0e7ff;
+            color: var(--primary-dark);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        /* Tie-breaker Highlight */
+        .tie-break-info {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 4px;
+            display: block;
+        }
+        .tie-active {
+            color: #d97706; /* Amber color for tie alerts */
+            font-weight: 600;
+        }
+
+        /* Loading State */
+        #loader {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+
+        /* Utility */
+        .hidden { display: none !important; }
+        
+        .explanation-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🏆 Yoga Competition Master Sheet</h1>
+        <p class="subtitle">Live Scoring & Judgement System</p>
+    </header>
+
+    <div class="controls">
+        <div class="filter-group">
+            <span class="filter-label">Filter by Class/Group:</span>
+            <div id="classFilters" class="checkbox-container">
+                Loading filters...
+            </div>
+        </div>
+        <div>
+            <button onclick="fetchData()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                🔄 Refresh Data
+            </button>
+        </div>
+    </div>
+
+    <div id="loader">Loading Exam Master Sheet...</div>
+    
+    <div id="app" class="dashboard hidden">
+        </div>
+</div>
+
+<script>
+    /** * ==========================================
+     * CONFIGURATION AREA
+     * ==========================================
+     */
+    
+    // 1. Paste your "Publish to Web" CSV link here
+    const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
+    
+    // 2. Adjust Column Names to match your sheet HEADERS exactly
+    const CONFIG = {
+        // Identification Columns
+        idCol: "Roll No",
+        nameCol: "Name of the Student",
+        classCol: "Class", 
+        
+        // Scoring Configuration
+        // Assuming marks per asana per judge is 25 (Modify this if different)
+        maxMarksPerAsana: 25, 
+        numberOfAsanas: 4, 
+        numberOfJudges: 3,
+
+        // Column Mapping
+        // These keys allow the algorithm to find the right columns dynamically
+        // Use partial matches if needed, but exact headers are safer
+        judge1Cols: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
+        judge2Cols: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
+        judge3Cols: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"]
+    };
+
+    /**
+     * ==========================================
+     * ALGORITHM & LOGIC
+     * ==========================================
+     */
+
+    let globalData = [];
+    let activeClasses = new Set();
+
+    async function fetchData() {
+        const loader = document.getElementById('loader');
+        const app = document.getElementById('app');
+        
+        try {
+            loader.classList.remove('hidden');
+            app.classList.add('hidden');
+
+            if(GOOGLE_SHEET_CSV_URL.includes("YOUR_GOOGLE_SHEET")) {
+                throw new Error("Please configure the CSV URL in the code.");
+            }
+
+            const response = await fetch(GOOGLE_SHEET_CSV_URL);
+            const text = await response.text();
+            
+            processData(text);
+            
+            loader.classList.add('hidden');
+            app.classList.remove('hidden');
+            
+        } catch (error) {
+            loader.innerHTML = `⚠️ Error: ${error.message}<br><br>Make sure you published the sheet as CSV.`;
+            console.error(error);
+        }
+    }
+
+    // CSV Parser
+    function csvJSON(csv) {
+        const lines = csv.split("\n");
+        const result = [];
+        // Handle potential carriage returns
+        const headers = lines[0].replace(/\r/g, '').split(",");
+
+        for (let i = 1; i < lines.length; i++) {
+            if (!lines[i]) continue;
+            const obj = {};
+            // Regex to handle commas inside quotes if they exist (simple CSV parse)
+            const currentline = lines[i].replace(/\r/g, '').split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+
+            for (let j = 0; j < headers.length; j++) {
+                // Remove quotes if present
+                let val = currentline[j] ? currentline[j].replace(/^"|"$/g, '') : "";
+                obj[headers[j]] = val;
+            }
+            result.push(obj);
+        }
+        return result;
+    }
+
+    function getSum(row, columns) {
+        return columns.reduce((sum, colName) => {
+            let val = parseFloat(row[colName]);
+            return sum + (isNaN(val) ? 0 : val);
+        }, 0);
+    }
+
+    function processData(csvText) {
+        const rawData = csvJSON(csvText);
+        const classes = new Set();
+
+        // 1. Calculate Totals for every student
+        const processedStudents = rawData.map(student => {
+            const j1Total = getSum(student, CONFIG.judge1Cols);
+            const j2Total = getSum(student, CONFIG.judge2Cols);
+            const j3Total = getSum(student, CONFIG.judge3Cols);
+            
+            const grandTotal = j1Total + j2Total + j3Total;
+            
+            // Full Marks (FM) Calculation
+            const fm = CONFIG.maxMarksPerAsana * CONFIG.numberOfAsanas * CONFIG.numberOfJudges;
+            
+            // Percentage
+            const percentage = ((grandTotal / fm) * 100).toFixed(2);
+            
+            const studentClass = student[CONFIG.classCol] ? student[CONFIG.classCol].trim() : "Unknown";
+            classes.add(studentClass);
+
+            return {
+                ...student,
+                j1Total,
+                j2Total,
+                j3Total,
+                grandTotal,
+                fm,
+                percentage,
+                studentClass
+            };
+        });
+
+        // Generate Filters
+        renderFilters(Array.from(classes).sort());
+        
+        // Store for rendering
+        globalData = processedStudents;
+        renderDashboard();
+    }
+
+    function renderFilters(classList) {
+        const container = document.getElementById('classFilters');
+        // Only render if empty to preserve selection state on refresh
+        if (container.innerHTML.includes('Loading')) {
+            container.innerHTML = '';
+            classList.forEach(cls => {
+                // Default all to checked
+                activeClasses.add(cls); 
+                
+                const label = document.createElement('label');
+                label.className = 'checkbox-item';
+                label.innerHTML = `
+                    <input type="checkbox" value="${cls}" checked onchange="toggleFilter('${cls}')">
+                    ${cls}
+                `;
+                container.appendChild(label);
+            });
+        }
+    }
+
+    function toggleFilter(cls) {
+        if (activeClasses.has(cls)) {
+            activeClasses.delete(cls);
+        } else {
+            activeClasses.add(cls);
+        }
+        renderDashboard();
+    }
+
+    // THE RANKING ALGORITHM
+    function sortStudents(students) {
+        return students.sort((a, b) => {
+            // Rule 1: Higher Grand Total wins
+            if (b.grandTotal !== a.grandTotal) {
+                return b.grandTotal - a.grandTotal;
+            }
+            
+            // Rule 2 (Tie): Higher Judge 1 Total wins
+            if (b.j1Total !== a.j1Total) {
+                return b.j1Total - a.j1Total;
+            }
+
+            // Rule 3 (Tie): Higher Judge 2 Total wins
+            return b.j2Total - a.j2Total;
+        });
+    }
+
+    function renderDashboard() {
+        const app = document.getElementById('app');
+        app.innerHTML = '';
+        
+        // Group by Class
+        const studentsByClass = globalData.reduce((acc, student) => {
+            if (!acc[student.studentClass]) acc[student.studentClass] = [];
+            acc[student.studentClass].push(student);
+            return acc;
+        }, {});
+
+        // Sort classes alphabetically
+        const sortedClasses = Object.keys(studentsByClass).sort();
+
+        sortedClasses.forEach(className => {
+            if (!activeClasses.has(className)) return;
+
+            const classStudents = studentsByClass[className];
+            const sortedStudents = sortStudents(classStudents);
+
+            const section = document.createElement('div');
+            section.className = 'class-section';
+            
+            let tableRows = '';
+            
+            sortedStudents.forEach((s, index) => {
+                const rank = index + 1;
+                let rankClass = 'rank-other';
+                if(rank === 1) rankClass = 'rank-1';
+                if(rank === 2) rankClass = 'rank-2';
+                if(rank === 3) rankClass = 'rank-3';
+
+                // Detect Tie Logic for UI explanation
+                let tieNote = '';
+                const prev = sortedStudents[index-1];
+                
+                // If this student has same total as prev, explain why they are ranked lower
+                if (prev && prev.grandTotal === s.grandTotal) {
+                    if (prev.j1Total > s.j1Total) {
+                        tieNote = `<span class="tie-break-info tie-active">Lost Tie-break 1 (Judge 1 Score: ${s.j1Total} vs ${prev.j1Total})</span>`;
+                    } else if (prev.j1Total === s.j1Total && prev.j2Total > s.j2Total) {
+                        tieNote = `<span class="tie-break-info tie-active">Lost Tie-break 2 (Judge 2 Score: ${s.j2Total} vs ${prev.j2Total})</span>`;
+                    } else {
+                        tieNote = `<span class="tie-break-info">Perfect Tie</span>`;
+                    }
+                }
+
+                tableRows += `
+                    <tr>
+                        <td><div class="rank-badge ${rankClass}">${rank}</div></td>
+                        <td>
+                            <div style="font-weight:bold;">${s[CONFIG.nameCol]}</div>
+                            <div style="font-size:0.8rem; color:#666;">Roll: ${s[CONFIG.idCol]}</div>
+                            ${tieNote}
+                        </td>
+                        <td style="text-align:center;">
+                            <div title="J1+J2+J3">${s.grandTotal} / ${s.fm}</div>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="score-pill">${s.percentage}%</span>
+                        </td>
+                        <td style="color:#666; font-size:0.85rem;">
+                            J1: <b>${s.j1Total}</b> | J2: <b>${s.j2Total}</b> | J3: ${s.j3Total}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            section.innerHTML = `
+                <div class="class-header">
+                    <div class="class-title">${className}</div>
+                    <div style="color:var(--text-light)">${sortedStudents.length} Students</div>
+                </div>
+                
+                <div class="explanation-box">
+                    <strong>⚖️ Ranking Logic Applied:</strong> 
+                    1. Highest Total Marks &rarr; 
+                    2. If Tie: Highest Judge 1 Total &rarr; 
+                    3. If Tie: Highest Judge 2 Total.
+                </div>
+                <br>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="50">Rank</th>
+                                <th>Student Details</th>
+                                <th width="100" style="text-align:center;">Total Marks</th>
+                                <th width="80" style="text-align:center;">Percentage</th>
+                                <th>Breakdown (Tie Breakers)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            app.appendChild(section);
+        });
+    }
+
+    // Initial Load
+    fetchData();
+</script>
+
+</body>
+</html>
