@@ -6,580 +6,463 @@
     <title>Yoga Competition Live System</title>
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary: #ec4899;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text-main: #1e293b;
-            --text-light: #64748b;
-            --gold: #fbbf24;
+            --primary: #4338ca;      /* Indigo 700 */
+            --primary-light: #6366f1; /* Indigo 500 */
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sub: #6b7280;
+            --border: #e5e7eb;
+            
+            /* Rank Colors */
+            --gold: #f59e0b;
             --silver: #94a3b8;
             --bronze: #b45309;
-            --rank-bg: #f1f5f9;
         }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-        }
-
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text-main); margin: 0; padding: 20px; }
         .container { max-width: 1400px; margin: 0 auto; }
 
-        /* HEADER */
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 16px;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        /* --- HEADER & CONTROLS --- */
+        .top-bar {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 15px;
+            margin-bottom: 20px;
         }
+
+        .app-title h1 { margin: 0; font-size: 1.4rem; color: var(--primary); }
+        .app-title small { font-size: 0.8rem; color: var(--text-sub); }
+
+        .controls { display: flex; gap: 10px; align-items: center; }
+
+        /* Live Pulse Button */
+        .live-btn {
+            display: flex; align-items: center; gap: 8px;
+            background: #e2e8f0; padding: 8px 16px; border-radius: 20px;
+            cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s;
+            border: 1px solid transparent;
+        }
+        .live-btn.active { background: #dcfce7; color: #166534; border-color: #86efac; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
+        .live-btn.active .dot { background: #22c55e; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* Tabs */
+        .tabs { background: #f1f5f9; padding: 4px; border-radius: 8px; display: flex; gap: 4px; }
+        .tab {
+            padding: 8px 16px; border: none; background: none; border-radius: 6px;
+            cursor: pointer; font-weight: 600; color: var(--text-sub); transition: 0.2s;
+        }
+        .tab.active { background: white; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+        /* Filter Chips */
+        .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 15px; }
+        .chip {
+            background: white; border: 1px solid var(--border); padding: 5px 12px;
+            border-radius: 15px; font-size: 0.85rem; cursor: pointer; white-space: nowrap;
+        }
+        .chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* --- VIEWS --- */
+        .view { display: none; }
+        .view.active { display: block; animation: fadeUp 0.3s ease; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- LIVE TABLE --- */
+        .class-card { background: var(--card-bg); border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .class-header { padding: 15px; background: #f8fafc; border-bottom: 1px solid var(--border); font-weight: 700; color: var(--primary); font-size: 1.1rem; }
         
-        .header-content h1 { margin: 0; font-size: 1.8rem; }
-        .header-status { font-size: 0.9rem; opacity: 0.9; background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; }
-
-        /* CONTROLS */
-        .controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            align-items: center;
-            background: var(--card);
-            padding: 1rem;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            flex-wrap: wrap;
-        }
-
-        .tab-buttons { display: flex; gap: 10px; background: #e2e8f0; padding: 5px; border-radius: 10px; }
-        .tab-btn {
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            background: transparent;
-            color: var(--text-light);
-        }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
-        .refresh-btn {
-            margin-left: auto;
-            background: var(--text-main);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .refresh-btn:hover { opacity: 0.9; }
-
-        /* FILTERS */
-        .filter-container { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-        .filter-chip {
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            user-select: none;
-        }
-        .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        /* VIEWS */
-        .view-section { display: none; }
-        .view-section.active { display: block; }
-
-        /* ================= PODIUM STYLES ================= */
-        .podium-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 10px; /* Gap between bars */
-            margin: 3rem auto;
-            max-width: 600px;
-            height: 350px; /* Fixed height for podium area */
-            padding-bottom: 20px;
-        }
-
-        .podium-place {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            flex: 1;
-            position: relative;
-        }
-
-        .podium-bar {
-            width: 100%;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            align-items: flex-end; /* Puts Rank Number at bottom */
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 2rem;
-            padding-bottom: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        /* Heights for Podium */
-        .p-1 { height: 220px; background: linear-gradient(to bottom, #fbbf24, #d97706); z-index: 3; }
-        .p-2 { height: 160px; background: linear-gradient(to bottom, #94a3b8, #475569); z-index: 2; }
-        .p-3 { height: 120px; background: linear-gradient(to bottom, #b45309, #78350f); z-index: 1; }
-
-        .winner-card {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 110%; /* Slightly wider than bar */
-            z-index: 10;
-        }
-
-        .winner-name { font-weight: bold; color: var(--text-main); font-size: 1.1rem; }
-        .winner-score { color: var(--primary); font-weight: 800; }
-        .winner-badge {
-            width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: bold; margin: 0 auto 5px auto;
-        }
-
-        /* ================= TABLE STYLES ================= */
-        .live-table-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .table-responsive { overflow-x: auto; }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #f1f5f9; padding: 12px 8px; text-align: center; border-bottom: 2px solid var(--border); color: var(--text-main); white-space: nowrap; }
+        td { padding: 8px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        /* Fixed First Column */
+        .col-fixed { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #f1f5f9; min-width: 150px; }
+        th.col-fixed { background: #f1f5f9; z-index: 20; }
         
-        th {
-            background: #f1f5f9;
-            padding: 12px;
-            text-align: center;
-            font-weight: 600;
-            border-bottom: 2px solid #e2e8f0;
-            white-space: nowrap;
-        }
+        /* Specific Columns */
+        .col-score-group { border-right: 1px solid var(--border); }
+        .score-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; width: 75px; margin: 0 auto; }
+        .sv { background: #f3f4f6; border-radius: 3px; font-size: 0.75rem; color: #64748b; padding: 1px 0; }
         
-        /* Group Headers */
-        .th-group { border-right: 1px solid #cbd5e1; }
-        .th-main { text-align: left; position: sticky; left: 0; background: #f1f5f9; z-index: 10; }
+        .val-judge { font-weight: 600; color: #4b5563; background: #f9fafb; padding: 3px 6px; border-radius: 4px; }
+        .val-total { font-weight: 800; color: var(--primary); font-size: 1rem; }
+        .val-perc { background: #e0e7ff; color: #3730a3; padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; }
 
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #f1f5f9;
-            text-align: center;
-        }
-
-        /* Sticky first column */
-        td:first-child {
-            position: sticky;
-            left: 0;
-            background: white;
-            z-index: 5;
-            text-align: left;
-            border-right: 2px solid #f1f5f9;
-            font-weight: 600;
-        }
-
-        /* Score Cells */
-        .score-box {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 2px;
-            width: 90px;
-            margin: 0 auto;
-        }
-        .s-val { background: #f8fafc; padding: 2px; border-radius: 4px; font-size: 0.75rem; color: #64748b; }
+        /* --- PODIUM JUDGMENT --- */
+        .podium-area { display: flex; justify-content: center; align-items: flex-end; height: 280px; gap: 15px; margin: 30px auto; max-width: 600px; }
+        .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
         
-        .total-cell { font-weight: bold; color: var(--primary); font-size: 1rem; }
+        .p-bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; color: white; font-weight: bold; font-size: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .p-1 { height: 180px; background: linear-gradient(to bottom, #fcd34d, #d97706); }
+        .p-2 { height: 140px; background: linear-gradient(to bottom, #cbd5e1, #64748b); }
+        .p-3 { height: 100px; background: linear-gradient(to bottom, #fdba74, #b45309); }
         
-        /* Rest of List (Judgment) */
-        .rank-list-item {
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 8px;
-            border-left: 4px solid transparent;
-        }
-        .rank-list-item:hover { transform: translateX(5px); transition: 0.2s; }
+        .winner-tag { background: white; padding: 8px; border-radius: 6px; text-align: center; margin-bottom: 10px; width: 110%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .w-name { font-weight: 700; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .w-score { color: var(--primary); font-weight: 800; }
 
-        .rank-num { font-size: 1.2rem; font-weight: bold; color: var(--text-light); width: 40px; }
-        .rank-info { flex: 1; }
-        .rank-total { font-weight: bold; color: var(--primary); }
+        .rank-list { max-width: 900px; margin: 0 auto; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+        .rank-item { display: grid; grid-template-columns: 50px 1fr 100px 180px; align-items: center; padding: 12px; border-bottom: 1px solid #f1f5f9; background: white; }
+        .rank-item:last-child { border-bottom: none; }
+        .rank-head { background: #f8fafc; font-weight: 600; color: var(--text-sub); font-size: 0.85rem; }
+        
+        .tie-reason { font-size: 0.75rem; color: #d97706; background: #fffbeb; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 4px; }
+        .judge-breakdown { font-size: 0.75rem; color: var(--text-sub); margin-top: 2px; }
 
         /* Loader */
-        .loader { text-align: center; padding: 4rem; display: none; }
-        .loader.active { display: block; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; color: white; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 999; }
+        .toast.show { opacity: 1; bottom: 30px; }
+
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <div class="header-content">
-            <h1>🏆 Yoga Competition Master Sheet</h1>
-            <p style="opacity: 0.8; margin: 5px 0 0 0;">Live Scoring & Judgment System</p>
+    <div class="top-bar">
+        <div class="app-title">
+            <h1>🏆 Yoga Scoreboard</h1>
+            <small id="lastUpdated">Waiting for data...</small>
         </div>
-        <div id="statusBadge" class="header-status">
-            Waiting for update...
-        </div>
-    </header>
-
-    <div class="controls">
-        <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('live')">📝 Live Score Sheet</button>
-            <button class="tab-btn" onclick="switchTab('judgment')">🏆 Podium Judgment</button>
-        </div>
-
-        <div style="width: 1px; height: 30px; background: #e2e8f0; margin: 0 10px;"></div>
-
-        <div id="filterContainer" class="filter-container">
+        
+        <div class="controls">
+            <div id="liveToggle" class="live-btn" onclick="toggleLive()">
+                <div class="dot"></div>
+                <span id="liveText">Paused</span>
             </div>
-
-        <button class="refresh-btn" onclick="fetchData()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-            Refresh
-        </button>
+            
+            <div class="tabs">
+                <button class="tab active" onclick="setTab('live', this)">📝 Live Sheet</button>
+                <button class="tab" onclick="setTab('judgement', this)">🏆 Judgment</button>
+            </div>
+            
+            <button onclick="fetchData()" style="padding: 8px 12px; background: var(--text-main); color: white; border: none; border-radius: 6px; cursor: pointer;">
+                Refresh
+            </button>
+        </div>
     </div>
 
-    <div id="loader" class="loader">
-        <div style="font-size: 2rem;">🔄</div>
-        <p>Fetching latest scores from Google Sheet...</p>
-    </div>
+    <div id="filterBar" class="filters"></div>
 
-    <div id="view-live" class="view-section active">
-        </div>
+    <div id="view-live" class="view active"></div>
 
-    <div id="view-judgment" class="view-section">
-        </div>
-
+    <div id="view-judgement" class="view"></div>
 </div>
 
+<div id="toast" class="toast">Updated successfully</div>
+
 <script>
-    // ================= CONFIGURATION =================
-    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
+    /* ================= SETUP ================= */
+    // 1. YOUR SHEET LINK
+    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
 
-    const CONFIG = {
-        idCol: "Roll No",
-        nameCol: "Name of the Student",
-        classCol: "Class",
-        
-        // Exact Headers from your sheet
+    // 2. SCORING CONFIG
+    const MARKS_PER_ASANA = 25; // Change if marks are out of 10, 20 etc.
+    const NUM_JUDGES = 3;
+    const NUM_ASANAS = 4; // 3 Main + 1 Optional
+    const TOTAL_FM = MARKS_PER_ASANA * NUM_ASANAS * NUM_JUDGES; // Auto-calculated (300)
+
+    const COLS = {
+        id: "Roll No",
+        name: "Name of the Student",
+        cls: "Class",
         asanas: [
-            { name: "Asana 1", cols: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
-            { name: "Asana 2", cols: ["ASANA 2 (Judge 1)", "ASANA 2 (Judge 2)", "ASANA 2 (Judge 3)"] },
-            { name: "Asana 3", cols: ["ASANA 3 (Judge 1)", "ASANA 3 (Judge 2)", "ASANA 3 (Judge 3)"] },
-            { name: "Optional", cols: ["OPTIONAL (Judge 1)", "OPTIONAL (Judge 2)", "OPTIONAL (Judge 3)"] }
+            { name: "Asana 1", keys: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
+            { name: "Asana 2", keys: ["ASANA 2 (Judge 1)", "ASANA 2 (Judge 2)", "ASANA 2 (Judge 3)"] },
+            { name: "Asana 3", keys: ["ASANA 3 (Judge 1)", "ASANA 3 (Judge 2)", "ASANA 3 (Judge 3)"] },
+            { name: "Optional", keys: ["OPTIONAL (Judge 1)", "OPTIONAL (Judge 2)", "OPTIONAL (Judge 3)"] }
         ],
-        
-        // Groups for totals
-        j1Cols: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
-        j2Cols: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
-        j3Cols: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"],
-
-        maxMarks: 300 // 4 asanas * 3 judges * 25
+        // Columns needed for Judge Totals
+        j1: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
+        j2: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
+        j3: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"]
     };
 
-    // ================= STATE =================
-    let globalData = [];
+    /* ================= STATE ================= */
+    let rawData = [];
     let activeClass = "All";
-    let allClasses = [];
+    let isLive = false;
+    let timer = null;
 
-    // ================= LOGIC =================
-
-    async function fetchData() {
-        document.getElementById('loader').classList.add('active');
-        document.getElementById('statusBadge').innerText = "Updating...";
-
-        try {
-            // CACHE BUSTING: Add timestamp to force fresh fetch
-            const uniqueUrl = `${SHEET_CSV_URL}&t=${Date.now()}`;
-            const response = await fetch(uniqueUrl);
-            const text = await response.text();
-
-            processData(text);
-
-            const now = new Date();
-            document.getElementById('statusBadge').innerText = `Last Updated: ${now.toLocaleTimeString()}`;
-        } catch (err) {
-            alert("Error loading data. Check internet connection.");
-            console.error(err);
-        } finally {
-            document.getElementById('loader').classList.remove('active');
-        }
-    }
-
-    function csvJSON(csv) {
-        const lines = csv.split("\n");
-        const headers = lines[0].replace(/\r/g, '').split(",");
-        const result = [];
-        for (let i = 1; i < lines.length; i++) {
-            if (!lines[i]) continue;
-            // Handle commas inside quotes logic simplified
-            const currentline = lines[i].replace(/\r/g, '').split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-            const obj = {};
-            headers.forEach((h, idx) => {
-                obj[h] = currentline[idx] ? currentline[idx].replace(/^"|"$/g, '') : "";
-            });
-            result.push(obj);
-        }
-        return result;
-    }
-
-    function getSum(row, cols) {
-        return cols.reduce((sum, col) => sum + (parseFloat(row[col]) || 0), 0);
-    }
-
-    function processData(csvText) {
-        const raw = csvJSON(csvText);
-        const classSet = new Set();
-
-        globalData = raw.map(s => {
-            const j1Total = getSum(s, CONFIG.j1Cols);
-            const j2Total = getSum(s, CONFIG.j2Cols);
-            const j3Total = getSum(s, CONFIG.j3Cols);
-            const grandTotal = j1Total + j2Total + j3Total;
-            const className = s[CONFIG.classCol] ? s[CONFIG.classCol].trim() : "Unknown";
-            
-            if(className) classSet.add(className);
-
-            return { ...s, j1Total, j2Total, j3Total, grandTotal, className };
-        });
-
-        allClasses = Array.from(classSet).sort();
+    /* ================= CORE FUNCTIONS ================= */
+    
+    // Toggle Live Mode
+    function toggleLive() {
+        isLive = !isLive;
+        const btn = document.getElementById('liveToggle');
+        const txt = document.getElementById('liveText');
         
-        // Init Filters only once or if empty
-        const filterCont = document.getElementById('filterContainer');
-        if (filterCont.innerHTML.trim() === "") {
-            renderFilters();
-        }
-
-        refreshViews();
-    }
-
-    function renderFilters() {
-        const container = document.getElementById('filterContainer');
-        let html = `<div class="filter-chip ${activeClass === 'All' ? 'active' : ''}" onclick="setFilter('All')">All Classes</div>`;
-        allClasses.forEach(cls => {
-            html += `<div class="filter-chip ${activeClass === cls ? 'active' : ''}" onclick="setFilter('${cls}')">${cls}</div>`;
-        });
-        container.innerHTML = html;
-    }
-
-    function setFilter(cls) {
-        activeClass = cls;
-        renderFilters(); // Re-render to update active class
-        refreshViews();
-    }
-
-    function sortStudents(students) {
-        return students.sort((a, b) => {
-            if (b.grandTotal !== a.grandTotal) return b.grandTotal - a.grandTotal;
-            if (b.j1Total !== a.j1Total) return b.j1Total - a.j1Total;
-            return b.j2Total - a.j2Total;
-        });
-    }
-
-    function refreshViews() {
-        // Filter Data
-        let filtered = globalData;
-        if (activeClass !== "All") {
-            filtered = globalData.filter(s => s.className === activeClass);
-        }
-
-        // Group by Class for displays
-        const groups = {};
-        if (activeClass === "All") {
-            allClasses.forEach(c => groups[c] = filtered.filter(s => s.className === c));
+        if (isLive) {
+            btn.classList.add('active');
+            txt.innerText = "Live (Auto)";
+            fetchData();
+            timer = setInterval(fetchData, 5000); // 5 Seconds
+            alert("Live Mode On: App will check for updates every 5 seconds.\n\nNOTE: Google Sheets takes 3-5 minutes to publish changes to the web.");
         } else {
-            groups[activeClass] = filtered;
+            btn.classList.remove('active');
+            txt.innerText = "Paused";
+            clearInterval(timer);
         }
-
-        // Render Both Views
-        renderLiveSheet(groups);
-        renderJudgment(groups);
     }
 
-    // ================= RENDER LIVE SHEET =================
-    function renderLiveSheet(groups) {
-        const container = document.getElementById('view-live');
-        container.innerHTML = "";
+    // Tab Switcher
+    function setTab(viewId, btnEl) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('view-' + viewId).classList.add('active');
+        btnEl.classList.add('active');
+    }
 
-        Object.keys(groups).forEach(cls => {
-            const students = groups[cls];
-            if (students.length === 0) return;
+    // Data Fetcher
+    async function fetchData() {
+        try {
+            // Add timestamp to URL to bypass browser cache
+            const url = `${CSV_URL}&t=${Date.now()}`; 
+            const res = await fetch(url);
+            const text = await res.text();
+            
+            processData(text);
+            
+            const now = new Date();
+            document.getElementById('lastUpdated').innerText = `Updated: ${now.toLocaleTimeString()}`;
+            showToast();
+        } catch (err) {
+            console.error(err);
+            document.getElementById('lastUpdated').innerText = `Error fetching data`;
+        }
+    }
 
-            const section = document.createElement('div');
-            section.className = 'live-table-container';
+    function showToast() {
+        const t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    // CSV Parser with Header Trimming
+    function processData(csv) {
+        const lines = csv.split("\n").filter(l => l.trim() !== "");
+        const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, '')); // Trim headers!
+        
+        rawData = [];
+        const classes = new Set();
+
+        for (let i = 1; i < lines.length; i++) {
+            // Regex handles quoted commas correctly
+            const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, ''));
+            const obj = {};
+            headers.forEach((h, idx) => obj[h] = row[idx]);
+
+            // Calculate Scores
+            const j1Sum = getSum(obj, COLS.j1);
+            const j2Sum = getSum(obj, COLS.j2);
+            const j3Sum = getSum(obj, COLS.j3);
+            const grand = j1Sum + j2Sum + j3Sum;
+            const perc = ((grand / TOTAL_FM) * 100).toFixed(2);
+            
+            const cls = obj[COLS.cls] ? obj[COLS.cls].trim() : "Unknown";
+            classes.add(cls);
+
+            rawData.push({
+                ...obj,
+                j1Sum, j2Sum, j3Sum, grand, perc, cls
+            });
+        }
+
+        renderFilters(Array.from(classes).sort());
+        renderApp();
+    }
+
+    function getSum(row, keys) {
+        return keys.reduce((sum, k) => {
+            const val = parseFloat(row[k]);
+            return sum + (isNaN(val) ? 0 : val);
+        }, 0);
+    }
+
+    /* ================= RENDERING ================= */
+
+    function renderFilters(classList) {
+        const bar = document.getElementById('filterBar');
+        if (bar.innerHTML !== "") return; // Don't redraw if exists
+
+        let html = `<div class="chip active" onclick="setFilter('All', this)">All Classes</div>`;
+        classList.forEach(c => {
+            html += `<div class="chip" onclick="setFilter('${c}', this)">${c}</div>`;
+        });
+        bar.innerHTML = html;
+    }
+
+    function setFilter(cls, el) {
+        activeClass = cls;
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        renderApp();
+    }
+
+    function renderApp() {
+        // Filter Data
+        const data = activeClass === "All" ? rawData : rawData.filter(d => d.cls === activeClass);
+        
+        // Group by Class
+        const grouped = {};
+        const cats = activeClass === "All" ? [...new Set(data.map(d => d.cls))].sort() : [activeClass];
+        cats.forEach(c => grouped[c] = data.filter(d => d.cls === c));
+
+        // Render Views
+        renderLiveTable(grouped);
+        renderJudgement(grouped);
+    }
+
+    // --- VIEW 1: LIVE TABLE ---
+    function renderLiveTable(grouped) {
+        const cont = document.getElementById('view-live');
+        cont.innerHTML = "";
+
+        Object.keys(grouped).forEach(cls => {
+            const students = grouped[cls];
+            if (!students.length) return;
 
             let rows = "";
             students.forEach(s => {
-                // Build Asana Cells
-                let asanaCells = "";
-                CONFIG.asanas.forEach(asana => {
-                    const j1 = s[asana.cols[0]] || "-";
-                    const j2 = s[asana.cols[1]] || "-";
-                    const j3 = s[asana.cols[2]] || "-";
-                    asanaCells += `
-                        <td style="border-right: 1px solid #e2e8f0;">
-                            <div class="score-box">
-                                <span class="s-val" title="Judge 1">${j1}</span>
-                                <span class="s-val" title="Judge 2">${j2}</span>
-                                <span class="s-val" title="Judge 3">${j3}</span>
+                // Build Asana Scores
+                let asanaHtml = "";
+                COLS.asanas.forEach(a => {
+                    asanaHtml += `
+                        <td class="col-score-group">
+                            <div class="score-row">
+                                <span class="sv">${s[a.keys[0]] || '-'}</span>
+                                <span class="sv">${s[a.keys[1]] || '-'}</span>
+                                <span class="sv">${s[a.keys[2]] || '-'}</span>
                             </div>
                         </td>`;
                 });
 
                 rows += `
                     <tr>
-                        <td>
-                            <div>${s[CONFIG.nameCol]}</div>
-                            <div style="font-size:0.75rem; color:#64748b;">#${s[CONFIG.idCol]}</div>
+                        <td class="col-fixed">
+                            <div style="font-weight:600;">${s[COLS.name]}</div>
+                            <div style="font-size:0.75rem; color:#6b7280;">Roll: ${s[COLS.id]}</div>
                         </td>
-                        ${asanaCells}
-                        <td class="total-cell">${s.grandTotal}</td>
+                        ${asanaHtml}
+                        <td><span class="val-judge">${s.j1Sum}</span></td>
+                        <td><span class="val-judge">${s.j2Sum}</span></td>
+                        <td><span class="val-judge">${s.j3Sum}</span></td>
+                        <td><span class="val-total">${s.grand}</span></td>
+                        <td><span class="val-perc">${s.perc}%</span></td>
                     </tr>
                 `;
             });
 
             // Headers
-            let asanaHeaders = "";
-            CONFIG.asanas.forEach(a => {
-                asanaHeaders += `<th class="th-group">${a.name}<br><span style="font-size:0.7rem; font-weight:normal;">(J1 | J2 | J3)</span></th>`;
+            let asanaHeads = COLS.asanas.map(a => `<th>${a.name}<br><span style="font-size:0.7em; font-weight:400; color:#6b7280">(J1|J2|J3)</span></th>`).join("");
+
+            cont.innerHTML += `
+                <div class="class-card">
+                    <div class="class-header">${cls}</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="col-fixed">Student</th>
+                                    ${asanaHeads}
+                                    <th>J1<br>Total</th>
+                                    <th>J2<br>Total</th>
+                                    <th>J3<br>Total</th>
+                                    <th>Grand<br>Total</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // --- VIEW 2: JUDGMENT ---
+    function renderJudgement(grouped) {
+        const cont = document.getElementById('view-judgement');
+        cont.innerHTML = "";
+
+        Object.keys(grouped).forEach(cls => {
+            // SORTING RULES (Transparency Logic)
+            const students = [...grouped[cls]].sort((a, b) => {
+                if (b.grand !== a.grand) return b.grand - a.grand; // Rule 1
+                if (b.j1Sum !== a.j1Sum) return b.j1Sum - a.j1Sum; // Rule 2
+                return b.j2Sum - a.j2Sum; // Rule 3
             });
 
-            section.innerHTML = `
-                <div style="padding:15px; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-weight:bold; color:var(--primary);">
-                    ${cls}
-                </div>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th class="th-main" style="width:200px;">Student</th>
-                                ${asanaHeaders}
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                </div>
-            `;
-            container.appendChild(section);
-        });
-    }
+            if (!students.length) return;
 
-    // ================= RENDER JUDGMENT (PODIUM) =================
-    function renderJudgment(groups) {
-        const container = document.getElementById('view-judgment');
-        container.innerHTML = "";
-
-        Object.keys(groups).forEach(cls => {
-            const students = sortStudents([...groups[cls]]); // Copy and sort
-            if (students.length === 0) return;
-
-            const s1 = students[0];
-            const s2 = students[1];
-            const s3 = students[2];
-
-            // 1. Build Podium HTML
-            let podiumHTML = `
-                <div style="text-align:center; margin-bottom: 20px;">
-                    <h2 style="color:var(--text-main);">${cls} - Final Results</h2>
-                </div>
-                <div class="podium-container">
-                    <div class="podium-place">
-                        ${s2 ? `
-                        <div class="winner-card">
-                            <div class="winner-badge" style="background:var(--silver);">2</div>
-                            <div class="winner-name">${s2[CONFIG.nameCol]}</div>
-                            <div class="winner-score">${s2.grandTotal} pts</div>
-                        </div>
-                        <div class="podium-bar p-2">2</div>
-                        ` : ''}
+            // Podium Setup
+            const [s1, s2, s3] = students;
+            
+            let podiumHtml = `
+                <div class="podium-area">
+                    <div class="podium-col" style="order:1">
+                        ${s2 ? `<div class="winner-tag"><div class="w-name">${s2[COLS.name]}</div><div class="w-score">${s2.grand}</div></div><div class="p-bar p-2">2</div>` : ''}
                     </div>
-                    
-                    <div class="podium-place">
-                        ${s1 ? `
-                        <div class="winner-card">
-                            <div class="winner-badge" style="background:var(--gold);">1</div>
-                            <div class="winner-name">${s1[CONFIG.nameCol]}</div>
-                            <div class="winner-score">${s1.grandTotal} pts</div>
-                        </div>
-                        <div class="podium-bar p-1">1</div>
-                        ` : ''}
+                    <div class="podium-col" style="order:2">
+                        ${s1 ? `<div class="winner-tag" style="transform:scale(1.1); border:2px solid var(--gold);"><div class="w-name">${s1[COLS.name]}</div><div class="w-score">${s1.grand}</div></div><div class="p-bar p-1">1</div>` : ''}
                     </div>
-
-                    <div class="podium-place">
-                        ${s3 ? `
-                        <div class="winner-card">
-                            <div class="winner-badge" style="background:var(--bronze);">3</div>
-                            <div class="winner-name">${s3[CONFIG.nameCol]}</div>
-                            <div class="winner-score">${s3.grandTotal} pts</div>
-                        </div>
-                        <div class="podium-bar p-3">3</div>
-                        ` : ''}
+                    <div class="podium-col" style="order:3">
+                        ${s3 ? `<div class="winner-tag"><div class="w-name">${s3[COLS.name]}</div><div class="w-score">${s3.grand}</div></div><div class="p-bar p-3">3</div>` : ''}
                     </div>
                 </div>
             `;
 
-            // 2. Rest of the list
-            let listHTML = `<div style="max-width: 800px; margin: 0 auto;">`;
-            for(let i = 3; i < students.length; i++) {
-                const s = students[i];
-                listHTML += `
-                    <div class="rank-list-item">
-                        <div class="rank-num">${i + 1}</div>
-                        <div class="rank-info">
-                            <div style="font-weight:600;">${s[CONFIG.nameCol]}</div>
-                            <div style="font-size:0.8rem; color:#64748b;">Roll: ${s[CONFIG.idCol]}</div>
+            // List Setup
+            let listHtml = `
+                <div class="rank-list">
+                    <div class="rank-item rank-head">
+                        <div>#</div>
+                        <div>Student Name</div>
+                        <div>Total</div>
+                        <div>Rule Transparency</div>
+                    </div>
+            `;
+
+            students.forEach((s, idx) => {
+                // Determine Tie Reason for transparency
+                let tieInfo = "";
+                const prev = students[idx-1];
+                if (prev && prev.grand === s.grand) {
+                    if (prev.j1Sum > s.j1Sum) tieInfo = `<span class="tie-reason">Lost Tie: Judge 1 (${s.j1Sum} vs ${prev.j1Sum})</span>`;
+                    else if (prev.j2Sum > s.j2Sum) tieInfo = `<span class="tie-reason">Lost Tie: Judge 2 (${s.j2Sum} vs ${prev.j2Sum})</span>`;
+                    else tieInfo = `<span class="tie-reason" style="background:#f3f4f6; color:#6b7280;">Perfect Tie</span>`;
+                }
+
+                listHtml += `
+                    <div class="rank-item">
+                        <div style="font-weight:700; color:#cbd5e1; font-size:1.2rem;">${idx+1}</div>
+                        <div>
+                            <div style="font-weight:600;">${s[COLS.name]}</div>
+                            <div class="judge-breakdown">J1:${s.j1Sum} | J2:${s.j2Sum} | J3:${s.j3Sum}</div>
                         </div>
-                        <div class="rank-total">${s.grandTotal}</div>
+                        <div style="font-weight:700; color:var(--primary); font-size:1.1rem;">${s.grand}</div>
+                        <div>${tieInfo}</div>
                     </div>
                 `;
-            }
-            listHTML += `</div><hr style="border:0; border-top:1px dashed #cbd5e1; margin: 4rem 0;">`;
+            });
+            listHtml += `</div>`;
 
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = podiumHTML + listHTML;
-            container.appendChild(wrapper);
+            cont.innerHTML += `
+                <div class="class-card">
+                    <div class="class-header">${cls} - Final Results</div>
+                    ${podiumHtml}
+                    ${listHtml}
+                </div>
+            `;
         });
-    }
-
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
-        
-        const activeBtn = document.querySelector(`button[onclick="switchTab('${tab}')"]`);
-        if(activeBtn) activeBtn.classList.add('active');
-        
-        document.getElementById(`view-${tab}`).classList.add('active');
     }
 
     // Init
