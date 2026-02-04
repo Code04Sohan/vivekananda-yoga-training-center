@@ -9,6 +9,9 @@ const CONFIG = {
     backgroundImage: "resources/yoga_background.png",
     logoImage: "resources/yoga_dp.jpeg",
 
+    // 🟢 ADD YOUR IMAGE LINK HERE
+    thankYouImage: "https://via.placeholder.com/400x600",
+
     // 🟢 DETAILED AGE GROUPS
     ageGroups: [
         // 1. Euro Kids (Below 7) -> Code: EK
@@ -80,6 +83,7 @@ const CONFIG = {
 
 document.body.style.backgroundImage = `url('${CONFIG.backgroundImage}')`;
 document.getElementById('orgLogo').src = CONFIG.logoImage;
+document.getElementById('tyImage').src = CONFIG.thankYouImage;
 
 const form = document.getElementById('yogaForm');
 const formView = document.getElementById('formView');
