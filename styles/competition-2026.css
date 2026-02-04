@@ -283,12 +283,13 @@ iframe {
 /* Thankyou image */
 .thank-you-img {
             width: 100%;
-            max-width: 200px; /* Controls how big it looks */
+            /* max-width: 200px; /* Controls how big it looks */
             aspect-ratio: 2 / 3; /* Forces 2:3 vertical ratio */
             object-fit: cover;
             border-radius: 12px;
-            margin: 15px auto;
+            /* margin: 15px auto; */
+            margin: 25px auto;
             display: block;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border: 4px solid white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            /* border: 4px solid white; */
         }
