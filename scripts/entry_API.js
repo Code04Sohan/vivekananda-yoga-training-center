@@ -164,6 +164,8 @@ form.addEventListener('submit', function (e) {
         .then(res => res.json())
         .then(result => {
             if (result.result === 'success') {
+                const athleteName = document.querySelector('input[name="name"]').value;
+                document.getElementById('resultLabel').textContent = athleteName.toUpperCase() + " - TRACK NO";
                 lastCoachVal = coachField.value;
                 lastCenterVal = centerField.value;
                 lastCoachNameSpan.textContent = lastCoachVal;
