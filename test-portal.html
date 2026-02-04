@@ -33,135 +33,143 @@
             background: var(--glass);
             backdrop-filter: blur(10px);
             border: var(--glass-border);
-            padding: 1.5rem;
+            padding: 1rem 1.5rem;
             border-radius: 20px;
             box-shadow: var(--shadow);
             margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1rem;
         }
         
         .brand { display: flex; align-items: center; gap: 1rem; }
         .brand-icon { width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3); }
-        .brand h1 { margin: 0; font-size: 1.8rem; letter-spacing: -0.5px; color: var(--text-main); }
-        .brand p { margin: 0; color: var(--text-muted); font-size: 0.9rem; margin-top: 2px; }
+        .brand h1 { margin: 0; font-size: 1.6rem; letter-spacing: -0.5px; color: var(--text-main); }
+        .brand p { margin: 0; color: var(--text-muted); font-size: 0.85rem; margin-top: 2px; }
 
-        /* --- TOOLBAR --- */
-        .toolbar {
+        /* Judges Info Box (Top Right) */
+        .judges-box {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 15px;
+            min-width: 250px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .jb-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); font-weight: 700; margin-bottom: 5px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 3px; }
+        .jb-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 2px; }
+        .jb-label { color: var(--text-muted); font-weight: 600; }
+        .jb-name { font-weight: 700; color: var(--primary-dark); }
+
+        /* --- STICKY NAV BAR --- */
+        .sticky-nav {
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            padding: 10px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.8);
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
-            padding: 12px 20px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             flex-wrap: wrap;
             gap: 15px;
-            margin-bottom: 25px;
-            border: 1px solid #e2e8f0;
         }
 
-        .tool-group { display: flex; gap: 12px; align-items: center; }
-
-        /* Modern Search */
-        .search-box { position: relative; width: 280px; }
-        .search-box input {
-            width: 100%; padding: 10px 12px 10px 40px; border-radius: 10px; border: 1px solid #cbd5e1; outline: none; transition: 0.3s; font-size: 0.95rem;
+        .nav-tabs { display: flex; gap: 8px; }
+        .tab-btn {
+            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; 
+            color: var(--text-muted); background: transparent; border: 1px solid transparent; 
+            transition: all 0.2s; white-space: nowrap; font-size: 0.95rem;
         }
-        .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
-        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        .tab-btn:hover { background: #f1f5f9; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); transform: translateY(-1px); }
 
-        /* Buttons */
-        .btn { border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-primary { background: var(--text-main); color: white; }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-outline { background: white; border: 1px solid #cbd5e1; color: var(--text-main); }
-        .btn-outline:hover { background: #f8fafc; border-color: var(--text-main); }
+        /* --- TOOLBAR CONTROLS --- */
+        .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+        /* Search Component */
+        .search-wrapper { display: flex; align-items: center; gap: 5px; background: white; border: 1px solid #cbd5e1; border-radius: 10px; padding: 5px; transition: 0.2s; }
+        .search-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
         
+        .search-select { border: none; background: #f1f5f9; padding: 6px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-main); cursor: pointer; outline: none; }
+        
+        .search-input-box { border: none; outline: none; padding: 6px 10px; font-size: 0.9rem; width: 180px; }
+        
+        /* Datalist styling trick for dropdown behavior */
+        input::-webkit-calendar-picker-indicator { opacity: 1; cursor: pointer; }
+
+        /* Live Toggle */
         .live-toggle {
-            background: #f1f5f9; padding: 8px 16px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid #e2e8f0; font-size: 0.9rem; font-weight: 700; color: var(--text-muted); transition: 0.3s;
+            background: #f1f5f9; padding: 8px 14px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid #e2e8f0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
         }
         .live-toggle.active { background: #dcfce7; border-color: #86efac; color: #15803d; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; background: #94a3b8; transition: 0.3s; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; }
         .active .dot { background: #22c55e; animation: pulse 1.5s infinite; }
 
-        /* --- FILTERS & TABS --- */
-        .nav-area { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; overflow-x: auto; padding-bottom: 5px; }
-        
-        .tab-pill { padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; color: var(--text-muted); background: white; border: 1px solid #e2e8f0; transition: 0.2s; white-space: nowrap; }
-        .tab-pill:hover { background: #f8fafc; border-color: var(--primary); }
-        .tab-pill.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+        /* Filters Scroll */
+        .filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
+        .filter-chip {
+            padding: 6px 16px; border-radius: 20px; border: 1px solid #e2e8f0; background: white; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: 0.2s;
+        }
+        .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+        .filter-chip.active { background: var(--text-main); color: white; border-color: var(--text-main); }
 
-        .divider { height: 30px; width: 1px; background: #cbd5e1; margin: 0 5px; }
-
-        /* --- DATA VIEWS --- */
-        .view-section { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* --- DATA TABLES --- */
+        .view-section { display: none; animation: slideUp 0.3s ease-out; }
         .view-section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Table Card */
         .data-card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 2rem; border: 1px solid #e2e8f0; }
-        .card-head { padding: 15px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.2rem; }
+        .card-head { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.1rem; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { background: #f8fafc; padding: 14px; text-align: center; color: var(--text-muted); font-weight: 700; border-bottom: 2px solid #e2e8f0; white-space: nowrap; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
-        td { padding: 12px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #f8fafc; padding: 10px; text-align: center; color: var(--text-muted); font-weight: 700; border-bottom: 2px solid #e2e8f0; white-space: nowrap; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+        td { padding: 10px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
         
-        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #f1f5f9; min-width: 200px; box-shadow: 2px 0 5px rgba(0,0,0,0.02); }
+        /* Sticky Column for Student Name */
+        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #f1f5f9; min-width: 180px; box-shadow: 2px 0 5px rgba(0,0,0,0.02); }
         th.col-sticky { background: #f8fafc; z-index: 20; }
 
-        .score-pill { background: #f8fafc; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; color: #64748b; border: 1px solid #e2e8f0; font-family: 'Courier New', monospace; font-weight: bold; }
+        .detail-sub { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 8px; margin-top: 2px; }
+        .detail-badge { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; border: 1px solid #e2e8f0; }
+
+        .score-pill { background: #f8fafc; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; color: #64748b; border: 1px solid #e2e8f0; font-family: monospace; font-weight: bold; }
         
-        /* Judge Columns Colors */
-        .j-col-1 { background: rgba(245, 158, 11, 0.08); color: #b45309; font-weight: 700; }
-        .j-col-2 { background: rgba(16, 185, 129, 0.08); color: #047857; font-weight: 700; }
-        .j-col-3 { background: rgba(59, 130, 246, 0.08); color: #1d4ed8; font-weight: 700; }
-        
-        .total-col { font-weight: 800; color: var(--primary); font-size: 1.15rem; }
+        .j-col { font-weight: 700; color: #4b5563; background: #f9fafb; }
+        .total-col { font-weight: 800; color: var(--primary); font-size: 1rem; background: #eef2ff; }
 
         /* --- PODIUM --- */
-        .podium-stage {
-            display: flex; justify-content: center; align-items: flex-end; gap: 20px;
-            height: 380px; margin: 40px auto; max-width: 900px; padding-bottom: 20px;
-        }
-        .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; }
+        .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 350px; margin: 30px auto; max-width: 800px; padding-bottom: 20px; }
+        .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; color: white; font-weight: 800; font-size: 2.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .p1 .bar { height: 220px; background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); }
+        .p2 .bar { height: 160px; background: linear-gradient(180deg, #94a3b8 0%, #475569 100%); }
+        .p3 .bar { height: 120px; background: linear-gradient(180deg, #fdba74 0%, #b45309 100%); }
         
-        .bar { width: 100%; border-radius: 12px 12px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 15px; color: rgba(255,255,255,0.95); font-size: 3rem; font-weight: 800; box-shadow: 0 10px 20px rgba(0,0,0,0.1); transition: height 1s ease; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        
-        .p1 .bar { height: 240px; background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); z-index: 3; }
-        .p2 .bar { height: 180px; background: linear-gradient(180deg, #94a3b8 0%, #475569 100%); z-index: 2; }
-        .p3 .bar { height: 130px; background: linear-gradient(180deg, #fdba74 0%, #b45309 100%); z-index: 1; }
+        .winner-card { background: white; padding: 10px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 15px; width: 110%; border: 1px solid #e2e8f0; }
+        .w-name { font-weight: 700; color: var(--text-main); font-size: 1rem; }
+        .w-coach { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .w-score { color: var(--primary); font-weight: 800; font-size: 1.2rem; margin-top: 5px; }
 
-        .winner-card {
-            background: white; padding: 15px; border-radius: 16px; text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-bottom: 20px; width: 110%;
-            border: 1px solid rgba(255,255,255,0.6);
-            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
-        /* --- PRINT MODE --- */
+        /* Print Mode */
         @media print {
-            body { background: white; padding: 0; }
-            header, .toolbar, .nav-area, #toast { display: none !important; }
-            .container { max-width: 100%; margin: 0; }
-            .data-card { box-shadow: none; border: 1px solid #000; margin-bottom: 20px; break-inside: avoid; }
+            header, .toolbar-right, .nav-tabs, #toast, .filter-scroll { display: none !important; }
+            .sticky-nav { position: static; box-shadow: none; border: none; padding: 0; }
             .view-section { display: block !important; }
-            #view-live { display: block; } 
-            #view-podium { display: none; } /* Usually print live sheet only */
-            td, th { border: 1px solid #ccc; padding: 5px; font-size: 10pt; color: black; }
-            .col-sticky { position: static; border: 1px solid #ccc; box-shadow: none; }
-            .j-col-1, .j-col-2, .j-col-3 { background: none; color: black; }
+            .col-sticky { position: static; border: 1px solid #ccc; }
+            td, th { border: 1px solid #ccc; color: black; }
         }
 
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.1); } 100% { opacity: 1; transform: scale(1); } }
-        
-        /* Toast */
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.95rem; transform: translateY(100px); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; font-weight: 600; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; }
         .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
@@ -171,110 +179,134 @@
     
     <header>
         <div class="brand">
-            <div class="brand-icon">🧘‍♀️</div>
+            <div class="brand-icon">🧘‍♂️</div>
             <div>
-                <h1>Yoga Competition Scoreboard</h1>
-                <p id="updateStatus">System Ready. Waiting for live data...</p>
+                <h1>Yoga Scoreboard Pro</h1>
+                <p id="updateStatus">Connecting to Live Sheet...</p>
             </div>
         </div>
-        
-        <div style="text-align: right; display:none;" id="judgeDisplay">
+
+        <div class="judges-box">
+            <div class="jb-title">Today's Competition Respected Judges</div>
+            <div class="jb-row">
+                <span class="jb-label">1st Judge:</span>
+                <span class="jb-name" id="j1NameDisplay">--</span>
             </div>
+            <div class="jb-row">
+                <span class="jb-label">2nd Judge:</span>
+                <span class="jb-name" id="j2NameDisplay">--</span>
+            </div>
+            <div class="jb-row">
+                <span class="jb-label">3rd Judge:</span>
+                <span class="jb-name" id="j3NameDisplay">--</span>
+            </div>
+        </div>
     </header>
 
-    <div class="toolbar">
-        <div class="tool-group">
-            <div class="search-box">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" placeholder="Find Student by Name or Roll..." onkeyup="filterSearch()">
-            </div>
+    <div class="sticky-nav">
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchView('live', this)">📝 Live Score Board</button>
+            <button class="tab-btn" onclick="switchView('podium', this)">🏆 Judgment Podium</button>
         </div>
 
-        <div class="tool-group">
+        <div class="toolbar-right">
+            <div class="search-wrapper">
+                <select id="searchMode" class="search-select" onchange="toggleSearchMode()">
+                    <option value="track">🆔 Track No</option>
+                    <option value="center">📍 Center Name</option>
+                </select>
+                
+                <input type="text" id="inputTrack" class="search-input-box" placeholder="Search Track No..." onkeyup="handleSearch()">
+                
+                <input type="text" id="inputCenter" class="search-input-box" list="centerOptions" placeholder="Select Center..." style="display:none;" oninput="handleSearch()">
+                <datalist id="centerOptions">
+                    </datalist>
+            </div>
+
             <div id="liveBtn" class="live-toggle" onclick="toggleLive()">
                 <div class="dot"></div> <span id="liveText">Paused</span>
             </div>
             
-            <button class="btn btn-outline" onclick="fetchData(true)">
-                🔄 Refresh
-            </button>
-            <button class="btn btn-primary" onclick="window.print()">
-                🖨️ Print Sheet
-            </button>
-            <button class="btn btn-outline" onclick="toggleFullScreen()">
-                ⛶ Full Screen
-            </button>
+            <button onclick="fetchData(true)" style="background:white; border:1px solid #cbd5e1; padding:6px 10px; border-radius:8px; cursor:pointer;">🔄</button>
+            <button onclick="window.print()" style="background:var(--text-main); color:white; border:none; padding:6px 12px; border-radius:8px; cursor:pointer;">🖨️ Print</button>
         </div>
     </div>
 
-    <div class="nav-area">
-        <div class="tab-pill active" onclick="switchView('live', this)">📝 Live Score Sheet</div>
-        <div class="tab-pill" onclick="switchView('podium', this)">🏆 Judgment Podium</div>
-        <div class="divider"></div>
-        <div id="classFilters" style="display:flex; gap:10px;">
-            </div>
-    </div>
-
-    <div id="view-live" class="view-section active">
+    <div class="filter-scroll" id="groupFilters">
         </div>
 
-    <div id="view-podium" class="view-section">
-        </div>
+    <div id="view-live" class="view-section active"></div>
+
+    <div id="view-podium" class="view-section"></div>
 
 </div>
 
-<div id="toast" class="toast">
-    <span>✅</span> Live Data Updated
-</div>
+<div id="toast" class="toast">✅ Data Updated</div>
 
 <script>
-    /** ================= CONFIGURATION AREA ================= */
+    /** ================= CONFIGURATION ================= */
     
-    // 1. YOUR GOOGLE SHEET LINK
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
     
-    // 2. SCORING SETUP
-    // 10 marks for Asana 1,2,3 | 20 for Optional = 50 Total per Judge
-    const MARKS_PER_JUDGE = 50; 
-    const TOTAL_FM = MARKS_PER_JUDGE * 3; // 150 Total Marks
-
-    // 3. JUDGE NAMES SETUP (Change these names here!)
     const CONFIG = {
+        // Scoring
+        MARKS_PER_JUDGE: 50, 
+        TOTAL_FM: 150, 
+
+        // Judge Names (Displayed in Top Right Box)
         judges: {
-            j1: "Respected Judge X",  // e.g. "Amit Sharma"
-            j2: "Respected Judge Y",  // e.g. "Dr. R. Singh"
-            j3: "Respected Judge Z"   // e.g. "Priya Das"
+            j1: "Mr. Amit Kumar", 
+            j2: "Mrs. Sarah Jones",
+            j3: "Dr. Ravi Singh"
         },
+
+        // Column Mapping (Must match Sheet Headers Exactly)
         cols: {
-            id: "TRACK NO", name: "NAME OF THE ATHLETES", cls: "GROUP",
+            id: "TRACK NO",
+            name: "NAME OF THE ATHLETES",
+            group: "GROUP",         // Was Class
+            coach: "COACH NAME",    // New
+            center: "CENTER NAME",  // New
+            sex: "SEX",
+            
+            // Asana Columns
             asanas: [
                 { name: "Asana 1", keys: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
                 { name: "Asana 2", keys: ["ASANA 2 (Judge 1)", "ASANA 2 (Judge 2)", "ASANA 2 (Judge 3)"] },
                 { name: "Asana 3", keys: ["ASANA 3 (Judge 1)", "ASANA 3 (Judge 2)", "ASANA 3 (Judge 3)"] },
                 { name: "Optional", keys: ["OPTIONAL (Judge 1)", "OPTIONAL (Judge 2)", "OPTIONAL (Judge 3)"] }
             ],
-            j1: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
-            j2: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
-            j3: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"]
+            // For Summation
+            j1Keys: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
+            j2Keys: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
+            j3Keys: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"]
         }
     };
 
-    /** ================= STATE & INIT ================= */
+    /** ================= STATE ================= */
     let rawData = [];
-    let activeClass = "All";
+    let activeGroup = "All";
+    let centerList = new Set();
     let isLive = false;
     let timer = null;
 
-    window.onload = () => fetchData();
+    window.onload = () => {
+        // Set Judge Names in Header
+        document.getElementById('j1NameDisplay').innerText = CONFIG.judges.j1;
+        document.getElementById('j2NameDisplay').innerText = CONFIG.judges.j2;
+        document.getElementById('j3NameDisplay').innerText = CONFIG.judges.j3;
+        fetchData();
+    };
 
-    /** ================= CONTROLLER ================= */
+    /** ================= LOGIC ================= */
+    
     function toggleLive() {
         isLive = !isLive;
         const btn = document.getElementById('liveBtn');
         const txt = document.getElementById('liveText');
         if(isLive) {
             btn.classList.add('active');
-            txt.innerText = "Live On";
+            txt.innerText = "Live";
             timer = setInterval(() => fetchData(), 5000);
             fetchData();
         } else {
@@ -284,15 +316,8 @@
         }
     }
 
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-        else if (document.exitFullscreen) document.exitFullscreen();
-    }
-
-    /** ================= DATA LOGIC ================= */
     async function fetchData(manual = false) {
         try {
-            // Timestamp prevents caching
             const res = await fetch(`${CSV_URL}&t=${Date.now()}`);
             const text = await res.text();
             processData(text);
@@ -308,7 +333,7 @@
     function showToast() {
         const t = document.getElementById('toast');
         t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
+        setTimeout(() => t.classList.remove('show'), 2000);
     }
 
     function processData(csv) {
@@ -316,27 +341,34 @@
         const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ''));
         
         rawData = [];
-        const classes = new Set();
-        const COLS = CONFIG.cols;
+        const groups = new Set();
+        centerList.clear();
+
+        const C = CONFIG.cols;
 
         for (let i = 1; i < lines.length; i++) {
-            // Regex handles commas inside quotes
             const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, ''));
             const obj = {};
             headers.forEach((h, idx) => obj[h] = row[idx]);
 
-            const j1Sum = getSum(obj, COLS.j1);
-            const j2Sum = getSum(obj, COLS.j2);
-            const j3Sum = getSum(obj, COLS.j3);
+            // Calc Scores
+            const j1Sum = getSum(obj, C.j1Keys);
+            const j2Sum = getSum(obj, C.j2Keys);
+            const j3Sum = getSum(obj, C.j3Keys);
             const grand = j1Sum + j2Sum + j3Sum;
-            const perc = ((grand / TOTAL_FM) * 100).toFixed(2);
-            const cls = obj[COLS.cls] ? obj[COLS.cls].trim() : "Unknown";
+            const perc = ((grand / CONFIG.TOTAL_FM) * 100).toFixed(2);
             
-            classes.add(cls);
-            rawData.push({ ...obj, j1Sum, j2Sum, j3Sum, grand, perc, cls });
+            const grp = obj[C.group] ? obj[C.group].trim() : "Unknown";
+            const center = obj[C.center] ? obj[C.center].trim() : "";
+            
+            groups.add(grp);
+            if(center) centerList.add(center);
+
+            rawData.push({ ...obj, j1Sum, j2Sum, j3Sum, grand, perc, grp, center });
         }
 
-        renderFilters(Array.from(classes).sort());
+        renderFilters(Array.from(groups).sort());
+        populateCenterDropdown();
         renderApp();
     }
 
@@ -344,55 +376,87 @@
         return keys.reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
     }
 
-    /** ================= UI RENDERING ================= */
-    function renderFilters(classList) {
-        const div = document.getElementById('classFilters');
+    /* --- SEARCH LOGIC --- */
+    function toggleSearchMode() {
+        const mode = document.getElementById('searchMode').value;
+        const trackInput = document.getElementById('inputTrack');
+        const centerInput = document.getElementById('inputCenter');
+        
+        // Clear inputs
+        trackInput.value = "";
+        centerInput.value = "";
+
+        if(mode === 'track') {
+            trackInput.style.display = 'block';
+            centerInput.style.display = 'none';
+        } else {
+            trackInput.style.display = 'none';
+            centerInput.style.display = 'block';
+        }
+        renderApp(); // Reset view
+    }
+
+    function populateCenterDropdown() {
+        const dl = document.getElementById('centerOptions');
+        dl.innerHTML = "";
+        Array.from(centerList).sort().forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c;
+            dl.appendChild(opt);
+        });
+    }
+
+    function handleSearch() {
+        renderApp();
+    }
+
+    /* --- UI RENDERING --- */
+    function renderFilters(list) {
+        const div = document.getElementById('groupFilters');
         if (div.innerHTML.trim() !== "") return;
 
-        let html = `<div class="tab-pill ${activeClass === 'All' ? 'active' : ''}" onclick="filterClass('All', this)">All Classes</div>`;
-        classList.forEach(c => {
-            html += `<div class="tab-pill" onclick="filterClass('${c}', this)">${c}</div>`;
+        let html = `<div class="filter-chip ${activeGroup === 'All' ? 'active' : ''}" onclick="filterGroup('All', this)">All Groups</div>`;
+        list.forEach(g => {
+            html += `<div class="filter-chip" onclick="filterGroup('${g}', this)">${g}</div>`;
         });
         div.innerHTML = html;
     }
 
-    function filterClass(cls, el) {
-        activeClass = cls;
-        document.querySelectorAll('#classFilters .tab-pill').forEach(b => b.classList.remove('active'));
+    function filterGroup(g, el) {
+        activeGroup = g;
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
         el.classList.add('active');
         renderApp();
-    }
-
-    function filterSearch() {
-        renderApp(); 
     }
 
     function switchView(view, el) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
         document.getElementById(`view-${view}`).classList.add('active');
-        document.querySelectorAll('.nav-area > .tab-pill').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
     }
 
     function renderApp() {
-        const search = document.getElementById('searchInput').value.toLowerCase();
-        const COLS = CONFIG.cols;
+        const mode = document.getElementById('searchMode').value;
+        const trackVal = document.getElementById('inputTrack').value.toLowerCase();
+        const centerVal = document.getElementById('inputCenter').value.toLowerCase();
         
-        // 1. Filter by Class
-        let data = activeClass === "All" ? rawData : rawData.filter(d => d.cls === activeClass);
+        const C = CONFIG.cols;
+
+        // 1. Filter by Group
+        let data = activeGroup === "All" ? rawData : rawData.filter(d => d.grp === activeGroup);
         
-        // 2. Filter by Search
-        if(search) {
-            data = data.filter(d => 
-                d[COLS.name].toLowerCase().includes(search) || 
-                d[COLS.id].toString().includes(search)
-            );
+        // 2. Search Filter
+        if(mode === 'track' && trackVal) {
+            data = data.filter(d => d[C.id].toString().toLowerCase().includes(trackVal));
+        } else if(mode === 'center' && centerVal) {
+            data = data.filter(d => d.center.toLowerCase().includes(centerVal));
         }
 
-        // Grouping
+        // Grouping for Display
         const groups = {};
-        const cats = [...new Set(data.map(d => d.cls))].sort();
-        cats.forEach(c => groups[c] = data.filter(d => d.cls === c));
+        const cats = [...new Set(data.map(d => d.grp))].sort();
+        cats.forEach(c => groups[c] = data.filter(d => d.grp === c));
 
         renderLive(groups);
         renderPodium(groups);
@@ -400,13 +464,13 @@
 
     function renderLive(groups) {
         const container = document.getElementById('view-live');
-        const COLS = CONFIG.cols;
+        const C = CONFIG.cols;
         container.innerHTML = "";
 
-        Object.keys(groups).forEach(cls => {
-            const students = groups[cls];
-            let rows = students.map(s => {
-                let asanaCells = COLS.asanas.map(a => `
+        Object.keys(groups).forEach(grp => {
+            const athletes = groups[grp];
+            let rows = athletes.map(s => {
+                let asanaCells = C.asanas.map(a => `
                     <td style="border-right:1px solid #f1f5f9">
                         <div style="display:flex; gap:2px; justify-content:center;">
                             <span class="score-pill">${s[a.keys[0]] || '-'}</span>
@@ -419,36 +483,39 @@
                 return `
                     <tr>
                         <td class="col-sticky">
-                            <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${s[COLS.name]}</div>
-                            <div style="font-size:0.8rem; color:var(--text-muted);">Roll: ${s[COLS.id]}</div>
+                            <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${s[C.name]}</div>
+                            <div class="detail-sub">
+                                <span class="detail-badge">🆔 ${s[C.id]}</span>
+                                <span class="detail-badge">👨‍🏫 ${s[C.coach]}</span>
+                            </div>
                         </td>
                         ${asanaCells}
-                        <td class="j-col-1">${s.j1Sum}</td>
-                        <td class="j-col-2">${s.j2Sum}</td>
-                        <td class="j-col-3">${s.j3Sum}</td>
+                        <td class="j-col">${s.j1Sum}</td>
+                        <td class="j-col">${s.j2Sum}</td>
+                        <td class="j-col">${s.j3Sum}</td>
                         <td class="total-col">${s.grand}</td>
                         <td><span style="background:#e0e7ff; color:#4338ca; padding:4px 8px; border-radius:8px; font-weight:700; font-size:0.8rem;">${s.perc}%</span></td>
                     </tr>
                 `;
             }).join("");
 
-            let headers = COLS.asanas.map(a => `<th>${a.name} <div style="font-size:0.65rem; font-weight:400; opacity:0.7;">(J1 | J2 | J3)</div></th>`).join("");
+            let headers = C.asanas.map(a => `<th>${a.name} <div style="font-size:0.65rem; font-weight:400; opacity:0.7;">(1st | 2nd | 3rd)</div></th>`).join("");
 
             container.innerHTML += `
                 <div class="data-card">
                     <div class="card-head">
-                        <h3>${cls}</h3>
-                        <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">${students.length} Students</span>
+                        <h3>${grp}</h3>
+                        <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">${athletes.length} Athletes</span>
                     </div>
                     <div style="overflow-x:auto;">
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="col-sticky">Student Details</th>
+                                    <th class="col-sticky">Athlete Details</th>
                                     ${headers}
-                                    <th style="color:#b45309; background:rgba(245, 158, 11, 0.05);">${CONFIG.judges.j1}</th>
-                                    <th style="color:#047857; background:rgba(16, 185, 129, 0.05);">${CONFIG.judges.j2}</th>
-                                    <th style="color:#1d4ed8; background:rgba(59, 130, 246, 0.05);">${CONFIG.judges.j3}</th>
+                                    <th>1st Judge</th>
+                                    <th>2nd Judge</th>
+                                    <th>3rd Judge</th>
                                     <th>Total</th>
                                     <th>%</th>
                                 </tr>
@@ -463,63 +530,65 @@
 
     function renderPodium(groups) {
         const container = document.getElementById('view-podium');
-        const COLS = CONFIG.cols;
+        const C = CONFIG.cols;
         container.innerHTML = "";
 
-        Object.keys(groups).forEach(cls => {
-            const students = [...groups[cls]].sort((a, b) => {
+        Object.keys(groups).forEach(grp => {
+            const athletes = [...groups[grp]].sort((a, b) => {
                 if (b.grand !== a.grand) return b.grand - a.grand;
                 if (b.j1Sum !== a.j1Sum) return b.j1Sum - a.j1Sum;
                 return b.j2Sum - a.j2Sum;
             });
 
-            if(students.length === 0) return;
-            const [s1, s2, s3] = students;
+            if(athletes.length === 0) return;
+            const [s1, s2, s3] = athletes;
 
             let podium = `
                 <div class="data-card">
-                    <div class="card-head"><h3>🏆 ${cls} - Final Results</h3></div>
+                    <div class="card-head"><h3>🏆 ${grp} - Final Results</h3></div>
                     <div class="podium-stage">
                         <div class="podium-col p2">
                             ${s2 ? `<div class="winner-card">
-                                <div style="font-weight:700;">${s2[COLS.name]}</div>
-                                <div style="color:var(--text-main); font-weight:800; font-size:1.2rem;">${s2.grand} pts</div>
+                                <div class="w-name">${s2[C.name]}</div>
+                                <div class="w-coach">Coach: ${s2[C.coach]}</div>
+                                <div class="w-score">${s2.grand}</div>
                             </div><div class="bar">2</div>` : ''}
                         </div>
                         <div class="podium-col p1">
                             ${s1 ? `<div class="winner-card" style="transform: scale(1.1); border:2px solid #fbbf24;">
                                 <div style="font-size:1.5rem;">🥇</div>
-                                <div style="font-weight:700; font-size:1.1rem;">${s1[COLS.name]}</div>
-                                <div style="color:#d97706; font-weight:800; font-size:1.5rem;">${s1.grand} pts</div>
+                                <div class="w-name">${s1[C.name]}</div>
+                                <div class="w-coach">Coach: ${s1[C.coach]}</div>
+                                <div class="w-score" style="color:#d97706;">${s1.grand}</div>
                             </div><div class="bar">1</div>` : ''}
                         </div>
                         <div class="podium-col p3">
                             ${s3 ? `<div class="winner-card">
-                                <div style="font-weight:700;">${s3[COLS.name]}</div>
-                                <div style="color:var(--text-main); font-weight:800; font-size:1.2rem;">${s3.grand} pts</div>
+                                <div class="w-name">${s3[C.name]}</div>
+                                <div class="w-coach">Coach: ${s3[C.coach]}</div>
+                                <div class="w-score">${s3.grand}</div>
                             </div><div class="bar">3</div>` : ''}
                         </div>
                     </div>
                     
-                    <div style="padding:20px; max-width:850px; margin:0 auto;">
-                        <h4 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-bottom:15px;">Full Ranking & Judgment Analysis</h4>
+                    <div style="padding:20px; max-width:900px; margin:0 auto;">
+                        <h4 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-bottom:15px;">Full Ranking</h4>
                         <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
-                            ${students.map((s, i) => {
+                            ${athletes.map((s, i) => {
                                 let tieReason = "";
-                                if(i > 0 && students[i-1].grand === s.grand) {
-                                    const prev = students[i-1];
-                                    if(prev.j1Sum > s.j1Sum) tieReason = `Lost Tie by ${CONFIG.judges.j1}`;
-                                    else if(prev.j2Sum > s.j2Sum) tieReason = `Lost Tie by ${CONFIG.judges.j2}`;
-                                    
-                                    tieReason = `<span style="font-size:0.75rem; color:#d97706; background:#fffbeb; padding:2px 8px; border-radius:4px;">⚠️ ${tieReason}</span>`;
+                                if(i > 0 && athletes[i-1].grand === s.grand) {
+                                    const prev = athletes[i-1];
+                                    if(prev.j1Sum > s.j1Sum) tieReason = `Tie broken by 1st Judge`;
+                                    else if(prev.j2Sum > s.j2Sum) tieReason = `Tie broken by 2nd Judge`;
+                                    tieReason = `<span style="font-size:0.7rem; color:#d97706; background:#fffbeb; padding:2px 6px; border-radius:4px;">⚠️ ${tieReason}</span>`;
                                 }
                                 return `
                                     <div style="display:flex; align-items:center; padding:12px 15px; border-bottom:1px solid #f1f5f9; background:white; gap:15px;">
-                                        <div style="font-weight:800; color:#cbd5e1; font-size:1.3rem; width:35px;">${i+1}</div>
+                                        <div style="font-weight:800; color:#cbd5e1; font-size:1.3rem; width:30px;">${i+1}</div>
                                         <div style="flex:1;">
-                                            <div style="font-weight:700; color:var(--text-main); font-size:1rem;">${s[COLS.name]}</div>
+                                            <div style="font-weight:700; color:var(--text-main);">${s[C.name]}</div>
                                             <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
-                                                ${CONFIG.judges.j1}: <b>${s.j1Sum}</b> | ${CONFIG.judges.j2}: <b>${s.j2Sum}</b> | ${CONFIG.judges.j3}: <b>${s.j3Sum}</b>
+                                                Coach: ${s[C.coach]} | Track: ${s[C.id]}
                                             </div>
                                         </div>
                                         <div style="text-align:right;">
