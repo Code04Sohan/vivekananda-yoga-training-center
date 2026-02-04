@@ -10,7 +10,7 @@ const CONFIG = {
     logoImage: "resources/yoga_dp.jpeg",
 
     // 🟢 ADD YOUR IMAGE LINK HERE
-    thankYouImage: "https://via.placeholder.com/400x600",
+    thankYouImage: "resources/yoga_thankyou.jpeg",
 
     // 🟢 DETAILED AGE GROUPS
     ageGroups: [
