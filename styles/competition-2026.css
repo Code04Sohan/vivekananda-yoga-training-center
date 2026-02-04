@@ -170,7 +170,7 @@ input[readonly] {
 #successView {
     display: none;
     text-align: center;
-    padding: 40px 20px;
+    padding: 20px 10px;
     background: rgba(255, 255, 255, 0.95);
     flex-grow: 1;
 }
@@ -290,6 +290,6 @@ iframe {
             /* margin: 15px auto; */
             margin: 25px auto;
             display: block;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            /* border: 4px solid white; */
+            /* box-shadow: 0 8px 20px rgba(0,0,0,0.1); */
+            border: 4px solid white;
         }
