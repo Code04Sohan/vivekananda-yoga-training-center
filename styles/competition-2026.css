@@ -192,7 +192,7 @@ input[readonly] {
     border-radius: 10px;
     overflow: hidden;
     border: 2px solid #ddd;
-    height: 300px;
+    height: 200px;
     width: 100%;
 }
 
