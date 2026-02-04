@@ -164,11 +164,11 @@
     // 1. YOUR SHEET LINK
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
 
-    // 2. SCORING CONFIG
-    const MARKS_PER_ASANA = 25; // Change if marks are out of 10, 20 etc.
+    // 2. SCORING CONFIG (UPDATED)
+    // Asana 1,2,3 (10 each) + Optional (20) = 50 Marks Per Judge
+    const MARKS_PER_JUDGE = 50; 
     const NUM_JUDGES = 3;
-    const NUM_ASANAS = 4; // 3 Main + 1 Optional
-    const TOTAL_FM = MARKS_PER_ASANA * NUM_ASANAS * NUM_JUDGES; // Auto-calculated (300)
+    const TOTAL_FM = MARKS_PER_JUDGE * NUM_JUDGES; // This will now be 150
 
     const COLS = {
         id: "Roll No",
