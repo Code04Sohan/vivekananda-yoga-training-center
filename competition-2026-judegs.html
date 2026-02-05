@@ -17,7 +17,7 @@
     #login-screen { width: 90%; max-width: 400px; padding: 40px; background: rgba(36,52,77,0.9); border-radius: 12px; text-align: center; border: 1px solid #444; }
     .input-box { position: relative; margin-bottom: 15px; }
     .input-box i { position: absolute; left: 15px; top: 12px; color: #888; }
-    .inp { width: 100%; padding: 12px 12px 12px 45px; border-radius: 6px; border: none; font-size: 16px; box-sizing: border-box; }
+    .inp { width: 100%; padding: 12px 12px 12px 45px; border-radius: 6px; border: none; font-size: 16px; box-sizing: border-box; text-transform: uppercase;}
     .btn-gold { background: var(--gold); color: #1a2639; font-weight: bold; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; border:none; cursor: pointer; margin-top:10px;}
     .btn-gold:disabled { background: #555; color: #999; cursor: not-allowed; }
 
@@ -160,31 +160,36 @@
     }
 
     // --- OPERATIONS ---
-    function startHeat() {
-      const t = ['a','b','c'].map(x => document.getElementById('track-'+x).value.trim()).filter(Boolean);
-      if(!t.length) return alert("Enter at least one track number");
-      
-      showLoad("Fetching from Node " + currentUser.num + "...");
-      
-      // Use the assigned ACTIVE URL for this judge
-      fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
-        .then(r => r.json())
-        .then(res => {
-          hideLoad();
-          if(res.status === 'success') {
-            heatData = t.map((id, i) => ({
-              uid: ['A','B','C'][i],
-              track: id,
-              info: res.data[id] || {name:'Unknown', group:'-', coach:'-'},
-              scores: {a1:0, a2:0, a3:0, opt:0}
-            }));
-            render();
-            document.getElementById('track-screen').classList.add('hidden');
-            document.getElementById('scoring-screen').classList.remove('hidden');
-          } else { alert("Error: " + res.message); }
-        })
-        .catch(() => { hideLoad(); alert("Fetch Failed"); });
-    }
+    /* IN YOUR <script> SECTION */
+function startHeat() {
+  // ADDED .toUpperCase() HERE:
+  const t = ['a','b','c']
+    .map(x => document.getElementById('track-'+x).value.trim().toUpperCase()) 
+    .filter(Boolean);
+  
+  if(!t.length) return alert("Enter at least one track number");
+  
+  showLoad("Fetching from Node " + currentUser.num + "...");
+  
+  // Now 't' contains ["MS001"] even if user typed "ms001"
+  fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
+    .then(r => r.json())
+    .then(res => {
+      hideLoad();
+      if(res.status === 'success') {
+        heatData = t.map((id, i) => ({
+          uid: ['A','B','C'][i],
+          track: id,
+          info: res.data[id] || {name:'Unknown', group:'-', coach:'-'},
+          scores: {a1:0, a2:0, a3:0, opt:0}
+        }));
+        render();
+        document.getElementById('track-screen').classList.add('hidden');
+        document.getElementById('scoring-screen').classList.remove('hidden');
+      } else { alert("Error: " + res.message); }
+    })
+    .catch(() => { hideLoad(); alert("Fetch Failed"); });
+}
 
     function render() {
       const g = document.getElementById('grid');
