@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yoga Judge Pool System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <style>
+    /* COMPACT & DARK UI STYLES */
+    :root { --bg: #1a2639; --card: #24344d; --gold: #cfb53b; --white: #fff; }
+    body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .hidden { display: none !important; }
+    
+    /* Login */
+    #login-screen { width: 90%; max-width: 400px; padding: 40px; background: rgba(36,52,77,0.9); border-radius: 12px; text-align: center; border: 1px solid #444; }
+    .input-box { position: relative; margin-bottom: 15px; }
+    .input-box i { position: absolute; left: 15px; top: 12px; color: #888; }
+    .inp { width: 100%; padding: 12px 12px 12px 45px; border-radius: 6px; border: none; font-size: 16px; box-sizing: border-box; }
+    .btn-gold { background: var(--gold); color: #1a2639; font-weight: bold; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; border:none; cursor: pointer; margin-top:10px;}
+    .btn-gold:disabled { background: #555; color: #999; cursor: not-allowed; }
+
+    /* Header */
+    .app-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: var(--bg); border-bottom: 1px solid #333; z-index: 100; }
+    
+    /* Grid */
+    #track-screen, #scoring-screen { width: 95%; max-width: 1000px; padding-top: 80px; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align:left; }
+    .card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #334; }
+    
+    /* Stepper */
+    .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .stepper { display: flex; align-items: center; gap: 5px; background: #111; padding: 3px; border-radius: 6px; }
+    .s-btn { width: 32px; height: 32px; background: #ddd; border:none; font-weight:bold; font-size:18px; border-radius:4px; cursor:pointer;}
+    .val { width: 40px; text-align: center; color: var(--gold); font-weight: bold; font-size: 16px; }
+
+    /* Footer */
+    .footer { display: flex; gap: 10px; margin-top: 30px; margin-bottom: 50px;}
+    .btn-out { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 6px; font-weight: bold; flex: 1; cursor:pointer;}
+    
+    #loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200; display:flex; justify-content:center; align-items:center; flex-direction:column;}
+  </style>
+</head>
+<body>
+
+  <div id="loader"><h3 id="loader-txt" style="color:var(--gold);">Initializing Pool...</h3></div>
+
+  <div id="login-screen">
+    <i class="material-icons" style="font-size:48px; color:var(--gold);">self_improvement</i>
+    <h2 style="color:#ddd; font-weight:normal;">Judge Portal</h2>
+    <div id="pool-status" style="font-size:12px; color:#888; margin-bottom:15px;">Connecting to Judge Pool...</div>
+    
+    <div class="input-box"><i class="material-icons">person</i><input id="user" class="inp" type="text" placeholder="Username"></div>
+    <div class="input-box"><i class="material-icons">lock</i><input id="pin" class="inp" type="password" placeholder="PIN"></div>
+    <button id="login-btn" class="btn-gold" onclick="doLogin()" disabled>WAITING FOR NETWORK...</button>
+    <div id="error-msg" style="color:#ff6b6b; margin-top:10px; font-size:14px;"></div>
+  </div>
+
+  <div id="app-header" class="app-header hidden">
+    <div style="color:var(--gold); font-weight:bold; font-size:18px;">YOGA LIVE</div>
+    <div style="color:#aaa; display:flex; align-items:center; gap:8px;">
+      <span id="judge-lbl">Judge</span> <i class="material-icons">account_circle</i>
+    </div>
+  </div>
+
+  <div id="track-screen" class="hidden">
+    <h3 style="color:#ccc;">Enter Track Numbers</h3>
+    <div style="max-width:400px; margin:0 auto; text-align:left;">
+      <div style="margin-bottom:15px;">
+        <label style="display:block; color:#888; margin-bottom:5px;">Student A</label>
+        <input id="track-a" class="inp" type="text" placeholder="e.g. VT001">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block; color:#888; margin-bottom:5px;">Student B</label>
+        <input id="track-b" class="inp" type="text" placeholder="e.g. SJ023">
+      </div>
+      <div style="margin-bottom:15px;">
+        <label style="display:block; color:#888; margin-bottom:5px;">Student C</label>
+        <input id="track-c" class="inp" type="text" placeholder="e.g. MK101">
+      </div>
+      <button class="btn-gold" onclick="startHeat()">FETCH DATA & START</button>
+    </div>
+  </div>
+
+  <div id="scoring-screen" class="hidden">
+    <div id="grid" class="grid"></div>
+    <div class="footer">
+      <button class="btn-out" onclick="reset()">CANCEL</button>
+      <button class="btn-gold" onclick="submit()">SUBMIT SCORES</button>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. THE ACCOUNT POOL CONFIGURATION ---
+    // Paste your deployed Web App URLs here.
+    const API_POOL = {
+      "1": "https://script.google.com/macros/s/AKfycbwVOSKuYX6bUkN_ikRU43z7peYNMPn2mTq-rkrYaw-KSw-Twf7CXowitnMl5lvhGCuI/exec", 
+      "2": "https://script.google.com/macros/s/AKfycbxw78NmNVw1IGhqztUU9sLOWtegzvOsZuqQ3rqrdsMC_19H0koes8LYydOth1lviKfi/exec", 
+      "3": "https://script.google.com/macros/s/AKfycbxw78NmNVw1IGhqztUU9sLOWtegzvOsZuqQ3rqrdsMC_19H0koes8LYydOth1lviKfi/exec"
+    };
+
+    // We use Account 1 as the 'Master' to fetch the initial Auth list.
+    const MASTER_URL = API_POOL["1"]; 
+
+    // --- STATE ---
+    let authDB = [];
+    let currentUser = null;
+    let activeApiUrl = ""; // Will be set after login
+    let heatData = [];
+
+    // --- INITIALIZE ---
+    window.onload = () => {
+      fetch(MASTER_URL + "?action=getAuth")
+        .then(r => r.json())
+        .then(d => {
+          if(d.status === 'success') {
+            parseAuth(d.data);
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('login-btn').innerText = "LOGIN";
+            document.getElementById('login-btn').disabled = false;
+            document.getElementById('pool-status').innerText = "System Online • Pool Ready";
+            document.getElementById('pool-status').style.color = "#4caf50";
+          }
+        })
+        .catch(e => document.getElementById('loader-txt').innerText = "Connection Failed. Refresh.");
+    };
+
+    function parseAuth(txt) {
+      authDB = txt.split('\n').map(l => {
+        const p = l.split(',');
+        if(p.length>=4) return { user:p[0].trim(), pin:p[1].trim(), name:p[2].trim(), num:p[3].trim() };
+      }).filter(Boolean);
+    }
+
+    // --- LOGIN & ROUTING ---
+    function doLogin() {
+      const u = document.getElementById('user').value.trim();
+      const p = document.getElementById('pin').value.trim();
+      const match = authDB.find(x => x.user === u && x.pin === p);
+
+      if(match) {
+        currentUser = match;
+        // SMART ROUTING: Assign specific API URL based on Judge Number
+        activeApiUrl = API_POOL[match.num]; 
+        
+        if(!activeApiUrl) {
+           alert("Configuration Error: No API URL found for Judge " + match.num);
+           return;
+        }
+
+        document.getElementById('judge-lbl').innerText = `${match.name} (J${match.num})`;
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-header').classList.remove('hidden');
+        document.getElementById('track-screen').classList.remove('hidden');
+        console.log(`Logged in as ${match.name}. Using API Node: ${match.num}`);
+      } else {
+        document.getElementById('error-msg').innerText = "Invalid Credentials";
+      }
+    }
+
+    // --- OPERATIONS ---
+    function startHeat() {
+      const t = ['a','b','c'].map(x => document.getElementById('track-'+x).value.trim()).filter(Boolean);
+      if(!t.length) return alert("Enter at least one track number");
+      
+      showLoad("Fetching from Node " + currentUser.num + "...");
+      
+      // Use the assigned ACTIVE URL for this judge
+      fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
+        .then(r => r.json())
+        .then(res => {
+          hideLoad();
+          if(res.status === 'success') {
+            heatData = t.map((id, i) => ({
+              uid: ['A','B','C'][i],
+              track: id,
+              info: res.data[id] || {name:'Unknown', group:'-', coach:'-'},
+              scores: {a1:0, a2:0, a3:0, opt:0}
+            }));
+            render();
+            document.getElementById('track-screen').classList.add('hidden');
+            document.getElementById('scoring-screen').classList.remove('hidden');
+          } else { alert("Error: " + res.message); }
+        })
+        .catch(() => { hideLoad(); alert("Fetch Failed"); });
+    }
+
+    function render() {
+      const g = document.getElementById('grid');
+      g.innerHTML = '';
+      heatData.forEach((s, i) => {
+        g.innerHTML += `
+        <div class="card">
+          <div style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:10px;">
+            <div style="color:var(--gold); font-size:20px; font-weight:bold;">#${s.track}</div>
+            <div style="font-size:14px;">${s.info.name}</div>
+            <div style="font-size:12px; color:#888;">${s.info.group} • ${s.info.coach}</div>
+          </div>
+          ${step(i,'a1','Asana 1')} ${step(i,'a2','Asana 2')} ${step(i,'a3','Asana 3')} ${step(i,'opt','Optional')}
+        </div>`;
+      });
+    }
+
+    function step(i, k, l) {
+      return `<div class="row"><span style="font-size:14px; color:#aaa;">${l}</span>
+        <div class="stepper">
+          <button class="s-btn" onclick="mod(${i},'${k}',-0.5)">-</button>
+          <div class="val" id="v-${i}-${k}">0</div>
+          <button class="s-btn" onclick="mod(${i},'${k}',0.5)">+</button>
+        </div></div>`;
+    }
+
+    function mod(i, k, d) {
+      let v = heatData[i].scores[k] + d;
+      if(v<0) v=0; if(v>10) v=10;
+      heatData[i].scores[k] = v;
+      document.getElementById(`v-${i}-${k}`).innerText = v;
+    }
+
+    function submit() {
+      showLoad("Submitting to Node " + currentUser.num + "...");
+      const payload = {
+        judgeNum: currentUser.num,
+        students: heatData.map(s => ({ trackNo: s.track, scores: s.scores }))
+      };
+
+      fetch(activeApiUrl, { method:"POST", body:JSON.stringify(payload) })
+        .then(r => r.json())
+        .then(d => {
+           hideLoad();
+           if(d.status === 'success') { alert("Saved!"); reset(); }
+           else { alert("Error: " + d.message); }
+        })
+        .catch(e => { hideLoad(); alert("Submit Failed"); });
+    }
+
+    function reset() {
+      ['track-a','track-b','track-c'].forEach(x => document.getElementById(x).value='');
+      document.getElementById('scoring-screen').classList.add('hidden');
+      document.getElementById('track-screen').classList.remove('hidden');
+    }
+
+    function showLoad(m) { document.getElementById('loader').classList.remove('hidden'); document.getElementById('loader-txt').innerText=m; }
+    function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
+  </script>
+</body>
+</html>
