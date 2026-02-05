@@ -4,7 +4,7 @@
 
 const CONFIG = {
     // 🔴 PASTE YOUR WEB APP URL HERE
-    scriptUrl: "https://script.google.com/macros/s/AKfycbwVOSKuYX6bUkN_ikRU43z7peYNMPn2mTq-rkrYaw-KSw-Twf7CXowitnMl5lvhGCuI/exec",
+    scriptUrl: "https://script.google.com/macros/s/AKfycbx6BzD6Amm0CWEkeIz-2mjRTZqDTTWTsjzOU3mG6fn9NpF9D7xM_ccPoRyDSfbR2Iv3/exec",
     // 🔴 BACKGROUND IMAGE AND LOGO
     backgroundImage: "resources/yoga_background.png",
     logoImage: "resources/yoga_dp.jpeg",
