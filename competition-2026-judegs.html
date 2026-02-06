@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Judge Scoring System Pro V4</title>
+  <title>Judge Scoring System V6</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   
@@ -21,162 +21,116 @@
     body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-x: hidden; }
     .hidden { display: none !important; }
     
-    /* --- LOADING OVERLAY --- */
-    #loader { 
-      position: fixed; top:0; left:0; width:100%; height:100%; 
-      background: var(--dim-overlay); z-index:9999; 
-      display:flex; justify-content:center; align-items:center; flex-direction:column;
-      backdrop-filter: blur(5px);
-    }
-    .spinner {
-      border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--gold);
-      border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
+    /* --- LOADER --- */
+    #loader { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--dim-overlay); z-index:9999; display:flex; justify-content:center; align-items:center; flex-direction:column; backdrop-filter: blur(5px); }
+    .spinner { border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--gold); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* --- LOGIN SCREEN --- */
-    #login-screen { 
-      width: 90%; max-width: 400px; padding: 40px; 
-      background: rgba(36,52,77,0.8); border-radius: 16px; 
-      text-align: center; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    
-    .logo-img {
-      width: 100px; height: 100px; border-radius: 50%; 
-      border: 3px solid var(--gold); object-fit: cover;
-      margin-bottom: 20px; padding: 5px; background: var(--bg);
-    }
-
+    #login-screen { width: 90%; max-width: 400px; padding: 40px; background: rgba(36,52,77,0.8); border-radius: 16px; text-align: center; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .logo-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; margin-bottom: 20px; padding: 5px; background: var(--bg); }
     .input-box { position: relative; margin-bottom: 20px; text-align: left; }
     .input-box i { position: absolute; left: 15px; top: 12px; color: #888; }
-    .inp { 
-      width: 100%; padding: 12px 12px 12px 45px; 
-      border-radius: 8px; border: 1px solid #444; 
-      background: #151e2e; color: white; font-size: 16px; 
-      box-sizing: border-box; transition: 0.3s;
-    }
+    .inp { width: 100%; padding: 12px 12px 12px 45px; border-radius: 8px; border: 1px solid #444; background: #151e2e; color: white; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
     .inp:focus { border-color: var(--gold); outline: none; background: #1a2639; }
-    
-    .btn-gold { 
-      background: var(--gold); color: #1a2639; 
-      font-weight: bold; padding: 14px; width: 100%; 
-      border-radius: 8px; font-size: 16px; border:none; 
-      cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-      transition: transform 0.1s;
-    }
+    .btn-gold { background: var(--gold); color: #1a2639; font-weight: bold; padding: 14px; width: 100%; border-radius: 8px; font-size: 16px; border:none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: transform 0.1s; }
     .btn-gold:active { transform: scale(0.98); }
 
-    /* --- SYSTEM STATUS PANEL (Bottom Right) --- */
-    #status-panel {
-      position: fixed; bottom: 20px; right: 20px;
-      background: rgba(0,0,0,0.6); padding: 15px;
-      border-radius: 10px; border: 1px solid #444;
-      font-size: 12px; color: #aaa; width: 180px;
-      backdrop-filter: blur(4px);
+    /* --- HEADER --- */
+    .app-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: var(--bg); border-bottom: 1px solid #333; z-index: 100; }
+    .node-badge { font-size: 12px; color: var(--green); margin-right: 15px; display: flex; align-items: center; gap: 5px; }
+    .user-menu { position: relative; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .profile-btn { background: transparent; border: none; color: #aaa; display: flex; align-items: center; gap: 8px; font-size: 16px; cursor: pointer; }
+    .dropdown-content { display: none; position: absolute; right: 0; top: 50px; background-color: var(--card); min-width: 160px; box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; border: 1px solid #444; }
+    .dropdown-content div { color: white; padding: 12px 16px; text-decoration: none; display: block; cursor: pointer; }
+    .dropdown-content div:hover { background-color: #333; }
+    .show { display: block; }
+
+    /* --- TRACK SCREEN --- */
+    #track-screen { width: 95%; max-width: 1000px; padding-top: 80px; text-align: center; padding-bottom: 50px; }
+    .track-row { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .track-row label { display: block; color: #aaa; margin-bottom: 5px; font-size: 14px; }
+    .track-inp { text-transform: uppercase; font-size: 18px; letter-spacing: 1px; }
+
+    /* --- SCORING SCREEN (MATRIX LAYOUT) --- */
+    #scoring-screen { width: 98%; max-width: 1200px; padding-top: 80px; padding-bottom: 50px; }
+    
+    /* The Table/Grid Container */
+    .score-table { display: flex; flex-direction: column; gap: 10px; }
+    
+    /* Table Headers */
+    .table-header { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr; gap: 10px; padding: 0 10px; margin-bottom: 5px; }
+    .th-cell { color: #aaa; font-size: 14px; text-align: center; font-weight: bold; }
+    .th-left { text-align: left; padding-left: 10px; }
+
+    /* Student Row Card */
+    .score-card { 
+      background: var(--card); border-radius: 8px; border: 1px solid #334; 
+      display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr 1fr; gap: 10px; 
+      padding: 15px 10px; align-items: center;
     }
+
+    /* Left Side: Student Details */
+    .student-details { text-align: left; padding-left: 10px; border-right: 1px solid #444; padding-right: 10px; }
+    .sd-track { color: var(--gold); font-size: 20px; font-weight: bold; letter-spacing: 0.5px; }
+    .sd-name { font-size: 16px; font-weight: 500; color: #fff; margin: 4px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sd-coach { font-size: 12px; color: #8dbaff; }
+
+    /* Right Side: Inputs (Vertical Columns) */
+    .input-cell { display: flex; justify-content: center; align-items: center; }
+    .score-input { 
+      width: 100%; max-width: 70px; padding: 12px 5px; font-size: 18px; text-align: center; 
+      background: #111; border: 1px solid #555; border-radius: 6px; color: white; font-weight: bold;
+    }
+    .score-input:focus { outline: none; border-color: var(--gold); background: #000; }
+    .score-input.error { border-color: var(--red); background: rgba(255, 107, 107, 0.1); color: var(--red); }
+    .score-input::placeholder { color: #444; font-weight: normal; }
+
+    /* Footer */
+    .footer { display: flex; gap: 15px; margin-top: 30px; justify-content: center; }
+    .btn-out { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 14px 30px; border-radius: 8px; font-weight: bold; cursor:pointer; }
+    .btn-submit { background: var(--gold); color: #1a2639; padding: 14px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; flex-grow: 1; max-width: 400px;}
+    
+    /* STATUS DOTS */
+    #status-panel { position: fixed; bottom: 20px; right: 20px; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; border: 1px solid #444; font-size: 12px; color: #aaa; width: 180px; backdrop-filter: blur(4px); }
     .status-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; }
     .dot-green { background: var(--green); box-shadow: 0 0 5px var(--green); }
     .dot-red { background: var(--red); box-shadow: 0 0 5px var(--red); }
     .dot-yellow { background: var(--gold); }
-
-    /* --- HEADER & DROPDOWN --- */
-    .app-header { 
-      position: fixed; top: 0; left: 0; right: 0; height: 60px; 
-      display: flex; justify-content: space-between; align-items: center; 
-      padding: 0 20px; background: var(--bg); border-bottom: 1px solid #333; z-index: 100; 
-    }
-    .node-badge { font-size: 12px; color: var(--green); margin-right: 15px; display: flex; align-items: center; gap: 5px; }
-    
-    .user-menu { position: relative; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-    .profile-btn { 
-      background: transparent; border: none; color: #aaa; 
-      display: flex; align-items: center; gap: 8px; font-size: 16px; cursor: pointer;
-    }
-    .dropdown-content {
-      display: none; position: absolute; right: 0; top: 50px; 
-      background-color: var(--card); min-width: 160px; 
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); 
-      border-radius: 8px; overflow: hidden; border: 1px solid #444;
-    }
-    .dropdown-content div {
-      color: white; padding: 12px 16px; text-decoration: none; display: block; cursor: pointer;
-    }
-    .dropdown-content div:hover { background-color: #333; }
-    .show { display: block; }
-
-    /* --- SCREENS --- */
-    #track-screen, #scoring-screen { width: 95%; max-width: 1000px; padding-top: 80px; text-align: center; padding-bottom: 50px; }
-    
-    .track-row { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
-    .track-row label { display: block; color: #aaa; margin-bottom: 5px; font-size: 14px; }
-    .track-inp { text-transform: uppercase; font-size: 18px; letter-spacing: 1px; }
-
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align:left; }
-    
-    .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334; display: flex; flex-direction: column; gap: 15px; }
-    
-    .student-info { text-align: center; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 5px; }
-    .s-track { color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 1px; }
-    .s-name { font-size: 18px; font-weight: 500; margin: 5px 0; color: #fff; }
-    .s-meta { font-size: 13px; color: #aaa; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;}
-    .s-coach { color: #8dbaff; }
-
-    .score-row { display: flex; justify-content: space-between; align-items: center; }
-    .score-input { width: 80px; padding: 10px; font-size: 18px; text-align: center; background: #111; border: 1px solid #555; border-radius: 6px; color: white; }
-    .score-input:focus { outline: none; border-color: var(--gold); }
-    .score-input.error { border-color: var(--red); background: rgba(255, 107, 107, 0.1); color: var(--red); }
-    .error-msg { color: var(--red); font-size: 12px; text-align: right; height: 14px; margin-top: 2px;}
-
-    .footer { display: flex; gap: 15px; margin-top: 30px; justify-content: center; }
-    .btn-out { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 14px 30px; border-radius: 8px; font-weight: bold; cursor:pointer; }
-    .btn-submit { background: var(--gold); color: #1a2639; padding: 14px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; flex-grow: 1; max-width: 400px;}
-    
   </style>
 </head>
 <body>
 
-  <div id="loader" class="hidden">
-    <div class="spinner"></div>
-    <h3 id="loader-txt" style="color:var(--gold); font-weight: normal; letter-spacing: 1px;">Loading...</h3>
-  </div>
+  <div id="loader" class="hidden"><div class="spinner"></div><h3 id="loader-txt" style="color:var(--gold);">Loading...</h3></div>
 
   <div id="status-panel">
     <div style="border-bottom:1px solid #555; margin-bottom:8px; padding-bottom:5px; font-weight:bold; color:var(--gold);">SYSTEM HEALTH</div>
     <div class="status-item"><span>Auth Database</span> <div id="stat-auth" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>Node 1 (Master)</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>Node 1</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
     <div class="status-item"><span>Node 2</span> <div id="stat-n2" class="status-dot dot-yellow"></div></div>
     <div class="status-item"><span>Node 3</span> <div id="stat-n3" class="status-dot dot-yellow"></div></div>
   </div>
 
   <div id="login-screen">
-    <img src="resources\yoga_dp.jpeg" alt="Logo" class="logo-img">
-    <h2 style="color:#ddd; margin:0 0 30px 0; font-weight:normal;">Judge Scoring System Pro V4</h2>
-    
+    <img src="https://via.placeholder.com/100/1a2639/cfb53b?text=YOGA" alt="Logo" class="logo-img">
+    <h2 style="color:#ddd; margin:0 0 30px 0; font-weight:normal;">CHAMPIONSHIP 2026</h2>
     <div class="input-box"><i class="material-icons">person</i><input id="user" class="inp" type="text" placeholder="Username"></div>
     <div class="input-box"><i class="material-icons">lock</i><input id="pin" class="inp" type="password" placeholder="PIN"></div>
-    
     <button id="login-btn" class="btn-gold" onclick="handleLogin()">LOGIN</button>
     <div id="login-error" style="color:var(--red); margin-top:15px; font-size:14px; display:none;"></div>
   </div>
 
   <div id="app-header" class="app-header hidden">
     <div style="display:flex; align-items:center;">
-      <div style="color:var(--gold); font-weight:bold; font-size:18px; letter-spacing:1px; margin-right:20px;">CHAMPIONSHIP LIVE</div>
+      <div style="color:var(--gold); font-weight:bold; font-size:18px; letter-spacing:1px; margin-right:20px;">CHAMPIONSHIP 2026</div>
     </div>
-    
     <div style="display:flex; align-items:center;">
       <div class="node-badge"><span class="status-dot dot-green"></span> <span id="active-node-lbl">Connecting...</span></div>
-      
       <div class="user-menu" onclick="toggleDropdown()">
-        <button class="profile-btn">
-          <span id="judge-lbl">Judge</span> 
-          <img src="" style="border-radius:50%;" id="header-avatar">
-          <i class="material-icons">arrow_drop_down</i>
-        </button>
+        <button class="profile-btn"><span id="judge-lbl">Judge</span> <img src="" style="border-radius:50%;" id="header-avatar"><i class="material-icons">arrow_drop_down</i></button>
         <div id="userDropdown" class="dropdown-content">
-          <div onclick="window.location.href='competition-2026.html'">Dashboard</div>
+          <div onclick="window.location.href='test-portal.html'">Dashboard</div>
           <div onclick="window.location.reload()" style="border-top:1px solid #444; color:var(--red);">Logout</div>
         </div>
       </div>
@@ -192,7 +146,17 @@
   </div>
 
   <div id="scoring-screen" class="hidden">
-    <div id="grid" class="grid"></div>
+    
+    <div class="table-header">
+      <div class="th-cell th-left">STUDENT DETAILS</div>
+      <div class="th-cell">ASANA 1</div>
+      <div class="th-cell">ASANA 2</div>
+      <div class="th-cell">ASANA 3</div>
+      <div class="th-cell">OPTIONAL</div>
+    </div>
+
+    <div id="grid" class="score-table"></div>
+
     <div class="footer">
       <button class="btn-out" onclick="reset()">CANCEL</button>
       <button class="btn-submit" onclick="submit()">SUBMIT SCORES</button>
@@ -200,92 +164,43 @@
   </div>
 
   <script>
-    // --- CONFIGURATION ---
     const GIST_URL = "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/4c16640dbb14fcc5c59cf7da2224697a326b5e35/judges.json";
-    
     const API_POOL = {
       "1": "https://script.google.com/macros/s/AKfycbzWgySBCDiOHdiEUABdG5j9CG9ZJ1Ez9OaR1f1unfyP8ZhwGq_FHhT0-pjPBrXjJsWoBQ/exec", 
       "2": "https://script.google.com/macros/s/AKfycbwxnLPRQIJeaMaVKkckre6j3XTXCow6HAOkn0g5mPC2ktVmxZelkOGxrG8j3N3n38TQ/exec", 
       "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
     };
-
     const MAX_SCORE = 10;
 
-    // --- STATE ---
-    let currentUser = null;
-    let activeApiUrl = ""; 
-    let heatData = [];
+    let currentUser = null, activeApiUrl = "", heatData = [];
 
-    // --- INITIAL SYSTEM CHECK ---
-    window.onload = function() {
-      checkSystemHealth();
-    };
-
+    window.onload = function() { checkSystemHealth(); };
     function checkSystemHealth() {
-      // 1. Check Auth (Gist)
-      fetch(GIST_URL + "?t=" + Date.now())
-        .then(r => r.ok ? updateStatus('auth', true) : updateStatus('auth', false))
-        .catch(() => updateStatus('auth', false));
-
-      // 2. Check Nodes (Ping)
-      // We ping by sending a dummy request. 'Ping' tracks usually return valid empty responses.
-      Object.keys(API_POOL).forEach(key => {
-        const url = API_POOL[key];
-        fetch(`${url}?action=getStudents&tracks=PING_TEST`, { mode: 'no-cors' }) // no-cors is enough to verify connectivity for some setups, but fully verifying requires simple fetch
-        .then(() => updateStatus(`n${key}`, true))
-        .catch(() => updateStatus(`n${key}`, false));
-        
-        // Note: With 'no-cors' we can't read status, but if promise resolves, network is reachable.
-        // For accurate 'Online' status on Apps Script, simple GET usually works.
-      });
+      fetch(GIST_URL + "?t=" + Date.now()).then(r=>updateStatus('auth',r.ok)).catch(()=>updateStatus('auth',false));
+      Object.keys(API_POOL).forEach(k => fetch(API_POOL[k]+"?action=ping",{mode:'no-cors'}).then(()=>updateStatus('n'+k,true)).catch(()=>updateStatus('n'+k,false)));
     }
+    function updateStatus(id, ok) { const el = document.getElementById(`stat-${id}`); if(el) el.className = ok ? 'status-dot dot-green':'status-dot dot-red'; }
 
-    function updateStatus(id, isOnline) {
-      const el = document.getElementById(`stat-${id}`);
-      if(el) {
-        el.className = isOnline ? 'status-dot dot-green' : 'status-dot dot-red';
-      }
-    }
-
-    // --- LOGIN ---
     function handleLogin() {
-      const u = document.getElementById('user').value.trim();
-      const p = document.getElementById('pin').value.trim();
+      const u = document.getElementById('user').value.trim(), p = document.getElementById('pin').value.trim();
       if(!u || !p) return alert("Enter Credentials");
-
       showLoad("Authenticating...");
-      fetch(GIST_URL + "?t=" + Date.now())
-        .then(res => res.json())
-        .then(authDB => {
-          const match = authDB.find(x => x.user === u && x.pin === p);
-          if(match) {
-            currentUser = match;
-            activeApiUrl = API_POOL[match.num];
-            
-            // UI Updates
-            document.getElementById('judge-lbl').innerText = `${match.name}`;
-            document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${match.name}&background=cfb53b&color=1a2639&rounded=true&size=32`;
-            document.getElementById('active-node-lbl').innerText = "Live on Node " + match.num;
-            
-            // Remove Status Panel on Login
-            document.getElementById('status-panel').style.display = 'none';
-
-            hideLoad();
-            switchScreen('track-screen');
-          } else {
-            hideLoad();
-            document.getElementById('login-error').innerText = "Invalid Access.";
-            document.getElementById('login-error').style.display = 'block';
-          }
-        })
-        .catch(() => { hideLoad(); alert("Auth Failed. System Offline?"); });
+      fetch(GIST_URL + "?t=" + Date.now()).then(r=>r.json()).then(db => {
+        const m = db.find(x => x.user === u && x.pin === p);
+        if(m) {
+          currentUser = m; activeApiUrl = API_POOL[m.num];
+          document.getElementById('judge-lbl').innerText = m.name;
+          document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${m.name}&background=cfb53b&color=1a2639&rounded=true&size=32`;
+          document.getElementById('active-node-lbl').innerText = "Live on Node " + m.num;
+          document.getElementById('status-panel').style.display = 'none';
+          hideLoad(); switchScreen('track-screen');
+        } else { hideLoad(); document.getElementById('login-error').innerText = "Invalid Access."; document.getElementById('login-error').style.display = 'block'; }
+      }).catch(() => { hideLoad(); alert("Auth Failed. System Offline?"); });
     }
 
-    // --- CORE LOGIC ---
     function startHeat() {
       const t = ['a','b','c'].map(x => document.getElementById('track-'+x).value.trim().toUpperCase()).filter(Boolean);
       if(!t.length) return alert("Enter Track No.");
-      
       showLoad("Fetching Data...");
       fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
         .then(r => r.json())
@@ -293,13 +208,11 @@
           hideLoad();
           if(res.status === 'success') {
             heatData = t.map((id, i) => ({
-              uid: ['A','B','C'][i],
-              track: id,
+              uid: ['A','B','C'][i], track: id,
               info: res.data[id] || {name:'Unknown ID', group:'-', coach:'-'},
               scores: {a1:'', a2:'', a3:'', opt:''}
             }));
-            renderGrid();
-            switchScreen('scoring-screen');
+            renderGrid(); switchScreen('scoring-screen');
           } else { alert("Error: " + res.message); }
         })
         .catch(() => { hideLoad(); alert("Fetch Failed"); });
@@ -309,30 +222,25 @@
       const g = document.getElementById('grid'); g.innerHTML = '';
       heatData.forEach((s, i) => {
         g.innerHTML += `
-        <div class="card">
-          <div class="student-info">
-            <div class="s-track">#${s.track}</div>
-            <div class="s-name">${s.info.name}</div>
-            <div class="s-meta"><span>Grp: ${s.info.group}</span><span class="s-coach">Coach: ${s.info.coach}</span></div>
+        <div class="score-card">
+          <div class="student-details">
+            <div class="sd-track">#${s.track}</div>
+            <div class="sd-name" title="${s.info.name}">${s.info.name}</div>
+            <div class="sd-coach">Coach: ${s.info.coach}</div>
           </div>
-          ${renderInput(i, 'a1', 'Asana 1')} ${renderInput(i, 'a2', 'Asana 2')}
-          ${renderInput(i, 'a3', 'Asana 3')} ${renderInput(i, 'opt', 'Optional')}
+          <div class="input-cell"><input type="number" class="score-input" placeholder="-" oninput="val(this,${i},'a1')"></div>
+          <div class="input-cell"><input type="number" class="score-input" placeholder="-" oninput="val(this,${i},'a2')"></div>
+          <div class="input-cell"><input type="number" class="score-input" placeholder="-" oninput="val(this,${i},'a3')"></div>
+          <div class="input-cell"><input type="number" class="score-input" placeholder="-" oninput="val(this,${i},'opt')"></div>
         </div>`;
       });
     }
 
-    function renderInput(idx, k, l) {
-      return `<div class="score-row"><span>${l}</span>
-        <div><input type="number" class="score-input" id="inp-${idx}-${k}" placeholder="-" oninput="valInp(this,${idx},'${k}')"><div id="err-${idx}-${k}" class="error-msg"></div></div>
-      </div>`;
-    }
-
-    function valInp(el, i, k) {
+    function val(el, i, k) {
       const v = parseFloat(el.value);
       heatData[i].scores[k] = el.value;
-      const err = document.getElementById(`err-${i}-${k}`);
-      el.classList.remove('error'); err.innerText = "";
-      if(v > MAX_SCORE) { el.classList.add('error'); err.innerText = `Max ${MAX_SCORE}`; }
+      el.classList.remove('error');
+      if(v > MAX_SCORE) el.classList.add('error');
     }
 
     function submit() {
@@ -342,7 +250,6 @@
         if(!isNaN(v) && v > MAX_SCORE) crit = true;
         if(s.scores[k] === '') empty = true;
       }));
-      
       if(crit) return alert("Fix scores > " + MAX_SCORE);
       if(empty && !confirm("Some fields empty. Submit anyway?")) return;
 
@@ -360,34 +267,16 @@
       showLoad("Saving...");
       fetch(activeApiUrl, { method:"POST", body:JSON.stringify(payload) })
         .then(r => r.json())
-        .then(d => {
-          hideLoad();
-          if(d.status==='success') { alert("Saved!"); reset(); }
-          else alert("Error: " + d.message);
-        })
+        .then(d => { hideLoad(); if(d.status==='success') { alert("Saved!"); reset(); } else alert("Error: " + d.message); })
         .catch(() => { hideLoad(); alert("Submit Failed"); });
     }
 
-    // --- UI HELPERS ---
     function showLoad(m) { document.getElementById('loader').classList.remove('hidden'); document.getElementById('loader-txt').innerText=m; }
     function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
-    function switchScreen(id) { 
-      ['login-screen','track-screen','scoring-screen'].forEach(x => document.getElementById(x).classList.add('hidden'));
-      document.getElementById('app-header').classList.remove('hidden');
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function reset() {
-      ['track-a','track-b','track-c'].forEach(x => document.getElementById(x).value='');
-      document.getElementById('scoring-screen').classList.add('hidden');
-      document.getElementById('track-screen').classList.remove('hidden');
-    }
+    function switchScreen(id) { ['login-screen','track-screen','scoring-screen'].forEach(x => document.getElementById(x).classList.add('hidden')); document.getElementById('app-header').classList.remove('hidden'); document.getElementById(id).classList.remove('hidden'); }
+    function reset() { ['track-a','track-b','track-c'].forEach(x => document.getElementById(x).value=''); document.getElementById('scoring-screen').classList.add('hidden'); document.getElementById('track-screen').classList.remove('hidden'); }
     function toggleDropdown() { document.getElementById("userDropdown").classList.toggle("show"); }
-    window.onclick = function(e) {
-      if (!e.target.closest('.profile-btn')) {
-        const d = document.getElementsByClassName("dropdown-content");
-        for (let i=0; i<d.length; i++) if (d[i].classList.contains('show')) d[i].classList.remove('show');
-      }
-    }
+    window.onclick = function(e) { if (!e.target.closest('.profile-btn')) { const d = document.getElementsByClassName("dropdown-content"); for (let i=0; i<d.length; i++) if (d[i].classList.contains('show')) d[i].classList.remove('show'); } }
   </script>
 </body>
 </html>
