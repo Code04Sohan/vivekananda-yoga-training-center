@@ -6,17 +6,16 @@
     <title>Yoga Competition Live Pro</title>
     <style>
         :root {
-            /* YOGA THEME PALETTE */
-            --primary: #ea580c;       /* Saffron / Burnt Orange */
-            --primary-dark: #9a3412;  /* Deep Rust */
-            --secondary: #991b1b;     /* Maroon Accent */
-            --gold: #d97706;          /* Gold */
+            /* THEME PALETTE */
+            --primary: #ea580c;
+            --primary-dark: #9a3412;
+            --secondary: #991b1b;
+            --gold: #d97706;
             
-            /* Warm Backgrounds */
+            /* BACKGROUNDS */
             --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
             --glass: rgba(255, 255, 255, 0.90);
             --glass-border: 1px solid rgba(253, 186, 116, 0.3);
-            
             --shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15);
             
             --text-main: #27272a;     
@@ -28,13 +27,13 @@
             background: var(--bg-gradient);
             color: var(--text-main);
             margin: 0;
-            padding: 15px; /* Reduced padding for mobile */
+            padding: 15px;
             min-height: 100vh;
         }
 
         .container { max-width: 1600px; margin: 0 auto; }
 
-        /* --- HEADER AREA --- */
+        /* HEADER */
         header {
             background: var(--glass);
             backdrop-filter: blur(12px);
@@ -52,14 +51,9 @@
             overflow: hidden;
         }
         
-        header::before {
-            content: ''; position: absolute; top: -50px; left: -50px; width: 150px; height: 150px;
-            background: radial-gradient(circle, rgba(251,146,60,0.2) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%; z-index: 0; pointer-events: none;
-        }
-        
         .brand { display: flex; align-items: center; gap: 1.2rem; position: relative; z-index: 1; }
         
+        /* LOGO: Ensure 'resources' folder and 'yoga_dp.jpeg' exist */
         .brand-logo { 
             width: 70px; height: 70px; border-radius: 50%; object-fit: cover; 
             border: 3px solid white; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
@@ -72,15 +66,9 @@
         }
         .brand p { margin: 0; color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; font-weight: 500; }
 
-        /* Judges Info Box */
         .judges-box {
-            background: #fff;
-            border: 1px solid #fed7aa;
-            border-radius: 16px;
-            padding: 12px 20px;
-            min-width: 260px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-            position: relative; z-index: 1;
+            background: #fff; border: 1px solid #fed7aa; border-radius: 16px;
+            padding: 12px 20px; min-width: 260px; position: relative; z-index: 1;
         }
         .jb-title { 
             font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; 
@@ -91,7 +79,7 @@
         .jb-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; }
         .jb-name { font-weight: 700; color: var(--text-main); }
 
-        /* --- STICKY NAV BAR --- */
+        /* NAV & TOOLS */
         .sticky-nav {
             position: sticky; top: 10px; z-index: 100;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
@@ -102,27 +90,23 @@
             flex-wrap: wrap; gap: 10px;
         }
 
-        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 5px; border-radius: 15px; white-space: nowrap; }
+        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 5px; border-radius: 15px; }
         .tab-btn {
             padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; 
             color: var(--text-muted); background: transparent; border: none; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.95rem;
+            transition: 0.3s; font-size: 0.95rem;
         }
-        .tab-btn:hover { color: var(--primary); }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 15px rgba(234, 88, 12, 0.15); transform: scale(1.02); }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 15px rgba(234, 88, 12, 0.15); }
 
         .toolbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
-        /* Search */
         .search-wrapper { 
             display: flex; align-items: center; background: white; border: 1px solid #fed7aa; 
-            border-radius: 12px; padding: 2px; transition: 0.3s; 
+            border-radius: 12px; padding: 2px;
         }
-        .search-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.1); }
-        .search-select { border: none; background: #fff7ed; padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); outline: none; }
+        .search-select { border: none; background: #fff7ed; padding: 10px; border-radius: 10px; font-weight: 700; color: var(--primary-dark); outline: none; }
         .search-input-box { border: none; outline: none; padding: 8px; font-size: 0.95rem; width: 150px; }
         
-        /* Buttons */
         .live-toggle {
             background: white; padding: 8px 12px; border-radius: 30px; cursor: pointer; 
             display: flex; align-items: center; gap: 6px; border: 1px solid #e2e8f0; 
@@ -137,16 +121,9 @@
             font-weight: 700; transition: 0.2s; border: none; height: 40px;
         }
         .btn-icon { background: white; border: 1px solid #fed7aa; color: var(--primary); width: 40px; font-size: 1.2rem; }
-        .btn-print { background: var(--text-main); color: white; padding: 0 15px; gap: 5px; }
-        
-        /* New Judges Button */
-        .btn-judge { 
-            background: var(--primary); color: white; padding: 0 15px; gap: 5px; 
-            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
-        }
-        .btn-judge:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-print { background: var(--text-main); color: white; padding: 0 15px; }
+        .btn-judge { background: var(--primary); color: white; padding: 0 15px; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); }
 
-        /* Filters */
         .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
         .filter-chip {
             padding: 8px 16px; border-radius: 30px; border: 1px solid #fed7aa; background: white; 
@@ -154,7 +131,7 @@
         }
         .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- DATA TABLES --- */
+        /* DATA CARDS */
         .view-section { display: none; animation: slideUp 0.4s ease-out; }
         .view-section.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -165,9 +142,8 @@
         }
         .card-head { padding: 12px 20px; background: #fff7ed; border-bottom: 1px solid #ffedd5; display: flex; justify-content: space-between; align-items: center; }
         .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.1rem; }
-        .badge-count { background: #fed7aa; color: var(--primary-dark); padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
-
-        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        
+        .table-wrap { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th { background: #fff7ed; padding: 10px; text-align: center; color: var(--primary-dark); font-weight: 700; border-bottom: 2px solid #fed7aa; white-space: nowrap; font-size: 0.7rem; text-transform: uppercase; }
         td { padding: 10px; border-bottom: 1px solid #fff7ed; text-align: center; vertical-align: middle; white-space: nowrap; }
@@ -182,7 +158,7 @@
         .total-col { font-weight: 800; color: var(--primary); font-size: 1rem; background: #fff7ed; }
         .perc-badge { background: #ecfccb; color: #365314; padding: 3px 8px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
 
-        /* --- PODIUM --- */
+        /* PODIUM */
         .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 15px; height: 350px; margin: 30px auto; max-width: 800px; padding-bottom: 20px; }
         .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
         .bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; color: white; font-weight: 800; font-size: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -193,10 +169,9 @@
         .winner-card { background: white; padding: 10px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 10px; width: 100%; border: 2px solid white; }
         .p1 .winner-card { border-color: #fcd34d; transform: scale(1.05); }
         .w-name { font-weight: 800; color: var(--text-main); font-size: 0.95rem; white-space: normal; }
-        .w-coach { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
         .w-score { color: var(--primary); font-weight: 900; font-size: 1.2rem; }
 
-        /* --- RESPONSIVE MEDIA QUERIES --- */
+        /* RESPONSIVE */
         @media (max-width: 992px) {
             .container { max-width: 100%; }
             .sticky-nav { flex-direction: column; align-items: stretch; }
@@ -214,13 +189,11 @@
             .sticky-nav { padding: 10px; top: 0; border-radius: 0 0 15px 15px; }
             .tab-btn { padding: 8px 15px; font-size: 0.85rem; }
             
-            .search-select { padding: 8px; width: 90px; }
-            
             .podium-stage { height: auto; flex-direction: column; align-items: center; gap: 20px; }
             .podium-col { width: 100%; flex-direction: row; align-items: center; gap: 15px; }
-            .bar { display: none; /* Hide bars on mobile, show list view style */ }
+            .bar { display: none; }
             .winner-card { width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; margin: 0; }
-            .p1 { order: -1; } /* Keep winner top */
+            .p1 { order: -1; }
         }
 
         @media print {
@@ -230,7 +203,7 @@
             .col-sticky { position: static; border: 1px solid #ccc; box-shadow: none; }
             td, th { border: 1px solid #ccc; color: black; background: white !important; font-size: 8pt; padding: 2px; }
             .data-card { box-shadow: none; border: 1px solid #000; break-inside: avoid; }
-            .podium-stage { display: none; } /* Text list only for print */
+            .podium-stage { display: none; } 
         }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
@@ -244,7 +217,7 @@
     
     <header>
         <div class="brand">
-            <img src="resources/yoga_dp.jpeg" alt="Logo" class="brand-logo" onerror="this.src='https:/via.placeholder.com/70/ea580c/ffffff?text=YOGA'">
+            <img src="resources/yoga_dp.jpeg" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
             <div>
                 <h1>Yoga Scoreboard Pro</h1>
                 <p id="updateStatus">System Ready</p>
@@ -276,7 +249,7 @@
                 <datalist id="centerOptions"></datalist>
             </div>
 
-            <button onclick="goToJudges()" class="btn-judge" title="Go to Judges Portal">👨‍⚖️ Judges Portal</button>
+            <button onclick="goToJudges()" class="btn-judge" title="Go to Judges Portal">👨‍⚖️ Judges</button>
 
             <div id="liveBtn" class="live-toggle" onclick="toggleLive()">
                 <div class="dot"></div> <span id="liveText">Paused</span>
@@ -298,33 +271,20 @@
 
 <script>
     /** ================= CONFIGURATION ================= */
-    
-    // 1. CSV LINK
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
     
     const CONFIG = {
-        // SCORING
         MARKS_PER_JUDGE: 50, 
         TOTAL_FM: 150, 
-
-        // NAVIGATION PATHS
         JUDGES_PORTAL_URL: "competition-2026-judegs.html",
 
-        // JUDGES
         judges: {
-            j1: "1st Judge", 
-            j2: "2nd Judge",
-            j3: "3rd Judge"
+            j1: "1st Judge", j2: "2nd Judge", j3: "3rd Judge"
         },
 
-        // COLUMNS
         cols: {
-            id: "TRACK NO",
-            name: "NAME OF THE ATHLETES",
-            group: "GROUP", 
-            coach: "COACH NAME",
-            center: "CENTER NAME",
-            sex: "SEX",
+            id: "TRACK NO", name: "NAME OF THE ATHLETES", group: "GROUP", 
+            coach: "COACH NAME", center: "CENTER NAME", sex: "SEX",
             
             asanas: [
                 { name: "Asana 1", keys: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
@@ -352,22 +312,17 @@
         fetchData();
     };
 
-    function goToJudges() {
-        window.location.href = CONFIG.JUDGES_PORTAL_URL;
-    }
+    function goToJudges() { window.location.href = CONFIG.JUDGES_PORTAL_URL; }
 
     function toggleLive() {
         isLive = !isLive;
         const btn = document.getElementById('liveBtn');
         const txt = document.getElementById('liveText');
         if(isLive) {
-            btn.classList.add('active');
-            txt.innerText = "Live On";
-            timer = setInterval(() => fetchData(), 5000);
-            fetchData();
+            btn.classList.add('active'); txt.innerText = "Live On";
+            timer = setInterval(() => fetchData(), 5000); fetchData();
         } else {
-            btn.classList.remove('active');
-            txt.innerText = "Paused";
+            btn.classList.remove('active'); txt.innerText = "Paused";
             clearInterval(timer);
         }
     }
@@ -377,7 +332,6 @@
             const res = await fetch(`${CSV_URL}&t=${Date.now()}`);
             const text = await res.text();
             processData(text);
-            
             const time = new Date().toLocaleTimeString();
             document.getElementById('updateStatus').innerText = `Updated: ${time}`;
             if(manual) showToast();
@@ -389,23 +343,17 @@
 
     function showToast() {
         const t = document.getElementById('toast');
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2000);
+        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000);
     }
 
     function processData(csv) {
         const lines = csv.split("\n").filter(l => l.trim() !== "");
         const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ''));
-        
-        rawData = [];
-        const groups = new Set();
-        centerList.clear();
-        const C = CONFIG.cols;
+        rawData = []; const groups = new Set(); centerList.clear(); const C = CONFIG.cols;
 
         for (let i = 1; i < lines.length; i++) {
             const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, ''));
-            const obj = {};
-            headers.forEach((h, idx) => obj[h] = row[idx]);
+            const obj = {}; headers.forEach((h, idx) => obj[h] = row[idx]);
 
             const j1Sum = getSum(obj, C.j1Keys);
             const j2Sum = getSum(obj, C.j2Keys);
@@ -416,15 +364,10 @@
             const grp = obj[C.group] ? obj[C.group].trim() : "Unknown";
             const center = obj[C.center] ? obj[C.center].trim() : "";
             
-            groups.add(grp);
-            if(center) centerList.add(center);
-
+            groups.add(grp); if(center) centerList.add(center);
             rawData.push({ ...obj, j1Sum, j2Sum, j3Sum, grand, perc, grp, center });
         }
-
-        renderFilters(Array.from(groups).sort());
-        populateCenterDropdown();
-        renderApp();
+        renderFilters(Array.from(groups).sort()); populateCenterDropdown(); renderApp();
     }
 
     function getSum(row, keys) {
@@ -433,22 +376,17 @@
 
     function toggleSearchMode() {
         const mode = document.getElementById('searchMode').value;
-        const trackInput = document.getElementById('inputTrack');
-        const centerInput = document.getElementById('inputCenter');
-        trackInput.value = ""; centerInput.value = "";
-        
-        if(mode === 'track') { trackInput.style.display = 'block'; centerInput.style.display = 'none'; } 
-        else { trackInput.style.display = 'none'; centerInput.style.display = 'block'; }
+        const t = document.getElementById('inputTrack'); const c = document.getElementById('inputCenter');
+        t.value = ""; c.value = "";
+        if(mode === 'track') { t.style.display = 'block'; c.style.display = 'none'; } 
+        else { t.style.display = 'none'; c.style.display = 'block'; }
         renderApp();
     }
 
     function populateCenterDropdown() {
-        const dl = document.getElementById('centerOptions');
-        dl.innerHTML = "";
+        const dl = document.getElementById('centerOptions'); dl.innerHTML = "";
         Array.from(centerList).sort().forEach(c => {
-            const opt = document.createElement('option');
-            opt.value = c;
-            dl.appendChild(opt);
+            const opt = document.createElement('option'); opt.value = c; dl.appendChild(opt);
         });
     }
 
@@ -465,8 +403,7 @@
     function filterGroup(g, el) {
         activeGroup = g;
         document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
-        el.classList.add('active');
-        renderApp();
+        el.classList.add('active'); renderApp();
     }
 
     function switchView(view, el) {
@@ -490,8 +427,7 @@
         const cats = [...new Set(data.map(d => d.grp))].sort();
         cats.forEach(c => groups[c] = data.filter(d => d.grp === c));
 
-        renderLive(groups);
-        renderPodium(groups);
+        renderLive(groups); renderPodium(groups);
     }
 
     function renderLive(groups) {
@@ -516,17 +452,11 @@
                     <tr>
                         <td class="col-sticky">
                             <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${s[C.name]}</div>
-                            <div class="detail-sub">
-                                <span class="detail-badge">🆔 ${s[C.id]}</span>
-                                <span class="detail-badge">👨‍🏫 ${s[C.coach]}</span>
-                            </div>
+                            <div class="detail-sub"><span class="detail-badge">🆔 ${s[C.id]}</span><span class="detail-badge">👨‍🏫 ${s[C.coach]}</span></div>
                         </td>
                         ${asanaCells}
-                        <td class="j-col">${s.j1Sum}</td>
-                        <td class="j-col">${s.j2Sum}</td>
-                        <td class="j-col">${s.j3Sum}</td>
-                        <td class="total-col">${s.grand}</td>
-                        <td><span class="perc-badge">${s.perc}%</span></td>
+                        <td class="j-col">${s.j1Sum}</td><td class="j-col">${s.j2Sum}</td><td class="j-col">${s.j3Sum}</td>
+                        <td class="total-col">${s.grand}</td><td><span class="perc-badge">${s.perc}%</span></td>
                     </tr>
                 `;
             }).join("");
