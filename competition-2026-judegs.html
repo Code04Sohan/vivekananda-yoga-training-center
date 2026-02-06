@@ -11,20 +11,18 @@
   <style>
     /* --- YOGA THEME PALETTE --- */
     :root {
-      --primary: #ea580c;       /* Saffron / Burnt Orange */
-      --primary-dark: #c2410c;  /* Deep Rust (Hover state) */
-      --secondary: #991b1b;     /* Maroon Accent */
-      --gold: #d97706;          /* Gold */
+      --primary: #ea580c;       
+      --primary-dark: #c2410c;  
+      --secondary: #991b1b;     
+      --gold: #d97706;          
       
-      /* Warm Backgrounds */
       --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); 
       --glass: rgba(255, 255, 255, 0.95);
       --glass-border: 1px solid rgba(253, 186, 116, 0.4); 
-      
       --shadow: 0 10px 30px -5px rgba(234, 88, 12, 0.15); 
       
-      --text-main: #27272a;     /* Dark Grey */
-      --text-muted: #71717a;    /* Muted Grey */
+      --text-main: #27272a;     
+      --text-muted: #71717a;    
       --text-on-primary: #ffffff;
       
       --red-error: #ef4444;
@@ -54,7 +52,7 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- SYSTEM STATUS PANEL --- */
+    /* --- STATUS PANEL --- */
     #status-panel {
       position: fixed; bottom: 20px; right: 20px;
       background: var(--glass); padding: 15px;
@@ -96,7 +94,7 @@
       font-weight: 600; padding: 14px; width: 100%; 
       border-radius: 10px; font-size: 16px; border:none; 
       cursor: pointer; transition: transform 0.1s, background 0.2s;
-      box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+      box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); text-transform: uppercase; letter-spacing: 0.5px;
     }
     .btn-primary:hover { background: var(--primary-dark); }
     .btn-primary:active { transform: scale(0.98); }
@@ -116,7 +114,6 @@
       margin-right: 15px; display: flex; align-items: center; gap: 6px; 
       background: rgba(34, 197, 94, 0.1); padding: 4px 10px; border-radius: 20px; font-weight: 600;
     }
-    
     .profile-btn { 
       background: transparent; border: none; color: var(--text-main); 
       display: flex; align-items: center; gap: 8px; font-size: 14px; 
@@ -142,73 +139,70 @@
     .track-row label { display: block; color: var(--text-muted); margin-bottom: 8px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
     .track-inp { text-transform: uppercase; font-size: 18px; letter-spacing: 1px; font-weight: 600; color: var(--primary-dark); }
 
-    /* --- SCORING SCREEN --- */
-    #scoring-screen { width: 95%; max-width: 1000px; padding-top: 100px; padding-bottom: 60px; }
+    /* --- SCORING SCREEN (MATRIX/TABLE LAYOUT) --- */
+    #scoring-screen { width: 98%; max-width: 1200px; padding-top: 100px; padding-bottom: 60px; }
     
-    /* Table Header (Desktop) */
-    .table-header { 
-      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 10px; 
-      padding: 0 15px; margin-bottom: 10px; display: none; /* Hidden on mobile */
+    /* SCROLL WRAPPER for Table on Mobile */
+    .table-scroll-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 10px; /* Space for scrollbar */
     }
-    @media (min-width: 768px) { .table-header { display: grid; } }
-    
+
+    /* Fixed Width Grid for Consistency */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: 200px 100px 100px 100px 100px; /* Fixed widths ensure row structure */
+      gap: 10px;
+      min-width: 640px; /* Forces scroll on small screens */
+    }
+
+    /* Table Header */
+    .table-header { 
+      padding: 0 15px; margin-bottom: 10px;
+    }
     .th-cell { color: var(--text-muted); font-size: 12px; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; }
     .th-left { text-align: left; }
 
-    /* Student Card Row */
+    /* Student Row */
     .score-card { 
-      background: var(--glass); border-radius: 16px; border: var(--glass-border); 
-      box-shadow: var(--shadow); margin-bottom: 15px; padding: 20px;
-      display: flex; flex-direction: column; gap: 15px; /* Mobile Default */
+      background: var(--glass); border-radius: 12px; border: var(--glass-border); 
+      box-shadow: var(--shadow); margin-bottom: 10px; padding: 15px;
+      align-items: center;
     }
 
-    @media (min-width: 768px) {
-      .score-card { 
-        display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; 
-        align-items: center; gap: 10px; padding: 15px;
-      }
-    }
-
-    /* Student Info Section */
     .student-details { display: flex; flex-direction: column; gap: 2px; }
-    .sd-track { color: var(--primary); font-size: 18px; font-weight: 700; }
-    .sd-name { font-size: 16px; font-weight: 600; color: var(--text-main); }
-    .sd-coach { font-size: 12px; color: var(--text-muted); background: #f3f4f6; padding: 2px 8px; border-radius: 4px; align-self: flex-start; margin-top: 4px; }
+    .sd-track { color: var(--primary); font-size: 16px; font-weight: 700; }
+    .sd-name { font-size: 14px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sd-coach { font-size: 11px; color: var(--text-muted); background: #f3f4f6; padding: 2px 6px; border-radius: 4px; align-self: flex-start; margin-top: 4px; }
 
-    /* Inputs */
-    .input-cell { 
-      display: flex; flex-direction: column; align-items: center; 
-    }
-    .mobile-label { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; font-weight: 600; display: block; }
-    @media (min-width: 768px) { .mobile-label { display: none; } } /* Hide label on desktop */
-
+    .input-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    
     .score-input { 
-      width: 100%; max-width: 80px; padding: 12px; font-size: 18px; text-align: center; 
+      width: 70px; padding: 10px; font-size: 16px; text-align: center; 
       background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; 
       color: var(--text-main); font-weight: 600; transition: 0.2s;
     }
     .score-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
     .score-input.error { border-color: var(--red-error); background: #fef2f2; color: var(--red-error); }
+    
+    .max-badge { font-size: 9px; color: #aaa; margin-top: 3px; }
 
     /* Footer */
-    .footer { display: flex; gap: 15px; margin-top: 30px; justify-content: center; width: 100%; }
+    .footer { display: flex; gap: 15px; margin-top: 30px; justify-content: center; width: 100%; flex-wrap: wrap;}
     .btn-out { 
       background: #fff; border: 2px solid var(--primary); color: var(--primary); 
       padding: 14px 24px; border-radius: 10px; font-weight: 600; cursor:pointer; 
-      transition: 0.2s;
+      transition: 0.2s; min-width: 150px;
     }
     .btn-out:hover { background: #fff7ed; }
 
-    /* --- RESPONSIVE ADJUSTMENTS --- */
-    @media (max-width: 768px) {
-      .score-card { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; /* 2 columns for inputs on mobile */
-        gap: 15px;
-      }
-      .student-details { grid-column: span 2; border-bottom: 1px solid #f3f4f6; padding-bottom: 10px; margin-bottom: 5px; }
-      .footer { flex-direction: column-reverse; }
-      .btn-out, .btn-primary { width: 100%; }
+    /* Mobile Note */
+    .swipe-hint {
+      display: none; text-align: center; font-size: 11px; color: var(--primary); margin-bottom: 5px; font-weight: 500;
+    }
+    @media (max-width: 650px) {
+      .swipe-hint { display: block; }
     }
   </style>
 </head>
@@ -228,9 +222,9 @@
   </div>
 
   <div id="login-screen">
-    <img src="resources\yoga_dp.jpeg" alt="Logo" class="logo-img">
+    <img id="login-logo" src="" alt="Logo" class="logo-img">
     <h2 style="color:var(--text-main); margin:0 0 5px 0; font-weight:700;">Welcome Judge</h2>
-    <p style="color:var(--text-muted); margin:0 0 30px 0; font-size:14px;">Please sign in to access the podium</p>
+    <p style="color:var(--text-muted); margin:0 0 30px 0; font-size:14px;">Sign in to access the podium</p>
     
     <div class="input-box">
       <i class="material-icons">person_outline</i>
@@ -240,7 +234,6 @@
       <i class="material-icons">lock_outline</i>
       <input id="pin" class="inp" type="password" placeholder="Access PIN">
     </div>
-    
     <button id="login-btn" class="btn-primary" onclick="handleLogin()">SECURE LOGIN</button>
     <div id="login-error" style="color:var(--red-error); margin-top:15px; font-size:13px; font-weight:500; display:none;"></div>
   </div>
@@ -249,10 +242,8 @@
     <div style="display:flex; align-items:center;">
       <div class="brand">YOGA PRO</div>
     </div>
-    
     <div style="display:flex; align-items:center;">
       <div class="node-badge"><span class="status-dot dot-green"></span> <span id="active-node-lbl">Online</span></div>
-      
       <div class="user-menu" onclick="toggleDropdown()">
         <button class="profile-btn">
           <span id="judge-lbl">Judge</span> 
@@ -260,12 +251,10 @@
           <i class="material-icons" style="font-size:18px;">expand_more</i>
         </button>
         <div id="userDropdown" class="dropdown-content">
-          <div onclick="window.location.href='test-portal.html'">
+          <div onclick="goToDashboard()">
             <i class="material-icons" style="vertical-align:middle; font-size:16px; margin-right:5px; color:var(--primary);">dashboard</i> Dashboard
           </div>
-          <div onclick="window.location.reload()" style="border-top:1px solid #f3f4f6; color:var(--red-error);">
-             Logout
-          </div>
+          <div onclick="window.location.reload()" style="border-top:1px solid #f3f4f6; color:var(--red-error);">Logout</div>
         </div>
       </div>
     </div>
@@ -273,62 +262,68 @@
 
   <div id="track-screen" class="hidden">
     <div class="track-card">
-      <h3 style="color:var(--text-main); margin-bottom:5px; font-weight:700;">Enter Heat Details</h3>
-      <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;">Enter the student track numbers for this heat.</p>
+      <h3 style="color:var(--text-main); margin-bottom:5px; font-weight:700;">Enter Round Details</h3>
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;">Enter the student track numbers for this round.</p>
       
-      <div class="track-row">
-        <label>Student A Track No.</label>
-        <input id="track-a" class="inp track-inp" type="text" placeholder="e.g. VT001">
-      </div>
-      <div class="track-row">
-        <label>Student B Track No.</label>
-        <input id="track-b" class="inp track-inp" type="text" placeholder="e.g. SJ023">
-      </div>
-      <div class="track-row">
-        <label>Student C Track No.</label>
-        <input id="track-c" class="inp track-inp" type="text" placeholder="e.g. MK101">
-      </div>
-
-      <button class="btn-primary" onclick="startHeat()" style="margin-top:20px;">FETCH DATA & START</button>
+      <div class="track-row"><label>Student A Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder="e.g. VT001"></div>
+      <div class="track-row"><label>Student B Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder="e.g. SJ023"></div>
+      <div class="track-row"><label>Student C Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder="e.g. MK101"></div>
+      <button class="btn-primary" onclick="startRound()" style="margin-top:20px;">FETCH DATA & START</button>
     </div>
   </div>
 
   <div id="scoring-screen" class="hidden">
+    <div class="swipe-hint"><i class="material-icons" style="font-size:10px; vertical-align:middle;">arrow_forward</i> SWIPE TO SEE MORE</div>
     
-    <div class="table-header">
-      <div class="th-cell th-left">STUDENT INFO</div>
-      <div class="th-cell">ASANA 1</div>
-      <div class="th-cell">ASANA 2</div>
-      <div class="th-cell">ASANA 3</div>
-      <div class="th-cell">OPTIONAL</div>
+    <div class="table-scroll-container">
+      <div class="table-header matrix-grid">
+        <div class="th-cell th-left">STUDENT INFO</div>
+        <div class="th-cell">ASANA 1 (10)</div>
+        <div class="th-cell">ASANA 2 (10)</div>
+        <div class="th-cell">ASANA 3 (10)</div>
+        <div class="th-cell">OPTIONAL (20)</div>
+      </div>
+      
+      <div id="grid"></div>
     </div>
 
-    <div id="grid"></div>
-
     <div class="footer">
-      <button class="btn-out" onclick="reset()">CANCEL HEAT</button>
+      <button class="btn-out" onclick="reset()">CANCEL ROUND</button>
       <button class="btn-primary" onclick="submit()">SUBMIT SCORES</button>
     </div>
   </div>
 
   <script>
-    // --- CONFIGURATION ---
-    const GIST_URL = "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/4c16640dbb14fcc5c59cf7da2224697a326b5e35/judges.json";
-    
-    const API_POOL = {
-      "1": "https://script.google.com/macros/s/AKfycbzWgySBCDiOHdiEUABdG5j9CG9ZJ1Ez9OaR1f1unfyP8ZhwGq_FHhT0-pjPBrXjJsWoBQ/exec", 
-      "2": "https://script.google.com/macros/s/AKfycbwxnLPRQIJeaMaVKkckre6j3XTXCow6HAOkn0g5mPC2ktVmxZelkOGxrG8j3N3n38TQ/exec", 
-      "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
+    /* --- CONFIGURATION SECTION --- */
+    const CONFIG = {
+      GIST_URL: "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/4c16640dbb14fcc5c59cf7da2224697a326b5e35/judges.json",
+      API_POOL: {
+        "1": "https://script.google.com/macros/s/AKfycbzWgySBCDiOHdiEUABdG5j9CG9ZJ1Ez9OaR1f1unfyP8ZhwGq_FHhT0-pjPBrXjJsWoBQ/exec", 
+        "2": "https://script.google.com/macros/s/AKfycbwxnLPRQIJeaMaVKkckre6j3XTXCow6HAOkn0g5mPC2ktVmxZelkOGxrG8j3N3n38TQ/exec", 
+        "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
+      },
+      PATHS: {
+        DASHBOARD: "test-portal.html",
+        LOGO: "resources/yoga_dp.jpeg" 
+      },
+      SCORING: {
+        MAX_ASANA: 10,
+        MAX_OPTIONAL: 20
+      }
     };
 
-    const MAX_SCORE = 10;
-    let currentUser = null, activeApiUrl = "", heatData = [];
+    let currentUser = null, activeApiUrl = "", roundData = [];
 
-    window.onload = function() { checkSystemHealth(); };
+    window.onload = function() { 
+      document.getElementById('login-logo').src = CONFIG.PATHS.LOGO;
+      checkSystemHealth(); 
+    };
+
+    function goToDashboard() { window.location.href = CONFIG.PATHS.DASHBOARD; }
 
     function checkSystemHealth() {
-      fetch(GIST_URL + "?t=" + Date.now()).then(r=>updateStatus('auth',r.ok)).catch(()=>updateStatus('auth',false));
-      Object.keys(API_POOL).forEach(k => fetch(API_POOL[k]+"?action=ping",{mode:'no-cors'}).then(()=>updateStatus('n'+k,true)).catch(()=>updateStatus('n'+k,false)));
+      fetch(CONFIG.GIST_URL + "?t=" + Date.now()).then(r=>updateStatus('auth',r.ok)).catch(()=>updateStatus('auth',false));
+      Object.keys(CONFIG.API_POOL).forEach(k => fetch(CONFIG.API_POOL[k]+"?action=ping",{mode:'no-cors'}).then(()=>updateStatus('n'+k,true)).catch(()=>updateStatus('n'+k,false)));
     }
     function updateStatus(id, ok) { const el = document.getElementById(`stat-${id}`); if(el) el.className = ok ? 'status-dot dot-green':'status-dot dot-red'; }
 
@@ -336,35 +331,29 @@
       const u = document.getElementById('user').value.trim(), p = document.getElementById('pin').value.trim();
       if(!u || !p) return alert("Please enter your credentials.");
       showLoad("Verifying Identity...");
-      
-      fetch(GIST_URL + "?t=" + Date.now()).then(r=>r.json()).then(db => {
+      fetch(CONFIG.GIST_URL + "?t=" + Date.now()).then(r=>r.json()).then(db => {
         const m = db.find(x => x.user === u && x.pin === p);
         if(m) {
-          currentUser = m; activeApiUrl = API_POOL[m.num];
+          currentUser = m; activeApiUrl = CONFIG.API_POOL[m.num];
           document.getElementById('judge-lbl').innerText = m.name;
           document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${m.name}&background=ea580c&color=ffffff&rounded=true&size=64`;
           document.getElementById('active-node-lbl').innerText = "Node " + m.num;
           document.getElementById('status-panel').style.display = 'none';
           hideLoad(); switchScreen('track-screen');
-        } else { 
-          hideLoad(); 
-          document.getElementById('login-error').innerText = "Incorrect Username or PIN."; 
-          document.getElementById('login-error').style.display = 'block'; 
-        }
+        } else { hideLoad(); document.getElementById('login-error').innerText = "Incorrect Username or PIN."; document.getElementById('login-error').style.display = 'block'; }
       }).catch(() => { hideLoad(); alert("Network Error: Unable to verify login."); });
     }
 
-    function startHeat() {
+    function startRound() {
       const t = ['a','b','c'].map(x => document.getElementById('track-'+x).value.trim().toUpperCase()).filter(Boolean);
       if(!t.length) return alert("Please enter at least one track number.");
-      showLoad("Fetching Contestants...");
-      
+      showLoad("Setting up Round...");
       fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
         .then(r => r.json())
         .then(res => {
           hideLoad();
           if(res.status === 'success') {
-            heatData = t.map((id, i) => ({
+            roundData = t.map((id, i) => ({
               uid: ['A','B','C'][i], track: id,
               info: res.data[id] || {name:'Unknown ID', group:'-', coach:'-'},
               scores: {a1:'', a2:'', a3:'', opt:''}
@@ -377,48 +366,54 @@
 
     function renderGrid() {
       const g = document.getElementById('grid'); g.innerHTML = '';
-      heatData.forEach((s, i) => {
+      roundData.forEach((s, i) => {
         g.innerHTML += `
-        <div class="score-card">
+        <div class="score-card matrix-grid">
           <div class="student-details">
             <div class="sd-track">#${s.track}</div>
             <div class="sd-name" title="${s.info.name}">${s.info.name}</div>
             <div class="sd-coach">${s.info.coach}</div>
           </div>
-          ${renderInp(i, 'a1', 'Asana 1')} ${renderInp(i, 'a2', 'Asana 2')}
-          ${renderInp(i, 'a3', 'Asana 3')} ${renderInp(i, 'opt', 'Optional')}
+          ${renderInp(i, 'a1', 'Asana 1', CONFIG.SCORING.MAX_ASANA)} 
+          ${renderInp(i, 'a2', 'Asana 2', CONFIG.SCORING.MAX_ASANA)}
+          ${renderInp(i, 'a3', 'Asana 3', CONFIG.SCORING.MAX_ASANA)} 
+          ${renderInp(i, 'opt', 'Optional', CONFIG.SCORING.MAX_OPTIONAL)}
         </div>`;
       });
     }
 
-    function renderInp(idx, k, l) {
+    function renderInp(idx, k, l, max) {
       return `<div class="input-cell">
-        <span class="mobile-label">${l}</span>
-        <input type="number" class="score-input" placeholder="-" oninput="val(this,${idx},'${k}')">
+        <input type="number" class="score-input" placeholder="-" oninput="val(this,${idx},'${k}', ${max})">
+        <span class="max-badge">Max: ${max}</span>
       </div>`;
     }
 
-    function val(el, i, k) {
+    function val(el, i, k, max) {
       const v = parseFloat(el.value);
-      heatData[i].scores[k] = el.value;
+      roundData[i].scores[k] = el.value;
       el.classList.remove('error');
-      if(v > MAX_SCORE) el.classList.add('error');
+      if(v > max) el.classList.add('error');
     }
 
     function submit() {
       let crit = false, empty = false;
-      heatData.forEach(s => ['a1','a2','a3','opt'].forEach(k => {
-        const v = parseFloat(s.scores[k]);
-        if(!isNaN(v) && v > MAX_SCORE) crit = true;
-        if(s.scores[k] === '') empty = true;
-      }));
-      
-      if(crit) return alert("One or more scores exceed the maximum limit (" + MAX_SCORE + "). Please correct them.");
+      roundData.forEach(s => {
+        ['a1','a2','a3'].forEach(k => {
+          const v = parseFloat(s.scores[k]);
+          if(!isNaN(v) && v > CONFIG.SCORING.MAX_ASANA) crit = true;
+          if(s.scores[k] === '') empty = true;
+        });
+        const vOpt = parseFloat(s.scores.opt);
+        if(!isNaN(vOpt) && vOpt > CONFIG.SCORING.MAX_OPTIONAL) crit = true;
+        if(s.scores.opt === '') empty = true;
+      });
+      if(crit) return alert("One or more scores exceed the maximum limits. Please correct them (Red fields).");
       if(empty && !confirm("Warning: Some score fields are empty. Submit anyway?")) return;
 
       const payload = {
         judgeNum: currentUser.num,
-        students: heatData.map(s => ({
+        students: roundData.map(s => ({
           trackNo: s.track,
           scores: {
             a1: s.scores.a1===''?0:s.scores.a1, a2: s.scores.a2===''?0:s.scores.a2,
@@ -436,22 +431,10 @@
 
     function showLoad(m) { document.getElementById('loader').classList.remove('hidden'); document.getElementById('loader-txt').innerText=m; }
     function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
-    function switchScreen(id) { 
-      ['login-screen','track-screen','scoring-screen'].forEach(x => document.getElementById(x).classList.add('hidden')); 
-      document.getElementById('app-header').classList.remove('hidden'); 
-      document.getElementById(id).classList.remove('hidden'); 
-    }
-    function reset() { 
-      ['track-a','track-b','track-c'].forEach(x => document.getElementById(x).value=''); 
-      document.getElementById('scoring-screen').classList.add('hidden'); 
-      document.getElementById('track-screen').classList.remove('hidden'); 
-    }
+    function switchScreen(id) { ['login-screen','track-screen','scoring-screen'].forEach(x => document.getElementById(x).classList.add('hidden')); document.getElementById('app-header').classList.remove('hidden'); document.getElementById(id).classList.remove('hidden'); }
+    function reset() { ['track-a','track-b','track-c'].forEach(x => document.getElementById(x).value=''); document.getElementById('scoring-screen').classList.add('hidden'); document.getElementById('track-screen').classList.remove('hidden'); }
     function toggleDropdown() { document.getElementById("userDropdown").classList.toggle("show"); }
-    
-    // Close dropdown on outside click
-    window.onclick = function(e) { if (!e.target.closest('.user-menu')) { 
-      document.getElementById("userDropdown").classList.remove('show'); 
-    }}
+    window.onclick = function(e) { if (!e.target.closest('.user-menu')) { document.getElementById("userDropdown").classList.remove('show'); }}
   </script>
 </body>
 </html>
