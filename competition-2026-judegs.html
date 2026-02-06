@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Judge Scoring System Pro V3</title>
+  <title>Yoga Judge Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   
@@ -15,6 +15,7 @@
       --gold: #cfb53b; 
       --white: #fff; 
       --red: #ff6b6b;
+      --green: #00e676;
       --dim-overlay: rgba(26, 38, 57, 0.95);
     }
     body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-x: hidden; }
@@ -41,7 +42,6 @@
       text-align: center; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
     
-    /* Circular Logo */
     .logo-img {
       width: 100px; height: 100px; border-radius: 50%; 
       border: 3px solid var(--gold); object-fit: cover;
@@ -67,12 +67,28 @@
     }
     .btn-gold:active { transform: scale(0.98); }
 
+    /* --- SYSTEM STATUS PANEL (Bottom Right) --- */
+    #status-panel {
+      position: fixed; bottom: 20px; right: 20px;
+      background: rgba(0,0,0,0.6); padding: 15px;
+      border-radius: 10px; border: 1px solid #444;
+      font-size: 12px; color: #aaa; width: 180px;
+      backdrop-filter: blur(4px);
+    }
+    .status-item { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; display: inline-block; }
+    .dot-green { background: var(--green); box-shadow: 0 0 5px var(--green); }
+    .dot-red { background: var(--red); box-shadow: 0 0 5px var(--red); }
+    .dot-yellow { background: var(--gold); }
+
     /* --- HEADER & DROPDOWN --- */
     .app-header { 
       position: fixed; top: 0; left: 0; right: 0; height: 60px; 
       display: flex; justify-content: space-between; align-items: center; 
       padding: 0 20px; background: var(--bg); border-bottom: 1px solid #333; z-index: 100; 
     }
+    .node-badge { font-size: 12px; color: var(--green); margin-right: 15px; display: flex; align-items: center; gap: 5px; }
+    
     .user-menu { position: relative; cursor: pointer; display: flex; align-items: center; gap: 10px; }
     .profile-btn { 
       background: transparent; border: none; color: #aaa; 
@@ -93,40 +109,26 @@
     /* --- SCREENS --- */
     #track-screen, #scoring-screen { width: 95%; max-width: 1000px; padding-top: 80px; text-align: center; padding-bottom: 50px; }
     
-    /* Track Inputs */
     .track-row { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
     .track-row label { display: block; color: #aaa; margin-bottom: 5px; font-size: 14px; }
     .track-inp { text-transform: uppercase; font-size: 18px; letter-spacing: 1px; }
 
-    /* Grid Layout */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align:left; }
     
-    /* Scoring Card */
     .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334; display: flex; flex-direction: column; gap: 15px; }
     
-    .student-info { 
-      text-align: center; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 5px;
-    }
+    .student-info { text-align: center; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 5px; }
     .s-track { color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 1px; }
     .s-name { font-size: 18px; font-weight: 500; margin: 5px 0; color: #fff; }
     .s-meta { font-size: 13px; color: #aaa; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;}
     .s-coach { color: #8dbaff; }
 
-    /* Manual Score Inputs */
     .score-row { display: flex; justify-content: space-between; align-items: center; }
-    .score-input {
-      width: 80px; padding: 10px; font-size: 18px; text-align: center;
-      background: #111; border: 1px solid #555; border-radius: 6px; color: white;
-    }
+    .score-input { width: 80px; padding: 10px; font-size: 18px; text-align: center; background: #111; border: 1px solid #555; border-radius: 6px; color: white; }
     .score-input:focus { outline: none; border-color: var(--gold); }
-    
-    /* Validation States */
     .score-input.error { border-color: var(--red); background: rgba(255, 107, 107, 0.1); color: var(--red); }
-    .score-input.empty { border-color: #aaa; }
-    
     .error-msg { color: var(--red); font-size: 12px; text-align: right; height: 14px; margin-top: 2px;}
 
-    /* Footer */
     .footer { display: flex; gap: 15px; margin-top: 30px; justify-content: center; }
     .btn-out { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 14px 30px; border-radius: 8px; font-weight: bold; cursor:pointer; }
     .btn-submit { background: var(--gold); color: #1a2639; padding: 14px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; flex-grow: 1; max-width: 400px;}
@@ -140,56 +142,52 @@
     <h3 id="loader-txt" style="color:var(--gold); font-weight: normal; letter-spacing: 1px;">Loading...</h3>
   </div>
 
+  <div id="status-panel">
+    <div style="border-bottom:1px solid #555; margin-bottom:8px; padding-bottom:5px; font-weight:bold; color:var(--gold);">SYSTEM HEALTH</div>
+    <div class="status-item"><span>Auth Database</span> <div id="stat-auth" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>Node 1 (Master)</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>Node 2</span> <div id="stat-n2" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>Node 3</span> <div id="stat-n3" class="status-dot dot-yellow"></div></div>
+  </div>
+
   <div id="login-screen">
-    <img src="resources\yoga_dp.jpeg" alt="Logo" class="logo-img">
+    <img src="https://via.placeholder.com/100/1a2639/cfb53b?text=YOGA" alt="Logo" class="logo-img">
+    <h2 style="color:#ddd; margin:0 0 30px 0; font-weight:normal;">Judge Portal</h2>
     
-    <h2 style="color:#ddd; margin:0 0 30px 0; font-weight:normal;">Judge Scoring System Pro V3</h2>
-    
-    <div class="input-box">
-      <i class="material-icons">person</i>
-      <input id="user" class="inp" type="text" placeholder="Username">
-    </div>
-    <div class="input-box">
-      <i class="material-icons">lock</i>
-      <input id="pin" class="inp" type="password" placeholder="PIN">
-    </div>
+    <div class="input-box"><i class="material-icons">person</i><input id="user" class="inp" type="text" placeholder="Username"></div>
+    <div class="input-box"><i class="material-icons">lock</i><input id="pin" class="inp" type="password" placeholder="PIN"></div>
     
     <button id="login-btn" class="btn-gold" onclick="handleLogin()">LOGIN</button>
     <div id="login-error" style="color:var(--red); margin-top:15px; font-size:14px; display:none;"></div>
   </div>
 
   <div id="app-header" class="app-header hidden">
-    <div style="color:var(--gold); font-weight:bold; font-size:18px; letter-spacing:1px;">CHAMPIONSHIP LIVE</div>
+    <div style="display:flex; align-items:center;">
+      <div style="color:var(--gold); font-weight:bold; font-size:18px; letter-spacing:1px; margin-right:20px;">CHAMPIONSHIP LIVE</div>
+    </div>
     
-    <div class="user-menu" onclick="toggleDropdown()">
-      <button class="profile-btn">
-        <span id="judge-lbl">Judge</span> 
-        <img src="https://ui-avatars.com/api/?name=Judge&background=cfb53b&color=1a2639&rounded=true&size=32" style="border-radius:50%;" id="header-avatar">
-        <i class="material-icons">arrow_drop_down</i>
-      </button>
-      <div id="userDropdown" class="dropdown-content">
-        <div onclick="reset()">Dashboard</div>
-        <div onclick="window.location.reload()" style="border-top:1px solid #444; color:var(--red);">Logout</div>
+    <div style="display:flex; align-items:center;">
+      <div class="node-badge"><span class="status-dot dot-green"></span> <span id="active-node-lbl">Connecting...</span></div>
+      
+      <div class="user-menu" onclick="toggleDropdown()">
+        <button class="profile-btn">
+          <span id="judge-lbl">Judge</span> 
+          <img src="" style="border-radius:50%;" id="header-avatar">
+          <i class="material-icons">arrow_drop_down</i>
+        </button>
+        <div id="userDropdown" class="dropdown-content">
+          <div onclick="window.location.href='competition-2026.html'">Dashboard</div>
+          <div onclick="window.location.reload()" style="border-top:1px solid #444; color:var(--red);">Logout</div>
+        </div>
       </div>
     </div>
   </div>
 
   <div id="track-screen" class="hidden">
     <h3 style="color:#ccc; margin-bottom:30px;">Enter Heat Details</h3>
-    
-    <div class="track-row">
-      <label>Student A Track No.</label>
-      <input id="track-a" class="inp track-inp" type="text" placeholder="e.g. VT001">
-    </div>
-    <div class="track-row">
-      <label>Student B Track No.</label>
-      <input id="track-b" class="inp track-inp" type="text" placeholder="e.g. SJ023">
-    </div>
-    <div class="track-row">
-      <label>Student C Track No.</label>
-      <input id="track-c" class="inp track-inp" type="text" placeholder="e.g. MK101">
-    </div>
-
+    <div class="track-row"><label>Student A Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder="e.g. VT001"></div>
+    <div class="track-row"><label>Student B Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder="e.g. SJ023"></div>
+    <div class="track-row"><label>Student C Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder="e.g. MK101"></div>
     <button class="btn-gold" onclick="startHeat()" style="max-width:400px; margin-top:20px;">FETCH & START</button>
   </div>
 
@@ -211,88 +209,84 @@
       "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
     };
 
-    const MAX_SCORE = 10; // Full Marks (FM)
+    const MAX_SCORE = 10;
 
     // --- STATE ---
     let currentUser = null;
     let activeApiUrl = ""; 
     let heatData = [];
 
-    // --- UTILS ---
-    function showLoad(msg) { 
-      const l = document.getElementById('loader');
-      l.classList.remove('hidden'); 
-      document.getElementById('loader-txt').innerText = msg;
+    // --- INITIAL SYSTEM CHECK ---
+    window.onload = function() {
+      checkSystemHealth();
+    };
+
+    function checkSystemHealth() {
+      // 1. Check Auth (Gist)
+      fetch(GIST_URL + "?t=" + Date.now())
+        .then(r => r.ok ? updateStatus('auth', true) : updateStatus('auth', false))
+        .catch(() => updateStatus('auth', false));
+
+      // 2. Check Nodes (Ping)
+      // We ping by sending a dummy request. 'Ping' tracks usually return valid empty responses.
+      Object.keys(API_POOL).forEach(key => {
+        const url = API_POOL[key];
+        fetch(`${url}?action=getStudents&tracks=PING_TEST`, { mode: 'no-cors' }) // no-cors is enough to verify connectivity for some setups, but fully verifying requires simple fetch
+        .then(() => updateStatus(`n${key}`, true))
+        .catch(() => updateStatus(`n${key}`, false));
+        
+        // Note: With 'no-cors' we can't read status, but if promise resolves, network is reachable.
+        // For accurate 'Online' status on Apps Script, simple GET usually works.
+      });
     }
-    function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
-    
-    // --- LOGIN LOGIC ---
+
+    function updateStatus(id, isOnline) {
+      const el = document.getElementById(`stat-${id}`);
+      if(el) {
+        el.className = isOnline ? 'status-dot dot-green' : 'status-dot dot-red';
+      }
+    }
+
+    // --- LOGIN ---
     function handleLogin() {
       const u = document.getElementById('user').value.trim();
       const p = document.getElementById('pin').value.trim();
-      
-      if(!u || !p) return alert("Please enter Username and PIN");
+      if(!u || !p) return alert("Enter Credentials");
 
-      showLoad("Verifying Access..."); // Faded background starts here
-
-      // Fetch Gist only when user clicks Login
-      fetch(GIST_URL + "?t=" + new Date().getTime()) // prevent caching
+      showLoad("Authenticating...");
+      fetch(GIST_URL + "?t=" + Date.now())
         .then(res => res.json())
         .then(authDB => {
           const match = authDB.find(x => x.user === u && x.pin === p);
-          
           if(match) {
             currentUser = match;
             activeApiUrl = API_POOL[match.num];
             
-            if(!activeApiUrl) throw new Error("No API Node for Judge " + match.num);
-
-            // Update Header
-            document.getElementById('judge-lbl').innerText = `${match.name} (J${match.num})`;
+            // UI Updates
+            document.getElementById('judge-lbl').innerText = `${match.name}`;
             document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${match.name}&background=cfb53b&color=1a2639&rounded=true&size=32`;
+            document.getElementById('active-node-lbl').innerText = "Live on Node " + match.num;
             
-            // Switch Screens
+            // Remove Status Panel on Login
+            document.getElementById('status-panel').style.display = 'none';
+
             hideLoad();
-            document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('app-header').classList.remove('hidden');
-            document.getElementById('track-screen').classList.remove('hidden');
+            switchScreen('track-screen');
           } else {
             hideLoad();
-            const err = document.getElementById('login-error');
-            err.innerText = "Invalid Credentials. Access Denied.";
-            err.style.display = 'block';
+            document.getElementById('login-error').innerText = "Invalid Access.";
+            document.getElementById('login-error').style.display = 'block';
           }
         })
-        .catch(e => {
-          hideLoad();
-          alert("Connection Failed: Unable to reach Judge Database.\n" + e.message);
-        });
+        .catch(() => { hideLoad(); alert("Auth Failed. System Offline?"); });
     }
 
-    // --- HEADER DROPDOWN ---
-    function toggleDropdown() {
-      document.getElementById("userDropdown").classList.toggle("show");
-    }
-    // Close dropdown if clicked outside
-    window.onclick = function(event) {
-      if (!event.target.closest('.profile-btn')) {
-        const dropdowns = document.getElementsByClassName("dropdown-content");
-        for (let i = 0; i < dropdowns.length; i++) {
-          if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
-        }
-      }
-    }
-
-    // --- HEAT LOGIC ---
+    // --- CORE LOGIC ---
     function startHeat() {
-      const t = ['a','b','c']
-        .map(x => document.getElementById('track-'+x).value.trim().toUpperCase()) 
-        .filter(Boolean);
+      const t = ['a','b','c'].map(x => document.getElementById('track-'+x).value.trim().toUpperCase()).filter(Boolean);
+      if(!t.length) return alert("Enter Track No.");
       
-      if(!t.length) return alert("Enter at least one track number");
-      
-      showLoad("Fetching Data..."); // Reuse loading screen
-      
+      showLoad("Fetching Data...");
       fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
         .then(r => r.json())
         .then(res => {
@@ -302,137 +296,97 @@
               uid: ['A','B','C'][i],
               track: id,
               info: res.data[id] || {name:'Unknown ID', group:'-', coach:'-'},
-              scores: {a1:'', a2:'', a3:'', opt:''} // Start empty
+              scores: {a1:'', a2:'', a3:'', opt:''}
             }));
             renderGrid();
-            document.getElementById('track-screen').classList.add('hidden');
-            document.getElementById('scoring-screen').classList.remove('hidden');
-          } else { 
-            alert("Error: " + res.message); 
-          }
+            switchScreen('scoring-screen');
+          } else { alert("Error: " + res.message); }
         })
-        .catch(() => { 
-          hideLoad(); 
-          alert("Fetch Failed. Check internet connection."); 
-        });
+        .catch(() => { hideLoad(); alert("Fetch Failed"); });
     }
 
-    // --- RENDERING & INPUTS ---
     function renderGrid() {
-      const g = document.getElementById('grid');
-      g.innerHTML = '';
+      const g = document.getElementById('grid'); g.innerHTML = '';
       heatData.forEach((s, i) => {
         g.innerHTML += `
         <div class="card">
           <div class="student-info">
             <div class="s-track">#${s.track}</div>
             <div class="s-name">${s.info.name}</div>
-            <div class="s-meta">
-              <span>Grp: ${s.info.group}</span>
-              <span class="s-coach">Coach: ${s.info.coach}</span>
-            </div>
+            <div class="s-meta"><span>Grp: ${s.info.group}</span><span class="s-coach">Coach: ${s.info.coach}</span></div>
           </div>
-          ${renderInput(i, 'a1', 'Asana 1')}
-          ${renderInput(i, 'a2', 'Asana 2')}
-          ${renderInput(i, 'a3', 'Asana 3')}
-          ${renderInput(i, 'opt', 'Optional')}
+          ${renderInput(i, 'a1', 'Asana 1')} ${renderInput(i, 'a2', 'Asana 2')}
+          ${renderInput(i, 'a3', 'Asana 3')} ${renderInput(i, 'opt', 'Optional')}
         </div>`;
       });
     }
 
-    function renderInput(idx, key, label) {
-      return `
-        <div class="score-row">
-          <span>${label}</span>
-          <div style="text-align:right;">
-            <input type="number" class="score-input" id="inp-${idx}-${key}" 
-              placeholder="-" oninput="validateInput(this, ${idx}, '${key}')">
-            <div id="err-${idx}-${key}" class="error-msg"></div>
-          </div>
-        </div>
-      `;
+    function renderInput(idx, k, l) {
+      return `<div class="score-row"><span>${l}</span>
+        <div><input type="number" class="score-input" id="inp-${idx}-${k}" placeholder="-" oninput="valInp(this,${idx},'${k}')"><div id="err-${idx}-${k}" class="error-msg"></div></div>
+      </div>`;
     }
 
-    // --- VALIDATION LOGIC ---
-    function validateInput(el, idx, key) {
-      const val = parseFloat(el.value);
-      const errDiv = document.getElementById(`err-${idx}-${key}`);
-      
-      // Update local state
-      heatData[idx].scores[key] = el.value; 
-
-      // Reset Styles
-      el.classList.remove('error');
-      errDiv.innerText = "";
-
-      // Check Limits
-      if (val > MAX_SCORE) {
-        el.classList.add('error');
-        errDiv.innerText = `Max ${MAX_SCORE}`;
-      }
+    function valInp(el, i, k) {
+      const v = parseFloat(el.value);
+      heatData[i].scores[k] = el.value;
+      const err = document.getElementById(`err-${i}-${k}`);
+      el.classList.remove('error'); err.innerText = "";
+      if(v > MAX_SCORE) { el.classList.add('error'); err.innerText = `Max ${MAX_SCORE}`; }
     }
 
     function submit() {
-      // 1. Check for Critical Errors (Values > FM)
-      let hasCriticalError = false;
-      let hasEmptyFields = false;
+      let crit = false, empty = false;
+      heatData.forEach(s => ['a1','a2','a3','opt'].forEach(k => {
+        const v = parseFloat(s.scores[k]);
+        if(!isNaN(v) && v > MAX_SCORE) crit = true;
+        if(s.scores[k] === '') empty = true;
+      }));
+      
+      if(crit) return alert("Fix scores > " + MAX_SCORE);
+      if(empty && !confirm("Some fields empty. Submit anyway?")) return;
 
-      // Scan all current inputs
-      heatData.forEach((s, i) => {
-        ['a1','a2','a3','opt'].forEach(k => {
-          const val = parseFloat(s.scores[k]);
-          // Check if valid number and > Max
-          if (!isNaN(val) && val > MAX_SCORE) hasCriticalError = true;
-          // Check if empty
-          if (s.scores[k] === '' || s.scores[k] === null) hasEmptyFields = true;
-        });
-      });
-
-      if (hasCriticalError) {
-        alert("⚠️ WARNING: You have entered scores higher than the Full Marks (" + MAX_SCORE + ").\n\nPlease correct the red fields before submitting.");
-        return;
-      }
-
-      if (hasEmptyFields) {
-        const proceed = confirm("⚠️ Some score fields are empty.\n\nAre you sure you want to submit anyway?");
-        if (!proceed) return;
-      }
-
-      // 2. Prepare Payload
-      // Convert empty strings to 0 for the sheet
       const payload = {
         judgeNum: currentUser.num,
         students: heatData.map(s => ({
           trackNo: s.track,
           scores: {
-            a1: s.scores.a1 === '' ? 0 : s.scores.a1,
-            a2: s.scores.a2 === '' ? 0 : s.scores.a2,
-            a3: s.scores.a3 === '' ? 0 : s.scores.a3,
-            opt: s.scores.opt === '' ? 0 : s.scores.opt
+            a1: s.scores.a1===''?0:s.scores.a1, a2: s.scores.a2===''?0:s.scores.a2,
+            a3: s.scores.a3===''?0:s.scores.a3, opt: s.scores.opt===''?0:s.scores.opt
           }
         }))
       };
-
-      showLoad("Submitting Scores...");
-
+      
+      showLoad("Saving...");
       fetch(activeApiUrl, { method:"POST", body:JSON.stringify(payload) })
         .then(r => r.json())
         .then(d => {
-           hideLoad();
-           if(d.status === 'success') { 
-             alert("✅ Scores Submitted Successfully!"); 
-             reset(); 
-           } else { 
-             alert("❌ Server Error: " + d.message); 
-           }
+          hideLoad();
+          if(d.status==='success') { alert("Saved!"); reset(); }
+          else alert("Error: " + d.message);
         })
-        .catch(e => { hideLoad(); alert("Submit Failed. Check Connection."); });
+        .catch(() => { hideLoad(); alert("Submit Failed"); });
     }
 
+    // --- UI HELPERS ---
+    function showLoad(m) { document.getElementById('loader').classList.remove('hidden'); document.getElementById('loader-txt').innerText=m; }
+    function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
+    function switchScreen(id) { 
+      ['login-screen','track-screen','scoring-screen'].forEach(x => document.getElementById(x).classList.add('hidden'));
+      document.getElementById('app-header').classList.remove('hidden');
+      document.getElementById(id).classList.remove('hidden');
+    }
     function reset() {
       ['track-a','track-b','track-c'].forEach(x => document.getElementById(x).value='');
       document.getElementById('scoring-screen').classList.add('hidden');
       document.getElementById('track-screen').classList.remove('hidden');
+    }
+    function toggleDropdown() { document.getElementById("userDropdown").classList.toggle("show"); }
+    window.onclick = function(e) {
+      if (!e.target.closest('.profile-btn')) {
+        const d = document.getElementsByClassName("dropdown-content");
+        for (let i=0; i<d.length; i++) if (d[i].classList.contains('show')) d[i].classList.remove('show');
+      }
     }
   </script>
 </body>
