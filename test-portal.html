@@ -10,18 +10,17 @@
             --primary: #ea580c;       /* Saffron / Burnt Orange */
             --primary-dark: #9a3412;  /* Deep Rust */
             --secondary: #991b1b;     /* Maroon Accent */
-            --gold: #d97706;          /* Gold for winners */
+            --gold: #d97706;          /* Gold */
             
             /* Warm Backgrounds */
-            --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); /* Cream/Orange Fade */
+            --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
             --glass: rgba(255, 255, 255, 0.90);
-            --glass-border: 1px solid rgba(253, 186, 116, 0.3); /* Slight orange tint border */
+            --glass-border: 1px solid rgba(253, 186, 116, 0.3);
             
-            --shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15); /* Warm Shadow */
+            --shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15);
             
-            --text-main: #27272a;     /* Dark Grey */
-            --text-muted: #71717a;    /* Muted Grey */
-            --text-on-primary: #ffffff;
+            --text-main: #27272a;     
+            --text-muted: #71717a;    
         }
 
         body {
@@ -29,7 +28,7 @@
             background: var(--bg-gradient);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 15px; /* Reduced padding for mobile */
             min-height: 100vh;
         }
 
@@ -46,14 +45,13 @@
             margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center; /* Centered vertically */
+            align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
             position: relative;
             overflow: hidden;
         }
         
-        /* Decorative decorative element */
         header::before {
             content: ''; position: absolute; top: -50px; left: -50px; width: 150px; height: 150px;
             background: radial-gradient(circle, rgba(251,146,60,0.2) 0%, rgba(0,0,0,0) 70%);
@@ -62,24 +60,15 @@
         
         .brand { display: flex; align-items: center; gap: 1.2rem; position: relative; z-index: 1; }
         
-        /* LOGO STYLE */
         .brand-logo { 
-            width: 70px; 
-            height: 70px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            border: 3px solid white;
-            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+            width: 70px; height: 70px; border-radius: 50%; object-fit: cover; 
+            border: 3px solid white; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
         }
 
         .brand h1 { 
-            margin: 0; 
-            font-size: 1.8rem; 
-            font-weight: 800;
-            letter-spacing: -0.5px; 
+            margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; 
             background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .brand p { margin: 0; color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; font-weight: 500; }
 
@@ -104,171 +93,148 @@
 
         /* --- STICKY NAV BAR --- */
         .sticky-nav {
-            position: sticky;
-            top: 15px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
-            padding: 10px 15px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: sticky; top: 10px; z-index: 100;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
+            padding: 10px 15px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid rgba(255, 255, 255, 0.6);
             margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 10px;
         }
 
-        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 5px; border-radius: 15px; }
+        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 5px; border-radius: 15px; white-space: nowrap; }
         .tab-btn {
-            padding: 10px 24px; border-radius: 12px; cursor: pointer; font-weight: 700; 
+            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; 
             color: var(--text-muted); background: transparent; border: none; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-size: 0.95rem;
         }
         .tab-btn:hover { color: var(--primary); }
-        .tab-btn.active { 
-            background: white; color: var(--primary); 
-            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.15); 
-            transform: scale(1.02);
-        }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 15px rgba(234, 88, 12, 0.15); transform: scale(1.02); }
 
-        /* --- TOOLBAR CONTROLS --- */
-        .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .toolbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
         /* Search */
         .search-wrapper { 
-            display: flex; align-items: center; gap: 0; 
-            background: white; border: 1px solid #fed7aa; 
+            display: flex; align-items: center; background: white; border: 1px solid #fed7aa; 
             border-radius: 12px; padding: 2px; transition: 0.3s; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         .search-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.1); }
+        .search-select { border: none; background: #fff7ed; padding: 10px; border-radius: 10px; font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); outline: none; }
+        .search-input-box { border: none; outline: none; padding: 8px; font-size: 0.95rem; width: 150px; }
         
-        .search-select { 
-            border: none; background: #fff7ed; padding: 10px 12px; border-radius: 10px; 
-            font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); cursor: pointer; outline: none; 
-        }
-        .search-input-box { border: none; outline: none; padding: 8px 12px; font-size: 0.95rem; width: 160px; color: var(--text-main); }
-        
-        /* Live Toggle */
+        /* Buttons */
         .live-toggle {
-            background: white; padding: 8px 16px; border-radius: 30px; cursor: pointer; 
-            display: flex; align-items: center; gap: 8px; border: 1px solid #e2e8f0; 
+            background: white; padding: 8px 12px; border-radius: 30px; cursor: pointer; 
+            display: flex; align-items: center; gap: 6px; border: 1px solid #e2e8f0; 
             font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.3s;
         }
         .live-toggle.active { background: #ecfccb; border-color: #84cc16; color: #365314; }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: 0.3s; }
         .active .dot { background: #65a30d; animation: pulse 1.5s infinite; }
 
-        /* Buttons */
-        .btn-icon {
-            background: white; border: 1px solid #fed7aa; color: var(--primary);
-            width: 40px; height: 40px; border-radius: 10px; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            transition: 0.2s;
+        .btn-icon, .btn-print, .btn-judge {
+            border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; transition: 0.2s; border: none; height: 40px;
         }
-        .btn-icon:hover { background: #fff7ed; transform: translateY(-2px); }
+        .btn-icon { background: white; border: 1px solid #fed7aa; color: var(--primary); width: 40px; font-size: 1.2rem; }
+        .btn-print { background: var(--text-main); color: white; padding: 0 15px; gap: 5px; }
         
-        .btn-print {
-            background: var(--primary); color: white; border: none; padding: 0 20px; height: 40px;
-            border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s;
+        /* New Judges Button */
+        .btn-judge { 
+            background: var(--primary); color: white; padding: 0 15px; gap: 5px; 
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
         }
-        .btn-print:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-judge:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
         /* Filters */
-        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; scrollbar-width: thin; }
+        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
         .filter-chip {
-            padding: 8px 20px; border-radius: 30px; border: 1px solid #fed7aa; background: white; 
-            font-size: 0.9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; 
-            white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            padding: 8px 16px; border-radius: 30px; border: 1px solid #fed7aa; background: white; 
+            font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap;
         }
-        .filter-chip:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
-        .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3); }
+        .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* --- DATA TABLES --- */
-        .view-section { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .view-section { display: none; animation: slideUp 0.4s ease-out; }
         .view-section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .data-card { 
-            background: white; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); 
-            overflow: hidden; margin-bottom: 2rem; border: 1px solid #ffedd5; 
+            background: white; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+            overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #ffedd5; 
         }
-        .card-head { 
-            padding: 15px 25px; background: linear-gradient(to right, #fff7ed, white); 
-            border-bottom: 1px solid #ffedd5; display: flex; justify-content: space-between; align-items: center; 
-        }
-        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.2rem; font-weight: 800; }
-        .badge-count { background: #fed7aa; color: var(--primary-dark); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+        .card-head { padding: 12px 20px; background: #fff7ed; border-bottom: 1px solid #ffedd5; display: flex; justify-content: space-between; align-items: center; }
+        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.1rem; }
+        .badge-count { background: #fed7aa; color: var(--primary-dark); padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { 
-            background: #fff7ed; padding: 14px; text-align: center; color: var(--primary-dark); 
-            font-weight: 700; border-bottom: 2px solid #fed7aa; white-space: nowrap; 
-            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.8px; 
-        }
-        td { padding: 12px; border-bottom: 1px solid #fff7ed; text-align: center; vertical-align: middle; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #fffcf5; }
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: #fff7ed; padding: 10px; text-align: center; color: var(--primary-dark); font-weight: 700; border-bottom: 2px solid #fed7aa; white-space: nowrap; font-size: 0.7rem; text-transform: uppercase; }
+        td { padding: 10px; border-bottom: 1px solid #fff7ed; text-align: center; vertical-align: middle; white-space: nowrap; }
         
-        /* Sticky Column */
-        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #fff7ed; min-width: 200px; box-shadow: 4px 0 10px rgba(0,0,0,0.02); }
+        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #fff7ed; min-width: 160px; }
         th.col-sticky { background: #fff7ed; z-index: 20; }
-        tr:hover .col-sticky { background: #fffcf5; }
 
-        .detail-sub { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 8px; margin-top: 4px; font-weight: 500; }
-        .detail-badge { background: #f3f4f6; padding: 2px 8px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.75rem; }
+        .detail-sub { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 5px; margin-top: 3px; }
+        .detail-badge { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; border: 1px solid #e5e7eb; }
 
-        .score-pill { 
-            background: white; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; 
-            color: var(--text-main); border: 1px solid #e5e7eb; font-family: 'Courier New', monospace; font-weight: 700;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        
-        .j-col { font-weight: 700; color: var(--text-muted); background: #f9fafb; }
-        .total-col { font-weight: 800; color: var(--primary); font-size: 1.1rem; background: #fff7ed; }
-        .perc-badge { background: #ecfccb; color: #365314; padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }
+        .score-pill { background: white; padding: 3px 6px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #e5e7eb; font-weight: 700; }
+        .total-col { font-weight: 800; color: var(--primary); font-size: 1rem; background: #fff7ed; }
+        .perc-badge { background: #ecfccb; color: #365314; padding: 3px 8px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
 
         /* --- PODIUM --- */
-        .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 380px; margin: 40px auto; max-width: 800px; padding-bottom: 20px; }
+        .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 15px; height: 350px; margin: 30px auto; max-width: 800px; padding-bottom: 20px; }
         .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-        .bar { 
-            width: 100%; border-radius: 12px 12px 0 0; display: flex; justify-content: center; align-items: flex-end; 
-            padding-bottom: 10px; color: white; font-weight: 800; font-size: 2.5rem; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative;
-        }
-        /* Saffron, Silver, Bronze Bars */
-        .p1 .bar { height: 230px; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); z-index: 3; }
-        .p2 .bar { height: 170px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%); z-index: 2; }
-        .p3 .bar { height: 130px; background: linear-gradient(180deg, #d97706 0%, #92400e 100%); z-index: 1; } /* Bronze */
+        .bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; color: white; font-weight: 800; font-size: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .p1 .bar { height: 200px; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); }
+        .p2 .bar { height: 150px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%); }
+        .p3 .bar { height: 110px; background: linear-gradient(180deg, #d97706 0%, #92400e 100%); }
         
-        .winner-card { 
-            background: white; padding: 15px; border-radius: 16px; text-align: center; 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08); margin-bottom: 15px; width: 110%; 
-            border: 2px solid white; transition: 0.3s;
-        }
+        .winner-card { background: white; padding: 10px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 10px; width: 100%; border: 2px solid white; }
         .p1 .winner-card { border-color: #fcd34d; transform: scale(1.05); }
+        .w-name { font-weight: 800; color: var(--text-main); font-size: 0.95rem; white-space: normal; }
+        .w-coach { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+        .w-score { color: var(--primary); font-weight: 900; font-size: 1.2rem; }
 
-        .w-name { font-weight: 800; color: var(--text-main); font-size: 1rem; }
-        .w-coach { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
-        .w-score { color: var(--primary); font-weight: 900; font-size: 1.4rem; margin-top: 5px; }
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 992px) {
+            .container { max-width: 100%; }
+            .sticky-nav { flex-direction: column; align-items: stretch; }
+            .nav-tabs { justify-content: center; width: 100%; }
+            .toolbar-right { justify-content: space-between; }
+            .search-wrapper { flex-grow: 1; }
+            .search-input-box { width: 100%; }
+        }
 
-        /* Print Mode */
+        @media (max-width: 768px) {
+            header { flex-direction: column; text-align: center; padding: 1rem; }
+            .brand { flex-direction: column; gap: 0.5rem; }
+            .judges-box { width: 100%; box-sizing: border-box; margin-top: 10px; }
+            
+            .sticky-nav { padding: 10px; top: 0; border-radius: 0 0 15px 15px; }
+            .tab-btn { padding: 8px 15px; font-size: 0.85rem; }
+            
+            .search-select { padding: 8px; width: 90px; }
+            
+            .podium-stage { height: auto; flex-direction: column; align-items: center; gap: 20px; }
+            .podium-col { width: 100%; flex-direction: row; align-items: center; gap: 15px; }
+            .bar { display: none; /* Hide bars on mobile, show list view style */ }
+            .winner-card { width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; margin: 0; }
+            .p1 { order: -1; } /* Keep winner top */
+        }
+
         @media print {
             header, .toolbar-right, .nav-tabs, #toast, .filter-scroll { display: none !important; }
             .sticky-nav { position: static; box-shadow: none; border: none; padding: 0; background: white; }
             .view-section { display: block !important; }
             .col-sticky { position: static; border: 1px solid #ccc; box-shadow: none; }
-            td, th { border: 1px solid #ccc; color: black; background: white !important; }
-            .data-card { box-shadow: none; border: 1px solid #000; }
+            td, th { border: 1px solid #ccc; color: black; background: white !important; font-size: 8pt; padding: 2px; }
+            .data-card { box-shadow: none; border: 1px solid #000; break-inside: avoid; }
+            .podium-stage { display: none; } /* Text list only for print */
         }
 
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #27272a; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #27272a; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
@@ -278,67 +244,57 @@
     
     <header>
         <div class="brand">
-            <img src="resources/yoga_dp.jpeg" alt="Logo" class="brand-logo" onerror="this.src='https://via.placeholder.com/70?text=YOGA'">
+            <img src="resources/yoga_dp.jpeg" alt="Logo" class="brand-logo" onerror="this.src='https:/via.placeholder.com/70/ea580c/ffffff?text=YOGA'">
             <div>
                 <h1>Yoga Scoreboard Pro</h1>
-                <p id="updateStatus">Initializing System...</p>
+                <p id="updateStatus">System Ready</p>
             </div>
         </div>
 
         <div class="judges-box">
             <div class="jb-title">Today's Competition Respected Judges</div>
-            <div class="jb-row">
-                <span class="jb-label">1st Judge:</span>
-                <span class="jb-name" id="j1NameDisplay">--</span>
-            </div>
-            <div class="jb-row">
-                <span class="jb-label">2nd Judge:</span>
-                <span class="jb-name" id="j2NameDisplay">--</span>
-            </div>
-            <div class="jb-row">
-                <span class="jb-label">3rd Judge:</span>
-                <span class="jb-name" id="j3NameDisplay">--</span>
-            </div>
+            <div class="jb-row"><span class="jb-label">1st Judge:</span><span class="jb-name" id="j1NameDisplay">--</span></div>
+            <div class="jb-row"><span class="jb-label">2nd Judge:</span><span class="jb-name" id="j2NameDisplay">--</span></div>
+            <div class="jb-row"><span class="jb-label">3rd Judge:</span><span class="jb-name" id="j3NameDisplay">--</span></div>
         </div>
     </header>
 
     <div class="sticky-nav">
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchView('live', this)">📝 Live Score Board</button>
-            <button class="tab-btn" onclick="switchView('podium', this)">🏆 Judgment Podium</button>
+            <button class="tab-btn active" onclick="switchView('live', this)">📝 Live Scores</button>
+            <button class="tab-btn" onclick="switchView('podium', this)">🏆 Judgment</button>
         </div>
 
         <div class="toolbar-right">
             <div class="search-wrapper">
                 <select id="searchMode" class="search-select" onchange="toggleSearchMode()">
-                    <option value="track">🆔 Track No</option>
+                    <option value="track">🆔 No.</option>
                     <option value="center">📍 Center</option>
                 </select>
-                
-                <input type="text" id="inputTrack" class="search-input-box" placeholder="Search Track..." onkeyup="handleSearch()">
-                <input type="text" id="inputCenter" class="search-input-box" list="centerOptions" placeholder="Select Center..." style="display:none;" oninput="handleSearch()">
+                <input type="text" id="inputTrack" class="search-input-box" placeholder="Search..." onkeyup="handleSearch()">
+                <input type="text" id="inputCenter" class="search-input-box" list="centerOptions" placeholder="Select..." style="display:none;" oninput="handleSearch()">
                 <datalist id="centerOptions"></datalist>
             </div>
+
+            <button onclick="goToJudges()" class="btn-judge" title="Go to Judges Portal">👨‍⚖️ Judges Portal</button>
 
             <div id="liveBtn" class="live-toggle" onclick="toggleLive()">
                 <div class="dot"></div> <span id="liveText">Paused</span>
             </div>
             
-            <button onclick="fetchData(true)" class="btn-icon" title="Refresh">🔄</button>
-            <button onclick="window.print()" class="btn-print" title="Print Report">🖨️ Print</button>
+            <button onclick="fetchData(true)" class="btn-icon">🔄</button>
+            <button onclick="window.print()" class="btn-print">🖨️</button>
         </div>
     </div>
 
-    <div class="filter-scroll" id="groupFilters">
-        </div>
+    <div class="filter-scroll" id="groupFilters"></div>
 
     <div id="view-live" class="view-section active"></div>
-
     <div id="view-podium" class="view-section"></div>
 
 </div>
 
-<div id="toast" class="toast"><span>✅</span> Data Updated Successfully</div>
+<div id="toast" class="toast"><span>✅</span> Data Updated</div>
 
 <script>
     /** ================= CONFIGURATION ================= */
@@ -347,15 +303,21 @@
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
     
     const CONFIG = {
+        // SCORING
         MARKS_PER_JUDGE: 50, 
         TOTAL_FM: 150, 
 
+        // NAVIGATION PATHS
+        JUDGES_PORTAL_URL: "competition-2026-judegs.html",
+
+        // JUDGES
         judges: {
             j1: "1st Judge", 
             j2: "2nd Judge",
             j3: "3rd Judge"
         },
 
+        // COLUMNS
         cols: {
             id: "TRACK NO",
             name: "NAME OF THE ATHLETES",
@@ -376,7 +338,7 @@
         }
     };
 
-    /** ================= STATE ================= */
+    /** ================= LOGIC ================= */
     let rawData = [];
     let activeGroup = "All";
     let centerList = new Set();
@@ -390,8 +352,10 @@
         fetchData();
     };
 
-    /** ================= LOGIC ================= */
-    
+    function goToJudges() {
+        window.location.href = CONFIG.JUDGES_PORTAL_URL;
+    }
+
     function toggleLive() {
         isLive = !isLive;
         const btn = document.getElementById('liveBtn');
@@ -415,11 +379,11 @@
             processData(text);
             
             const time = new Date().toLocaleTimeString();
-            document.getElementById('updateStatus').innerText = `Last Updated: ${time}`;
+            document.getElementById('updateStatus').innerText = `Updated: ${time}`;
             if(manual) showToast();
         } catch (err) {
             console.error(err);
-            document.getElementById('updateStatus').innerText = "Connection Error";
+            document.getElementById('updateStatus').innerText = "Offline";
         }
     }
 
@@ -436,7 +400,6 @@
         rawData = [];
         const groups = new Set();
         centerList.clear();
-
         const C = CONFIG.cols;
 
         for (let i = 1; i < lines.length; i++) {
@@ -468,22 +431,14 @@
         return keys.reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
     }
 
-    /* --- SEARCH LOGIC --- */
     function toggleSearchMode() {
         const mode = document.getElementById('searchMode').value;
         const trackInput = document.getElementById('inputTrack');
         const centerInput = document.getElementById('inputCenter');
+        trackInput.value = ""; centerInput.value = "";
         
-        trackInput.value = "";
-        centerInput.value = "";
-
-        if(mode === 'track') {
-            trackInput.style.display = 'block';
-            centerInput.style.display = 'none';
-        } else {
-            trackInput.style.display = 'none';
-            centerInput.style.display = 'block';
-        }
+        if(mode === 'track') { trackInput.style.display = 'block'; centerInput.style.display = 'none'; } 
+        else { trackInput.style.display = 'none'; centerInput.style.display = 'block'; }
         renderApp();
     }
 
@@ -497,19 +452,13 @@
         });
     }
 
-    function handleSearch() {
-        renderApp();
-    }
+    function handleSearch() { renderApp(); }
 
-    /* --- UI RENDERING --- */
     function renderFilters(list) {
         const div = document.getElementById('groupFilters');
         if (div.innerHTML.trim() !== "") return;
-
         let html = `<div class="filter-chip ${activeGroup === 'All' ? 'active' : ''}" onclick="filterGroup('All', this)">All Groups</div>`;
-        list.forEach(g => {
-            html += `<div class="filter-chip" onclick="filterGroup('${g}', this)">${g}</div>`;
-        });
+        list.forEach(g => { html += `<div class="filter-chip" onclick="filterGroup('${g}', this)">${g}</div>`; });
         div.innerHTML = html;
     }
 
@@ -531,20 +480,12 @@
         const mode = document.getElementById('searchMode').value;
         const trackVal = document.getElementById('inputTrack').value.toLowerCase();
         const centerVal = document.getElementById('inputCenter').value.toLowerCase();
-        
         const C = CONFIG.cols;
-
-        // 1. Filter by Group
-        let data = activeGroup === "All" ? rawData : rawData.filter(d => d.grp === activeGroup);
         
-        // 2. Search Filter
-        if(mode === 'track' && trackVal) {
-            data = data.filter(d => d[C.id].toString().toLowerCase().includes(trackVal));
-        } else if(mode === 'center' && centerVal) {
-            data = data.filter(d => d.center.toLowerCase().includes(centerVal));
-        }
+        let data = activeGroup === "All" ? rawData : rawData.filter(d => d.grp === activeGroup);
+        if(mode === 'track' && trackVal) data = data.filter(d => d[C.id].toString().toLowerCase().includes(trackVal));
+        else if(mode === 'center' && centerVal) data = data.filter(d => d.center.toLowerCase().includes(centerVal));
 
-        // Grouping
         const groups = {};
         const cats = [...new Set(data.map(d => d.grp))].sort();
         cats.forEach(c => groups[c] = data.filter(d => d.grp === c));
@@ -562,7 +503,7 @@
             const athletes = groups[grp];
             let rows = athletes.map(s => {
                 let asanaCells = C.asanas.map(a => `
-                    <td style="border-right:1px solid #f9fafb;">
+                    <td style="border-right:1px solid #fed7aa;">
                         <div style="display:flex; gap:3px; justify-content:center;">
                             <span class="score-pill">${s[a.keys[0]] || '-'}</span>
                             <span class="score-pill">${s[a.keys[1]] || '-'}</span>
@@ -589,28 +530,15 @@
                     </tr>
                 `;
             }).join("");
-
-            let headers = C.asanas.map(a => `<th>${a.name} <div style="font-size:0.6rem; opacity:0.7;">(1st | 2nd | 3rd)</div></th>`).join("");
+            
+            let headers = C.asanas.map(a => `<th>${a.name} <div style="font-size:0.6rem; opacity:0.7;">(1 | 2 | 3)</div></th>`).join("");
 
             container.innerHTML += `
                 <div class="data-card">
-                    <div class="card-head">
-                        <h3>${grp}</h3>
-                        <span class="badge-count">${athletes.length} Athletes</span>
-                    </div>
-                    <div style="overflow-x:auto;">
+                    <div class="card-head"><h3>${grp}</h3><span class="badge-count">${athletes.length} Athletes</span></div>
+                    <div class="table-wrap">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th class="col-sticky">Athlete Details</th>
-                                    ${headers}
-                                    <th>1st Judge</th>
-                                    <th>2nd Judge</th>
-                                    <th>3rd Judge</th>
-                                    <th>Total</th>
-                                    <th>%</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th class="col-sticky">Details</th>${headers}<th>J1</th><th>J2</th><th>J3</th><th>Total</th><th>%</th></tr></thead>
                             <tbody>${rows}</tbody>
                         </table>
                     </div>
@@ -636,35 +564,22 @@
 
             let podium = `
                 <div class="data-card">
-                    <div class="card-head"><h3>🏆 ${grp} - Final Results</h3></div>
+                    <div class="card-head"><h3>🏆 ${grp} Results</h3></div>
                     <div class="podium-stage">
                         <div class="podium-col p2">
-                            ${s2 ? `<div class="winner-card">
-                                <div class="w-name">${s2[C.name]}</div>
-                                <div class="w-coach">Coach: ${s2[C.coach]}</div>
-                                <div class="w-score">${s2.grand}</div>
-                            </div><div class="bar">2</div>` : ''}
+                            ${s2 ? `<div class="winner-card"><div class="w-name">${s2[C.name]}</div><div class="w-coach">${s2[C.coach]}</div><div class="w-score">${s2.grand}</div></div><div class="bar">2</div>` : ''}
                         </div>
                         <div class="podium-col p1">
-                            ${s1 ? `<div class="winner-card">
-                                <div style="font-size:1.5rem;">🥇</div>
-                                <div class="w-name">${s1[C.name]}</div>
-                                <div class="w-coach">Coach: ${s1[C.coach]}</div>
-                                <div class="w-score">${s1.grand}</div>
-                            </div><div class="bar">1</div>` : ''}
+                            ${s1 ? `<div class="winner-card"><div style="font-size:1.5rem;">🥇</div><div class="w-name">${s1[C.name]}</div><div class="w-coach">${s1[C.coach]}</div><div class="w-score">${s1.grand}</div></div><div class="bar">1</div>` : ''}
                         </div>
                         <div class="podium-col p3">
-                            ${s3 ? `<div class="winner-card">
-                                <div class="w-name">${s3[C.name]}</div>
-                                <div class="w-coach">Coach: ${s3[C.coach]}</div>
-                                <div class="w-score">${s3.grand}</div>
-                            </div><div class="bar">3</div>` : ''}
+                            ${s3 ? `<div class="winner-card"><div class="w-name">${s3[C.name]}</div><div class="w-coach">${s3[C.coach]}</div><div class="w-score">${s3.grand}</div></div><div class="bar">3</div>` : ''}
                         </div>
                     </div>
                     
-                    <div style="padding:20px; max-width:900px; margin:0 auto;">
-                        <h4 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-bottom:15px; text-align:center;">Full Ranking & Tie-Break Analysis</h4>
-                        <div style="border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
+                    <div style="padding:15px; max-width:900px; margin:0 auto;">
+                        <h4 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-bottom:15px; text-align:center;">Ranking Details</h4>
+                        <div style="border:1px solid #fed7aa; border-radius:12px; overflow:hidden;">
                             ${athletes.map((s, i) => {
                                 let tieReason = "";
                                 if(i > 0 && athletes[i-1].grand === s.grand) {
@@ -674,24 +589,21 @@
                                     tieReason = `<span style="font-size:0.75rem; color:#d97706; background:#fff7ed; padding:2px 8px; border-radius:4px;">⚠️ Tie ${tieReason}</span>`;
                                 }
                                 return `
-                                    <div style="display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid #f3f4f6; background:white; gap:15px;">
-                                        <div style="font-weight:900; color:#d1d5db; font-size:1.3rem; width:30px;">${i+1}</div>
+                                    <div style="display:flex; align-items:center; padding:12px 15px; border-bottom:1px solid #fff7ed; background:white; gap:10px;">
+                                        <div style="font-weight:900; color:#d1d5db; font-size:1.2rem; width:25px;">${i+1}</div>
                                         <div style="flex:1;">
-                                            <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${s[C.name]}</div>
-                                            <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
-                                                Coach: ${s[C.coach]} | Track: ${s[C.id]}
-                                            </div>
+                                            <div style="font-weight:700; color:var(--text-main); font-size:0.9rem;">${s[C.name]}</div>
+                                            <div style="font-size:0.75rem; color:#64748b;">${s[C.coach]} | ${s[C.id]}</div>
                                         </div>
                                         <div style="text-align:right;">
-                                            <div style="font-weight:900; color:var(--primary); font-size:1.2rem;">${s.grand}</div>
+                                            <div style="font-weight:900; color:var(--primary); font-size:1.1rem;">${s.grand}</div>
                                             ${tieReason}
                                         </div>
-                                    </div>
-                                `;
+                                    </div>`;
                             }).join("")}
                         </div>
                     </div>
-                    <div style="height:30px;"></div>
+                    <div style="height:20px;"></div>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', podium);
