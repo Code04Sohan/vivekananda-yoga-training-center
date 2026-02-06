@@ -2,19 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yoga Competition Live Pro</title>
     <style>
         :root {
-            /* THEME PALETTE */
-            --primary: #ea580c;
-            --primary-dark: #9a3412;
-            --secondary: #991b1b;
-            --gold: #d97706;
+            /* THEME VARIABLES */
+            --primary: #ea580c;       
+            --primary-dark: #9a3412;  
+            --secondary: #991b1b;     
+            --gold: #d97706;          
             
-            /* BACKGROUNDS */
             --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-            --glass: rgba(255, 255, 255, 0.90);
+            --glass: rgba(255, 255, 255, 0.95);
             --glass-border: 1px solid rgba(253, 186, 116, 0.3);
             --shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15);
             
@@ -22,95 +21,96 @@
             --text-muted: #71717a;    
         }
 
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
             margin: 0;
-            padding: 15px;
+            padding: 10px;
             min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll on body */
         }
 
-        .container { max-width: 1600px; margin: 0 auto; }
+        .container { max-width: 1600px; margin: 0 auto; width: 100%; }
 
-        /* HEADER */
+        /* --- HEADER --- */
         header {
             background: var(--glass);
             backdrop-filter: blur(12px);
             border: var(--glass-border);
-            padding: 1rem 1.5rem;
-            border-radius: 24px;
+            padding: 1rem;
+            border-radius: 20px;
             box-shadow: var(--shadow);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
             position: relative;
-            overflow: hidden;
         }
         
-        .brand { display: flex; align-items: center; gap: 1.2rem; position: relative; z-index: 1; }
+        .brand { display: flex; align-items: center; gap: 1rem; position: relative; z-index: 1; }
         
-        /* LOGO: Ensure 'resources' folder and 'yoga_dp.jpeg' exist */
         .brand-logo { 
-            width: 70px; height: 70px; border-radius: 50%; object-fit: cover; 
+            width: 60px; height: 60px; border-radius: 50%; object-fit: cover; 
             border: 3px solid white; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+            flex-shrink: 0;
         }
 
         .brand h1 { 
-            margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; 
+            margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; 
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1.2;
         }
-        .brand p { margin: 0; color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; font-weight: 500; }
+        .brand p { margin: 0; color: var(--text-muted); font-size: 0.8rem; margin-top: 2px; }
 
         .judges-box {
-            background: #fff; border: 1px solid #fed7aa; border-radius: 16px;
-            padding: 12px 20px; min-width: 260px; position: relative; z-index: 1;
+            background: #fff; border: 1px solid #fed7aa; border-radius: 12px;
+            padding: 10px 15px; min-width: 200px; flex-grow: 1; max-width: 400px;
         }
         .jb-title { 
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; 
-            color: var(--primary); font-weight: 800; margin-bottom: 8px; 
-            border-bottom: 2px solid #ffedd5; padding-bottom: 4px; 
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; 
+            color: var(--primary); font-weight: 800; margin-bottom: 5px; 
+            border-bottom: 1px solid #ffedd5; padding-bottom: 2px; 
         }
-        .jb-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; }
-        .jb-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; }
+        .jb-row { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 2px; }
         .jb-name { font-weight: 700; color: var(--text-main); }
 
-        /* NAV & TOOLS */
+        /* --- STICKY NAV --- */
         .sticky-nav {
             position: sticky; top: 10px; z-index: 100;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px);
-            padding: 10px 15px; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid rgba(255, 255, 255, 0.6);
-            margin-bottom: 25px;
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap; gap: 10px;
+            padding: 8px; border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08); border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between;
         }
 
-        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 5px; border-radius: 15px; }
+        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 4px; border-radius: 12px; flex-grow: 1; justify-content: center; }
         .tab-btn {
-            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; 
+            padding: 8px 12px; border-radius: 10px; cursor: pointer; font-weight: 700; 
             color: var(--text-muted); background: transparent; border: none; 
-            transition: 0.3s; font-size: 0.95rem;
+            transition: 0.2s; font-size: 0.85rem; flex: 1; text-align: center;
         }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 15px rgba(234, 88, 12, 0.15); }
+        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 8px rgba(234, 88, 12, 0.15); }
 
-        .toolbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .toolbar-right { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; flex-grow: 1; justify-content: flex-end; }
 
         .search-wrapper { 
             display: flex; align-items: center; background: white; border: 1px solid #fed7aa; 
-            border-radius: 12px; padding: 2px;
+            border-radius: 10px; padding: 0; overflow: hidden; height: 36px;
         }
-        .search-select { border: none; background: #fff7ed; padding: 10px; border-radius: 10px; font-weight: 700; color: var(--primary-dark); outline: none; }
-        .search-input-box { border: none; outline: none; padding: 8px; font-size: 0.95rem; width: 150px; }
+        .search-select { border: none; background: #fff7ed; padding: 0 8px; height: 100%; font-size: 0.8rem; font-weight: 700; color: var(--primary-dark); outline: none; }
+        .search-input-box { border: none; outline: none; padding: 0 8px; font-size: 0.9rem; width: 120px; height: 100%; }
         
         .live-toggle {
-            background: white; padding: 8px 12px; border-radius: 30px; cursor: pointer; 
+            background: white; padding: 0 10px; border-radius: 30px; cursor: pointer; height: 36px;
             display: flex; align-items: center; gap: 6px; border: 1px solid #e2e8f0; 
-            font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
+            font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
         }
         .live-toggle.active { background: #ecfccb; border-color: #84cc16; color: #365314; }
         .dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: 0.3s; }
@@ -118,82 +118,105 @@
 
         .btn-icon, .btn-print, .btn-judge {
             border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; transition: 0.2s; border: none; height: 40px;
+            font-weight: 700; border: none; height: 36px; font-size: 0.9rem;
         }
-        .btn-icon { background: white; border: 1px solid #fed7aa; color: var(--primary); width: 40px; font-size: 1.2rem; }
-        .btn-print { background: var(--text-main); color: white; padding: 0 15px; }
-        .btn-judge { background: var(--primary); color: white; padding: 0 15px; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); }
+        .btn-icon { background: white; border: 1px solid #fed7aa; color: var(--primary); width: 36px; }
+        .btn-print { background: var(--text-main); color: white; padding: 0 12px; }
+        .btn-judge { background: var(--primary); color: white; padding: 0 12px; box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3); }
 
-        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; scrollbar-width: none; }
+        .filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; margin-bottom: 10px; scrollbar-width: none; }
         .filter-chip {
-            padding: 8px 16px; border-radius: 30px; border: 1px solid #fed7aa; background: white; 
-            font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap;
+            padding: 6px 14px; border-radius: 20px; border: 1px solid #fed7aa; background: white; 
+            font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; flex-shrink: 0;
         }
         .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        /* DATA CARDS */
-        .view-section { display: none; animation: slideUp 0.4s ease-out; }
+        /* --- DATA CARDS --- */
+        .view-section { display: none; animation: slideUp 0.3s ease-out; }
         .view-section.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .data-card { 
-            background: white; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
-            overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #ffedd5; 
+            background: white; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); 
+            overflow: hidden; margin-bottom: 1.5rem; border: 1px solid #ffedd5; width: 100%;
         }
-        .card-head { padding: 12px 20px; background: #fff7ed; border-bottom: 1px solid #ffedd5; display: flex; justify-content: space-between; align-items: center; }
-        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.1rem; }
+        .card-head { padding: 10px 15px; background: #fff7ed; border-bottom: 1px solid #ffedd5; display: flex; justify-content: space-between; align-items: center; }
+        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1rem; }
+        .badge-count { background: #fed7aa; color: var(--primary-dark); padding: 3px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
+
+        .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { background: #fff7ed; padding: 8px; text-align: center; color: var(--primary-dark); font-weight: 700; border-bottom: 2px solid #fed7aa; white-space: nowrap; font-size: 0.7rem; text-transform: uppercase; }
+        td { padding: 8px; border-bottom: 1px solid #fff7ed; text-align: center; vertical-align: middle; white-space: nowrap; }
         
-        .table-wrap { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { background: #fff7ed; padding: 10px; text-align: center; color: var(--primary-dark); font-weight: 700; border-bottom: 2px solid #fed7aa; white-space: nowrap; font-size: 0.7rem; text-transform: uppercase; }
-        td { padding: 10px; border-bottom: 1px solid #fff7ed; text-align: center; vertical-align: middle; white-space: nowrap; }
-        
-        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #fff7ed; min-width: 160px; }
+        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #fff7ed; min-width: 140px; max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
         th.col-sticky { background: #fff7ed; z-index: 20; }
 
-        .detail-sub { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 5px; margin-top: 3px; }
-        .detail-badge { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; border: 1px solid #e5e7eb; }
+        .detail-sub { font-size: 0.7rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
+        .detail-badge { background: #f3f4f6; padding: 1px 4px; border-radius: 4px; border: 1px solid #e5e7eb; display: inline-block; width: fit-content;}
 
-        .score-pill { background: white; padding: 3px 6px; border-radius: 4px; font-size: 0.8rem; border: 1px solid #e5e7eb; font-weight: 700; }
-        .total-col { font-weight: 800; color: var(--primary); font-size: 1rem; background: #fff7ed; }
-        .perc-badge { background: #ecfccb; color: #365314; padding: 3px 8px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+        .score-pill { background: white; padding: 2px 4px; border-radius: 4px; font-size: 0.75rem; border: 1px solid #e5e7eb; font-weight: 700; }
+        .total-col { font-weight: 800; color: var(--primary); font-size: 0.9rem; background: #fff7ed; }
+        .perc-badge { background: #ecfccb; color: #365314; padding: 2px 6px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; }
 
-        /* PODIUM */
-        .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 15px; height: 350px; margin: 30px auto; max-width: 800px; padding-bottom: 20px; }
-        .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-        .bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; color: white; font-weight: 800; font-size: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .p1 .bar { height: 200px; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); }
-        .p2 .bar { height: 150px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%); }
-        .p3 .bar { height: 110px; background: linear-gradient(180deg, #d97706 0%, #92400e 100%); }
-        
-        .winner-card { background: white; padding: 10px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 10px; width: 100%; border: 2px solid white; }
-        .p1 .winner-card { border-color: #fcd34d; transform: scale(1.05); }
-        .w-name { font-weight: 800; color: var(--text-main); font-size: 0.95rem; white-space: normal; }
-        .w-score { color: var(--primary); font-weight: 900; font-size: 1.2rem; }
-
-        /* RESPONSIVE */
-        @media (max-width: 992px) {
-            .container { max-width: 100%; }
-            .sticky-nav { flex-direction: column; align-items: stretch; }
-            .nav-tabs { justify-content: center; width: 100%; }
-            .toolbar-right { justify-content: space-between; }
-            .search-wrapper { flex-grow: 1; }
-            .search-input-box { width: 100%; }
+        /* --- PODIUM --- */
+        .podium-stage { 
+            display: flex; justify-content: center; align-items: flex-end; gap: 10px; 
+            height: 350px; margin: 20px auto; max-width: 800px; padding-bottom: 10px; 
+            width: 100%;
         }
+        .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        
+        .bar { 
+            width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; 
+            padding-bottom: 5px; color: white; font-weight: 800; font-size: 1.5rem; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+        .p1 .bar { height: 180px; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); }
+        .p2 .bar { height: 130px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%); }
+        .p3 .bar { height: 90px; background: linear-gradient(180deg, #d97706 0%, #92400e 100%); }
+        
+        .winner-card { 
+            background: white; padding: 8px; border-radius: 10px; text-align: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 8px; width: 100%; 
+            border: 2px solid white; font-size: 0.8rem;
+        }
+        .p1 .winner-card { border-color: #fcd34d; transform: scale(1.05); z-index: 5; }
+        
+        .w-name { font-weight: 800; color: var(--text-main); font-size: 0.85rem; white-space: normal; line-height: 1.2; }
+        .w-coach { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .w-score { color: var(--primary); font-weight: 900; font-size: 1rem; }
 
+        /* --- RESPONSIVE ADJUSTMENTS --- */
         @media (max-width: 768px) {
-            header { flex-direction: column; text-align: center; padding: 1rem; }
-            .brand { flex-direction: column; gap: 0.5rem; }
-            .judges-box { width: 100%; box-sizing: border-box; margin-top: 10px; }
+            body { padding: 5px; }
             
-            .sticky-nav { padding: 10px; top: 0; border-radius: 0 0 15px 15px; }
-            .tab-btn { padding: 8px 15px; font-size: 0.85rem; }
+            /* Header Stack */
+            header { padding: 10px; text-align: center; justify-content: center; }
+            .brand { flex-direction: column; text-align: center; gap: 5px; width: 100%; }
+            .brand h1 { font-size: 1.3rem; }
+            .judges-box { margin-top: 10px; width: 100%; text-align: left; }
+
+            /* Navigation Stack */
+            .sticky-nav { padding: 8px; top: 0; }
+            .nav-tabs { width: 100%; }
+            .toolbar-right { justify-content: space-between; width: 100%; }
+            .search-wrapper { flex-grow: 1; }
+            .search-input-box { width: 100%; } /* Input fills space */
             
-            .podium-stage { height: auto; flex-direction: column; align-items: center; gap: 20px; }
-            .podium-col { width: 100%; flex-direction: row; align-items: center; gap: 15px; }
-            .bar { display: none; }
-            .winner-card { width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center; margin: 0; }
-            .p1 { order: -1; }
+            /* Podium Adjustments for Mobile */
+            .podium-stage { height: 260px; gap: 5px; }
+            .p1 .bar { height: 120px; }
+            .p2 .bar { height: 80px; }
+            .p3 .bar { height: 50px; }
+            .bar { font-size: 1.2rem; }
+            .winner-card { padding: 5px; }
+            .w-name { font-size: 0.75rem; }
+            .w-score { font-size: 0.9rem; }
+            
+            /* Table adjustments */
+            .col-sticky { min-width: 110px; font-size: 0.75rem; }
+            th, td { padding: 6px 4px; }
         }
 
         @media print {
@@ -207,7 +230,7 @@
         }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #27272a; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .toast { position: fixed; bottom: 20px; right: 20px; background: #27272a; color: white; padding: 10px 20px; border-radius: 50px; font-size: 0.8rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: 600; }
         .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
@@ -241,18 +264,18 @@
         <div class="toolbar-right">
             <div class="search-wrapper">
                 <select id="searchMode" class="search-select" onchange="toggleSearchMode()">
-                    <option value="track">🆔 No.</option>
-                    <option value="center">📍 Center</option>
+                    <option value="track">🆔</option>
+                    <option value="center">📍</option>
                 </select>
                 <input type="text" id="inputTrack" class="search-input-box" placeholder="Search..." onkeyup="handleSearch()">
                 <input type="text" id="inputCenter" class="search-input-box" list="centerOptions" placeholder="Select..." style="display:none;" oninput="handleSearch()">
                 <datalist id="centerOptions"></datalist>
             </div>
 
-            <button onclick="goToJudges()" class="btn-judge" title="Go to Judges Portal">👨‍⚖️ Judges</button>
+            <button onclick="goToJudges()" class="btn-judge" title="Judges Portal">👨‍⚖️ Judges</button>
 
             <div id="liveBtn" class="live-toggle" onclick="toggleLive()">
-                <div class="dot"></div> <span id="liveText">Paused</span>
+                <div class="dot"></div>
             </div>
             
             <button onclick="fetchData(true)" class="btn-icon">🔄</button>
@@ -317,12 +340,11 @@
     function toggleLive() {
         isLive = !isLive;
         const btn = document.getElementById('liveBtn');
-        const txt = document.getElementById('liveText');
         if(isLive) {
-            btn.classList.add('active'); txt.innerText = "Live On";
+            btn.classList.add('active');
             timer = setInterval(() => fetchData(), 5000); fetchData();
         } else {
-            btn.classList.remove('active'); txt.innerText = "Paused";
+            btn.classList.remove('active');
             clearInterval(timer);
         }
     }
@@ -451,7 +473,7 @@
                 return `
                     <tr>
                         <td class="col-sticky">
-                            <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${s[C.name]}</div>
+                            <div style="font-weight:700; color:var(--text-main); font-size:0.85rem;">${s[C.name]}</div>
                             <div class="detail-sub"><span class="detail-badge">🆔 ${s[C.id]}</span><span class="detail-badge">👨‍🏫 ${s[C.coach]}</span></div>
                         </td>
                         ${asanaCells}
