@@ -3,192 +3,308 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Yoga Judge Pool System Pro (version 2)</title>
+  <title>Judge Scoring System Pro V3</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   
   <style>
-    /* COMPACT & DARK UI STYLES */
-    :root { --bg: #1a2639; --card: #24344d; --gold: #cfb53b; --white: #fff; }
-    body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    /* --- CSS VARIABLES & BASE --- */
+    :root { 
+      --bg: #1a2639; 
+      --card: #24344d; 
+      --gold: #cfb53b; 
+      --white: #fff; 
+      --red: #ff6b6b;
+      --dim-overlay: rgba(26, 38, 57, 0.95);
+    }
+    body { margin: 0; font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow-x: hidden; }
     .hidden { display: none !important; }
     
-    /* Login */
-    #login-screen { width: 90%; max-width: 400px; padding: 40px; background: rgba(36,52,77,0.9); border-radius: 12px; text-align: center; border: 1px solid #444; }
-    .input-box { position: relative; margin-bottom: 15px; }
-    .input-box i { position: absolute; left: 15px; top: 12px; color: #888; }
-    .inp { width: 100%; padding: 12px 12px 12px 45px; border-radius: 6px; border: none; font-size: 16px; box-sizing: border-box;}
-    .btn-gold { background: var(--gold); color: #1a2639; font-weight: bold; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; border:none; cursor: pointer; margin-top:10px;}
-    .btn-gold:disabled { background: #555; color: #999; cursor: not-allowed; }
+    /* --- LOADING OVERLAY --- */
+    #loader { 
+      position: fixed; top:0; left:0; width:100%; height:100%; 
+      background: var(--dim-overlay); z-index:9999; 
+      display:flex; justify-content:center; align-items:center; flex-direction:column;
+      backdrop-filter: blur(5px);
+    }
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--gold);
+      border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* Header */
-    .app-header { position: fixed; top: 0; left: 0; right: 0; height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: var(--bg); border-bottom: 1px solid #333; z-index: 100; }
+    /* --- LOGIN SCREEN --- */
+    #login-screen { 
+      width: 90%; max-width: 400px; padding: 40px; 
+      background: rgba(36,52,77,0.8); border-radius: 16px; 
+      text-align: center; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
     
-    /* Grid */
-    #track-screen, #scoring-screen { width: 95%; max-width: 1000px; padding-top: 80px; text-align: center; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; text-align:left; }
-    .card { background: var(--card); border-radius: 10px; padding: 15px; border: 1px solid #334; }
+    /* Circular Logo */
+    .logo-img {
+      width: 100px; height: 100px; border-radius: 50%; 
+      border: 3px solid var(--gold); object-fit: cover;
+      margin-bottom: 20px; padding: 5px; background: var(--bg);
+    }
+
+    .input-box { position: relative; margin-bottom: 20px; text-align: left; }
+    .input-box i { position: absolute; left: 15px; top: 12px; color: #888; }
+    .inp { 
+      width: 100%; padding: 12px 12px 12px 45px; 
+      border-radius: 8px; border: 1px solid #444; 
+      background: #151e2e; color: white; font-size: 16px; 
+      box-sizing: border-box; transition: 0.3s;
+    }
+    .inp:focus { border-color: var(--gold); outline: none; background: #1a2639; }
     
-    /* Stepper */
-    .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .stepper { display: flex; align-items: center; gap: 5px; background: #111; padding: 3px; border-radius: 6px; }
-    .s-btn { width: 32px; height: 32px; background: #ddd; border:none; font-weight:bold; font-size:18px; border-radius:4px; cursor:pointer;}
-    .val { width: 40px; text-align: center; color: var(--gold); font-weight: bold; font-size: 16px; }
+    .btn-gold { 
+      background: var(--gold); color: #1a2639; 
+      font-weight: bold; padding: 14px; width: 100%; 
+      border-radius: 8px; font-size: 16px; border:none; 
+      cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+      transition: transform 0.1s;
+    }
+    .btn-gold:active { transform: scale(0.98); }
+
+    /* --- HEADER & DROPDOWN --- */
+    .app-header { 
+      position: fixed; top: 0; left: 0; right: 0; height: 60px; 
+      display: flex; justify-content: space-between; align-items: center; 
+      padding: 0 20px; background: var(--bg); border-bottom: 1px solid #333; z-index: 100; 
+    }
+    .user-menu { position: relative; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+    .profile-btn { 
+      background: transparent; border: none; color: #aaa; 
+      display: flex; align-items: center; gap: 8px; font-size: 16px; cursor: pointer;
+    }
+    .dropdown-content {
+      display: none; position: absolute; right: 0; top: 50px; 
+      background-color: var(--card); min-width: 160px; 
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5); 
+      border-radius: 8px; overflow: hidden; border: 1px solid #444;
+    }
+    .dropdown-content div {
+      color: white; padding: 12px 16px; text-decoration: none; display: block; cursor: pointer;
+    }
+    .dropdown-content div:hover { background-color: #333; }
+    .show { display: block; }
+
+    /* --- SCREENS --- */
+    #track-screen, #scoring-screen { width: 95%; max-width: 1000px; padding-top: 80px; text-align: center; padding-bottom: 50px; }
+    
+    /* Track Inputs */
+    .track-row { margin-bottom: 15px; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto; }
+    .track-row label { display: block; color: #aaa; margin-bottom: 5px; font-size: 14px; }
+    .track-inp { text-transform: uppercase; font-size: 18px; letter-spacing: 1px; }
+
+    /* Grid Layout */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; text-align:left; }
+    
+    /* Scoring Card */
+    .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334; display: flex; flex-direction: column; gap: 15px; }
+    
+    .student-info { 
+      text-align: center; border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 5px;
+    }
+    .s-track { color: var(--gold); font-size: 24px; font-weight: bold; letter-spacing: 1px; }
+    .s-name { font-size: 18px; font-weight: 500; margin: 5px 0; color: #fff; }
+    .s-meta { font-size: 13px; color: #aaa; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px;}
+    .s-coach { color: #8dbaff; }
+
+    /* Manual Score Inputs */
+    .score-row { display: flex; justify-content: space-between; align-items: center; }
+    .score-input {
+      width: 80px; padding: 10px; font-size: 18px; text-align: center;
+      background: #111; border: 1px solid #555; border-radius: 6px; color: white;
+    }
+    .score-input:focus { outline: none; border-color: var(--gold); }
+    
+    /* Validation States */
+    .score-input.error { border-color: var(--red); background: rgba(255, 107, 107, 0.1); color: var(--red); }
+    .score-input.empty { border-color: #aaa; }
+    
+    .error-msg { color: var(--red); font-size: 12px; text-align: right; height: 14px; margin-top: 2px;}
 
     /* Footer */
-    .footer { display: flex; gap: 10px; margin-top: 30px; margin-bottom: 50px;}
-    .btn-out { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 12px; border-radius: 6px; font-weight: bold; flex: 1; cursor:pointer;}
+    .footer { display: flex; gap: 15px; margin-top: 30px; justify-content: center; }
+    .btn-out { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 14px 30px; border-radius: 8px; font-weight: bold; cursor:pointer; }
+    .btn-submit { background: var(--gold); color: #1a2639; padding: 14px 40px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; border: none; flex-grow: 1; max-width: 400px;}
     
-    #loader { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:200; display:flex; justify-content:center; align-items:center; flex-direction:column;}
-    #track-a, #track-b, #track-c {text-transform: uppercase;}
   </style>
 </head>
 <body>
 
-  <div id="loader"><h3 id="loader-txt" style="color:var(--gold);">Initializing Pool...</h3></div>
+  <div id="loader" class="hidden">
+    <div class="spinner"></div>
+    <h3 id="loader-txt" style="color:var(--gold); font-weight: normal; letter-spacing: 1px;">Loading...</h3>
+  </div>
 
   <div id="login-screen">
-    <i class="material-icons" style="font-size:48px; color:var(--gold);">self_improvement</i>
-    <h2 style="color:#ddd; font-weight:normal;">Judge Portal</h2>
-    <div id="pool-status" style="font-size:12px; color:#888; margin-bottom:15px;">Connecting to Judge Pool...</div>
+    <img src="resources\yoga_dp.jpeg" alt="Logo" class="logo-img">
     
-    <div class="input-box"><i class="material-icons">person</i><input id="user" class="inp" type="text" placeholder="Username"></div>
-    <div class="input-box"><i class="material-icons">lock</i><input id="pin" class="inp" type="password" placeholder="PIN"></div>
-    <button id="login-btn" class="btn-gold" onclick="doLogin()" disabled>WAITING FOR NETWORK...</button>
-    <div id="error-msg" style="color:#ff6b6b; margin-top:10px; font-size:14px;"></div>
+    <h2 style="color:#ddd; margin:0 0 30px 0; font-weight:normal;">Judge Scoring System Pro V3</h2>
+    
+    <div class="input-box">
+      <i class="material-icons">person</i>
+      <input id="user" class="inp" type="text" placeholder="Username">
+    </div>
+    <div class="input-box">
+      <i class="material-icons">lock</i>
+      <input id="pin" class="inp" type="password" placeholder="PIN">
+    </div>
+    
+    <button id="login-btn" class="btn-gold" onclick="handleLogin()">LOGIN</button>
+    <div id="login-error" style="color:var(--red); margin-top:15px; font-size:14px; display:none;"></div>
   </div>
 
   <div id="app-header" class="app-header hidden">
-    <div style="color:var(--gold); font-weight:bold; font-size:18px;">Yoga Judge Pool System Pro (version 2)</div>
-    <div style="color:#aaa; display:flex; align-items:center; gap:8px;">
-      <span id="judge-lbl">Judge</span> <i class="material-icons">account_circle</i>
+    <div style="color:var(--gold); font-weight:bold; font-size:18px; letter-spacing:1px;">CHAMPIONSHIP LIVE</div>
+    
+    <div class="user-menu" onclick="toggleDropdown()">
+      <button class="profile-btn">
+        <span id="judge-lbl">Judge</span> 
+        <img src="https://ui-avatars.com/api/?name=Judge&background=cfb53b&color=1a2639&rounded=true&size=32" style="border-radius:50%;" id="header-avatar">
+        <i class="material-icons">arrow_drop_down</i>
+      </button>
+      <div id="userDropdown" class="dropdown-content">
+        <div onclick="reset()">Dashboard</div>
+        <div onclick="window.location.reload()" style="border-top:1px solid #444; color:var(--red);">Logout</div>
+      </div>
     </div>
   </div>
 
   <div id="track-screen" class="hidden">
-    <h3 style="color:#ccc;">Enter Track Numbers</h3>
-    <div style="max-width:400px; margin:0 auto; text-align:left;">
-      <div style="margin-bottom:15px;">
-        <label style="display:block; color:#888; margin-bottom:5px;">Student A</label>
-        <input id="track-a" class="inp" type="text" placeholder="e.g. VT001">
-      </div>
-      <div style="margin-bottom:15px;">
-        <label style="display:block; color:#888; margin-bottom:5px;">Student B</label>
-        <input id="track-b" class="inp" type="text" placeholder="e.g. SJ023">
-      </div>
-      <div style="margin-bottom:15px;">
-        <label style="display:block; color:#888; margin-bottom:5px;">Student C</label>
-        <input id="track-c" class="inp" type="text" placeholder="e.g. MK101">
-      </div>
-      <button class="btn-gold" onclick="startHeat()">FETCH DATA & START</button>
+    <h3 style="color:#ccc; margin-bottom:30px;">Enter Heat Details</h3>
+    
+    <div class="track-row">
+      <label>Student A Track No.</label>
+      <input id="track-a" class="inp track-inp" type="text" placeholder="e.g. VT001">
     </div>
+    <div class="track-row">
+      <label>Student B Track No.</label>
+      <input id="track-b" class="inp track-inp" type="text" placeholder="e.g. SJ023">
+    </div>
+    <div class="track-row">
+      <label>Student C Track No.</label>
+      <input id="track-c" class="inp track-inp" type="text" placeholder="e.g. MK101">
+    </div>
+
+    <button class="btn-gold" onclick="startHeat()" style="max-width:400px; margin-top:20px;">FETCH & START</button>
   </div>
 
   <div id="scoring-screen" class="hidden">
     <div id="grid" class="grid"></div>
     <div class="footer">
       <button class="btn-out" onclick="reset()">CANCEL</button>
-      <button class="btn-gold" onclick="submit()">SUBMIT SCORES</button>
+      <button class="btn-submit" onclick="submit()">SUBMIT SCORES</button>
     </div>
   </div>
 
   <script>
-    // --- 1. THE ACCOUNT POOL CONFIGURATION ---
-    // Paste your deployed Web App URLs here.
+    // --- CONFIGURATION ---
+    const GIST_URL = "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/4c16640dbb14fcc5c59cf7da2224697a326b5e35/judges.json";
+    
     const API_POOL = {
       "1": "https://script.google.com/macros/s/AKfycbzWgySBCDiOHdiEUABdG5j9CG9ZJ1Ez9OaR1f1unfyP8ZhwGq_FHhT0-pjPBrXjJsWoBQ/exec", 
       "2": "https://script.google.com/macros/s/AKfycbwxnLPRQIJeaMaVKkckre6j3XTXCow6HAOkn0g5mPC2ktVmxZelkOGxrG8j3N3n38TQ/exec", 
       "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
     };
 
-    // We use Account 1 as the 'Master' to fetch the initial Auth list.
-    const MASTER_URL = API_POOL["1"]; 
+    const MAX_SCORE = 10; // Full Marks (FM)
 
     // --- STATE ---
-    let authDB = [];
     let currentUser = null;
-    let activeApiUrl = ""; // Will be set after login
+    let activeApiUrl = ""; 
     let heatData = [];
 
-    // --- INITIALIZE ---
-    window.onload = () => {
-      fetch(MASTER_URL + "?action=getAuth")
-        .then(r => r.json())
-        .then(d => {
-          if(d.status === 'success') {
-            parseAuth(d.data);
-            document.getElementById('loader').classList.add('hidden');
-            document.getElementById('login-btn').innerText = "LOGIN";
-            document.getElementById('login-btn').disabled = false;
-            document.getElementById('pool-status').innerText = "System Online • Pool Ready";
-            document.getElementById('pool-status').style.color = "#4caf50";
-          }
-        })
-        .catch(e => document.getElementById('loader-txt').innerText = "Connection Failed. Refresh.");
-    };
-
-    function parseAuth(txt) {
-      authDB = txt.split('\n').map(l => {
-        const p = l.split(',');
-        if(p.length>=4) return { user:p[0].trim(), pin:p[1].trim(), name:p[2].trim(), num:p[3].trim() };
-      }).filter(Boolean);
+    // --- UTILS ---
+    function showLoad(msg) { 
+      const l = document.getElementById('loader');
+      l.classList.remove('hidden'); 
+      document.getElementById('loader-txt').innerText = msg;
     }
-
-    // --- LOGIN & ROUTING ---
-    function doLogin() {
+    function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
+    
+    // --- LOGIN LOGIC ---
+    function handleLogin() {
       const u = document.getElementById('user').value.trim();
       const p = document.getElementById('pin').value.trim();
-      const match = authDB.find(x => x.user === u && x.pin === p);
+      
+      if(!u || !p) return alert("Please enter Username and PIN");
 
-      if(match) {
-        currentUser = match;
-        // SMART ROUTING: Assign specific API URL based on Judge Number
-        activeApiUrl = API_POOL[match.num]; 
-        
-        if(!activeApiUrl) {
-           alert("Configuration Error: No API URL found for Judge " + match.num);
-           return;
+      showLoad("Verifying Access..."); // Faded background starts here
+
+      // Fetch Gist only when user clicks Login
+      fetch(GIST_URL + "?t=" + new Date().getTime()) // prevent caching
+        .then(res => res.json())
+        .then(authDB => {
+          const match = authDB.find(x => x.user === u && x.pin === p);
+          
+          if(match) {
+            currentUser = match;
+            activeApiUrl = API_POOL[match.num];
+            
+            if(!activeApiUrl) throw new Error("No API Node for Judge " + match.num);
+
+            // Update Header
+            document.getElementById('judge-lbl').innerText = `${match.name} (J${match.num})`;
+            document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${match.name}&background=cfb53b&color=1a2639&rounded=true&size=32`;
+            
+            // Switch Screens
+            hideLoad();
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-header').classList.remove('hidden');
+            document.getElementById('track-screen').classList.remove('hidden');
+          } else {
+            hideLoad();
+            const err = document.getElementById('login-error');
+            err.innerText = "Invalid Credentials. Access Denied.";
+            err.style.display = 'block';
+          }
+        })
+        .catch(e => {
+          hideLoad();
+          alert("Connection Failed: Unable to reach Judge Database.\n" + e.message);
+        });
+    }
+
+    // --- HEADER DROPDOWN ---
+    function toggleDropdown() {
+      document.getElementById("userDropdown").classList.toggle("show");
+    }
+    // Close dropdown if clicked outside
+    window.onclick = function(event) {
+      if (!event.target.closest('.profile-btn')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let i = 0; i < dropdowns.length; i++) {
+          if (dropdowns[i].classList.contains('show')) dropdowns[i].classList.remove('show');
         }
-
-        document.getElementById('judge-lbl').innerText = `${match.name} (J${match.num})`;
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-header').classList.remove('hidden');
-        document.getElementById('track-screen').classList.remove('hidden');
-        console.log(`Logged in as ${match.name}. Using API Node: ${match.num}`);
-      } else {
-        document.getElementById('error-msg').innerText = "Invalid Credentials";
       }
     }
 
-    // --- OPERATIONS ---
-    /* IN YOUR <script> SECTION */
-function startHeat() {
-      // 1. Get inputs, Trim whitespace, and FORCE UPPERCASE
+    // --- HEAT LOGIC ---
+    function startHeat() {
       const t = ['a','b','c']
         .map(x => document.getElementById('track-'+x).value.trim().toUpperCase()) 
-        .filter(Boolean); // Removes empty entries
+        .filter(Boolean);
       
       if(!t.length) return alert("Enter at least one track number");
       
-      showLoad("Fetching from Node " + currentUser.num + "...");
+      showLoad("Fetching Data..."); // Reuse loading screen
       
-      // 2. Fetch data using the specific API URL for this judge
       fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}`)
         .then(r => r.json())
         .then(res => {
           hideLoad();
           if(res.status === 'success') {
-            // 3. Map the response to our local state
             heatData = t.map((id, i) => ({
               uid: ['A','B','C'][i],
               track: id,
-              // Use fetched details OR fallback if ID not found
               info: res.data[id] || {name:'Unknown ID', group:'-', coach:'-'},
-              scores: {a1:0, a2:0, a3:0, opt:0}
+              scores: {a1:'', a2:'', a3:'', opt:''} // Start empty
             }));
-            
-            // 4. Render the grid and switch screens
-            render();
+            renderGrid();
             document.getElementById('track-screen').classList.add('hidden');
             document.getElementById('scoring-screen').classList.remove('hidden');
           } else { 
@@ -201,53 +317,116 @@ function startHeat() {
         });
     }
 
-    function render() {
+    // --- RENDERING & INPUTS ---
+    function renderGrid() {
       const g = document.getElementById('grid');
       g.innerHTML = '';
       heatData.forEach((s, i) => {
         g.innerHTML += `
         <div class="card">
-          <div style="border-bottom:1px solid #444; padding-bottom:10px; margin-bottom:10px;">
-            <div style="color:var(--gold); font-size:20px; font-weight:bold;">#${s.track}</div>
-            <div style="font-size:14px;">${s.info.name}</div>
-            <div style="font-size:12px; color:#888;">${s.info.group} • ${s.info.coach}</div>
+          <div class="student-info">
+            <div class="s-track">#${s.track}</div>
+            <div class="s-name">${s.info.name}</div>
+            <div class="s-meta">
+              <span>Grp: ${s.info.group}</span>
+              <span class="s-coach">Coach: ${s.info.coach}</span>
+            </div>
           </div>
-          ${step(i,'a1','Asana 1')} ${step(i,'a2','Asana 2')} ${step(i,'a3','Asana 3')} ${step(i,'opt','Optional')}
+          ${renderInput(i, 'a1', 'Asana 1')}
+          ${renderInput(i, 'a2', 'Asana 2')}
+          ${renderInput(i, 'a3', 'Asana 3')}
+          ${renderInput(i, 'opt', 'Optional')}
         </div>`;
       });
     }
 
-    function step(i, k, l) {
-      return `<div class="row"><span style="font-size:14px; color:#aaa;">${l}</span>
-        <div class="stepper">
-          <button class="s-btn" onclick="mod(${i},'${k}',-0.5)">-</button>
-          <div class="val" id="v-${i}-${k}">0</div>
-          <button class="s-btn" onclick="mod(${i},'${k}',0.5)">+</button>
-        </div></div>`;
+    function renderInput(idx, key, label) {
+      return `
+        <div class="score-row">
+          <span>${label}</span>
+          <div style="text-align:right;">
+            <input type="number" class="score-input" id="inp-${idx}-${key}" 
+              placeholder="-" oninput="validateInput(this, ${idx}, '${key}')">
+            <div id="err-${idx}-${key}" class="error-msg"></div>
+          </div>
+        </div>
+      `;
     }
 
-    function mod(i, k, d) {
-      let v = heatData[i].scores[k] + d;
-      if(v<0) v=0; if(v>10) v=10;
-      heatData[i].scores[k] = v;
-      document.getElementById(`v-${i}-${k}`).innerText = v;
+    // --- VALIDATION LOGIC ---
+    function validateInput(el, idx, key) {
+      const val = parseFloat(el.value);
+      const errDiv = document.getElementById(`err-${idx}-${key}`);
+      
+      // Update local state
+      heatData[idx].scores[key] = el.value; 
+
+      // Reset Styles
+      el.classList.remove('error');
+      errDiv.innerText = "";
+
+      // Check Limits
+      if (val > MAX_SCORE) {
+        el.classList.add('error');
+        errDiv.innerText = `Max ${MAX_SCORE}`;
+      }
     }
 
     function submit() {
-      showLoad("Submitting to Node " + currentUser.num + "...");
+      // 1. Check for Critical Errors (Values > FM)
+      let hasCriticalError = false;
+      let hasEmptyFields = false;
+
+      // Scan all current inputs
+      heatData.forEach((s, i) => {
+        ['a1','a2','a3','opt'].forEach(k => {
+          const val = parseFloat(s.scores[k]);
+          // Check if valid number and > Max
+          if (!isNaN(val) && val > MAX_SCORE) hasCriticalError = true;
+          // Check if empty
+          if (s.scores[k] === '' || s.scores[k] === null) hasEmptyFields = true;
+        });
+      });
+
+      if (hasCriticalError) {
+        alert("⚠️ WARNING: You have entered scores higher than the Full Marks (" + MAX_SCORE + ").\n\nPlease correct the red fields before submitting.");
+        return;
+      }
+
+      if (hasEmptyFields) {
+        const proceed = confirm("⚠️ Some score fields are empty.\n\nAre you sure you want to submit anyway?");
+        if (!proceed) return;
+      }
+
+      // 2. Prepare Payload
+      // Convert empty strings to 0 for the sheet
       const payload = {
         judgeNum: currentUser.num,
-        students: heatData.map(s => ({ trackNo: s.track, scores: s.scores }))
+        students: heatData.map(s => ({
+          trackNo: s.track,
+          scores: {
+            a1: s.scores.a1 === '' ? 0 : s.scores.a1,
+            a2: s.scores.a2 === '' ? 0 : s.scores.a2,
+            a3: s.scores.a3 === '' ? 0 : s.scores.a3,
+            opt: s.scores.opt === '' ? 0 : s.scores.opt
+          }
+        }))
       };
+
+      showLoad("Submitting Scores...");
 
       fetch(activeApiUrl, { method:"POST", body:JSON.stringify(payload) })
         .then(r => r.json())
         .then(d => {
            hideLoad();
-           if(d.status === 'success') { alert("Saved!"); reset(); }
-           else { alert("Error: " + d.message); }
+           if(d.status === 'success') { 
+             alert("✅ Scores Submitted Successfully!"); 
+             reset(); 
+           } else { 
+             alert("❌ Server Error: " + d.message); 
+           }
         })
-        .catch(e => { hideLoad(); alert("Submit Failed"); });
+        .catch(e => { hideLoad(); alert("Submit Failed. Check Connection."); });
     }
 
     function reset() {
@@ -255,9 +434,6 @@ function startHeat() {
       document.getElementById('scoring-screen').classList.add('hidden');
       document.getElementById('track-screen').classList.remove('hidden');
     }
-
-    function showLoad(m) { document.getElementById('loader').classList.remove('hidden'); document.getElementById('loader-txt').innerText=m; }
-    function hideLoad() { document.getElementById('loader').classList.add('hidden'); }
   </script>
 </body>
 </html>
