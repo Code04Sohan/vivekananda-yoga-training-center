@@ -6,19 +6,26 @@
     <title>Yoga Competition Live Pro</title>
     <style>
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #3730a3;
-            --accent: #ec4899;
-            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
-            --glass: rgba(255, 255, 255, 0.95);
-            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            /* YOGA THEME PALETTE */
+            --primary: #ea580c;       /* Saffron / Burnt Orange */
+            --primary-dark: #9a3412;  /* Deep Rust */
+            --secondary: #991b1b;     /* Maroon Accent */
+            --gold: #d97706;          /* Gold for winners */
+            
+            /* Warm Backgrounds */
+            --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); /* Cream/Orange Fade */
+            --glass: rgba(255, 255, 255, 0.90);
+            --glass-border: 1px solid rgba(253, 186, 116, 0.3); /* Slight orange tint border */
+            
+            --shadow: 0 10px 25px -5px rgba(234, 88, 12, 0.15); /* Warm Shadow */
+            
+            --text-main: #27272a;     /* Dark Grey */
+            --text-muted: #71717a;    /* Muted Grey */
+            --text-on-primary: #ffffff;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: var(--bg-gradient);
             color: var(--text-main);
             margin: 0;
@@ -31,50 +38,82 @@
         /* --- HEADER AREA --- */
         header {
             background: var(--glass);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             border: var(--glass-border);
             padding: 1rem 1.5rem;
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: var(--shadow);
             margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center; /* Centered vertically */
             flex-wrap: wrap;
             gap: 1rem;
+            position: relative;
+            overflow: hidden;
         }
         
-        .brand { display: flex; align-items: center; gap: 1rem; }
-        .brand-icon { width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3); }
-        .brand h1 { margin: 0; font-size: 1.6rem; letter-spacing: -0.5px; color: var(--text-main); }
-        .brand p { margin: 0; color: var(--text-muted); font-size: 0.85rem; margin-top: 2px; }
-
-        /* Judges Info Box (Top Right) */
-        .judges-box {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 10px 15px;
-            min-width: 250px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        /* Decorative decorative element */
+        header::before {
+            content: ''; position: absolute; top: -50px; left: -50px; width: 150px; height: 150px;
+            background: radial-gradient(circle, rgba(251,146,60,0.2) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%; z-index: 0; pointer-events: none;
         }
-        .jb-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--accent); font-weight: 700; margin-bottom: 5px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 3px; }
-        .jb-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 2px; }
-        .jb-label { color: var(--text-muted); font-weight: 600; }
-        .jb-name { font-weight: 700; color: var(--primary-dark); }
+        
+        .brand { display: flex; align-items: center; gap: 1.2rem; position: relative; z-index: 1; }
+        
+        /* LOGO STYLE */
+        .brand-logo { 
+            width: 70px; 
+            height: 70px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
+        }
+
+        .brand h1 { 
+            margin: 0; 
+            font-size: 1.8rem; 
+            font-weight: 800;
+            letter-spacing: -0.5px; 
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .brand p { margin: 0; color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; font-weight: 500; }
+
+        /* Judges Info Box */
+        .judges-box {
+            background: #fff;
+            border: 1px solid #fed7aa;
+            border-radius: 16px;
+            padding: 12px 20px;
+            min-width: 260px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            position: relative; z-index: 1;
+        }
+        .jb-title { 
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; 
+            color: var(--primary); font-weight: 800; margin-bottom: 8px; 
+            border-bottom: 2px solid #ffedd5; padding-bottom: 4px; 
+        }
+        .jb-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; }
+        .jb-label { color: var(--text-muted); font-size: 0.8rem; font-weight: 600; }
+        .jb-name { font-weight: 700; color: var(--text-main); }
 
         /* --- STICKY NAV BAR --- */
         .sticky-nav {
             position: sticky;
-            top: 10px;
+            top: 15px;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            padding: 10px;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.8);
-            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            padding: 10px 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -82,94 +121,154 @@
             gap: 15px;
         }
 
-        .nav-tabs { display: flex; gap: 8px; }
+        .nav-tabs { display: flex; gap: 5px; background: #fff7ed; padding: 5px; border-radius: 15px; }
         .tab-btn {
-            padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 700; 
-            color: var(--text-muted); background: transparent; border: 1px solid transparent; 
-            transition: all 0.2s; white-space: nowrap; font-size: 0.95rem;
+            padding: 10px 24px; border-radius: 12px; cursor: pointer; font-weight: 700; 
+            color: var(--text-muted); background: transparent; border: none; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; font-size: 0.95rem;
         }
-        .tab-btn:hover { background: #f1f5f9; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); transform: translateY(-1px); }
+        .tab-btn:hover { color: var(--primary); }
+        .tab-btn.active { 
+            background: white; color: var(--primary); 
+            box-shadow: 0 4px 15px rgba(234, 88, 12, 0.15); 
+            transform: scale(1.02);
+        }
 
         /* --- TOOLBAR CONTROLS --- */
         .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
-        /* Search Component */
-        .search-wrapper { display: flex; align-items: center; gap: 5px; background: white; border: 1px solid #cbd5e1; border-radius: 10px; padding: 5px; transition: 0.2s; }
-        .search-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); }
+        /* Search */
+        .search-wrapper { 
+            display: flex; align-items: center; gap: 0; 
+            background: white; border: 1px solid #fed7aa; 
+            border-radius: 12px; padding: 2px; transition: 0.3s; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .search-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.1); }
         
-        .search-select { border: none; background: #f1f5f9; padding: 6px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--text-main); cursor: pointer; outline: none; }
+        .search-select { 
+            border: none; background: #fff7ed; padding: 10px 12px; border-radius: 10px; 
+            font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); cursor: pointer; outline: none; 
+        }
+        .search-input-box { border: none; outline: none; padding: 8px 12px; font-size: 0.95rem; width: 160px; color: var(--text-main); }
         
-        .search-input-box { border: none; outline: none; padding: 6px 10px; font-size: 0.9rem; width: 180px; }
-        
-        /* Datalist styling trick for dropdown behavior */
-        input::-webkit-calendar-picker-indicator { opacity: 1; cursor: pointer; }
-
         /* Live Toggle */
         .live-toggle {
-            background: #f1f5f9; padding: 8px 14px; border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px; border: 1px solid #e2e8f0; font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
+            background: white; padding: 8px 16px; border-radius: 30px; cursor: pointer; 
+            display: flex; align-items: center; gap: 8px; border: 1px solid #e2e8f0; 
+            font-size: 0.85rem; font-weight: 700; color: var(--text-muted);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02); transition: 0.3s;
         }
-        .live-toggle.active { background: #dcfce7; border-color: #86efac; color: #15803d; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; }
-        .active .dot { background: #22c55e; animation: pulse 1.5s infinite; }
+        .live-toggle.active { background: #ecfccb; border-color: #84cc16; color: #365314; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; transition: 0.3s; }
+        .active .dot { background: #65a30d; animation: pulse 1.5s infinite; }
 
-        /* Filters Scroll */
-        .filter-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; }
-        .filter-chip {
-            padding: 6px 16px; border-radius: 20px; border: 1px solid #e2e8f0; background: white; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: 0.2s;
+        /* Buttons */
+        .btn-icon {
+            background: white; border: 1px solid #fed7aa; color: var(--primary);
+            width: 40px; height: 40px; border-radius: 10px; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            transition: 0.2s;
         }
-        .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
-        .filter-chip.active { background: var(--text-main); color: white; border-color: var(--text-main); }
+        .btn-icon:hover { background: #fff7ed; transform: translateY(-2px); }
+        
+        .btn-print {
+            background: var(--primary); color: white; border: none; padding: 0 20px; height: 40px;
+            border-radius: 10px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s;
+        }
+        .btn-print:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* Filters */
+        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 10px; scrollbar-width: thin; }
+        .filter-chip {
+            padding: 8px 20px; border-radius: 30px; border: 1px solid #fed7aa; background: white; 
+            font-size: 0.9rem; font-weight: 600; color: var(--text-muted); cursor: pointer; 
+            white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .filter-chip:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+        .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3); }
 
         /* --- DATA TABLES --- */
-        .view-section { display: none; animation: slideUp 0.3s ease-out; }
+        .view-section { display: none; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .view-section.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .data-card { background: white; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 2rem; border: 1px solid #e2e8f0; }
-        .card-head { padding: 12px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.1rem; }
+        .data-card { 
+            background: white; border-radius: 20px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); 
+            overflow: hidden; margin-bottom: 2rem; border: 1px solid #ffedd5; 
+        }
+        .card-head { 
+            padding: 15px 25px; background: linear-gradient(to right, #fff7ed, white); 
+            border-bottom: 1px solid #ffedd5; display: flex; justify-content: space-between; align-items: center; 
+        }
+        .card-head h3 { margin: 0; color: var(--primary-dark); font-size: 1.2rem; font-weight: 800; }
+        .badge-count { background: #fed7aa; color: var(--primary-dark); padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th { background: #f8fafc; padding: 10px; text-align: center; color: var(--text-muted); font-weight: 700; border-bottom: 2px solid #e2e8f0; white-space: nowrap; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
-        td { padding: 10px; border-bottom: 1px solid #f1f5f9; text-align: center; vertical-align: middle; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th { 
+            background: #fff7ed; padding: 14px; text-align: center; color: var(--primary-dark); 
+            font-weight: 700; border-bottom: 2px solid #fed7aa; white-space: nowrap; 
+            text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.8px; 
+        }
+        td { padding: 12px; border-bottom: 1px solid #fff7ed; text-align: center; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #fffcf5; }
         
-        /* Sticky Column for Student Name */
-        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #f1f5f9; min-width: 180px; box-shadow: 2px 0 5px rgba(0,0,0,0.02); }
-        th.col-sticky { background: #f8fafc; z-index: 20; }
+        /* Sticky Column */
+        .col-sticky { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #fff7ed; min-width: 200px; box-shadow: 4px 0 10px rgba(0,0,0,0.02); }
+        th.col-sticky { background: #fff7ed; z-index: 20; }
+        tr:hover .col-sticky { background: #fffcf5; }
 
-        .detail-sub { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 8px; margin-top: 2px; }
-        .detail-badge { background: #f1f5f9; padding: 1px 5px; border-radius: 4px; border: 1px solid #e2e8f0; }
+        .detail-sub { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 8px; margin-top: 4px; font-weight: 500; }
+        .detail-badge { background: #f3f4f6; padding: 2px 8px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 0.75rem; }
 
-        .score-pill { background: #f8fafc; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; color: #64748b; border: 1px solid #e2e8f0; font-family: monospace; font-weight: bold; }
+        .score-pill { 
+            background: white; padding: 4px 8px; border-radius: 6px; font-size: 0.85rem; 
+            color: var(--text-main); border: 1px solid #e5e7eb; font-family: 'Courier New', monospace; font-weight: 700;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
         
-        .j-col { font-weight: 700; color: #4b5563; background: #f9fafb; }
-        .total-col { font-weight: 800; color: var(--primary); font-size: 1rem; background: #eef2ff; }
+        .j-col { font-weight: 700; color: var(--text-muted); background: #f9fafb; }
+        .total-col { font-weight: 800; color: var(--primary); font-size: 1.1rem; background: #fff7ed; }
+        .perc-badge { background: #ecfccb; color: #365314; padding: 4px 10px; border-radius: 20px; font-weight: 700; font-size: 0.85rem; }
 
         /* --- PODIUM --- */
-        .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 350px; margin: 30px auto; max-width: 800px; padding-bottom: 20px; }
+        .podium-stage { display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 380px; margin: 40px auto; max-width: 800px; padding-bottom: 20px; }
         .podium-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-        .bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; color: white; font-weight: 800; font-size: 2.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .p1 .bar { height: 220px; background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%); }
-        .p2 .bar { height: 160px; background: linear-gradient(180deg, #94a3b8 0%, #475569 100%); }
-        .p3 .bar { height: 120px; background: linear-gradient(180deg, #fdba74 0%, #b45309 100%); }
+        .bar { 
+            width: 100%; border-radius: 12px 12px 0 0; display: flex; justify-content: center; align-items: flex-end; 
+            padding-bottom: 10px; color: white; font-weight: 800; font-size: 2.5rem; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative;
+        }
+        /* Saffron, Silver, Bronze Bars */
+        .p1 .bar { height: 230px; background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%); z-index: 3; }
+        .p2 .bar { height: 170px; background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%); z-index: 2; }
+        .p3 .bar { height: 130px; background: linear-gradient(180deg, #d97706 0%, #92400e 100%); z-index: 1; } /* Bronze */
         
-        .winner-card { background: white; padding: 10px; border-radius: 12px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 15px; width: 110%; border: 1px solid #e2e8f0; }
-        .w-name { font-weight: 700; color: var(--text-main); font-size: 1rem; }
-        .w-coach { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
-        .w-score { color: var(--primary); font-weight: 800; font-size: 1.2rem; margin-top: 5px; }
+        .winner-card { 
+            background: white; padding: 15px; border-radius: 16px; text-align: center; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08); margin-bottom: 15px; width: 110%; 
+            border: 2px solid white; transition: 0.3s;
+        }
+        .p1 .winner-card { border-color: #fcd34d; transform: scale(1.05); }
+
+        .w-name { font-weight: 800; color: var(--text-main); font-size: 1rem; }
+        .w-coach { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+        .w-score { color: var(--primary); font-weight: 900; font-size: 1.4rem; margin-top: 5px; }
 
         /* Print Mode */
         @media print {
             header, .toolbar-right, .nav-tabs, #toast, .filter-scroll { display: none !important; }
-            .sticky-nav { position: static; box-shadow: none; border: none; padding: 0; }
+            .sticky-nav { position: static; box-shadow: none; border: none; padding: 0; background: white; }
             .view-section { display: block !important; }
-            .col-sticky { position: static; border: 1px solid #ccc; }
-            td, th { border: 1px solid #ccc; color: black; }
+            .col-sticky { position: static; border: 1px solid #ccc; box-shadow: none; }
+            td, th { border: 1px solid #ccc; color: black; background: white !important; }
+            .data-card { box-shadow: none; border: 1px solid #000; }
         }
 
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-        .toast { position: fixed; bottom: 30px; right: 30px; background: #1e293b; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #27272a; color: white; padding: 12px 25px; border-radius: 50px; font-size: 0.9rem; transform: translateY(100px); opacity: 0; transition: 0.3s; z-index: 999; display: flex; align-items: center; gap: 8px; font-weight: 600; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.show { transform: translateY(0); opacity: 1; }
     </style>
 </head>
@@ -179,10 +278,10 @@
     
     <header>
         <div class="brand">
-            <div class="brand-icon">🧘‍♂️</div>
+            <img src="resources/yoga_dp.jpeg" alt="Logo" class="brand-logo" onerror="this.src='https://via.placeholder.com/70?text=YOGA'">
             <div>
                 <h1>Yoga Scoreboard Pro</h1>
-                <p id="updateStatus">Connecting to Live Sheet...</p>
+                <p id="updateStatus">Initializing System...</p>
             </div>
         </div>
 
@@ -213,22 +312,20 @@
             <div class="search-wrapper">
                 <select id="searchMode" class="search-select" onchange="toggleSearchMode()">
                     <option value="track">🆔 Track No</option>
-                    <option value="center">📍 Center Name</option>
+                    <option value="center">📍 Center</option>
                 </select>
                 
-                <input type="text" id="inputTrack" class="search-input-box" placeholder="Search Track No..." onkeyup="handleSearch()">
-                
+                <input type="text" id="inputTrack" class="search-input-box" placeholder="Search Track..." onkeyup="handleSearch()">
                 <input type="text" id="inputCenter" class="search-input-box" list="centerOptions" placeholder="Select Center..." style="display:none;" oninput="handleSearch()">
-                <datalist id="centerOptions">
-                    </datalist>
+                <datalist id="centerOptions"></datalist>
             </div>
 
             <div id="liveBtn" class="live-toggle" onclick="toggleLive()">
                 <div class="dot"></div> <span id="liveText">Paused</span>
             </div>
             
-            <button onclick="fetchData(true)" style="background:white; border:1px solid #cbd5e1; padding:6px 10px; border-radius:8px; cursor:pointer;">🔄</button>
-            <button onclick="window.print()" style="background:var(--text-main); color:white; border:none; padding:6px 12px; border-radius:8px; cursor:pointer;">🖨️ Print</button>
+            <button onclick="fetchData(true)" class="btn-icon" title="Refresh">🔄</button>
+            <button onclick="window.print()" class="btn-print" title="Print Report">🖨️ Print</button>
         </div>
     </div>
 
@@ -241,42 +338,38 @@
 
 </div>
 
-<div id="toast" class="toast">✅ Data Updated</div>
+<div id="toast" class="toast"><span>✅</span> Data Updated Successfully</div>
 
 <script>
     /** ================= CONFIGURATION ================= */
     
+    // 1. CSV LINK
     const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv";
     
     const CONFIG = {
-        // Scoring
         MARKS_PER_JUDGE: 50, 
         TOTAL_FM: 150, 
 
-        // Judge Names (Displayed in Top Right Box)
         judges: {
-            j1: "Mr. Amit Kumar", 
-            j2: "Mrs. Sarah Jones",
-            j3: "Dr. Ravi Singh"
+            j1: "1st Judge", 
+            j2: "2nd Judge",
+            j3: "3rd Judge"
         },
 
-        // Column Mapping (Must match Sheet Headers Exactly)
         cols: {
             id: "TRACK NO",
             name: "NAME OF THE ATHLETES",
-            group: "GROUP",         // Was Class
-            coach: "COACH NAME",    // New
-            center: "CENTER NAME",  // New
+            group: "GROUP", 
+            coach: "COACH NAME",
+            center: "CENTER NAME",
             sex: "SEX",
             
-            // Asana Columns
             asanas: [
                 { name: "Asana 1", keys: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
                 { name: "Asana 2", keys: ["ASANA 2 (Judge 1)", "ASANA 2 (Judge 2)", "ASANA 2 (Judge 3)"] },
                 { name: "Asana 3", keys: ["ASANA 3 (Judge 1)", "ASANA 3 (Judge 2)", "ASANA 3 (Judge 3)"] },
                 { name: "Optional", keys: ["OPTIONAL (Judge 1)", "OPTIONAL (Judge 2)", "OPTIONAL (Judge 3)"] }
             ],
-            // For Summation
             j1Keys: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
             j2Keys: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
             j3Keys: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"]
@@ -291,7 +384,6 @@
     let timer = null;
 
     window.onload = () => {
-        // Set Judge Names in Header
         document.getElementById('j1NameDisplay').innerText = CONFIG.judges.j1;
         document.getElementById('j2NameDisplay').innerText = CONFIG.judges.j2;
         document.getElementById('j3NameDisplay').innerText = CONFIG.judges.j3;
@@ -306,7 +398,7 @@
         const txt = document.getElementById('liveText');
         if(isLive) {
             btn.classList.add('active');
-            txt.innerText = "Live";
+            txt.innerText = "Live On";
             timer = setInterval(() => fetchData(), 5000);
             fetchData();
         } else {
@@ -327,6 +419,7 @@
             if(manual) showToast();
         } catch (err) {
             console.error(err);
+            document.getElementById('updateStatus').innerText = "Connection Error";
         }
     }
 
@@ -351,7 +444,6 @@
             const obj = {};
             headers.forEach((h, idx) => obj[h] = row[idx]);
 
-            // Calc Scores
             const j1Sum = getSum(obj, C.j1Keys);
             const j2Sum = getSum(obj, C.j2Keys);
             const j3Sum = getSum(obj, C.j3Keys);
@@ -382,7 +474,6 @@
         const trackInput = document.getElementById('inputTrack');
         const centerInput = document.getElementById('inputCenter');
         
-        // Clear inputs
         trackInput.value = "";
         centerInput.value = "";
 
@@ -393,7 +484,7 @@
             trackInput.style.display = 'none';
             centerInput.style.display = 'block';
         }
-        renderApp(); // Reset view
+        renderApp();
     }
 
     function populateCenterDropdown() {
@@ -453,7 +544,7 @@
             data = data.filter(d => d.center.toLowerCase().includes(centerVal));
         }
 
-        // Grouping for Display
+        // Grouping
         const groups = {};
         const cats = [...new Set(data.map(d => d.grp))].sort();
         cats.forEach(c => groups[c] = data.filter(d => d.grp === c));
@@ -471,8 +562,8 @@
             const athletes = groups[grp];
             let rows = athletes.map(s => {
                 let asanaCells = C.asanas.map(a => `
-                    <td style="border-right:1px solid #f1f5f9">
-                        <div style="display:flex; gap:2px; justify-content:center;">
+                    <td style="border-right:1px solid #f9fafb;">
+                        <div style="display:flex; gap:3px; justify-content:center;">
                             <span class="score-pill">${s[a.keys[0]] || '-'}</span>
                             <span class="score-pill">${s[a.keys[1]] || '-'}</span>
                             <span class="score-pill">${s[a.keys[2]] || '-'}</span>
@@ -494,18 +585,18 @@
                         <td class="j-col">${s.j2Sum}</td>
                         <td class="j-col">${s.j3Sum}</td>
                         <td class="total-col">${s.grand}</td>
-                        <td><span style="background:#e0e7ff; color:#4338ca; padding:4px 8px; border-radius:8px; font-weight:700; font-size:0.8rem;">${s.perc}%</span></td>
+                        <td><span class="perc-badge">${s.perc}%</span></td>
                     </tr>
                 `;
             }).join("");
 
-            let headers = C.asanas.map(a => `<th>${a.name} <div style="font-size:0.65rem; font-weight:400; opacity:0.7;">(1st | 2nd | 3rd)</div></th>`).join("");
+            let headers = C.asanas.map(a => `<th>${a.name} <div style="font-size:0.6rem; opacity:0.7;">(1st | 2nd | 3rd)</div></th>`).join("");
 
             container.innerHTML += `
                 <div class="data-card">
                     <div class="card-head">
                         <h3>${grp}</h3>
-                        <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">${athletes.length} Athletes</span>
+                        <span class="badge-count">${athletes.length} Athletes</span>
                     </div>
                     <div style="overflow-x:auto;">
                         <table>
@@ -555,11 +646,11 @@
                             </div><div class="bar">2</div>` : ''}
                         </div>
                         <div class="podium-col p1">
-                            ${s1 ? `<div class="winner-card" style="transform: scale(1.1); border:2px solid #fbbf24;">
+                            ${s1 ? `<div class="winner-card">
                                 <div style="font-size:1.5rem;">🥇</div>
                                 <div class="w-name">${s1[C.name]}</div>
                                 <div class="w-coach">Coach: ${s1[C.coach]}</div>
-                                <div class="w-score" style="color:#d97706;">${s1.grand}</div>
+                                <div class="w-score">${s1.grand}</div>
                             </div><div class="bar">1</div>` : ''}
                         </div>
                         <div class="podium-col p3">
@@ -572,27 +663,27 @@
                     </div>
                     
                     <div style="padding:20px; max-width:900px; margin:0 auto;">
-                        <h4 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-bottom:15px;">Full Ranking</h4>
-                        <div style="border:1px solid #e2e8f0; border-radius:12px; overflow:hidden;">
+                        <h4 style="color:var(--text-muted); text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-bottom:15px; text-align:center;">Full Ranking & Tie-Break Analysis</h4>
+                        <div style="border:1px solid #e5e7eb; border-radius:12px; overflow:hidden;">
                             ${athletes.map((s, i) => {
                                 let tieReason = "";
                                 if(i > 0 && athletes[i-1].grand === s.grand) {
                                     const prev = athletes[i-1];
-                                    if(prev.j1Sum > s.j1Sum) tieReason = `Tie broken by 1st Judge`;
-                                    else if(prev.j2Sum > s.j2Sum) tieReason = `Tie broken by 2nd Judge`;
-                                    tieReason = `<span style="font-size:0.7rem; color:#d97706; background:#fffbeb; padding:2px 6px; border-radius:4px;">⚠️ ${tieReason}</span>`;
+                                    if(prev.j1Sum > s.j1Sum) tieReason = `Broken by 1st Judge`;
+                                    else if(prev.j2Sum > s.j2Sum) tieReason = `Broken by 2nd Judge`;
+                                    tieReason = `<span style="font-size:0.75rem; color:#d97706; background:#fff7ed; padding:2px 8px; border-radius:4px;">⚠️ Tie ${tieReason}</span>`;
                                 }
                                 return `
-                                    <div style="display:flex; align-items:center; padding:12px 15px; border-bottom:1px solid #f1f5f9; background:white; gap:15px;">
-                                        <div style="font-weight:800; color:#cbd5e1; font-size:1.3rem; width:30px;">${i+1}</div>
+                                    <div style="display:flex; align-items:center; padding:12px 20px; border-bottom:1px solid #f3f4f6; background:white; gap:15px;">
+                                        <div style="font-weight:900; color:#d1d5db; font-size:1.3rem; width:30px;">${i+1}</div>
                                         <div style="flex:1;">
-                                            <div style="font-weight:700; color:var(--text-main);">${s[C.name]}</div>
+                                            <div style="font-weight:700; color:var(--text-main); font-size:0.95rem;">${s[C.name]}</div>
                                             <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
                                                 Coach: ${s[C.coach]} | Track: ${s[C.id]}
                                             </div>
                                         </div>
                                         <div style="text-align:right;">
-                                            <div style="font-weight:800; color:var(--primary); font-size:1.2rem;">${s.grand}</div>
+                                            <div style="font-weight:900; color:var(--primary); font-size:1.2rem;">${s.grand}</div>
                                             ${tieReason}
                                         </div>
                                     </div>
