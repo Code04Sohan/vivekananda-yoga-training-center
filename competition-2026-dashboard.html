@@ -6,26 +6,22 @@
     <title>YOGA PRO - Live Scoreboard</title>
     <style>
         :root {
-            /* BRAND COLORS */
+            /* THEME */
             --primary: #ea580c;       
             --primary-dark: #c2410c;
             --accent: #4338ca;
             --bg-body: #fff7ed;
             --surface: #ffffff;
             
-            /* JUDGE COLORS (For distinct columns) */
-            --j1-bg: #fff7ed; --j1-border: #fdba74; --j1-text: #9a3412;
-            --j2-bg: #eff6ff; --j2-border: #bfdbfe; --j2-text: #1e40af;
-            --j3-bg: #f0fdf4; --j3-border: #bbf7d0; --j3-text: #166534;
+            /* JUDGE COLORS */
+            --j1-bg: #fff7ed; --j1-text: #9a3412;
+            --j2-bg: #eff6ff; --j2-text: #1e40af;
+            --j3-bg: #f0fdf4; --j3-text: #166534;
 
             /* MEDALS */
-            --gold: #d97706;
-            --silver: #64748b;
-            --bronze: #b45309;
+            --gold: #d97706; --silver: #64748b; --bronze: #b45309;
 
-            --text-main: #1f2937;
-            --text-light: #6b7280;
-            
+            --text-main: #1f2937; --text-light: #6b7280;
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
@@ -33,54 +29,41 @@
 
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0; padding: 0;
-            min-height: 100vh;
-            display: flex; flex-direction: column;
+            background-color: var(--bg-body); color: var(--text-main);
+            margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column;
         }
 
         .container { max-width: 1800px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; }
 
-        /* --- HEADER --- */
+        /* HEADER */
         header {
             background: var(--surface); border-radius: 16px; padding: 1rem 2rem;
             display: flex; justify-content: space-between; align-items: center;
             box-shadow: var(--shadow); margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary);
             flex-wrap: wrap; gap: 20px;
         }
-
         .brand-area { display: flex; align-items: center; gap: 15px; }
-        .app-logo { 
-            width: 65px; height: 65px; border-radius: 12px; object-fit: cover; 
-            background: #fff; box-shadow: 0 0 0 2px var(--primary); padding: 2px;
-        }
-        .app-title h1 { margin: 0; font-size: 1.8rem; color: var(--primary-dark); letter-spacing: -0.5px; text-transform: uppercase; }
+        .app-logo { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 0 2px var(--primary); padding: 2px; }
+        .app-title h1 { margin: 0; font-size: 1.8rem; color: var(--primary-dark); letter-spacing: -0.5px; }
         .app-title p { margin: 0; font-size: 0.9rem; color: var(--text-light); font-weight: 500; }
 
-        /* Judges Section */
+        /* JUDGES */
         .judges-wrapper {
             display: flex; align-items: center; gap: 10px; background: #fff;
             padding: 8px; border-radius: 50px; border: 1px solid #fed7aa;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
-        .judge-pill {
-            padding: 5px 15px; text-align: center;
-            border-right: 1px solid #e5e7eb;
-        }
+        .judge-pill { padding: 5px 15px; text-align: center; border-right: 1px solid #e5e7eb; }
         .judge-pill:last-child { border-right: none; }
         .jp-label { font-size: 0.65rem; color: var(--text-light); text-transform: uppercase; font-weight: 800; display: block; }
         .jp-name { font-weight: 700; color: var(--text-main); font-size: 0.9rem; }
-
         .btn-judge-login {
             background: var(--primary); color: white; border: none; padding: 8px 16px;
             border-radius: 30px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
-            display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
-            transition: transform 0.2s; text-decoration: none;
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s;
         }
         .btn-judge-login:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-        /* --- CONTROLS --- */
+        /* CONTROLS */
         .control-bar {
             position: sticky; top: 10px; z-index: 100;
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
@@ -88,7 +71,6 @@
             display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;
             border: 1px solid rgba(234, 88, 12, 0.1);
         }
-
         .view-switch { display: flex; background: #f3f4f6; padding: 4px; border-radius: 10px; gap: 5px; }
         .switch-btn {
             border: none; background: transparent; padding: 8px 20px; border-radius: 8px;
@@ -96,7 +78,6 @@
         }
         .switch-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        /* Dropdown Filter */
         .dropdown-container { position: relative; }
         .dropdown-btn {
             background: var(--surface); border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px;
@@ -104,19 +85,15 @@
         }
         .dropdown-content {
             position: absolute; top: 110%; left: 0; background: white; border: 1px solid #d1d5db;
-            border-radius: 8px; width: 280px; max-height: 400px; overflow-y: auto;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); display: none; padding: 10px; z-index: 200;
+            border-radius: 8px; width: 280px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .dropdown-content.show { display: block; }
-        .dd-search { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px; }
         .dd-item { display: flex; align-items: center; padding: 8px; cursor: pointer; border-radius: 4px; }
         .dd-item:hover { background: #f9fafb; }
-        .dd-item input { margin-right: 10px; transform: scale(1.2); accent-color: var(--primary); }
 
-        /* Search */
         .search-container { position: relative; flex-grow: 1; max-width: 450px; }
         .search-group { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; }
-        .search-select { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #e5e7eb; cursor: pointer; }
+        .search-select { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #e5e7eb; }
         .search-input { border: none; padding: 10px; width: 100%; font-size: 0.95rem; }
         .suggestions-box {
             position: absolute; top: 100%; left: 0; width: 100%; background: white;
@@ -126,7 +103,6 @@
         .sugg-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #f3f4f6; }
         .sugg-item:hover { background: #fff7ed; color: var(--primary); }
 
-        /* Actions */
         .btn-live { 
             background: #ecfccb; color: #365314; border: 1px solid #bef264; padding: 8px 16px; border-radius: 8px;
             font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
@@ -136,7 +112,7 @@
         .btn-live.active .dot { animation: pulse 1s infinite; opacity: 1; background: white; }
         .btn-refresh { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 
-        /* --- TABLE STYLES --- */
+        /* TABLE */
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeUp 0.4s; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -144,60 +120,48 @@
         .table-card { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; }
         .table-head { padding: 12px 20px; background: #fff7ed; border-bottom: 1px solid #fed7aa; display: flex; justify-content: space-between; align-items: center; }
         .group-name { font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); }
-        .badge-count { background: #fed7aa; color: var(--primary-dark); padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
         
         .table-responsive { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        
         th { background: #f9fafb; padding: 12px; text-align: center; font-weight: 700; color: var(--text-light); border-bottom: 2px solid #e5e7eb; white-space: nowrap; font-size: 0.75rem; text-transform: uppercase; }
-        td { padding: 8px 12px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle; }
+        td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle; }
         
-        /* Sticky Student Column */
-        .col-fixed { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #e5e7eb; min-width: 260px; }
+        /* New Student Details Column Styles */
+        .col-fixed { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #e5e7eb; min-width: 240px; padding: 8px 15px; }
         th.col-fixed { background: #f9fafb; z-index: 20; }
         
-        .stu-name { font-weight: 800; color: var(--text-main); font-size: 1.05rem; display: block; }
-        .stu-details { font-size: 0.75rem; color: var(--text-light); margin-top: 5px; display: flex; flex-wrap: wrap; gap: 6px; }
-        .tag { background: #f3f4f6; padding: 3px 8px; border-radius: 6px; border: 1px solid #e5e7eb; font-weight: 600; white-space: nowrap; }
+        .stu-wrapper { display: flex; flex-direction: column; gap: 2px; }
+        .stu-track { font-size: 0.75rem; color: var(--text-light); font-weight: 600; background: #f3f4f6; display: inline-block; padding: 2px 6px; border-radius: 4px; width: fit-content; margin-bottom: 4px; }
+        .stu-name { font-size: 1rem; font-weight: 800; color: var(--text-main); line-height: 1.2; }
+        .stu-coach { font-size: 0.8rem; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
 
-        /* DISTINCT JUDGE COLUMNS */
-        .th-j1 { background: var(--j1-bg); color: var(--j1-text); border-bottom: 2px solid var(--j1-border); border-left: 2px solid #fff; }
-        .th-j2 { background: var(--j2-bg); color: var(--j2-text); border-bottom: 2px solid var(--j2-border); border-left: 2px solid #fff; }
-        .th-j3 { background: var(--j3-bg); color: var(--j3-text); border-bottom: 2px solid var(--j3-border); border-left: 2px solid #fff; }
+        /* Score Grid System */
+        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; min-width: 90px; }
+        .s-box { padding: 4px; border-radius: 4px; font-weight: 700; font-size: 0.9rem; font-family: monospace; }
+        .s-j1 { background: var(--j1-bg); color: var(--j1-text); border: 1px solid #fed7aa; }
+        .s-j2 { background: var(--j2-bg); color: var(--j2-text); border: 1px solid #bfdbfe; }
+        .s-j3 { background: var(--j3-bg); color: var(--j3-text); border: 1px solid #bbf7d0; }
 
-        .cell-j1 { background: var(--j1-bg); color: var(--j1-text); font-weight: 800; border-left: 2px solid #fff; font-family: monospace; font-size: 1.1rem; }
-        .cell-j2 { background: var(--j2-bg); color: var(--j2-text); font-weight: 800; border-left: 2px solid #fff; font-family: monospace; font-size: 1.1rem; }
-        .cell-j3 { background: var(--j3-bg); color: var(--j3-text); font-weight: 800; border-left: 2px solid #fff; font-family: monospace; font-size: 1.1rem; }
+        /* Totals */
+        .total-j1 { color: var(--text-main); font-weight: 700; background: var(--j1-bg); }
+        .total-j2 { color: var(--text-main); font-weight: 700; background: var(--j2-bg); }
+        .total-j3 { color: var(--text-main); font-weight: 700; background: var(--j3-bg); }
+        .grand-total { font-weight: 900; color: white; background: var(--primary); font-size: 1.1rem; border-radius: 6px; padding: 6px 10px; display: inline-block; }
 
-        /* Score Pills inside Asanas */
-        .score-pill { background: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; border: 1px solid #e5e7eb; font-weight: 700; display: block; width: 100%; text-align: center; }
-        .mini-label { font-size: 0.65rem; opacity: 0.8; display: block; font-family: sans-serif; font-weight: 700; margin-bottom: 3px; color: var(--text-light); text-transform: uppercase; }
-
-        .cell-total { font-weight: 900; color: var(--primary-dark); font-size: 1.2rem; background: #fff7ed; border-left: 2px solid #fed7aa; }
-
-        /* --- JUDGMENT PODIUM --- */
-        .podium-area { display: flex; justify-content: center; align-items: flex-end; height: 400px; margin: 30px 0; gap: 15px; }
+        /* PODIUM */
+        .podium-area { display: flex; justify-content: center; align-items: flex-end; height: 380px; margin: 30px 0; gap: 15px; }
         .p-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; flex: 1; max-width: 320px; }
-        
-        .win-card {
-            background: white; border-radius: 12px; padding: 15px; text-align: center; width: 100%;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; margin-bottom: 10px; position: relative;
-        }
-        .medal { font-size: 2.5rem; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); filter: drop-shadow(0 4px 2px rgba(0,0,0,0.1)); }
-        
+        .win-card { background: white; border-radius: 12px; padding: 15px; text-align: center; width: 100%; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; margin-bottom: 10px; position: relative; }
+        .medal { font-size: 2.5rem; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); }
         .wc-name { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin-top: 10px; }
-        .wc-coach { font-size: 0.85rem; color: var(--text-light); margin-top: 2px; font-weight: 600; }
+        .wc-coach { font-size: 0.85rem; color: var(--text-light); font-weight: 600; }
         .wc-score { font-size: 1.6rem; font-weight: 900; color: var(--primary); margin-top: 5px; }
-
         .stand { width: 100%; border-radius: 10px 10px 0 0; color: rgba(255,255,255,0.8); font-weight: 900; font-size: 3rem; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 10px; }
+        
         .p1 .stand { height: 220px; background: linear-gradient(180deg, #f59e0b, #b45309); }
         .p1 .win-card { border: 2px solid var(--gold); transform: scale(1.05); z-index: 5; }
-        
         .p2 .stand { height: 160px; background: linear-gradient(180deg, #94a3b8, #475569); }
-        .p2 .win-card { border: 2px solid var(--silver); }
-        
         .p3 .stand { height: 110px; background: linear-gradient(180deg, #d97706, #78350f); }
-        .p3 .win-card { border: 2px solid var(--bronze); }
 
         /* Rank List */
         .rank-item { display: flex; align-items: center; background: white; border-bottom: 1px solid #f3f4f6; padding: 12px 20px; gap: 15px; }
@@ -206,7 +170,6 @@
         .rank-2 .r-num, .rank-2 .stu-name { color: var(--silver); }
         .rank-3 .r-num, .rank-3 .stu-name { color: var(--bronze); }
 
-        /* FOOTER */
         footer { text-align: center; padding: 30px; color: #9ca3af; font-size: 0.9rem; margin-top: auto; border-top: 1px solid #e5e7eb; }
         footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
 
@@ -220,7 +183,6 @@
             .medal { position: static; transform: none; font-size: 1.5rem; margin-right: 10px; }
             .p1 { order: -1; }
         }
-        
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
@@ -237,9 +199,9 @@
         </div>
 
         <div class="judges-wrapper">
-            <div class="judge-pill"><span class="jp-label">J1 (Ref)</span><span class="jp-name" id="j1Name">...</span></div>
-            <div class="judge-pill"><span class="jp-label">J2 (Ref)</span><span class="jp-name" id="j2Name">...</span></div>
-            <div class="judge-pill"><span class="jp-label">J3 (Ref)</span><span class="jp-name" id="j3Name">...</span></div>
+            <div class="judge-pill"><span class="jp-label">J1</span><span class="jp-name" id="j1Name">...</span></div>
+            <div class="judge-pill"><span class="jp-label">J2</span><span class="jp-name" id="j2Name">...</span></div>
+            <div class="judge-pill"><span class="jp-label">J3</span><span class="jp-name" id="j3Name">...</span></div>
             <button onclick="goToJudges()" class="btn-judge-login">👨‍⚖️ Portal</button>
         </div>
     </header>
@@ -257,7 +219,7 @@
             <div id="groupDropdown" class="dropdown-content">
                 <input type="text" class="dd-search" placeholder="Filter..." onkeyup="filterGroupList(this.value)">
                 <div class="dd-item" onclick="toggleAllGroups()">
-                    <input type="checkbox" id="cb-all" checked> <label style="font-weight:700;">Select All</label>
+                    <input type="checkbox" id="cb-all" checked> <label>Select All</label>
                 </div>
                 <div id="groupCheckboxes"></div>
             </div>
@@ -269,7 +231,7 @@
                     <option value="track">🆔 ID</option>
                     <option value="center">📍 Center</option>
                 </select>
-                <input type="text" id="mainSearch" class="search-input" placeholder="Search Track No..." onkeyup="handleSearchInput()">
+                <input type="text" id="mainSearch" class="search-input" placeholder="Search..." onkeyup="handleSearchInput()">
             </div>
             <div id="customSuggestions" class="suggestions-box"></div>
         </div>
@@ -294,18 +256,16 @@
         CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv",
         GIST_URL: "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/judges.json",
         JUDGES_PORTAL_URL: "competition-2026.html",
-
+        
         COLS: {
             ID: "TRACK NO", NAME: "NAME OF THE ATHLETES", GROUP: "GROUP", 
             COACH: "COACH NAME", CENTER: "CENTER NAME", SEX: "SEX",
-            // For Asanas Display
             ASANAS: [
                 { name: "Asana 1", keys: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
                 { name: "Asana 2", keys: ["ASANA 2 (Judge 1)", "ASANA 2 (Judge 2)", "ASANA 2 (Judge 3)"] },
                 { name: "Asana 3", keys: ["ASANA 3 (Judge 1)", "ASANA 3 (Judge 2)", "ASANA 3 (Judge 3)"] },
                 { name: "Optional", keys: ["OPTIONAL (Judge 1)", "OPTIONAL (Judge 2)", "OPTIONAL (Judge 3)"] }
             ],
-            // For Totals
             J1_KEYS: ["ASANA 1 (Judge 1)", "ASANA 2 (Judge 1)", "ASANA 3 (Judge 1)", "OPTIONAL (Judge 1)"],
             J2_KEYS: ["ASANA 1 (Judge 2)", "ASANA 2 (Judge 2)", "ASANA 3 (Judge 2)", "OPTIONAL (Judge 2)"],
             J3_KEYS: ["ASANA 1 (Judge 3)", "ASANA 2 (Judge 3)", "ASANA 3 (Judge 3)", "OPTIONAL (Judge 3)"]
@@ -319,7 +279,6 @@
     window.onload = () => { fetchJudges(); fetchData(); };
     function goToJudges() { window.location.href = CONFIG.JUDGES_PORTAL_URL; }
 
-    // Close Dropdowns
     document.addEventListener('click', e => {
         if (!e.target.closest('.dropdown-container')) document.getElementById('groupDropdown').classList.remove('show');
         if (!e.target.closest('.search-container')) document.getElementById('customSuggestions').style.display = 'none';
@@ -336,7 +295,7 @@
             if(j1) document.getElementById('j1Name').innerText = j1.name || "Judge 1";
             if(j2) document.getElementById('j2Name').innerText = j2.name || "Judge 2";
             if(j3) document.getElementById('j3Name').innerText = j3.name || "Judge 3";
-        } catch(e) { console.error("Judges Error", e); }
+        } catch(e) { console.error(e); }
     }
 
     async function fetchData(manual=false) {
@@ -344,7 +303,7 @@
             const res = await fetch(`${CONFIG.CSV_URL}&t=${Date.now()}`);
             const text = await res.text();
             processData(text);
-            if(manual) alert("Refreshed Successfully!");
+            if(manual) alert("Refreshed!");
         } catch(e) { console.error(e); }
     }
 
@@ -376,23 +335,21 @@
         return keys.reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
     }
 
-    /* FILTERS & SEARCH */
+    /* FILTERS & SEARCH (Unchanged Logic) */
     function toggleGroupDropdown() { document.getElementById('groupDropdown').classList.toggle('show'); }
     function updateGroupDropdownUI() {
         const c = document.getElementById('groupCheckboxes');
         if(c.children.length === groupList.length) return;
         c.innerHTML = "";
         groupList.forEach(g => {
-            c.innerHTML += `<div class="dd-item" onclick="handleCbClick(event, '${g}')"><input type="checkbox" checked> <label>${g}</label></div>`;
+            c.innerHTML += `<div class="dd-item" onclick="handleCbClick(event, '${g}')"><input type="checkbox" checked> ${g}</div>`;
         });
     }
     function handleCbClick(e, g) {
         const cb = e.target.tagName==='INPUT' ? e.target : e.target.querySelector('input');
         if(e.target.tagName!=='INPUT') cb.checked = !cb.checked;
-        
         if(selectedGroups.has("ALL")) selectedGroups = new Set(groupList);
         cb.checked ? selectedGroups.add(g) : selectedGroups.delete(g);
-        
         if(selectedGroups.size === groupList.length) {
             selectedGroups = new Set(["ALL"]); document.getElementById('cb-all').checked = true;
             document.getElementById('groupBtnText').innerText = "All Groups";
@@ -414,12 +371,10 @@
             d.style.display = d.innerText.toLowerCase().includes(v.toLowerCase()) ? "flex" : "none";
         });
     }
-
     function handleSearchInput() {
         const mode = document.getElementById('searchMode').value;
         const val = document.getElementById('mainSearch').value.toLowerCase();
         const box = document.getElementById('customSuggestions');
-        
         if(mode === 'center' && val) {
             const m = Array.from(centerList).filter(c => c.toLowerCase().includes(val));
             box.innerHTML = m.map(c => `<div class="sugg-item" onclick="setSearch('${c}')">${c}</div>`).join('');
@@ -434,14 +389,13 @@
         renderApp();
     }
 
-    /* RENDER */
+    /* RENDER LOGIC */
     function switchView(view, btn) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
         document.getElementById(`view-${view}`).classList.add('active');
         document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-    
     function toggleLive() {
         isLive = !isLive;
         const btn = document.getElementById('liveBtn');
@@ -449,7 +403,7 @@
             btn.classList.add('active'); btn.querySelector('span').innerText = "LIVE ON";
             refreshTimer = setInterval(() => fetchData(), 5000);
         } else {
-            btn.classList.remove('active'); btn.querySelector('span').innerText = "OFFLINE";
+            btn.classList.remove('active'); btn.querySelector('span').innerText = "LIVE OFF";
             clearInterval(refreshTimer);
         }
     }
@@ -461,7 +415,6 @@
 
         let filtered = rawData;
         if(!selectedGroups.has("ALL")) filtered = filtered.filter(d => selectedGroups.has(d.grp));
-        
         if(sVal) {
             if(sMode === 'track') filtered = filtered.filter(d => d[C.ID].toString().toLowerCase().includes(sVal));
             else if(sMode === 'center') filtered = filtered.filter(d => d.center.toLowerCase().includes(sVal));
@@ -475,67 +428,51 @@
     }
 
     function renderLive(groups) {
-        const div = document.getElementById('view-live'); 
-        div.innerHTML = "";
+        const div = document.getElementById('view-live'); div.innerHTML = "";
         const C = CONFIG.COLS;
 
         Object.keys(groups).forEach(grp => {
             const rows = groups[grp].map(s => {
-                // Generate detailed J1, J2, J3 boxes per Asana
                 let asanaCells = C.ASANAS.map(a => `
-                    <td style="border-right:1px solid #fed7aa; padding: 6px;">
-                        <div style="display:flex; gap:8px; justify-content:center;">
-                            <div style="text-align:center;">
-                                <span class="mini-label">J1</span>
-                                <span class="score-pill">${s[a.keys[0]] || '-'}</span>
-                            </div>
-                            <div style="text-align:center;">
-                                <span class="mini-label">J2</span>
-                                <span class="score-pill">${s[a.keys[1]] || '-'}</span>
-                            </div>
-                            <div style="text-align:center;">
-                                <span class="mini-label">J3</span>
-                                <span class="score-pill">${s[a.keys[2]] || '-'}</span>
-                            </div>
+                    <td>
+                        <div class="score-grid">
+                            <div class="s-box s-j1">${s[a.keys[0]]||'-'}</div>
+                            <div class="s-box s-j2">${s[a.keys[1]]||'-'}</div>
+                            <div class="s-box s-j3">${s[a.keys[2]]||'-'}</div>
                         </div>
                     </td>
                 `).join('');
 
-                return `
-                <tr>
+                return `<tr>
                     <td class="col-fixed">
-                        <span class="stu-name">${s[C.NAME]}</span>
-                        <div class="stu-details">
-                            <span class="tag">Track No: <b>${s[C.ID]}</b></span>
-                            <span class="tag">Coach: <b>${s[C.COACH]}</b></span>
+                        <div class="stu-wrapper">
+                            <span class="stu-track">🆔 ${s[C.ID]}</span>
+                            <span class="stu-name">${s[C.NAME]}</span>
+                            <span class="stu-coach">👨‍🏫 ${s[C.COACH]}</span>
                         </div>
                     </td>
                     ${asanaCells}
-                    <td class="cell-j1">${s.j1}</td>
-                    <td class="cell-j2">${s.j2}</td>
-                    <td class="cell-j3">${s.j3}</td>
-                    <td class="cell-total">${s.grand}</td>
+                    <td class="total-j1">${s.j1}</td>
+                    <td class="total-j2">${s.j2}</td>
+                    <td class="total-j3">${s.j3}</td>
+                    <td><span class="grand-total">${s.grand}</span></td>
                 </tr>`;
             }).join('');
 
-            // Asana Headers
-            let headers = C.ASANAS.map(a => `<th>${a.name} <div style="font-size:0.65rem; opacity:0.8; font-weight:normal; margin-top:2px;">[J1, J2, J3]</div></th>`).join('');
+            let headers = C.ASANAS.map(a => `<th>${a.name}</th>`).join("");
 
             div.innerHTML += `
                 <div class="table-card">
-                    <div class="table-head">
-                        <span class="group-name">${grp}</span> 
-                        <span class="badge-count">${groups[grp].length} Athletes</span>
-                    </div>
+                    <div class="table-head"><span class="group-name">${grp}</span> <span style="font-weight:700;">${groups[grp].length}</span></div>
                     <div class="table-responsive">
                         <table>
                             <thead><tr>
-                                <th class="col-fixed">Student Details</th>
+                                <th class="col-fixed">Athlete Profile</th>
                                 ${headers}
-                                <th class="th-j1">J1 Total</th>
-                                <th class="th-j2">J2 Total</th>
-                                <th class="th-j3">J3 Total</th>
-                                <th style="background:#fff7ed; color:var(--primary); font-size:0.85rem; border-left:2px solid #fed7aa;">Final Total</th>
+                                <th style="background:var(--j1-bg);color:var(--j1-text)">J1 Tot</th>
+                                <th style="background:var(--j2-bg);color:var(--j2-text)">J2 Tot</th>
+                                <th style="background:var(--j3-bg);color:var(--j3-text)">J3 Tot</th>
+                                <th>Grand</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
                         </table>
@@ -545,8 +482,7 @@
     }
 
     function renderPodium(groups) {
-        const div = document.getElementById('view-judgment'); 
-        div.innerHTML = "";
+        const div = document.getElementById('view-judgment'); div.innerHTML = "";
         const C = CONFIG.COLS;
 
         Object.keys(groups).forEach(grp => {
@@ -557,9 +493,9 @@
                 <div class="table-card">
                     <div class="table-head"><span class="group-name">🏆 ${grp} Results</span></div>
                     <div class="podium-area">
-                        <div class="p-col p2">${s2 ? winnerHtml(s2, '🥈', '2nd') : ''}</div>
-                        <div class="p-col p1">${s1 ? winnerHtml(s1, '🥇', '1st') : ''}</div>
-                        <div class="p-col p3">${s3 ? winnerHtml(s3, '🥉', '3rd') : ''}</div>
+                        <div class="p-col p2">${s2 ? winnerHtml(s2, '🥈', '2nd', C) : ''}</div>
+                        <div class="p-col p1">${s1 ? winnerHtml(s1, '🥇', '1st', C) : ''}</div>
+                        <div class="p-col p3">${s3 ? winnerHtml(s3, '🥉', '3rd', C) : ''}</div>
                     </div>
                     <div style="padding:0 20px 20px;">${listHtml(arr, C)}</div>
                 </div>`;
@@ -567,10 +503,10 @@
         });
     }
 
-    function winnerHtml(s, medal, rank) {
+    function winnerHtml(s, medal, rank, C) {
         return `<div class="win-card"><div class="medal">${medal}</div>
-            <div class="wc-name">${s[CONFIG.COLS.NAME]}</div>
-            <div class="wc-coach">Coach: ${s[CONFIG.COLS.COACH]}</div>
+            <div class="wc-name">${s[C.NAME]}</div>
+            <div class="wc-coach">Coach: ${s[C.COACH]}</div>
             <div class="wc-score">${s.grand}</div>
         </div><div class="stand">${rank}</div>`;
     }
@@ -578,17 +514,14 @@
     function listHtml(arr, C) {
         return arr.map((s, i) => {
             let rClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-            let tie = (i>0 && arr[i-1].grand === s.grand) ? `<span style="font-size:0.75rem; color:#d97706; background:#fff7ed; padding:3px 8px; border-radius:6px; margin-left:10px; font-weight:700; border:1px solid #fed7aa;">⚠️ Tie Broken</span>` : '';
+            let tie = (i>0 && arr[i-1].grand === s.grand) ? `<span style="font-size:0.7rem; color:#d97706; background:#fff7ed; padding:2px 5px; border-radius:4px; margin-left:10px;">⚠️ Tie Break</span>` : '';
             return `<div class="rank-item ${rClass}">
                 <div class="r-num">${i+1}</div>
                 <div style="flex:1">
-                    <span class="stu-name">${s[C.NAME]}</span>
-                    <div class="stu-details">
-                        <span class="tag">Track No: <b>${s[C.ID]}</b></span> 
-                        <span class="tag">Coach: <b>${s[C.COACH]}</b></span>
-                    </div>
+                    <div class="stu-name">${s[C.NAME]}</div>
+                    <div class="stu-coach">🆔 ${s[C.ID]} | ${s[C.COACH]}</div>
                 </div>
-                <div style="font-weight:900; font-size:1.3rem; color:var(--primary);">${s.grand}</div>
+                <div style="font-weight:900; font-size:1.1rem; color:var(--primary);">${s.grand}</div>
                 ${tie}
             </div>`;
         }).join('');
