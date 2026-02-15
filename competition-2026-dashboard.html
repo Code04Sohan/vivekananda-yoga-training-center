@@ -7,86 +7,42 @@
     <style>
         :root {
             /* THEME */
-            --primary: #ea580c;       
-            --primary-dark: #c2410c;
-            --accent: #4338ca;
-            --bg-body: #fff7ed;
-            --surface: #ffffff;
-            
-            /* JUDGE COLORS */
-            --j1-bg: #fff7ed; --j1-text: #9a3412;
-            --j2-bg: #eff6ff; --j2-text: #1e40af;
-            --j3-bg: #f0fdf4; --j3-text: #166534;
-
-            /* MEDALS */
+            --primary: #ea580c; --primary-dark: #c2410c; --accent: #4338ca;
+            --bg-body: #fff7ed; --surface: #ffffff;
+            --j1-bg: #fff7ed; --j2-bg: #eff6ff; --j3-bg: #f0fdf4;
             --gold: #d97706; --silver: #64748b; --bronze: #b45309;
-
             --text-main: #1f2937; --text-light: #6b7280;
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
         * { box-sizing: border-box; outline: none; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg-body); color: var(--text-main);
-            margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column;
-        }
-
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
         .container { max-width: 1800px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; }
 
         /* HEADER */
-        header {
-            background: var(--surface); border-radius: 16px; padding: 1rem 2rem;
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: var(--shadow); margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary);
-            flex-wrap: wrap; gap: 20px;
-        }
+        header { background: var(--surface); border-radius: 16px; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary); flex-wrap: wrap; gap: 20px; }
         .brand-area { display: flex; align-items: center; gap: 15px; }
         .app-logo { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 0 2px var(--primary); padding: 2px; }
         .app-title h1 { margin: 0; font-size: 1.8rem; color: var(--primary-dark); letter-spacing: -0.5px; }
         .app-title p { margin: 0; font-size: 0.9rem; color: var(--text-light); font-weight: 500; }
 
-        /* JUDGES */
-        .judges-wrapper {
-            display: flex; align-items: center; gap: 10px; background: #fff;
-            padding: 8px; border-radius: 50px; border: 1px solid #fed7aa;
-        }
+        .judges-wrapper { display: flex; align-items: center; gap: 10px; background: #fff; padding: 8px; border-radius: 50px; border: 1px solid #fed7aa; }
         .judge-pill { padding: 5px 15px; text-align: center; border-right: 1px solid #e5e7eb; }
         .judge-pill:last-child { border-right: none; }
         .jp-label { font-size: 0.65rem; color: var(--text-light); text-transform: uppercase; font-weight: 800; display: block; }
         .jp-name { font-weight: 700; color: var(--text-main); font-size: 0.9rem; }
-        .btn-judge-login {
-            background: var(--primary); color: white; border: none; padding: 8px 16px;
-            border-radius: 30px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
-            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s;
-        }
+        .btn-judge-login { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: 700; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s; }
         .btn-judge-login:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
         /* CONTROLS */
-        .control-bar {
-            position: sticky; top: 10px; z-index: 100;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 10px 20px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;
-            border: 1px solid rgba(234, 88, 12, 0.1);
-        }
+        .control-bar { position: sticky; top: 10px; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; border: 1px solid rgba(234, 88, 12, 0.1); }
         .view-switch { display: flex; background: #f3f4f6; padding: 4px; border-radius: 10px; gap: 5px; }
-        .switch-btn {
-            border: none; background: transparent; padding: 8px 20px; border-radius: 8px;
-            font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s;
-        }
+        .switch-btn { border: none; background: transparent; padding: 8px 20px; border-radius: 8px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .switch-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
         .dropdown-container { position: relative; }
-        .dropdown-btn {
-            background: var(--surface); border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px;
-            cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; min-width: 200px; justify-content: space-between;
-        }
-        .dropdown-content {
-            position: absolute; top: 110%; left: 0; background: white; border: 1px solid #d1d5db;
-            border-radius: 8px; width: 280px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
+        .dropdown-btn { background: var(--surface); border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 600; min-width: 200px; justify-content: space-between; }
+        .dropdown-content { position: absolute; top: 110%; left: 0; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 280px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .dropdown-content.show { display: block; }
         .dd-item { display: flex; align-items: center; padding: 8px; cursor: pointer; border-radius: 4px; }
         .dd-item:hover { background: #f9fafb; }
@@ -95,22 +51,16 @@
         .search-group { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; }
         .search-select { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #e5e7eb; }
         .search-input { border: none; padding: 10px; width: 100%; font-size: 0.95rem; }
-        .suggestions-box {
-            position: absolute; top: 100%; left: 0; width: 100%; background: white;
-            border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 5px;
-            max-height: 250px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        .suggestions-box { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 5px; max-height: 250px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .sugg-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #f3f4f6; }
         .sugg-item:hover { background: #fff7ed; color: var(--primary); }
 
-        .btn-live { 
-            background: #ecfccb; color: #365314; border: 1px solid #bef264; padding: 8px 16px; border-radius: 8px;
-            font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
-        }
+        .btn-live { background: #ecfccb; color: #365314; border: 1px solid #bef264; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
         .btn-live.active { background: #22c55e; color: white; border-color: #16a34a; }
         .dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; opacity: 0.5; }
         .btn-live.active .dot { animation: pulse 1s infinite; opacity: 1; background: white; }
         .btn-refresh { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-print { background: var(--text-main); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
         /* TABLE */
         .view-section { display: none; }
@@ -126,7 +76,6 @@
         th { background: #f9fafb; padding: 12px; text-align: center; font-weight: 700; color: var(--text-light); border-bottom: 2px solid #e5e7eb; white-space: nowrap; font-size: 0.75rem; text-transform: uppercase; }
         td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle; }
         
-        /* New Student Details Column Styles */
         .col-fixed { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #e5e7eb; min-width: 240px; padding: 8px 15px; }
         th.col-fixed { background: #f9fafb; z-index: 20; }
         
@@ -135,14 +84,14 @@
         .stu-name { font-size: 1rem; font-weight: 800; color: var(--text-main); line-height: 1.2; }
         .stu-coach { font-size: 0.8rem; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
 
-        /* Score Grid System */
-        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; min-width: 90px; }
-        .s-box { padding: 4px; border-radius: 4px; font-weight: 700; font-size: 0.9rem; font-family: monospace; }
-        .s-j1 { background: var(--j1-bg); color: var(--j1-text); border: 1px solid #fed7aa; }
-        .s-j2 { background: var(--j2-bg); color: var(--j2-text); border: 1px solid #bfdbfe; }
-        .s-j3 { background: var(--j3-bg); color: var(--j3-text); border: 1px solid #bbf7d0; }
+        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; min-width: 100px; }
+        .s-box { padding: 4px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; font-family: monospace; display: flex; flex-direction: column; align-items: center; }
+        .s-label { font-size: 0.55rem; opacity: 0.7; font-weight: normal; margin-bottom: 2px; }
+        
+        .s-j1 { background: var(--j1-bg); color: #9a3412; border: 1px solid #fed7aa; }
+        .s-j2 { background: var(--j2-bg); color: #1e40af; border: 1px solid #bfdbfe; }
+        .s-j3 { background: var(--j3-bg); color: #166534; border: 1px solid #bbf7d0; }
 
-        /* Totals */
         .total-j1 { color: var(--text-main); font-weight: 700; background: var(--j1-bg); }
         .total-j2 { color: var(--text-main); font-weight: 700; background: var(--j2-bg); }
         .total-j3 { color: var(--text-main); font-weight: 700; background: var(--j3-bg); }
@@ -163,7 +112,6 @@
         .p2 .stand { height: 160px; background: linear-gradient(180deg, #94a3b8, #475569); }
         .p3 .stand { height: 110px; background: linear-gradient(180deg, #d97706, #78350f); }
 
-        /* Rank List */
         .rank-item { display: flex; align-items: center; background: white; border-bottom: 1px solid #f3f4f6; padding: 12px 20px; gap: 15px; }
         .r-num { font-size: 1.4rem; font-weight: 900; width: 40px; text-align: center; color: #e5e7eb; }
         .rank-1 .r-num, .rank-1 .stu-name { color: var(--gold); }
@@ -183,7 +131,22 @@
             .medal { position: static; transform: none; font-size: 1.5rem; margin-right: 10px; }
             .p1 { order: -1; }
         }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* PRINT STYLES */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { max-width: 100%; padding: 0; }
+            header, .control-bar, footer, .view-switch, .dropdown-container, .search-container, .btn-live, .btn-refresh, .btn-print, #view-judgment { display: none !important; }
+            #view-live { display: block !important; }
+            .table-card { box-shadow: none; border: 1px solid #000; margin-bottom: 20px; break-inside: avoid; }
+            table { font-size: 9pt; width: 100%; }
+            th { background: #eee !important; color: black !important; border: 1px solid #000; }
+            td { border: 1px solid #000; color: black; padding: 4px; }
+            .col-fixed, th.col-fixed { position: static; border-right: 1px solid #000; }
+            .s-box, .total-j1, .total-j2, .total-j3, .grand-total { background: none !important; color: black !important; border: none !important; }
+            .score-grid { gap: 2px; }
+            #view-live::before { content: "Competition Report"; display: block; font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -240,6 +203,7 @@
             <div class="dot"></div> <span id="liveText">OFFLINE</span>
         </button>
         <button class="btn-refresh" onclick="fetchData(true)">🔄 Refresh</button>
+        <button class="btn-print" onclick="window.print()">🖨️ Print</button>
     </div>
 
     <div id="view-live" class="view-section active"></div>
@@ -253,8 +217,10 @@
 <script>
     /* ================= CONFIGURATION ================= */
     const CONFIG = {
-        CSV_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRksQprL7ZPKGWsYvETJrbrlG-lDSN3jW0SEWt90CB7g69mYFPpHqa0Z9WjrH03Hy5xCUFeMjlJHI5-/pub?output=csv",
-        GIST_URL: "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/judges.json",
+        // !!! PASTE YOUR GOOGLE APPS SCRIPT URL HERE !!!
+        APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec",
+        
+        GIST_URL: "",
         JUDGES_PORTAL_URL: "competition-2026-judegs.html",
         
         COLS: {
@@ -295,38 +261,37 @@
             if(j1) document.getElementById('j1Name').innerText = j1.name || "Judge 1";
             if(j2) document.getElementById('j2Name').innerText = j2.name || "Judge 2";
             if(j3) document.getElementById('j3Name').innerText = j3.name || "Judge 3";
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Judges Error", e); }
     }
 
     async function fetchData(manual=false) {
         try {
-            const res = await fetch(`${CONFIG.CSV_URL}&t=${Date.now()}`);
-            const text = await res.text();
-            processData(text);
-            if(manual) alert("Refreshed!");
-        } catch(e) { console.error(e); }
+            const res = await fetch(CONFIG.APPS_SCRIPT_URL);
+            const json = await res.json();
+            processData(json);
+            if(manual) alert("Data Updated!");
+        } catch(e) { 
+            console.error(e); 
+            if(CONFIG.APPS_SCRIPT_URL.includes("PASTE")) alert("Configuration Error: Please add the Apps Script URL.");
+        }
     }
 
-    function processData(csv) {
-        const lines = csv.split("\n").filter(l => l.trim() !== "");
-        const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ''));
+    function processData(data) {
         rawData = []; let tempGroups = new Set(); centerList.clear(); const C = CONFIG.COLS;
 
-        for (let i=1; i<lines.length; i++) {
-            const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(v => v.replace(/^"|"$/g, ''));
-            const obj = {}; headers.forEach((h, idx) => obj[h] = row[idx]);
-
+        data.forEach(obj => {
             const j1 = getSum(obj, C.J1_KEYS);
             const j2 = getSum(obj, C.J2_KEYS);
             const j3 = getSum(obj, C.J3_KEYS);
             const grand = j1 + j2 + j3;
             
-            const grp = obj[C.GROUP] ? obj[C.GROUP].trim() : "Unknown";
-            const center = obj[C.CENTER] ? obj[C.CENTER].trim() : "";
+            const grp = obj[C.GROUP] ? String(obj[C.GROUP]).trim() : "Unknown";
+            const center = obj[C.CENTER] ? String(obj[C.CENTER]).trim() : "";
             
             if(grp) tempGroups.add(grp); if(center) centerList.add(center);
             rawData.push({ ...obj, j1, j2, j3, grand, grp, center });
-        }
+        });
+
         groupList = Array.from(tempGroups).sort();
         updateGroupDropdownUI(); renderApp();
     }
@@ -335,7 +300,7 @@
         return keys.reduce((sum, k) => sum + (parseFloat(row[k]) || 0), 0);
     }
 
-    /* FILTERS & SEARCH (Unchanged Logic) */
+    /* FILTERS & SEARCH */
     function toggleGroupDropdown() { document.getElementById('groupDropdown').classList.toggle('show'); }
     function updateGroupDropdownUI() {
         const c = document.getElementById('groupCheckboxes');
@@ -389,7 +354,7 @@
         renderApp();
     }
 
-    /* RENDER LOGIC */
+    /* RENDER */
     function switchView(view, btn) {
         document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
         document.getElementById(`view-${view}`).classList.add('active');
@@ -416,7 +381,7 @@
         let filtered = rawData;
         if(!selectedGroups.has("ALL")) filtered = filtered.filter(d => selectedGroups.has(d.grp));
         if(sVal) {
-            if(sMode === 'track') filtered = filtered.filter(d => d[C.ID].toString().toLowerCase().includes(sVal));
+            if(sMode === 'track') filtered = filtered.filter(d => String(d[C.ID]).toLowerCase().includes(sVal));
             else if(sMode === 'center') filtered = filtered.filter(d => d.center.toLowerCase().includes(sVal));
         }
 
@@ -436,9 +401,9 @@
                 let asanaCells = C.ASANAS.map(a => `
                     <td>
                         <div class="score-grid">
-                            <div class="s-box s-j1">${s[a.keys[0]]||'-'}</div>
-                            <div class="s-box s-j2">${s[a.keys[1]]||'-'}</div>
-                            <div class="s-box s-j3">${s[a.keys[2]]||'-'}</div>
+                            <div class="s-box s-j1"><span class="s-label">J1</span>${s[a.keys[0]]||'-'}</div>
+                            <div class="s-box s-j2"><span class="s-label">J2</span>${s[a.keys[1]]||'-'}</div>
+                            <div class="s-box s-j3"><span class="s-label">J3</span>${s[a.keys[2]]||'-'}</div>
                         </div>
                     </td>
                 `).join('');
@@ -469,10 +434,10 @@
                             <thead><tr>
                                 <th class="col-fixed">Athlete Profile</th>
                                 ${headers}
-                                <th style="background:var(--j1-bg);color:var(--j1-text)">J1 Total</th>
-                                <th style="background:var(--j2-bg);color:var(--j2-text)">J2 Total</th>
-                                <th style="background:var(--j3-bg);color:var(--j3-text)">J3 Total</th>
-                                <th>Grand Total</th>
+                                <th style="background:var(--j1-bg);color:#9a3412">J1 Tot</th>
+                                <th style="background:var(--j2-bg);color:#1e40af">J2 Tot</th>
+                                <th style="background:var(--j3-bg);color:#166534">J3 Tot</th>
+                                <th>Grand</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
                         </table>
