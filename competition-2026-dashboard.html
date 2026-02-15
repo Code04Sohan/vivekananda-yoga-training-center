@@ -7,20 +7,41 @@
     <style>
         :root {
             /* THEME */
-            --primary: #ea580c; --primary-dark: #c2410c; --accent: #4338ca;
-            --bg-body: #fff7ed; --surface: #ffffff;
-            --j1-bg: #fff7ed; --j2-bg: #eff6ff; --j3-bg: #f0fdf4;
+            --primary: #ea580c;       
+            --primary-dark: #c2410c;
+            --accent: #4338ca;
+            --bg-body: #fff7ed;
+            --surface: #ffffff;
+            
+            /* JUDGE COLORS */
+            --j1-bg: #fff7ed; --j1-text: #9a3412; --j1-border: #fed7aa;
+            --j2-bg: #eff6ff; --j2-text: #1e40af; --j2-border: #bfdbfe;
+            --j3-bg: #f0fdf4; --j3-text: #166534; --j3-border: #bbf7d0;
+
+            /* MEDALS */
             --gold: #d97706; --silver: #64748b; --bronze: #b45309;
+
             --text-main: #1f2937; --text-light: #6b7280;
             --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
 
         * { box-sizing: border-box; outline: none; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
-        .container { max-width: 1800px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-body); color: var(--text-main);
+            margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column;
+        }
+
+        .container { max-width: 1800px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; padding-bottom: 60px; }
 
         /* HEADER */
-        header { background: var(--surface); border-radius: 16px; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary); flex-wrap: wrap; gap: 20px; }
+        header {
+            background: var(--surface); border-radius: 16px; padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: var(--shadow); margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary);
+            flex-wrap: wrap; gap: 20px;
+        }
         .brand-area { display: flex; align-items: center; gap: 15px; }
         .app-logo { width: 65px; height: 65px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 0 2px var(--primary); padding: 2px; }
         .app-title h1 { margin: 0; font-size: 1.8rem; color: var(--primary-dark); letter-spacing: -0.5px; }
@@ -31,11 +52,21 @@
         .judge-pill:last-child { border-right: none; }
         .jp-label { font-size: 0.65rem; color: var(--text-light); text-transform: uppercase; font-weight: 800; display: block; }
         .jp-name { font-weight: 700; color: var(--text-main); font-size: 0.9rem; }
-        .btn-judge-login { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 30px; font-weight: 700; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s; }
+        .btn-judge-login {
+            background: var(--primary); color: white; border: none; padding: 8px 16px;
+            border-radius: 30px; font-weight: 700; cursor: pointer; font-size: 0.85rem;
+            box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3); transition: 0.2s;
+        }
         .btn-judge-login:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
         /* CONTROLS */
-        .control-bar { position: sticky; top: 10px; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; border: 1px solid rgba(234, 88, 12, 0.1); }
+        .control-bar {
+            position: sticky; top: 10px; z-index: 100;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            padding: 10px 20px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px;
+            border: 1px solid rgba(234, 88, 12, 0.1);
+        }
         .view-switch { display: flex; background: #f3f4f6; padding: 4px; border-radius: 10px; gap: 5px; }
         .switch-btn { border: none; background: transparent; padding: 8px 20px; border-radius: 8px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .switch-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
@@ -55,10 +86,16 @@
         .sugg-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #f3f4f6; }
         .sugg-item:hover { background: #fff7ed; color: var(--primary); }
 
-        .btn-live { background: #ecfccb; color: #365314; border: 1px solid #bef264; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .btn-live { 
+            background: #ecfccb; color: #365314; border: 1px solid #bef264; padding: 8px 16px; border-radius: 8px;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
         .btn-live.active { background: #22c55e; color: white; border-color: #16a34a; }
         .dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; opacity: 0.5; }
-        .btn-live.active .dot { animation: pulse 1s infinite; opacity: 1; background: white; }
+        
+        /* FLASH ANIMATION FOR UPDATE */
+        .btn-live.flash-update { background-color: #4ade80; transform: scale(1.05); box-shadow: 0 0 15px #4ade80; }
+        
         .btn-refresh { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .btn-print { background: var(--text-main); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
@@ -76,15 +113,18 @@
         th { background: #f9fafb; padding: 12px; text-align: center; font-weight: 700; color: var(--text-light); border-bottom: 2px solid #e5e7eb; white-space: nowrap; font-size: 0.75rem; text-transform: uppercase; }
         td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle; }
         
-        .col-fixed { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #e5e7eb; min-width: 240px; padding: 8px 15px; }
+        .col-fixed { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #e5e7eb; min-width: 260px; padding: 8px 15px; }
         th.col-fixed { background: #f9fafb; z-index: 20; }
         
         .stu-wrapper { display: flex; flex-direction: column; gap: 2px; }
         .stu-track { font-size: 0.75rem; color: var(--text-light); font-weight: 600; background: #f3f4f6; display: inline-block; padding: 2px 6px; border-radius: 4px; width: fit-content; margin-bottom: 4px; }
         .stu-name { font-size: 1rem; font-weight: 800; color: var(--text-main); line-height: 1.2; }
-        .stu-coach { font-size: 0.8rem; color: var(--primary); font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+        .stu-details { font-size: 0.8rem; color: var(--primary); font-weight: 600; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+        
+        /* HIDE EXTRA DETAILS ON SCREEN */
+        .print-only { display: none; }
 
-        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; min-width: 100px; }
+        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; min-width: 90px; }
         .s-box { padding: 4px; border-radius: 4px; font-weight: 700; font-size: 0.85rem; font-family: monospace; display: flex; flex-direction: column; align-items: center; }
         .s-label { font-size: 0.55rem; opacity: 0.7; font-weight: normal; margin-bottom: 2px; }
         
@@ -118,8 +158,21 @@
         .rank-2 .r-num, .rank-2 .stu-name { color: var(--silver); }
         .rank-3 .r-num, .rank-3 .stu-name { color: var(--bronze); }
 
-        footer { text-align: center; padding: 30px; color: #9ca3af; font-size: 0.9rem; margin-top: auto; border-top: 1px solid #e5e7eb; }
-        footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
+        /* FOOTER & SUBTLE BRANDING */
+        footer { text-align: center; padding: 20px; color: #9ca3af; font-size: 0.85rem; margin-top: auto; border-top: 1px solid #e5e7eb; }
+        footer a { color: var(--text-light); text-decoration: none; }
+        
+        /* Floating Badge */
+        .powered-badge {
+            position: fixed; bottom: 10px; right: 10px; background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px); padding: 4px 10px; border-radius: 20px;
+            font-size: 0.8rem; color: #e9ac3b; border: 1px solid #e5e7eb;
+            text-decoration: none; z-index: 999; transition: 0.2s;
+        }
+        .powered-badge:hover { color: var(--primary); background: white; border-color: var(--primary); }
+
+        /* PRINT ELEMENTS */
+        .print-only-header, .print-only-footer { display: none; }
 
         @media (max-width: 900px) {
             header { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
@@ -134,22 +187,53 @@
 
         /* PRINT STYLES */
         @media print {
-            body { background: white; padding: 0; }
+            @page { size: landscape; margin: 5mm; }
+            body { background: white; padding: 0; font-family: 'Segoe UI', sans-serif; -webkit-print-color-adjust: exact; }
             .container { max-width: 100%; padding: 0; }
-            header, .control-bar, footer, .view-switch, .dropdown-container, .search-container, .btn-live, .btn-refresh, .btn-print, #view-judgment { display: none !important; }
+            
+            /* Hide UI */
+            header, .control-bar, footer, .powered-badge, #view-judgment { display: none !important; }
+            
+            /* Show Hidden Details */
+            .print-only { display: inline-block !important; margin-right: 8px; color: #444; }
+            
+            /* Print Headers */
+            .print-only-header { display: block; text-align: center; margin-bottom: 10px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+            .print-only-header h1 { margin: 0; font-size: 24pt; text-transform: uppercase; }
+            .print-only-header p { margin: 0; font-size: 12pt; }
+            
+            .print-only-footer { display: block; position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 8pt; border-top: 1px solid #ccc; padding-top: 5px; background: white; }
+
+            /* Table Formatting */
             #view-live { display: block !important; }
-            .table-card { box-shadow: none; border: 1px solid #000; margin-bottom: 20px; break-inside: avoid; }
-            table { font-size: 9pt; width: 100%; }
-            th { background: #eee !important; color: black !important; border: 1px solid #000; }
-            td { border: 1px solid #000; color: black; padding: 4px; }
-            .col-fixed, th.col-fixed { position: static; border-right: 1px solid #000; }
-            .s-box, .total-j1, .total-j2, .total-j3, .grand-total { background: none !important; color: black !important; border: none !important; }
-            .score-grid { gap: 2px; }
-            #view-live::before { content: "Competition Report"; display: block; font-size: 1.5rem; font-weight: bold; text-align: center; margin-bottom: 20px; }
+            .table-card { box-shadow: none; border: 1px solid #000; margin-bottom: 15px; break-inside: avoid; }
+            .table-head { background: #eee !important; border-bottom: 1px solid #000; color: black; padding: 5px 10px; }
+            
+            table { font-size: 9pt; width: 100%; border-collapse: collapse; }
+            th { background: #ddd !important; color: black !important; border: 1px solid #000; padding: 4px; font-size: 8pt; }
+            td { border: 1px solid #000; color: black; padding: 4px; text-align: center; }
+            
+            .col-fixed, th.col-fixed { position: static; border-right: 1px solid #000; text-align: left; width: 25%; }
+            .stu-wrapper { display: block; }
+            .stu-track { border: 1px solid #000; background: none; font-size: 8pt; padding: 1px 4px; display: inline; margin-right: 5px; }
+            .stu-name { font-size: 10pt; color: black; display: inline; font-weight: bold; }
+            .stu-details { font-size: 8pt; color: black; display: block; margin-top: 2px; }
+            .meta-item { display: inline; margin-right: 10px; }
+            
+            .score-grid { display: flex; gap: 2px; justify-content: center; }
+            .s-box { border: none; padding: 0 2px; font-size: 8pt; }
+            .s-label { display: none; }
+            .s-j1, .s-j2, .s-j3, .total-j1, .total-j2, .total-j3, .grand-total { background: none !important; color: black !important; border: none; font-weight: normal; }
+            .grand-total { font-weight: bold; }
         }
     </style>
 </head>
 <body>
+
+<div class="print-only-header">
+    <h1>Competition Report</h1>
+    <p>Report Date: <span id="printDate"></span></p>
+</div>
 
 <div class="container">
     <header>
@@ -203,29 +287,36 @@
             <div class="dot"></div> <span id="liveText">OFFLINE</span>
         </button>
         <button class="btn-refresh" onclick="fetchData(true)">🔄 Refresh</button>
-        <button class="btn-print" onclick="window.print()">🖨️ Print</button>
+        <button class="btn-print" onclick="window.print()">🖨️ Print Report</button>
     </div>
 
     <div id="view-live" class="view-section active"></div>
     <div id="view-judgment" class="view-section"></div>
 </div>
 
+<div class="print-only-footer">
+    www.soumenyoga.in | Tech Provider: BAHA Interactive | Contact: sohanadhikari04@gmail.com
+</div>
+
 <footer>
-    Technical Services Powered By <a href="https://code04sohan.github.io/cv" target="_blank">BAHA Interactive</a>
+    Visit <a href="https://www.soumenyoga.in" target="_blank">www.soumenyoga.in</a> for more info.
 </footer>
+
+<a href="https://code04sohan.github.io/cv" target="_blank" class="powered-badge">
+    Powered by BAHA Interactive
+</a>
 
 <script>
     /* ================= CONFIGURATION ================= */
     const CONFIG = {
-        // !!! PASTE YOUR GOOGLE APPS SCRIPT URL HERE !!!
         APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec",
         
-        GIST_URL: "",
+        GIST_URL: "https://gist.githubusercontent.com/Code04Sohan/03f0887af2dc685bf42af056cf878cc8/raw/judges.json",
         JUDGES_PORTAL_URL: "competition-2026-judegs.html",
         
         COLS: {
             ID: "TRACK NO", NAME: "NAME OF THE ATHLETES", GROUP: "GROUP", 
-            COACH: "COACH NAME", CENTER: "CENTER NAME", SEX: "SEX",
+            COACH: "COACH NAME", CENTER: "CENTER NAME", SEX: "SEX", AGE: "AGE", // AGE Added
             ASANAS: [
                 { name: "Asana 1", keys: ["ASANA 1 (Judge 1)", "ASANA 1 (Judge 2)", "ASANA 1 (Judge 3)"] },
                 { name: "Asana 2", keys: ["ASANA 2 (Judge 1)", "ASANA 2 (Judge 2)", "ASANA 2 (Judge 3)"] },
@@ -242,7 +333,10 @@
     let rawData = [], groupList = [], selectedGroups = new Set(["ALL"]), centerList = new Set();
     let isLive = false, refreshTimer = null;
 
-    window.onload = () => { fetchJudges(); fetchData(); };
+    window.onload = () => { 
+        fetchJudges(); fetchData(); 
+        document.getElementById('printDate').innerText = new Date().toLocaleString();
+    };
     function goToJudges() { window.location.href = CONFIG.JUDGES_PORTAL_URL; }
 
     document.addEventListener('click', e => {
@@ -269,10 +363,17 @@
             const res = await fetch(CONFIG.APPS_SCRIPT_URL);
             const json = await res.json();
             processData(json);
+            
             if(manual) alert("Data Updated!");
+            
+            // Flash Notification Logic
+            if(isLive) {
+                const btn = document.getElementById('liveBtn');
+                btn.classList.add('flash-update');
+                setTimeout(() => btn.classList.remove('flash-update'), 1000);
+            }
         } catch(e) { 
             console.error(e); 
-            if(CONFIG.APPS_SCRIPT_URL.includes("PASTE")) alert("Configuration Error: Please add the Apps Script URL.");
         }
     }
 
@@ -413,7 +514,11 @@
                         <div class="stu-wrapper">
                             <span class="stu-track">🆔 ${s[C.ID]}</span>
                             <span class="stu-name">${s[C.NAME]}</span>
-                            <span class="stu-coach">👨‍🏫 ${s[C.COACH]}</span>
+                            <div class="stu-details">
+                                <div class="meta-item">👨‍🏫 ${s[C.COACH]}</div>
+                                <div class="meta-item print-only">📍 ${s[C.CENTER]}</div>
+                                <div class="meta-item print-only">🎂 Age: ${s[C.AGE] || '-'}</div>
+                            </div>
                         </div>
                     </td>
                     ${asanaCells}
@@ -479,15 +584,30 @@
     function listHtml(arr, C) {
         return arr.map((s, i) => {
             let rClass = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'';
-            let tie = (i>0 && arr[i-1].grand === s.grand) ? `<span style="font-size:0.7rem; color:#d97706; background:#fff7ed; padding:2px 5px; border-radius:4px; margin-left:10px;">⚠️ Tie Break</span>` : '';
+            let tieInfo = "";
+            
+            // Tie Breaker Logic Transparency
+            if (i > 0 && arr[i-1].grand === s.grand) {
+                const prev = arr[i-1];
+                if (prev.j1 !== s.j1) {
+                    tieInfo = `<span style="font-size:0.75rem; color:#d97706; background:#fff7ed; padding:2px 8px; border-radius:4px; margin-left:10px;">⚠️ Tie Break: Won by J1 Score (${prev.j1} vs ${s.j1})</span>`;
+                } else if (prev.j2 !== s.j2) {
+                    tieInfo = `<span style="font-size:0.75rem; color:#d97706; background:#fff7ed; padding:2px 8px; border-radius:4px; margin-left:10px;">⚠️ Tie Break: Won by J2 Score (${prev.j2} vs ${s.j2})</span>`;
+                } else {
+                    tieInfo = `<span style="font-size:0.75rem; color:#6b7280; background:#f3f4f6; padding:2px 8px; border-radius:4px; margin-left:10px;">⚖️ Perfect Tie</span>`;
+                }
+            }
+
             return `<div class="rank-item ${rClass}">
                 <div class="r-num">${i+1}</div>
                 <div style="flex:1">
                     <div class="stu-name">${s[C.NAME]}</div>
                     <div class="stu-coach">🆔 ${s[C.ID]} | ${s[C.COACH]}</div>
                 </div>
-                <div style="font-weight:900; font-size:1.1rem; color:var(--primary);">${s.grand}</div>
-                ${tie}
+                <div style="text-align:right;">
+                    <div style="font-weight:900; font-size:1.1rem; color:var(--primary);">${s.grand}</div>
+                    ${tieInfo}
+                </div>
             </div>`;
         }).join('');
     }
