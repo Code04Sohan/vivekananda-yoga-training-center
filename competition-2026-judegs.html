@@ -132,19 +132,19 @@
        <div class="mini-dot" id="dot-n3"></div>
     </div>
     <div style="margin-bottom:10px; font-weight:700; color:var(--primary-dark); text-align:center;">Online</div>
-    <div class="status-item"><span>Auth Node</span> <div id="stat-auth" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>Node 1</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>Node 2</span> <div id="stat-n2" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>Node 3</span> <div id="stat-n3" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>Auth Link</span> <div id="stat-auth" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>API 1</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>API 2</span> <div id="stat-n2" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>API 3</span> <div id="stat-n3" class="status-dot dot-yellow"></div></div>
   </div>
 
   <div id="login-screen">
     <img id="login-logo" src="" alt="Logo" class="logo-img">
-    <h2 style="color:var(--text-main); margin:0 0 5px 0; font-weight:700;">Welcome Judge</h2>
+    <h2 style="color:var(--text-main); margin:0 0 5px 0; font-weight:700;">YOGA PRO</h2>
     <p style="color:var(--text-muted); margin:0 0 30px 0; font-size:14px;">Sign in to access the scoring-fields</scoring-fields></p>
     <div class="input-box"><i class="material-icons">person_outline</i><input id="user" class="inp" type="text" placeholder="Username"></div>
     <div class="input-box"><i class="material-icons">lock_outline</i><input id="pin" class="inp" type="password" placeholder="Access PIN"></div>
-    <button id="login-btn" class="btn-primary" onclick="handleLogin()">SECURE LOGIN</button>
+    <button id="login-btn" class="btn-primary" onclick="handleLogin()">LOGIN</button>
     <div id="login-error" style="color:var(--red-error); margin-top:15px; font-size:13px; font-weight:500; display:none;"></div>
   </div>
 
@@ -171,9 +171,9 @@
     <div class="track-card">
       <h3 style="color:var(--text-main); margin-bottom:5px; font-weight:700;">Enter Round Details</h3>
       <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;">Enter the student track numbers for this round.</p>
-      <div class="track-row"><label>Student A Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder="e.g. VT001"></div>
-      <div class="track-row"><label>Student B Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder="e.g. SJ023"></div>
-      <div class="track-row"><label>Student C Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder="e.g. MK101"></div>
+      <div class="track-row"><label>Student A Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder=""></div>
+      <div class="track-row"><label>Student B Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder=""></div>
+      <div class="track-row"><label>Student C Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder=""></div>
       <button class="btn-primary" onclick="startRound()" style="margin-top:30px; padding: 16px;">FETCH DATA & START</button>
     </div>
   </div>
@@ -195,7 +195,7 @@
   </div>
 
   <div class="app-footer">
-    Technical Services Powered By <a href="https://code04sohan.github.io/cv" target="_blank">BAHA Interactive</a>
+    Powered By <a href="https://code04sohan.github.io/cv" target="_blank">BAHA Interactive</a>
   </div>
 
   <script>
