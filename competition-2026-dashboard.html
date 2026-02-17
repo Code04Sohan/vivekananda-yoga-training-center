@@ -36,11 +36,12 @@
         .sw-btn { border: none; background: transparent; padding: 8px 16px; border-radius: 6px; font-weight: 600; color: var(--text-light); cursor: pointer; }
         .sw-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         
-        /* Filter Dropdown */
-        .filter-box { position: relative; }
-        .filter-btn { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; min-width: 180px; justify-content: space-between; }
-        .filter-content { position: absolute; top: 110%; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 280px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: var(--shadow); }
-        .filter-content.show { display: block; }
+        /* Dropdowns */
+        .drop-box { position: relative; }
+        .drop-btn { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; min-width: 160px; justify-content: space-between; }
+        .drop-content { position: absolute; top: 110%; right: 0; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 250px; max-height: 300px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: var(--shadow); }
+        .drop-content.show { display: block; }
+        
         .dd-search { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px; font-size: 0.9rem; }
         .fc-item { display: flex; align-items: center; padding: 5px; cursor: pointer; border-radius: 4px; }
         .fc-item:hover { background: #f9fafb; }
@@ -64,11 +65,6 @@
         .btn-live.flash { animation: flashGreen 0.5s ease-in-out; }
         @keyframes flashGreen { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
 
-        /* PRINT BUTTONS */
-        .print-grp { display: flex; gap: 5px; margin-left: auto; }
-        .btn-print { background: var(--text-main); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
-        .btn-print.alt { background: white; color: var(--text-main); border: 1px solid var(--text-main); }
-
         /* MAIN CONTENT */
         .view { display: none; }
         .view.active { display: block; animation: fadeUp 0.3s; }
@@ -90,7 +86,9 @@
         .s-id { font-size: 0.75rem; background: #f3f4f6; padding: 1px 5px; border-radius: 4px; width: fit-content; font-weight: 600; color: #666; }
         .s-nm { font-size: 1rem; font-weight: 700; color: var(--text-main); }
         .s-ch { font-size: 0.8rem; color: var(--primary); font-weight: 600; }
-        .s-xtra { font-size: 0.75rem; color: #666; display: none; } /* Hidden on screen */
+        
+        /* Extra info hidden by default on screen */
+        .s-meta-print { display: none; font-size: 0.8rem; color: #444; margin-top: 2px; }
 
         .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; min-width: 90px; }
         .sc-box { padding: 3px; border-radius: 4px; font-family: monospace; font-weight: 700; font-size: 0.9rem; }
@@ -125,7 +123,7 @@
         footer { text-align: center; padding: 20px; margin-top: auto; border-top: 1px solid #eee; color: #999; font-size: 0.8rem; }
         .badge-pw { position: fixed; bottom: 10px; right: 10px; background: rgba(255,255,255,0.8); border: 1px solid #ddd; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; color: #888; text-decoration: none; z-index: 999; }
 
-        /* PRINT */
+        /* PRINT CONFIG */
         .print-head, .print-foot { display: none; }
         @media print {
             @page { size: landscape; margin: 5mm; }
@@ -137,22 +135,26 @@
             .print-foot { display: block; position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 8pt; border-top: 1px solid #000; }
             #view-live { display: block !important; }
             .div-card { box-shadow: none; border: 1px solid #000; margin-bottom: 15px; break-inside: avoid; }
-            .div-header { background: #eee !important; color: black !important; border-bottom: 1px solid #000; }
-            th { background: #ddd !important; color: black !important; border: 1px solid #000; padding: 2px; font-size: 8pt; }
-            td { border: 1px solid #000; padding: 2px; color: black; }
-            .col-stu { position: static; border-right: 1px solid #000; width: 25%; }
-            .s-xtra { display: block !important; } /* Show Age/Center on Print */
+            .div-header { background: #eee !important; color: black !important; border-bottom: 1px solid #000; padding: 5px; }
+            th { background: #ddd !important; color: black !important; border: 1px solid #000; padding: 4px; font-size: 9pt; }
+            td { border: 1px solid #000; padding: 4px; color: black; font-size: 10pt; }
+            .col-stu { position: static; border-right: 1px solid #000; width: 30%; }
+            .s-meta-print { display: block !important; }
             
-            /* Clean Print (Results) */
-            body.print-res .bg-j1, body.print-res .bg-j2, body.print-res .bg-j3, body.print-res .tot-j1, body.print-res .tot-j2, body.print-res .tot-j3, body.print-res .grand { background: none !important; color: black !important; border: none; font-weight: normal; }
-            body.print-res .grand { font-weight: bold; }
+            /* Remove Score Graphics for Print */
+            .bg-j1, .bg-j2, .bg-j3, .tot-j1, .tot-j2, .tot-j3, .grand { background: none !important; color: black !important; border: none; font-weight: normal; }
+            .grand { font-weight: bold; }
 
-            /* Organizer Print (Name List Only) */
-            body.print-names .score-col, body.print-names .total-col, body.print-names .grand-col { display: none !important; }
+            /* --- ORGANIZER LIST MODE (Hides scores) --- */
+            body.print-names .score-col, 
+            body.print-names .total-col, 
+            body.print-names .grand-col { display: none !important; }
+            
             body.print-names .col-stu { width: 100%; border: none; }
-            body.print-names table th:not(.col-stu) { display: none; }
-            body.print-names table td:not(.col-stu) { display: none; }
-            body.print-names .s-nm { font-size: 14pt; }
+            body.print-names table { border: 1px solid #000; }
+            body.print-names tr { border-bottom: 1px solid #ccc; }
+            body.print-names .s-nm { font-size: 12pt; }
+            body.print-names .div-header { border: 1px solid #000; }
         }
     </style>
 </head>
@@ -173,9 +175,9 @@
             </div>
         </div>
         <div class="judges-box">
-            <div class="judge-pill"><span class="jp-lbl">J1</span><span class="jp-val" id="j1n">Loading...</span></div>
-            <div class="judge-pill"><span class="jp-lbl">J2</span><span class="jp-val" id="j2n">Loading...</span></div>
-            <div class="judge-pill"><span class="jp-lbl">J3</span><span class="jp-val" id="j3n">Loading...</span></div>
+            <div class="judge-pill"><span class="jp-lbl">J1</span><span class="jp-val" id="j1n">...</span></div>
+            <div class="judge-pill"><span class="jp-lbl">J2</span><span class="jp-val" id="j2n">...</span></div>
+            <div class="judge-pill"><span class="jp-lbl">J3</span><span class="jp-val" id="j3n">...</span></div>
             <a href="competition-2026-judegs.html" class="btn-portal">👨‍⚖️ Portal</a>
         </div>
     </header>
@@ -186,12 +188,12 @@
             <button class="sw-btn" onclick="switchTab('judgment', this)">🏆 Judgment</button>
         </div>
 
-        <div class="filter-box">
-            <button class="filter-btn" onclick="document.getElementById('grpDrop').classList.toggle('show')">
+        <div class="drop-box">
+            <button class="drop-btn" onclick="document.getElementById('grpDrop').classList.toggle('show')">
                 <span id="grpTxt">All Groups</span> ▼
             </button>
-            <div id="grpDrop" class="filter-content">
-                <input type="text" class="dd-search" placeholder="Filter Groups..." onkeyup="filterGrpList(this.value)">
+            <div id="grpDrop" class="drop-content filter-content">
+                <input type="text" class="dd-search" placeholder="Search Group..." onkeyup="filterGrpList(this.value)">
                 <div class="fc-item" onclick="toggleAllGrp()"><input type="checkbox" id="cbAll" checked> <b>Select All</b></div>
                 <div id="grpList"></div>
             </div>
@@ -213,9 +215,14 @@
             <div class="dot"></div> <span id="liveTxt">OFFLINE</span>
         </button>
         
-        <div class="print-grp">
-            <button class="btn-print" onclick="printMode('results')">🖨️ Results</button>
-            <button class="btn-print alt" onclick="printMode('names')">📋 List</button>
+        <div class="drop-box" style="margin-left:auto;">
+            <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
+                🖨️ Print Menu ▼
+            </button>
+            <div id="printDrop" class="drop-content">
+                <div class="fc-item" onclick="printMode('res')">📝 Results Report</div>
+                <div class="fc-item" onclick="printMode('names')">📋 Name List (Organizer)</div>
+            </div>
         </div>
     </div>
 
@@ -229,7 +236,7 @@
 
 <script>
     // --- CONFIGURATION ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; // <--- PASTE HERE
+    const API_URL = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
     
     // --- STATE ---
     let students = [], marksMap = {}, groups = [], selGroups = new Set(['ALL']);
@@ -243,27 +250,23 @@
         fetchStudents();
         
         document.addEventListener('click', e => {
-            if(!e.target.closest('.filter-box')) document.getElementById('grpDrop').classList.remove('show');
+            if(!e.target.closest('.drop-box')) document.querySelectorAll('.drop-content').forEach(d => d.classList.remove('show'));
             if(!e.target.closest('.search-wrapper')) document.getElementById('suggBox').style.display = 'none';
         });
     };
 
-    // --- 1. DATA FETCHING ---
+    // --- 1. FETCHING ---
     async function fetchJudges() {
         try {
             const res = await fetch(`${API_URL}?type=judges`);
             const d = await res.json();
-            // Robust parsing for judge names
-            const j1 = d.find(x => x.num == "1") || d[0];
-            const j2 = d.find(x => x.num == "2") || d[1];
-            const j3 = d.find(x => x.num == "3") || d[2];
-            document.getElementById('j1n').innerText = j1?.name || "Judge 1";
-            document.getElementById('j2n').innerText = j2?.name || "Judge 2";
-            document.getElementById('j3n').innerText = j3?.name || "Judge 3";
-        } catch(e) { 
-            console.log(e);
-            document.getElementById('j1n').innerText = "Error"; 
-        }
+            // Map num "1" to UI id "j1n"
+            const mapJudge = (num, eid) => {
+                const j = d.find(x => String(x.num) === String(num));
+                if(j) document.getElementById(eid).innerText = j.name;
+            };
+            mapJudge(1, 'j1n'); mapJudge(2, 'j2n'); mapJudge(3, 'j3n');
+        } catch(e) { console.log("J Err", e); }
     }
 
     async function fetchStudents(manual=false) {
@@ -280,15 +283,12 @@
         try {
             const res = await fetch(`${API_URL}?type=marks`);
             const data = await res.json();
-            
             marksMap = {};
             data.forEach(row => {
                 const id = row["TRACK NO"];
                 if(id) marksMap[id] = row;
             });
-
             updateScoresOnly();
-            
             if(manual) alert("Marks Updated!");
             if(isLive) flashBtn();
         } catch(e) { console.error("Marks Error", e); }
@@ -300,7 +300,6 @@
         let tempGroups = new Set();
         centerList.clear();
 
-        // Grouping
         let buckets = {};
         students.forEach(s => {
             const key = `${s.GROUP} - ${s.SEX}`;
@@ -313,7 +312,6 @@
         groups = Array.from(tempGroups).sort();
         updateFilterUI();
 
-        // Algorithm
         Object.keys(buckets).forEach(key => {
             const list = buckets[key];
             const sorted = interleaveByCoach(list);
@@ -323,7 +321,6 @@
                 divisions[divName] = chunk;
             }
         });
-
         renderStructure();
     }
 
@@ -342,26 +339,30 @@
         return result;
     }
 
-    // --- 3. UI RENDERING ---
+    // --- 3. RENDERING ---
     function renderStructure() {
         const liveContainer = document.getElementById('view-live');
         const judgeContainer = document.getElementById('view-judgment');
         liveContainer.innerHTML = "";
         judgeContainer.innerHTML = "";
 
+        const sMode = document.getElementById('searchMode').value;
+        const sVal = document.getElementById('mainSearch').value.toLowerCase().trim();
+
         Object.keys(divisions).sort().forEach(divName => {
             const baseGroup = divName.split(" - Division")[0];
             if(!selGroups.has('ALL') && !selGroups.has(baseGroup)) return;
 
             const athletes = divisions[divName];
-            const sMode = document.getElementById('searchMode').value;
-            const sVal = document.getElementById('mainSearch').value.toLowerCase();
-
+            
             // Search Filtering
             const filteredAthletes = athletes.filter(s => {
                 if(!sVal) return true;
-                if(sMode === 'track') return String(s["TRACK NO"]).toLowerCase().includes(sVal);
-                if(sMode === 'center') return String(s["CENTER NAME"]).toLowerCase().includes(sVal);
+                const track = String(s["TRACK NO"]).toLowerCase().trim();
+                const center = String(s["CENTER NAME"] || "").toLowerCase();
+                
+                if(sMode === 'track') return track === sVal; // EXACT MATCH
+                if(sMode === 'center') return center.includes(sVal);
                 return true;
             });
 
@@ -375,11 +376,11 @@
                             <span class="s-id">🆔 ${id}</span>
                             <span class="s-nm">${s["NAME OF THE ATHLETES"]}</span>
                             <span class="s-ch">👨‍🏫 ${s["COACH NAME"]}</span>
-                            <span class="s-xtra">📍 ${s["CENTER NAME"]} | 🎂 ${s["AGE"]}</span>
+                            <div class="s-meta-print">📍 ${s["CENTER NAME"]} | Age: ${s["AGE"]} | ${s["GROUP"]}</div>
                         </div>
                     </td>
-                    ${renderAsanaCells(id, 1)} ${renderAsanaCells(id, 2)}
-                    ${renderAsanaCells(id, 3)} ${renderAsanaCells(id, "OPTIONAL")}
+                    ${renderCells(id, 1)} ${renderCells(id, 2)}
+                    ${renderCells(id, 3)} ${renderCells(id, "OPTIONAL")}
                     <td class="tot-j1 total-col" id="t-${id}-j1">-</td>
                     <td class="tot-j2 total-col" id="t-${id}-j2">-</td>
                     <td class="tot-j3 total-col" id="t-${id}-j3">-</td>
@@ -407,7 +408,7 @@
         });
     }
 
-    function renderAsanaCells(id, num) {
+    function renderCells(id, num) {
         let l = num === "OPTIONAL" ? "OPT" : `A${num}`;
         return `<td class="score-col"><div class="score-grid">
             <div class="sc-box bg-j1" id="s-${id}-${l}-j1">-</div>
@@ -416,19 +417,18 @@
         </div></td>`;
     }
 
-    // --- 4. UPDATES ---
     function updateScoresOnly() {
         Object.keys(divisions).forEach(divName => {
             const athletes = divisions[divName];
             athletes.forEach(s => {
                 const id = s["TRACK NO"];
-                const scores = marksMap[id] || {};
+                const sc = marksMap[id] || {};
                 let tJ1=0, tJ2=0, tJ3=0;
 
                 [1, 2, 3, "OPTIONAL"].forEach(a => {
                     let l = a === "OPTIONAL" ? "OPT" : `A${a}`;
                     let suf = a === "OPTIONAL" ? "OPTIONAL" : `ASANA ${a}`;
-                    let v1 = Number(scores[`${suf} (Judge 1)`]||0), v2 = Number(scores[`${suf} (Judge 2)`]||0), v3 = Number(scores[`${suf} (Judge 3)`]||0);
+                    let v1=Number(sc[`${suf} (Judge 1)`]||0), v2=Number(sc[`${suf} (Judge 2)`]||0), v3=Number(sc[`${suf} (Judge 3)`]||0);
                     setTxt(`s-${id}-${l}-j1`, v1||'-'); setTxt(`s-${id}-${l}-j2`, v2||'-'); setTxt(`s-${id}-${l}-j3`, v3||'-');
                     tJ1+=v1; tJ2+=v2; tJ3+=v3;
                 });
@@ -436,7 +436,7 @@
                 setTxt(`t-${id}-j1`, Math.round(tJ1));
                 setTxt(`t-${id}-j2`, Math.round(tJ2));
                 setTxt(`t-${id}-j3`, Math.round(tJ3));
-                setTxt(`t-${id}-grand`, Math.round(tJ1+tJ2+tJ3)); // Whole Number
+                setTxt(`t-${id}-grand`, Math.round(tJ1+tJ2+tJ3)); // No decimals
 
                 s.stats = { j1: tJ1, j2: tJ2, j3: tJ3, grand: Math.round(tJ1+tJ2+tJ3) };
             });
@@ -481,7 +481,7 @@
         return `<div class="w-card"><div class="medal">${ico}</div><div class="w-nm">${s["NAME OF THE ATHLETES"]}</div><div class="w-det">${s["COACH NAME"]}</div><div class="w-sc">${s.stats?.grand || 0}</div></div><div class="stand">${rnk}</div>`;
     }
 
-    // --- UI HELPERS ---
+    // --- UTILS ---
     function switchTab(view, btn) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(`view-${view}`).classList.add('active');
@@ -495,7 +495,7 @@
     }
     
     function filterGrpList(val) {
-        document.querySelectorAll('.fc-item').forEach(el => {
+        document.querySelectorAll('#grpList .fc-item').forEach(el => {
             el.style.display = el.innerText.toLowerCase().includes(val.toLowerCase()) ? 'flex' : 'none';
         });
     }
@@ -568,7 +568,7 @@
 
     function printMode(mode) {
         document.body.className = (mode === 'names') ? 'print-names' : 'print-res';
-        document.getElementById('pTitle').innerText = (mode === 'names') ? 'Organizer Name List' : 'Competition Result Report';
+        document.getElementById('pTitle').innerText = (mode === 'names') ? 'Organizer Name List' : 'Competition Results';
         window.print();
         document.body.className = '';
     }
