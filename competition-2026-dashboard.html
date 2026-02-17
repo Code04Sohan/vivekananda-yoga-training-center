@@ -19,40 +19,65 @@
         .brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); }
         .brand h1 { margin: 0; font-size: 1.5rem; color: var(--dark); text-transform: uppercase; }
         
+        .header-right { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
         .judges-panel { display: flex; gap: 10px; background: #fff; padding: 5px 15px; border-radius: 50px; border: 1px solid #fed7aa; }
         .judge-item { text-align: center; padding: 0 10px; border-right: 1px solid #ddd; }
         .judge-item:last-child { border: none; }
         .judge-lbl { font-size: 0.7rem; color: var(--gray); font-weight: bold; display: block; }
         .judge-val { font-weight: 700; font-size: 0.9rem; }
+        .btn-portal { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.3); }
 
         /* CONTROLS */
-        .toolbar { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid #e5e7eb; }
+        .toolbar { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.98); padding: 10px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid #e5e7eb; }
         
         .tabs { display: flex; background: #f3f4f6; padding: 4px; border-radius: 8px; }
         .tab { border: none; background: none; padding: 8px 16px; font-weight: 600; cursor: pointer; border-radius: 6px; color: var(--gray); }
         .tab.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        .search-box { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; flex-grow: 1; max-width: 400px; }
-        .search-type { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #ddd; cursor: pointer; }
-        .search-in { border: none; padding: 8px; width: 100%; outline: none; }
-        .btn-apply { background: var(--primary); color: white; border: none; padding: 0 15px; font-weight: 700; cursor: pointer; }
+        /* DROPDOWNS */
+        .drop-box { position: relative; }
+        .drop-btn { background: white; border: 1px solid #d1d5db; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; min-width: 140px; justify-content: space-between; font-size: 0.9rem; }
+        .drop-content { position: absolute; top: 110%; left: 0; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 280px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .drop-content.show { display: block; }
+        .drop-content.right { left: auto; right: 0; width: 200px; }
+
+        .dd-search { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px; font-size: 0.9rem; }
+        .fc-item { display: flex; align-items: center; padding: 6px; cursor: pointer; border-radius: 4px; font-size: 0.9rem; }
+        .fc-item:hover { background: #f9fafb; }
+        .fc-item input { margin-right: 8px; accent-color: var(--primary); transform: scale(1.1); }
+
+        /* SEARCH BAR */
+        .search-box { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; flex-grow: 1; max-width: 350px; position: relative; }
+        .search-type { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #ddd; cursor: pointer; font-size: 0.85rem; color: var(--text); }
+        .search-in { border: none; padding: 8px; width: 100%; outline: none; font-size: 0.9rem; }
+        .btn-apply { background: var(--primary); color: white; border: none; padding: 0 12px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
         
-        .sugg-list { position: absolute; background: white; border: 1px solid #ddd; width: 300px; max-height: 200px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 45px; }
-        .sugg-opt { padding: 8px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .sugg-list { position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; width: 100%; max-height: 200px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .sugg-opt { padding: 8px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 0.9rem; }
         .sugg-opt:hover { background: #fff7ed; }
 
-        .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; background: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        /* BUTTONS */
+        .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; background: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
         .btn:hover { background: #f9fafb; }
         .btn-live { background: #ecfccb; color: #365314; border-color: #bef264; }
         .btn-live.on { background: #22c55e; color: white; }
-        
+        .btn-live .dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; opacity: 0.6; }
+        .btn-live.on .dot { background: white; opacity: 1; animation: pulse 1s infinite; }
+        .btn-live.flash { animation: flashGreen 0.5s ease-in-out; }
+        @keyframes flashGreen { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* VIEWS */
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* CARDS */
         .card { background: white; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; border: 1px solid #e5e7eb; }
         .card-head { background: #fff7ed; padding: 10px 15px; font-weight: 700; color: var(--dark); border-bottom: 1px solid #fed7aa; display: flex; justify-content: space-between; }
-        
+        .hidden { display: none !important; }
+
+        /* TABLE */
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         th { background: #f9fafb; padding: 10px; text-align: center; color: var(--gray); font-size: 0.75rem; border-bottom: 2px solid #e5e7eb; }
         td { padding: 8px; text-align: center; border-bottom: 1px solid #f3f4f6; }
@@ -61,43 +86,59 @@
         .s-id { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
         .s-name { display: block; font-weight: 700; font-size: 1rem; color: var(--text); }
         .s-coach { font-size: 0.8rem; color: var(--primary); }
-        
+        .s-meta-print { display: none; font-size: 0.8rem; color: #444; margin-top: 2px; }
+
         .sc-box { background: #fff; border: 1px solid #ddd; padding: 4px; border-radius: 4px; font-weight: bold; font-family: monospace; display: inline-block; width: 30px; margin: 0 1px; }
         .sc-j1 { border-color: #fed7aa; background: #fff7ed; color: #9a3412; }
         .sc-j2 { border-color: #bfdbfe; background: #eff6ff; color: #1e40af; }
         .sc-j3 { border-color: #bbf7d0; background: #f0fdf4; color: #166534; }
-        
         .grand { background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-weight: 900; }
 
-        /* PODIUM */
-        .podium { display: flex; align-items: flex-end; justify-content: center; height: 350px; gap: 15px; padding: 20px; }
+        /* JUDGMENT */
+        .podium { display: flex; align-items: flex-end; justify-content: center; height: 320px; gap: 10px; padding: 20px; margin-bottom: 20px; }
         .p-col { flex: 1; max-width: 250px; text-align: center; display: flex; flex-direction: column; justify-content: flex-end; }
-        .winner { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid #eee; margin-bottom: 10px; position: relative; }
-        .w-rank { font-size: 3rem; font-weight: 900; color: rgba(0,0,0,0.1); position: absolute; top: 0; right: 10px; line-height: 1; }
-        .w-score { font-size: 1.8rem; font-weight: 900; color: var(--primary); }
-        .bar { width: 100%; border-radius: 8px 8px 0 0; color: white; font-weight: 900; font-size: 2rem; padding-bottom: 10px; display: flex; justify-content: center; align-items: flex-end; }
+        .winner { background: white; padding: 10px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 1px solid #eee; margin-bottom: 8px; position: relative; }
+        .w-rank { font-size: 2rem; font-weight: 900; color: rgba(0,0,0,0.1); position: absolute; top: 0; right: 10px; line-height: 1; }
+        .w-score { font-size: 1.5rem; font-weight: 900; color: var(--primary); }
+        .bar { width: 100%; border-radius: 8px 8px 0 0; color: white; font-weight: 900; font-size: 2rem; padding-bottom: 5px; display: flex; justify-content: center; align-items: flex-end; }
         
-        .p1 .bar { height: 200px; background: var(--gold); } .p1 .winner { border: 2px solid var(--gold); transform: scale(1.1); z-index: 2; }
-        .p2 .bar { height: 150px; background: var(--silver); } .p2 .winner { border: 2px solid var(--silver); }
-        .p3 .bar { height: 100px; background: var(--bronze); } .p3 .winner { border: 2px solid var(--bronze); }
+        .p1 .bar { height: 180px; background: var(--gold); } .p1 .winner { border: 2px solid var(--gold); transform: scale(1.1); z-index: 2; }
+        .p2 .bar { height: 130px; background: var(--silver); } .p2 .winner { border: 2px solid var(--silver); }
+        .p3 .bar { height: 90px; background: var(--bronze); } .p3 .winner { border: 2px solid var(--bronze); }
 
+        .rank-row { display: flex; padding: 10px 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
+        .r-idx { font-weight: 900; font-size: 1.2rem; width: 30px; text-align: center; color: #ddd; }
+        .r-1 .r-idx { color: var(--gold); } .r-2 .r-idx { color: var(--silver); } .r-3 .r-idx { color: var(--bronze); }
+        .tie-reason { font-size: 0.75rem; color: #d97706; background: #fff7ed; padding: 2px 6px; border-radius: 4px; margin-left: 8px; white-space: nowrap; }
+
+        /* PRINT & FOOTER */
+        footer { text-align: center; padding: 20px; margin-top: auto; border-top: 1px solid #eee; color: #999; font-size: 0.8rem; }
+        .badge-pw { position: fixed; bottom: 10px; right: 10px; background: rgba(255,255,255,0.8); border: 1px solid #ddd; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; color: #888; text-decoration: none; z-index: 999; }
+        
+        .print-only { display: none; }
         @media print {
             body { background: white; padding: 0; }
-            header, .toolbar, footer { display: none !important; }
+            header, .toolbar, footer, .badge-pw { display: none !important; }
             .section { display: block !important; }
-            .card { box-shadow: none; border: 1px solid #000; break-inside: avoid; }
+            .print-only { display: block; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; }
+            .card { box-shadow: none; border: 1px solid #000; break-inside: avoid; margin-bottom: 20px; }
             .card-head { background: #eee !important; color: black !important; border-bottom: 1px solid #000; }
             
             body.print-list .score-col, body.print-list .grand-col { display: none !important; }
             body.print-list .col-left { width: 100%; border: none; }
             body.print-list .sc-box { display: none; }
-            
             body.print-report .sc-box { border: none !important; background: none !important; color: black !important; }
             body.print-report .grand { background: none !important; color: black !important; border: 2px solid black; }
+            .s-meta-print { display: block !important; }
         }
     </style>
 </head>
 <body>
+
+<div class="print-only">
+    <h1 id="pTitle">Competition Report</h1>
+    <p>Report Generated: <span id="pDate"></span></p>
+</div>
 
 <div class="container">
     <header>
@@ -108,10 +149,13 @@
                 <small>Championship Management System</small>
             </div>
         </div>
-        <div class="judges-panel">
-            <div class="judge-item"><span class="judge-lbl">J1</span><span class="judge-val" id="j1">...</span></div>
-            <div class="judge-item"><span class="judge-lbl">J2</span><span class="judge-val" id="j2">...</span></div>
-            <div class="judge-item"><span class="judge-lbl">J3</span><span class="judge-val" id="j3">...</span></div>
+        <div class="header-right">
+            <div class="judges-panel">
+                <div class="judge-item"><span class="judge-lbl">J1</span><span class="judge-val" id="j1">...</span></div>
+                <div class="judge-item"><span class="judge-lbl">J2</span><span class="judge-val" id="j2">...</span></div>
+                <div class="judge-item"><span class="judge-lbl">J3</span><span class="judge-val" id="j3">...</span></div>
+            </div>
+            <a href="competition-2026-judegs.html" class="btn-portal">👨‍⚖️ Portal</a>
         </div>
     </header>
 
@@ -121,28 +165,47 @@
             <button class="tab" onclick="setTab('judgment', this)">Judgment</button>
         </div>
 
+        <div class="drop-box">
+            <button class="drop-btn" onclick="document.getElementById('grpDrop').classList.toggle('show')">
+                <span id="grpTxt">All Groups</span> ▼
+            </button>
+            <div id="grpDrop" class="drop-content">
+                <input type="text" class="dd-search" placeholder="Search Groups..." onkeyup="filterGrpList(this.value)">
+                <div class="fc-item" onclick="toggleAllGrp()"><input type="checkbox" id="cbAll" checked> <b>Select All</b></div>
+                <div id="grpList"></div>
+            </div>
+        </div>
+
         <div class="search-box">
             <select class="search-type" id="filterType">
                 <option value="coach">Coach</option>
                 <option value="track">Track No</option>
             </select>
-            <input type="text" class="search-in" id="filterIn" placeholder="Type to search..." onkeyup="showSugg(this.value)">
+            <input type="text" class="search-in" id="filterIn" placeholder="Search..." onkeyup="showSugg(this.value)">
             <button class="btn-apply" onclick="applyFilter()">Apply</button>
+            <div id="suggList" class="sugg-list"></div>
         </div>
-        <div id="suggList" class="sugg-list"></div>
 
         <button class="btn" onclick="fetchCandidates(true)">🔄 Candidates</button>
         <button class="btn" onclick="fetchMarks(true)">🔄 Marks</button>
-        <button class="btn btn-live" id="btnLive" onclick="toggleLive()">🔴 <span id="txtLive">OFFLINE</span></button>
+        <button class="btn btn-live" id="btnLive" onclick="toggleLive()">
+            <div class="dot"></div> <span id="txtLive">OFFLINE</span>
+        </button>
         
-        <div style="margin-left:auto; display:flex; gap:5px;">
-            <button class="btn btn-print" onclick="printPage('report')">🖨️ Report</button>
-            <button class="btn" onclick="printPage('list')">📋 List</button>
+        <div class="drop-box" style="margin-left:auto;">
+            <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
+                🖨️ Actions ▼
+            </button>
+            <div id="printDrop" class="drop-content right">
+                <div class="fc-item" onclick="printPage('report')">🖨️ Report (Print)</div>
+                <div class="fc-item" onclick="printPage('list')">📋 List (Print)</div>
+                <div class="fc-item" onclick="exportExcel('results')">📥 Excel (Results)</div>
+                <div class="fc-item" onclick="exportExcel('list')">📥 Excel (List)</div>
+            </div>
         </div>
     </div>
 
     <div id="view-live" class="section active"></div>
-
     <div id="view-judgment" class="section"></div>
 </div>
 
@@ -154,20 +217,19 @@
     // --- CONFIGURATION ---
     const STATIC_API = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
     const DYNAMIC_API = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
-    
-    // DIRECT DRIVE LINK (Note: If this fails due to CORS, use fallback below)
-    const JUDGE_LINK = "https://drive.google.com/uc?export=download&id=1LRffTqzOgQwnBAwFqt1dSa-UmT7r1gzx";
 
     // --- STATE ---
     let students = [], marks = {}, divisions = {};
-    let coachList = new Set();
+    let groups = [], selGroups = new Set(['ALL']), coachList = new Set();
     let isLive = false, liveTimer = null;
     let activeFilter = { type: 'none', val: '' };
 
     window.onload = () => {
+        document.getElementById('pDate').innerText = new Date().toLocaleString();
         fetchJudges();
         fetchCandidates();
         document.addEventListener('click', e => {
+            if (!e.target.closest('.drop-box')) document.querySelectorAll('.drop-content').forEach(d => d.classList.remove('show'));
             if (!e.target.closest('.search-box')) document.getElementById('suggList').style.display = 'none';
         });
     };
@@ -175,38 +237,29 @@
     // --- 1. FETCHING ---
     async function fetchJudges() {
         try {
-            const res = await fetch(JUDGE_LINK);
+            const res = await fetch(`${STATIC_API}?type=judges`);
             const d = await res.json();
-            renderJudges(d);
-        } catch (e) {
-            console.warn("Direct Drive Fetch Failed (CORS). Using Fallback.");
-            // FALLBACK DATA (Uncomment if needed)
-            
-            const d = [
-              { "name": "Gourab Tripathi", "num": "1" },
-              { "name": "Bidisha Dey", "num": "2" },
-              { "name": "Deep Jana", "num": "3" }
-            ];
-            renderJudges(d);
-            
-        }
-    }
-
-    function renderJudges(d) {
-        const j1 = d.find(x => String(x.num) === "1");
-        const j2 = d.find(x => String(x.num) === "2");
-        const j3 = d.find(x => String(x.num) === "3");
-        document.getElementById('j1').innerText = j1?.name || "-";
-        document.getElementById('j2').innerText = j2?.name || "-";
-        document.getElementById('j3').innerText = j3?.name || "-";
+            const j1 = d.find(x => String(x.num) === "1");
+            const j2 = d.find(x => String(x.num) === "2");
+            const j3 = d.find(x => String(x.num) === "3");
+            document.getElementById('j1').innerText = j1?.name || "-";
+            document.getElementById('j2').innerText = j2?.name || "-";
+            document.getElementById('j3').innerText = j3?.name || "-";
+        } catch (e) { console.warn("Judge Fetch Error", e); }
     }
 
     async function fetchCandidates(manual=false) {
         try {
             const res = await fetch(`${STATIC_API}?type=students`);
             students = await res.json();
+            let grpSet = new Set();
             coachList.clear();
-            students.forEach(s => { if(s["COACH NAME"]) coachList.add(s["COACH NAME"]); });
+            students.forEach(s => { 
+                grpSet.add(`${s.GROUP} - ${s.SEX}`);
+                if(s["COACH NAME"]) coachList.add(s["COACH NAME"]); 
+            });
+            groups = Array.from(grpSet).sort();
+            updateGroupFilter();
             processData(); 
             if(manual) alert("Candidates Refreshed!");
             fetchMarks();
@@ -224,6 +277,10 @@
             });
             updateValues(); 
             if(manual) alert("Marks Updated!");
+            if(isLive) {
+                const b = document.getElementById('btnLive');
+                b.classList.add('flash'); setTimeout(()=>b.classList.remove('flash'), 1000);
+            }
         } catch(e) { console.error(e); }
     }
 
@@ -269,6 +326,12 @@
         live.innerHTML = ""; judge.innerHTML = "";
 
         Object.keys(divisions).sort().forEach(divName => {
+            const baseGroup = divName.split(" - Division")[0];
+            const divId = divName.replace(/[^a-zA-Z0-9]/g, '');
+            
+            let showGroup = (selGroups.has('ALL') || selGroups.has(baseGroup));
+            if (!showGroup) return;
+
             const athletes = divisions[divName];
             let visibleCount = 0;
 
@@ -286,7 +349,7 @@
                         <span class="s-id">${id}</span>
                         <span class="s-name">${s["NAME OF THE ATHLETES"]}</span>
                         <span class="s-coach">${s["COACH NAME"]}</span>
-                        <div style="font-size:0.8rem; color:#666;">Age: ${s["AGE"]} | ${s["CENTER NAME"]}</div>
+                        <div class="s-meta-print">📍 ${s["CENTER NAME"]} | Age: ${s["AGE"]} | ${s["GROUP"]}</div>
                     </td>
                     ${cols(id, 1)} ${cols(id, 2)} ${cols(id, 3)} ${cols(id, "OPTIONAL")}
                     <td class="score-col tot" id="t-${id}-1">-</td>
@@ -303,16 +366,17 @@
                         <div style="overflow-x:auto"><table>
                             <thead><tr>
                                 <th class="col-left">Athlete Details</th>
-                                <th class="score-col">Asana 1</th><th class="score-col">Asana 2</th><th class="score-col">Asana 3</th><th class="score-col">Opt</th>
+                                <th class="score-col">A1</th><th class="score-col">A2</th><th class="score-col">A3</th><th class="score-col">Opt</th>
                                 <th class="score-col">J1</th><th class="score-col">J2</th><th class="score-col">J3</th><th class="grand-col">Total</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
                         </table></div>
                     </div>`;
                 
-                judge.innerHTML += `<div id="podium-${divName.replace(/[^a-zA-Z0-9]/g,'')}"></div>`;
+                judge.innerHTML += `<div id="podium-${divId}"></div>`;
             }
         });
+        if(Object.keys(marks).length > 0) updateValues();
     }
 
     function cols(id, n) {
@@ -324,10 +388,11 @@
         </td>`;
     }
 
-    // --- 4. UPDATES ---
     function updateValues() {
         Object.keys(divisions).forEach(divName => {
+            const divId = divName.replace(/[^a-zA-Z0-9]/g, '');
             const athletes = divisions[divName];
+            
             athletes.forEach(s => {
                 const id = s["TRACK NO"];
                 const sc = marks[id] || {};
@@ -342,50 +407,163 @@
                 });
 
                 setTxt(`t-${id}-1`, t1); setTxt(`t-${id}-2`, t2); setTxt(`t-${id}-3`, t3);
-                let g = t1+t2+t3;
-                setTxt(`t-${id}-all`, Math.round(g));
+                let g = Math.round(t1+t2+t3);
+                setTxt(`t-${id}-all`, g);
                 s.score = { grand: g, j1: t1, j2: t2 };
             });
-            renderPodium(divName, athletes);
+            renderJudgment(divName, divId, athletes);
         });
     }
 
-    function setTxt(id, v) { const e = document.getElementById(id); if(e) e.innerText = v; }
+    function renderJudgment(divName, divId, list) {
+        const div = document.getElementById(`podium-${divId}`);
+        if(!div) return;
 
-    function renderPodium(divName, list) {
         let sorted = [...list].sort((a,b) => (b.score?.grand||0)-(a.score?.grand||0) || (b.score?.j1||0)-(a.score?.j1||0));
         let top3 = sorted.slice(0,3);
-        let pid = divName.replace(/[^a-zA-Z0-9]/g,'');
-        let div = document.getElementById(`podium-${pid}`);
-        if(!div) return;
+
+        let tableHtml = sorted.map((s, i) => {
+            let rank = i+1;
+            let rowClass = rank <= 3 ? `r-${rank}` : '';
+            let tieMsg = "";
+            if (i > 0 && sorted[i-1].score.grand === s.score.grand) {
+                let p = sorted[i-1].score, c = s.score;
+                if (p.j1 !== c.j1) tieMsg = `⚠️ J1 (${c.j1} vs ${p.j1})`;
+                else if (p.j2 !== c.j2) tieMsg = `⚠️ J2 (${c.j2} vs ${p.j2})`;
+                else tieMsg = `🤝 Tie`;
+            }
+
+            return `<tr class="${rowClass}">
+                <td class="r-pos">${rank}</td>
+                <td>
+                    <b>${s["NAME OF THE ATHLETES"]}</b>
+                    <div style="font-size:0.8rem;color:#666">${s["COACH NAME"]} | 🆔 ${s["TRACK NO"]}</div>
+                </td>
+                <td style="text-align:right;">
+                    <span style="font-weight:900;color:var(--primary);font-size:1.1rem">${s.score.grand}</span>
+                    <span class="tie-reason">${tieMsg}</span>
+                </td>
+            </tr>`;
+        }).join('');
 
         div.innerHTML = `
             <div class="card">
                 <div class="card-head">🏆 ${divName} Results</div>
                 <div class="podium">
-                    <div class="p-col p2">${winHtml(top3[1], 2, 'silver')}</div>
-                    <div class="p-col p1">${winHtml(top3[0], 1, 'gold')}</div>
-                    <div class="p-col p3">${winHtml(top3[2], 3, 'bronze')}</div>
+                    <div class="p-col p2">${winHtml(top3[1], 2)}</div>
+                    <div class="p-col p1">${winHtml(top3[0], 1)}</div>
+                    <div class="p-col p3">${winHtml(top3[2], 3)}</div>
+                </div>
+                <div style="padding:0 20px 20px;">
+                    <table class="rank-table">
+                        <thead><tr><th>Rank</th><th>Athlete</th><th style="text-align:right">Total</th></tr></thead>
+                        <tbody>${tableHtml}</tbody>
+                    </table>
                 </div>
             </div>`;
     }
 
-    function winHtml(s, rank, color) {
+    function winHtml(s, rank) {
         if(!s) return '';
+        let medal = rank===1 ? '🥇' : rank===2 ? '🥈' : '🥉';
         return `<div class="winner">
             <div class="w-rank">${rank}</div>
             <strong>${s["NAME OF THE ATHLETES"]}</strong><br>
             <small>${s["COACH NAME"]}</small>
-            <div class="w-score">${Math.round(s.score?.grand||0)}</div>
-        </div><div class="bar"></div>`;
+            <div class="w-score">${s.score?.grand||0}</div>
+        </div><div class="bar">${medal}</div>`;
     }
 
-    // --- 5. SEARCH & UTILS ---
+    // --- CSV EXPORT ---
+    function exportExcel(mode) {
+        let csv = [];
+        // Header
+        if(mode === 'results') {
+            csv.push(['Division', 'Rank', 'Track No', 'Name', 'Coach', 'Center', 'Asana 1', 'Asana 2', 'Asana 3', 'Optional', 'J1 Total', 'J2 Total', 'J3 Total', 'Grand Total']);
+        } else {
+            csv.push(['Division', 'Track No', 'Name', 'Coach', 'Center', 'Age Group', 'Sex', 'Age']);
+        }
+
+        Object.keys(divisions).sort().forEach(divName => {
+            let athletes = divisions[divName];
+            
+            // Sort if results, otherwise original order
+            if(mode === 'results') {
+                athletes = [...athletes].sort((a,b) => (b.score?.grand||0)-(a.score?.grand||0));
+            }
+
+            athletes.forEach((s, idx) => {
+                if(mode === 'results') {
+                    const id = s["TRACK NO"];
+                    const sc = marks[id] || {};
+                    // Quick sum for export
+                    let t1=0,t2=0,t3=0, gt=0;
+                    // (Simplified logic: grab stored stats or recalc)
+                    gt = s.score?.grand || 0;
+                    t1 = s.score?.j1 || 0;
+                    t2 = s.score?.j2 || 0;
+                    t3 = s.score?.j3 || 0;
+                    
+                    csv.push([
+                        divName, idx+1, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"],
+                        '-', '-', '-', '-', // Asana breakups hard to flatten, skipping for summary
+                        t1, t2, t3, gt
+                    ]);
+                } else {
+                    csv.push([
+                        divName, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"], 
+                        s["GROUP"], s["SEX"], s["AGE"]
+                    ]);
+                }
+            });
+        });
+
+        const blob = new Blob([csv.map(r => r.map(c => `"${c}"`).join(',')).join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `YogaPro_${mode}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+    }
+
+    // --- UTILS ---
+    function setTxt(id, v) { const e = document.getElementById(id); if(e) e.innerText = v; }
+    
+    function updateGroupFilter() {
+        const list = document.getElementById('grpList');
+        list.innerHTML = groups.map(g => `<div class="fc-item" onclick="togG('${g}')"><input type="checkbox" checked> ${g}</div>`).join('');
+    }
+    
+    function toggleAllGrp() {
+        const chk = document.getElementById('cbAll').checked;
+        selGroups = chk ? new Set(['ALL']) : new Set();
+        document.querySelectorAll('#grpList input').forEach(i => i.checked = chk);
+        document.getElementById('grpTxt').innerText = chk ? "All Groups" : "Select Groups";
+        renderAll();
+    }
+
+    function togG(g) {
+        const items = document.querySelectorAll('#grpList input');
+        if(selGroups.has('ALL')) selGroups = new Set(groups);
+        selGroups.has(g) ? selGroups.delete(g) : selGroups.add(g);
+        let target = [...items].find((inp, i) => groups[i] === g);
+        if(target) target.checked = selGroups.has(g);
+        if(selGroups.size === groups.length) { selGroups = new Set(['ALL']); document.getElementById('cbAll').checked = true; }
+        else document.getElementById('cbAll').checked = false;
+        document.getElementById('grpTxt').innerText = selGroups.has('ALL') ? "All Groups" : `${selGroups.size} Selected`;
+        renderAll();
+    }
+
+    function filterGrpList(val) {
+        document.querySelectorAll('#grpList .fc-item').forEach(el => {
+            el.style.display = el.innerText.toLowerCase().includes(val.toLowerCase()) ? 'flex' : 'none';
+        });
+    }
+
     function showSugg(val) {
         const type = document.getElementById('filterType').value;
         const box = document.getElementById('suggList');
         if(type !== 'coach' || val.length < 1) { box.style.display = 'none'; return; }
-        
         const m = Array.from(coachList).filter(c => c.toLowerCase().includes(val.toLowerCase()));
         box.innerHTML = m.map(c => `<div class="sugg-opt" onclick="selSugg('${c}')">${c}</div>`).join('');
         box.style.display = m.length ? 'block' : 'none';
@@ -413,6 +591,7 @@
 
     function printPage(mode) {
         document.body.className = (mode === 'list') ? 'print-list' : 'print-report';
+        document.getElementById('pTitle').innerText = (mode === 'list') ? 'Organizer Name List' : 'Competition Results';
         window.print();
         document.body.className = '';
     }
