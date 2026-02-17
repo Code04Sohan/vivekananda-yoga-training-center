@@ -6,7 +6,7 @@
     <title>YOGA PRO - Competition Manager</title>
     <style>
         :root {
-            --primary: #ea580c; --primary-dark: #c2410c; --accent: #4338ca;
+            --primary: #ea580c; --primary-dark: #c2410c;
             --bg-body: #fff7ed; --surface: #ffffff;
             --j1: #fff7ed; --j2: #eff6ff; --j3: #f0fdf4;
             --gold: #d97706; --silver: #64748b; --bronze: #b45309;
@@ -39,7 +39,7 @@
         /* Dropdowns */
         .drop-box { position: relative; }
         .drop-btn { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; min-width: 160px; justify-content: space-between; }
-        .drop-content { position: absolute; top: 110%; right: 0; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 250px; max-height: 300px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: var(--shadow); }
+        .drop-content { position: absolute; top: 110%; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 300px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: var(--shadow); }
         .drop-content.show { display: block; }
         
         .dd-search { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px; font-size: 0.9rem; }
@@ -65,10 +65,8 @@
         .btn-live.flash { animation: flashGreen 0.5s ease-in-out; }
         @keyframes flashGreen { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
 
-        /* MAIN CONTENT */
-        .view { display: none; }
-        .view.active { display: block; animation: fadeUp 0.3s; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* VIEW TOGGLE - FAST FILTERING */
+        .hidden { display: none !important; }
 
         /* DIVISIONS */
         .div-card { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 25px; border-left: 5px solid var(--primary); }
@@ -86,9 +84,7 @@
         .s-id { font-size: 0.75rem; background: #f3f4f6; padding: 1px 5px; border-radius: 4px; width: fit-content; font-weight: 600; color: #666; }
         .s-nm { font-size: 1rem; font-weight: 700; color: var(--text-main); }
         .s-ch { font-size: 0.8rem; color: var(--primary); font-weight: 600; }
-        
-        /* Extra info hidden by default on screen */
-        .s-meta-print { display: none; font-size: 0.8rem; color: #444; margin-top: 2px; }
+        .s-meta-print { display: none; font-size: 0.8rem; color: #444; margin-top: 2px; } /* Hidden on screen */
 
         .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; min-width: 90px; }
         .sc-box { padding: 3px; border-radius: 4px; font-family: monospace; font-weight: 700; font-size: 0.9rem; }
@@ -110,7 +106,6 @@
         .w-det { font-size: 0.8rem; color: #666; }
         .w-sc { font-size: 1.5rem; font-weight: 900; color: var(--primary); margin-top: 5px; }
         .stand { width: 100%; border-radius: 8px 8px 0 0; color: rgba(255,255,255,0.8); font-weight: 900; font-size: 2.5rem; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 5px; }
-        
         .p1 .stand { height: 200px; background: linear-gradient(180deg, #f59e0b, #b45309); }
         .p2 .stand { height: 150px; background: linear-gradient(180deg, #94a3b8, #475569); }
         .p3 .stand { height: 100px; background: linear-gradient(180deg, #d97706, #78350f); }
@@ -139,13 +134,13 @@
             th { background: #ddd !important; color: black !important; border: 1px solid #000; padding: 4px; font-size: 9pt; }
             td { border: 1px solid #000; padding: 4px; color: black; font-size: 10pt; }
             .col-stu { position: static; border-right: 1px solid #000; width: 30%; }
-            .s-meta-print { display: block !important; }
+            .s-meta-print { display: block !important; } /* Show extra details */
             
-            /* Remove Score Graphics for Print */
-            .bg-j1, .bg-j2, .bg-j3, .tot-j1, .tot-j2, .tot-j3, .grand { background: none !important; color: black !important; border: none; font-weight: normal; }
-            .grand { font-weight: bold; }
+            /* Clean Print (Results) */
+            body.print-res .bg-j1, body.print-res .bg-j2, body.print-res .bg-j3, body.print-res .tot-j1, body.print-res .tot-j2, body.print-res .tot-j3, body.print-res .grand { background: none !important; color: black !important; border: none; font-weight: normal; }
+            body.print-res .grand { font-weight: bold; }
 
-            /* --- ORGANIZER LIST MODE (Hides scores) --- */
+            /* Organizer Print (Name List Only) */
             body.print-names .score-col, 
             body.print-names .total-col, 
             body.print-names .grand-col { display: none !important; }
@@ -192,7 +187,7 @@
             <button class="drop-btn" onclick="document.getElementById('grpDrop').classList.toggle('show')">
                 <span id="grpTxt">All Groups</span> ▼
             </button>
-            <div id="grpDrop" class="drop-content filter-content">
+            <div id="grpDrop" class="drop-content">
                 <input type="text" class="dd-search" placeholder="Search Group..." onkeyup="filterGrpList(this.value)">
                 <div class="fc-item" onclick="toggleAllGrp()"><input type="checkbox" id="cbAll" checked> <b>Select All</b></div>
                 <div id="grpList"></div>
@@ -219,7 +214,7 @@
             <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
                 🖨️ Print Menu ▼
             </button>
-            <div id="printDrop" class="drop-content">
+            <div id="printDrop" class="drop-content" style="width:200px; right:0;">
                 <div class="fc-item" onclick="printMode('res')">📝 Results Report</div>
                 <div class="fc-item" onclick="printMode('names')">📋 Name List (Organizer)</div>
             </div>
@@ -236,7 +231,8 @@
 
 <script>
     // --- CONFIGURATION ---
-    const API_URL = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
+    const STATIC_API_URL = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
+    const MARKS_API_URL = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
     
     // --- STATE ---
     let students = [], marksMap = {}, groups = [], selGroups = new Set(['ALL']);
@@ -258,20 +254,23 @@
     // --- 1. FETCHING ---
     async function fetchJudges() {
         try {
-            const res = await fetch(`${API_URL}?type=judges`);
-            const d = await res.json();
-            // Map num "1" to UI id "j1n"
-            const mapJudge = (num, eid) => {
-                const j = d.find(x => String(x.num) === String(num));
-                if(j) document.getElementById(eid).innerText = j.name;
-            };
-            mapJudge(1, 'j1n'); mapJudge(2, 'j2n'); mapJudge(3, 'j3n');
+            const res = await fetch(`${STATIC_API_URL}?type=judges`);
+            let d = await res.json();
+            // Robust parsing if data comes as string
+            if (typeof d === 'string') d = JSON.parse(d);
+            
+            const j1 = d.find(x => String(x.num) === "1") || d[0];
+            const j2 = d.find(x => String(x.num) === "2") || d[1];
+            const j3 = d.find(x => String(x.num) === "3") || d[2];
+            document.getElementById('j1n').innerText = j1?.name || "Judge 1";
+            document.getElementById('j2n').innerText = j2?.name || "Judge 2";
+            document.getElementById('j3n').innerText = j3?.name || "Judge 3";
         } catch(e) { console.log("J Err", e); }
     }
 
     async function fetchStudents(manual=false) {
         try {
-            const res = await fetch(`${API_URL}?type=students`);
+            const res = await fetch(`${STATIC_API_URL}?type=students`);
             students = await res.json();
             processDivisions();
             if(manual) alert("Candidates Refreshed!");
@@ -281,7 +280,7 @@
 
     async function fetchMarks(manual=false) {
         try {
-            const res = await fetch(`${API_URL}?type=marks`);
+            const res = await fetch(`${MARKS_API_URL}?type=marks`);
             const data = await res.json();
             marksMap = {};
             data.forEach(row => {
@@ -346,31 +345,17 @@
         liveContainer.innerHTML = "";
         judgeContainer.innerHTML = "";
 
-        const sMode = document.getElementById('searchMode').value;
-        const sVal = document.getElementById('mainSearch').value.toLowerCase().trim();
-
         Object.keys(divisions).sort().forEach(divName => {
+            // CSS Hiding Logic for Filter
             const baseGroup = divName.split(" - Division")[0];
-            if(!selGroups.has('ALL') && !selGroups.has(baseGroup)) return;
+            const divId = divName.replace(/[^a-zA-Z0-9]/g, '');
+            const isHidden = (!selGroups.has('ALL') && !selGroups.has(baseGroup)) ? 'hidden' : '';
 
             const athletes = divisions[divName];
             
-            // Search Filtering
-            const filteredAthletes = athletes.filter(s => {
-                if(!sVal) return true;
-                const track = String(s["TRACK NO"]).toLowerCase().trim();
-                const center = String(s["CENTER NAME"] || "").toLowerCase();
-                
-                if(sMode === 'track') return track === sVal; // EXACT MATCH
-                if(sMode === 'center') return center.includes(sVal);
-                return true;
-            });
-
-            if(filteredAthletes.length === 0) return;
-
-            let rows = filteredAthletes.map(s => {
+            let rows = athletes.map(s => {
                 const id = s["TRACK NO"];
-                return `<tr>
+                return `<tr class="stu-row" data-track="${id}" data-center="${s['CENTER NAME']}">
                     <td class="col-stu">
                         <div class="stu-inf">
                             <span class="s-id">🆔 ${id}</span>
@@ -389,8 +374,8 @@
             }).join('');
 
             liveContainer.innerHTML += `
-                <div class="div-card">
-                    <div class="div-header"><span class="div-title">${divName}</span> <span>${filteredAthletes.length} Athletes</span></div>
+                <div class="div-card ${isHidden}" id="card-${divId}" data-grp="${baseGroup}">
+                    <div class="div-header"><span class="div-title">${divName}</span> <span>${athletes.length} Athletes</span></div>
                     <div class="t-wrap">
                         <table>
                             <thead><tr>
@@ -404,7 +389,7 @@
                     </div>
                 </div>`;
             
-            judgeContainer.innerHTML += `<div id="podium-${divName.replace(/[^a-zA-Z0-9]/g, '')}"></div>`;
+            judgeContainer.innerHTML += `<div id="podium-${divId}" class="${isHidden}"></div>`;
         });
     }
 
@@ -436,7 +421,7 @@
                 setTxt(`t-${id}-j1`, Math.round(tJ1));
                 setTxt(`t-${id}-j2`, Math.round(tJ2));
                 setTxt(`t-${id}-j3`, Math.round(tJ3));
-                setTxt(`t-${id}-grand`, Math.round(tJ1+tJ2+tJ3)); // No decimals
+                setTxt(`t-${id}-grand`, Math.round(tJ1+tJ2+tJ3));
 
                 s.stats = { j1: tJ1, j2: tJ2, j3: tJ3, grand: Math.round(tJ1+tJ2+tJ3) };
             });
@@ -481,7 +466,7 @@
         return `<div class="w-card"><div class="medal">${ico}</div><div class="w-nm">${s["NAME OF THE ATHLETES"]}</div><div class="w-det">${s["COACH NAME"]}</div><div class="w-sc">${s.stats?.grand || 0}</div></div><div class="stand">${rnk}</div>`;
     }
 
-    // --- UTILS ---
+    // --- UI HELPERS ---
     function switchTab(view, btn) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
         document.getElementById(`view-${view}`).classList.add('active');
@@ -500,12 +485,13 @@
         });
     }
 
+    // --- NEW FILTERING LOGIC (CSS Toggle) ---
     function toggleAllGrp() {
         const chk = document.getElementById('cbAll').checked;
         selGroups = chk ? new Set(['ALL']) : new Set();
         document.querySelectorAll('#grpList input').forEach(i => i.checked = chk);
         document.getElementById('grpTxt').innerText = chk ? "All Groups" : "Select Groups";
-        renderStructure();
+        applyFilter(); // Use applyFilter instead of renderStructure
     }
 
     function togG(g) {
@@ -527,26 +513,60 @@
         else document.getElementById('cbAll').checked = false;
         
         document.getElementById('grpTxt').innerText = selGroups.has('ALL') ? "All Groups" : `${selGroups.size} Selected`;
-        renderStructure();
+        applyFilter();
+    }
+
+    function applyFilter() {
+        // Fast CSS Hiding
+        document.querySelectorAll('.div-card').forEach(card => {
+            const grp = card.getAttribute('data-grp');
+            if (selGroups.has('ALL') || selGroups.has(grp)) {
+                card.classList.remove('hidden');
+                // Also show corresponding podium
+                const pid = card.id.replace('card-', 'podium-');
+                const p = document.getElementById(pid);
+                if(p) p.classList.remove('hidden');
+            } else {
+                card.classList.add('hidden');
+                const pid = card.id.replace('card-', 'podium-');
+                const p = document.getElementById(pid);
+                if(p) p.classList.add('hidden');
+            }
+        });
     }
 
     function handleSearch(val) {
         const mode = document.getElementById('searchMode').value;
         const box = document.getElementById('suggBox');
         
+        // Suggestion Logic for Center
         if(mode === 'center' && val) {
             const m = Array.from(centerList).filter(c => c.toLowerCase().includes(val.toLowerCase()));
             box.innerHTML = m.map(c => `<div class="sugg-item" onclick="setSearch('${c}')">${c}</div>`).join('');
             box.style.display = m.length ? 'block' : 'none';
         } else {
             box.style.display = 'none';
-            renderStructure();
         }
+
+        // Exact Filtering Logic
+        const rows = document.querySelectorAll('.stu-row');
+        rows.forEach(r => {
+            const t = r.getAttribute('data-track').toLowerCase();
+            const c = r.getAttribute('data-center').toLowerCase();
+            let vis = true;
+            
+            if (val) {
+                if (mode === 'track') vis = (t === val.toLowerCase()); // Exact Match
+                if (mode === 'center') vis = c.includes(val.toLowerCase());
+            }
+            r.style.display = vis ? '' : 'none';
+        });
     }
+
     function setSearch(v) {
         document.getElementById('mainSearch').value = v;
         document.getElementById('suggBox').style.display = 'none';
-        renderStructure();
+        handleSearch(v);
     }
 
     function toggleLive() {
@@ -554,7 +574,7 @@
         const btn = document.getElementById('liveBtn');
         if(isLive) {
             btn.classList.add('active'); document.getElementById('liveTxt').innerText = "LIVE ON";
-            timer = setInterval(() => fetchMarks(), 30000); // 30 Seconds
+            timer = setInterval(() => fetchMarks(), 30000); // 30s
         } else {
             btn.classList.remove('active'); document.getElementById('liveTxt').innerText = "OFFLINE";
             clearInterval(timer);
