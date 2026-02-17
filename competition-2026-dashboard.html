@@ -3,594 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOGA PRO - Competition Manager</title>
+    <title>YOGA PRO 2026</title>
     <style>
         :root {
-            --primary: #ea580c; --primary-dark: #c2410c;
-            --bg-body: #fff7ed; --surface: #ffffff;
-            --j1: #fff7ed; --j2: #eff6ff; --j3: #f0fdf4;
-            --gold: #d97706; --silver: #64748b; --bronze: #b45309;
-            --text-main: #1f2937; --text-light: #6b7280;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --primary: #ea580c; --dark: #c2410c; --bg: #fff7ed; --surface: #ffffff;
+            --text: #1f2937; --gray: #6b7280;
+            --gold: #f59e0b; --silver: #64748b; --bronze: #b45309;
         }
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
-        .container { max-width: 1800px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; padding-bottom: 60px; }
-
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 20px; min-height: 100vh; }
+        
         /* HEADER */
-        header { background: var(--surface); padding: 1rem 2rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 1.5rem; border-bottom: 4px solid var(--primary); flex-wrap: wrap; gap: 15px; }
+        header { background: var(--surface); padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-bottom: 4px solid var(--primary); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .brand { display: flex; align-items: center; gap: 15px; }
-        .logo { width: 60px; height: 60px; border-radius: 12px; object-fit: cover; box-shadow: 0 0 0 2px var(--primary); padding: 2px; }
-        .brand h1 { margin: 0; font-size: 1.8rem; color: var(--primary-dark); letter-spacing: -0.5px; }
-        .judges-box { display: flex; gap: 10px; background: #fff; padding: 8px; border-radius: 50px; border: 1px solid #fed7aa; align-items: center; }
-        .judge-pill { padding: 5px 15px; text-align: center; border-right: 1px solid #e5e7eb; }
-        .judge-pill:last-child { border-right: none; }
-        .jp-lbl { font-size: 0.65rem; color: var(--text-light); font-weight: 800; display: block; }
-        .jp-val { font-weight: 700; font-size: 0.9rem; }
-        .btn-portal { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.8rem; text-decoration: none; display: inline-block; }
+        .brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); }
+        .brand h1 { margin: 0; font-size: 1.5rem; color: var(--dark); text-transform: uppercase; }
+        
+        .judges-panel { display: flex; gap: 10px; background: #fff; padding: 5px 15px; border-radius: 50px; border: 1px solid #fed7aa; }
+        .judge-item { text-align: center; padding: 0 10px; border-right: 1px solid #ddd; }
+        .judge-item:last-child { border: none; }
+        .judge-lbl { font-size: 0.7rem; color: var(--gray); font-weight: bold; display: block; }
+        .judge-val { font-weight: 700; font-size: 0.9rem; }
 
         /* CONTROLS */
-        .controls { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 16px; box-shadow: var(--shadow); display: flex; gap: 15px; align-items: center; flex-wrap: wrap; margin-bottom: 20px; border: 1px solid #fed7aa; }
+        .toolbar { position: sticky; top: 10px; z-index: 100; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid #e5e7eb; }
         
-        .switch-box { display: flex; background: #f3f4f6; padding: 4px; border-radius: 8px; }
-        .sw-btn { border: none; background: transparent; padding: 8px 16px; border-radius: 6px; font-weight: 600; color: var(--text-light); cursor: pointer; }
-        .sw-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        
-        /* Dropdowns */
-        .drop-box { position: relative; }
-        .drop-btn { background: white; border: 1px solid #d1d5db; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; min-width: 160px; justify-content: space-between; }
-        .drop-content { position: absolute; top: 110%; background: white; border: 1px solid #d1d5db; border-radius: 8px; width: 300px; max-height: 400px; overflow-y: auto; display: none; padding: 10px; z-index: 200; box-shadow: var(--shadow); }
-        .drop-content.show { display: block; }
-        
-        .dd-search { width: 100%; padding: 8px; border: 1px solid #e5e7eb; border-radius: 6px; margin-bottom: 8px; font-size: 0.9rem; }
-        .fc-item { display: flex; align-items: center; padding: 5px; cursor: pointer; border-radius: 4px; }
-        .fc-item:hover { background: #f9fafb; }
-        .fc-item input { margin-right: 8px; accent-color: var(--primary); }
+        .tabs { display: flex; background: #f3f4f6; padding: 4px; border-radius: 8px; }
+        .tab { border: none; background: none; padding: 8px 16px; font-weight: 600; cursor: pointer; border-radius: 6px; color: var(--gray); }
+        .tab.active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-        /* Search Bar */
-        .search-wrapper { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; flex-grow: 1; max-width: 400px; position: relative; }
-        .search-mode { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #e5e7eb; color: var(--text-main); cursor: pointer; }
-        .search-input { border: none; padding: 8px 12px; width: 100%; font-size: 0.95rem; }
-        .sugg-box { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 5px; max-height: 250px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .sugg-item { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #f3f4f6; }
-        .sugg-item:hover { background: #fff7ed; color: var(--primary); }
-
-        .btn-refresh { background: white; border: 1px solid #d1d5db; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px; }
-        .btn-refresh:hover { background: #f9fafb; }
+        .search-box { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; flex-grow: 1; max-width: 400px; }
+        .search-type { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #ddd; cursor: pointer; }
+        .search-in { border: none; padding: 8px; width: 100%; outline: none; }
+        .btn-apply { background: var(--primary); color: white; border: none; padding: 0 15px; font-weight: 700; cursor: pointer; }
         
-        .btn-live { background: #ecfccb; color: #365314; border: 1px solid #bef264; padding: 8px 16px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-live.active { background: #22c55e; color: white; border-color: #16a34a; }
-        .dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; opacity: 0.5; }
-        .btn-live.active .dot { background: white; opacity: 1; animation: pulse 1s infinite; }
-        .btn-live.flash { animation: flashGreen 0.5s ease-in-out; }
-        @keyframes flashGreen { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+        .sugg-list { position: absolute; background: white; border: 1px solid #ddd; width: 300px; max-height: 200px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-top: 45px; }
+        .sugg-opt { padding: 8px; cursor: pointer; border-bottom: 1px solid #eee; }
+        .sugg-opt:hover { background: #fff7ed; }
 
-        /* VIEW TOGGLE - FAST FILTERING */
-        .hidden { display: none !important; }
-
-        /* DIVISIONS */
-        .div-card { background: white; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 25px; border-left: 5px solid var(--primary); }
-        .div-header { background: #fff7ed; padding: 10px 20px; border-bottom: 1px solid #fed7aa; display: flex; justify-content: space-between; align-items: center; }
-        .div-title { font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); text-transform: uppercase; }
+        .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; background: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .btn:hover { background: #f9fafb; }
+        .btn-live { background: #ecfccb; color: #365314; border-color: #bef264; }
+        .btn-live.on { background: #22c55e; color: white; }
         
-        /* TABLE */
-        .t-wrap { overflow-x: auto; }
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: white; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow: hidden; margin-bottom: 20px; border: 1px solid #e5e7eb; }
+        .card-head { background: #fff7ed; padding: 10px 15px; font-weight: 700; color: var(--dark); border-bottom: 1px solid #fed7aa; display: flex; justify-content: space-between; }
+        
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { background: #f9fafb; padding: 10px; text-align: center; font-weight: 700; color: var(--text-light); border-bottom: 2px solid #e5e7eb; white-space: nowrap; font-size: 0.75rem; text-transform: uppercase; }
-        td { padding: 8px; border-bottom: 1px solid #f3f4f6; text-align: center; vertical-align: middle; }
+        th { background: #f9fafb; padding: 10px; text-align: center; color: var(--gray); font-size: 0.75rem; border-bottom: 2px solid #e5e7eb; }
+        td { padding: 8px; text-align: center; border-bottom: 1px solid #f3f4f6; }
         
-        .col-stu { position: sticky; left: 0; background: white; z-index: 10; text-align: left; border-right: 2px solid #e5e7eb; min-width: 250px; padding: 8px 15px; }
-        .stu-inf { display: flex; flex-direction: column; gap: 2px; }
-        .s-id { font-size: 0.75rem; background: #f3f4f6; padding: 1px 5px; border-radius: 4px; width: fit-content; font-weight: 600; color: #666; }
-        .s-nm { font-size: 1rem; font-weight: 700; color: var(--text-main); }
-        .s-ch { font-size: 0.8rem; color: var(--primary); font-weight: 600; }
-        .s-meta-print { display: none; font-size: 0.8rem; color: #444; margin-top: 2px; } /* Hidden on screen */
-
-        .score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; min-width: 90px; }
-        .sc-box { padding: 3px; border-radius: 4px; font-family: monospace; font-weight: 700; font-size: 0.9rem; }
-        .bg-j1 { background: var(--j1); color: #9a3412; border: 1px solid #fed7aa; }
-        .bg-j2 { background: var(--j2); color: #1e40af; border: 1px solid #bfdbfe; }
-        .bg-j3 { background: var(--j3); color: #166534; border: 1px solid #bbf7d0; }
+        .col-left { text-align: left; padding-left: 15px; border-right: 2px solid #eee; width: 250px; }
+        .s-id { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .s-name { display: block; font-weight: 700; font-size: 1rem; color: var(--text); }
+        .s-coach { font-size: 0.8rem; color: var(--primary); }
         
-        .tot-j1 { background: var(--j1); font-weight: 700; color: var(--text-main); }
-        .tot-j2 { background: var(--j2); font-weight: 700; color: var(--text-main); }
-        .tot-j3 { background: var(--j3); font-weight: 700; color: var(--text-main); }
-        .grand { background: var(--primary); color: white; font-weight: 900; font-size: 1.1rem; border-radius: 4px; padding: 4px 8px; display: inline-block; }
+        .sc-box { background: #fff; border: 1px solid #ddd; padding: 4px; border-radius: 4px; font-weight: bold; font-family: monospace; display: inline-block; width: 30px; margin: 0 1px; }
+        .sc-j1 { border-color: #fed7aa; background: #fff7ed; color: #9a3412; }
+        .sc-j2 { border-color: #bfdbfe; background: #eff6ff; color: #1e40af; }
+        .sc-j3 { border-color: #bbf7d0; background: #f0fdf4; color: #166534; }
+        
+        .grand { background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-weight: 900; }
 
         /* PODIUM */
-        .podium-wrap { display: flex; justify-content: center; align-items: flex-end; gap: 10px; height: 350px; margin: 20px 0; }
-        .p-col { flex: 1; max-width: 300px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
-        .w-card { background: white; width: 100%; border-radius: 12px; padding: 15px; text-align: center; box-shadow: var(--shadow); border: 1px solid #e5e7eb; margin-bottom: 10px; position: relative; }
-        .medal { font-size: 2rem; position: absolute; top: -15px; left: 50%; transform: translateX(-50%); }
-        .w-nm { font-weight: 800; font-size: 1.1rem; margin-top: 10px; }
-        .w-det { font-size: 0.8rem; color: #666; }
-        .w-sc { font-size: 1.5rem; font-weight: 900; color: var(--primary); margin-top: 5px; }
-        .stand { width: 100%; border-radius: 8px 8px 0 0; color: rgba(255,255,255,0.8); font-weight: 900; font-size: 2.5rem; display: flex; justify-content: center; align-items: flex-end; padding-bottom: 5px; }
-        .p1 .stand { height: 200px; background: linear-gradient(180deg, #f59e0b, #b45309); }
-        .p2 .stand { height: 150px; background: linear-gradient(180deg, #94a3b8, #475569); }
-        .p3 .stand { height: 100px; background: linear-gradient(180deg, #d97706, #78350f); }
+        .podium { display: flex; align-items: flex-end; justify-content: center; height: 350px; gap: 15px; padding: 20px; }
+        .p-col { flex: 1; max-width: 250px; text-align: center; display: flex; flex-direction: column; justify-content: flex-end; }
+        .winner { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); border: 1px solid #eee; margin-bottom: 10px; position: relative; }
+        .w-rank { font-size: 3rem; font-weight: 900; color: rgba(0,0,0,0.1); position: absolute; top: 0; right: 10px; line-height: 1; }
+        .w-score { font-size: 1.8rem; font-weight: 900; color: var(--primary); }
+        .bar { width: 100%; border-radius: 8px 8px 0 0; color: white; font-weight: 900; font-size: 2rem; padding-bottom: 10px; display: flex; justify-content: center; align-items: flex-end; }
+        
+        .p1 .bar { height: 200px; background: var(--gold); } .p1 .winner { border: 2px solid var(--gold); transform: scale(1.1); z-index: 2; }
+        .p2 .bar { height: 150px; background: var(--silver); } .p2 .winner { border: 2px solid var(--silver); }
+        .p3 .bar { height: 100px; background: var(--bronze); } .p3 .winner { border: 2px solid var(--bronze); }
 
-        .rank-row { display: flex; padding: 10px 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
-        .r-idx { font-weight: 900; font-size: 1.2rem; width: 30px; text-align: center; color: #ddd; }
-        .r-1 .r-idx { color: var(--gold); } .r-2 .r-idx { color: var(--silver); } .r-3 .r-idx { color: var(--bronze); }
-
-        /* FOOTER */
-        footer { text-align: center; padding: 20px; margin-top: auto; border-top: 1px solid #eee; color: #999; font-size: 0.8rem; }
-        .badge-pw { position: fixed; bottom: 10px; right: 10px; background: rgba(255,255,255,0.8); border: 1px solid #ddd; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; color: #888; text-decoration: none; z-index: 999; }
-
-        /* PRINT CONFIG */
-        .print-head, .print-foot { display: none; }
         @media print {
-            @page { size: landscape; margin: 5mm; }
-            body { background: white; font-family: 'Segoe UI', sans-serif; -webkit-print-color-adjust: exact; }
-            .container { max-width: 100%; padding: 0; }
-            header, .controls, .badge-pw, #view-judgment { display: none !important; }
-            .print-head { display: block; text-align: center; border-bottom: 2px solid #000; margin-bottom: 10px; }
-            .print-head h1 { margin: 0; font-size: 20pt; }
-            .print-foot { display: block; position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 8pt; border-top: 1px solid #000; }
-            #view-live { display: block !important; }
-            .div-card { box-shadow: none; border: 1px solid #000; margin-bottom: 15px; break-inside: avoid; }
-            .div-header { background: #eee !important; color: black !important; border-bottom: 1px solid #000; padding: 5px; }
-            th { background: #ddd !important; color: black !important; border: 1px solid #000; padding: 4px; font-size: 9pt; }
-            td { border: 1px solid #000; padding: 4px; color: black; font-size: 10pt; }
-            .col-stu { position: static; border-right: 1px solid #000; width: 30%; }
-            .s-meta-print { display: block !important; } /* Show extra details */
+            body { background: white; padding: 0; }
+            header, .toolbar, footer { display: none !important; }
+            .section { display: block !important; }
+            .card { box-shadow: none; border: 1px solid #000; break-inside: avoid; }
+            .card-head { background: #eee !important; color: black !important; border-bottom: 1px solid #000; }
             
-            /* Clean Print (Results) */
-            body.print-res .bg-j1, body.print-res .bg-j2, body.print-res .bg-j3, body.print-res .tot-j1, body.print-res .tot-j2, body.print-res .tot-j3, body.print-res .grand { background: none !important; color: black !important; border: none; font-weight: normal; }
-            body.print-res .grand { font-weight: bold; }
-
-            /* Organizer Print (Name List Only) */
-            body.print-names .score-col, 
-            body.print-names .total-col, 
-            body.print-names .grand-col { display: none !important; }
+            body.print-list .score-col, body.print-list .grand-col { display: none !important; }
+            body.print-list .col-left { width: 100%; border: none; }
+            body.print-list .sc-box { display: none; }
             
-            body.print-names .col-stu { width: 100%; border: none; }
-            body.print-names table { border: 1px solid #000; }
-            body.print-names tr { border-bottom: 1px solid #ccc; }
-            body.print-names .s-nm { font-size: 12pt; }
-            body.print-names .div-header { border: 1px solid #000; }
+            body.print-report .sc-box { border: none !important; background: none !important; color: black !important; }
+            body.print-report .grand { background: none !important; color: black !important; border: 2px solid black; }
         }
     </style>
 </head>
 <body>
 
-<div class="print-head">
-    <h1 id="pTitle">Competition Report</h1>
-    <p>Report Generated: <span id="pDate"></span></p>
-</div>
-
 <div class="container">
     <header>
         <div class="brand">
-            <img src="resources/yoga_dp.jpeg" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/60?text=YP'">
+            <img src="resources/yoga_dp.jpeg" onerror="this.style.display='none'">
             <div>
                 <h1>YOGA PRO</h1>
-                <p>Championship Management System</p>
+                <small>Championship Management System</small>
             </div>
         </div>
-        <div class="judges-box">
-            <div class="judge-pill"><span class="jp-lbl">J1</span><span class="jp-val" id="j1n">...</span></div>
-            <div class="judge-pill"><span class="jp-lbl">J2</span><span class="jp-val" id="j2n">...</span></div>
-            <div class="judge-pill"><span class="jp-lbl">J3</span><span class="jp-val" id="j3n">...</span></div>
-            <a href="competition-2026-judegs.html" class="btn-portal">👨‍⚖️ Portal</a>
+        <div class="judges-panel">
+            <div class="judge-item"><span class="judge-lbl">J1</span><span class="judge-val" id="j1">...</span></div>
+            <div class="judge-item"><span class="judge-lbl">J2</span><span class="judge-val" id="j2">...</span></div>
+            <div class="judge-item"><span class="judge-lbl">J3</span><span class="judge-val" id="j3">...</span></div>
         </div>
     </header>
 
-    <div class="controls">
-        <div class="switch-box">
-            <button class="sw-btn active" onclick="switchTab('live', this)">📊 Live</button>
-            <button class="sw-btn" onclick="switchTab('judgment', this)">🏆 Judgment</button>
+    <div class="toolbar">
+        <div class="tabs">
+            <button class="tab active" onclick="setTab('live', this)">Live Scores</button>
+            <button class="tab" onclick="setTab('judgment', this)">Judgment</button>
         </div>
 
-        <div class="drop-box">
-            <button class="drop-btn" onclick="document.getElementById('grpDrop').classList.toggle('show')">
-                <span id="grpTxt">All Groups</span> ▼
-            </button>
-            <div id="grpDrop" class="drop-content">
-                <input type="text" class="dd-search" placeholder="Search Group..." onkeyup="filterGrpList(this.value)">
-                <div class="fc-item" onclick="toggleAllGrp()"><input type="checkbox" id="cbAll" checked> <b>Select All</b></div>
-                <div id="grpList"></div>
-            </div>
-        </div>
-
-        <div class="search-wrapper">
-            <select class="search-mode" id="searchMode">
-                <option value="track">🆔 ID</option>
-                <option value="center">📍 Center</option>
+        <div class="search-box">
+            <select class="search-type" id="filterType">
+                <option value="coach">Coach</option>
+                <option value="track">Track No</option>
             </select>
-            <input type="text" id="mainSearch" class="search-input" placeholder="Search..." onkeyup="handleSearch(this.value)">
-            <div id="suggBox" class="sugg-box"></div>
+            <input type="text" class="search-in" id="filterIn" placeholder="Type to search..." onkeyup="showSugg(this.value)">
+            <button class="btn-apply" onclick="applyFilter()">Apply</button>
         </div>
+        <div id="suggList" class="sugg-list"></div>
 
-        <button class="btn-refresh" onclick="fetchStudents(true)">🔄 Candidates</button>
-        <button class="btn-refresh" onclick="fetchMarks(true)">🔄 Marks</button>
+        <button class="btn" onclick="fetchCandidates(true)">🔄 Candidates</button>
+        <button class="btn" onclick="fetchMarks(true)">🔄 Marks</button>
+        <button class="btn btn-live" id="btnLive" onclick="toggleLive()">🔴 <span id="txtLive">OFFLINE</span></button>
         
-        <button class="btn-live" id="liveBtn" onclick="toggleLive()">
-            <div class="dot"></div> <span id="liveTxt">OFFLINE</span>
-        </button>
-        
-        <div class="drop-box" style="margin-left:auto;">
-            <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
-                🖨️ Print Menu ▼
-            </button>
-            <div id="printDrop" class="drop-content" style="width:200px; right:0;">
-                <div class="fc-item" onclick="printMode('res')">📝 Results Report</div>
-                <div class="fc-item" onclick="printMode('names')">📋 Name List (Organizer)</div>
-            </div>
+        <div style="margin-left:auto; display:flex; gap:5px;">
+            <button class="btn btn-print" onclick="printPage('report')">🖨️ Report</button>
+            <button class="btn" onclick="printPage('list')">📋 List</button>
         </div>
     </div>
 
-    <div id="view-live" class="view active"></div>
-    <div id="view-judgment" class="view"></div>
+    <div id="view-live" class="section active"></div>
+
+    <div id="view-judgment" class="section"></div>
 </div>
 
-<div class="print-foot">www.soumenyoga.in | Tech Provider: BAHA Interactive | Contact: sohanadhikari04@gmail.com</div>
-<footer>Visit <a href="https://www.soumenyoga.in">www.soumenyoga.in</a></footer>
-<a href="https://code04sohan.github.io/cv" target="_blank" class="badge-pw">Powered by BAHA Interactive</a>
+<footer style="text-align:center; padding:20px; font-size:0.8rem; color:#888;">
+    www.soumenyoga.in | Powered by BAHA Interactive
+</footer>
 
 <script>
     // --- CONFIGURATION ---
-    const STATIC_API_URL = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
-    const MARKS_API_URL = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
+    const STATIC_API = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
+    const DYNAMIC_API = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
     
+    // DIRECT DRIVE LINK (Note: If this fails due to CORS, use fallback below)
+    const JUDGE_LINK = "https://drive.google.com/uc?export=download&id=1LRffTqzOgQwnBAwFqt1dSa-UmT7r1gzx";
+
     // --- STATE ---
-    let students = [], marksMap = {}, groups = [], selGroups = new Set(['ALL']);
-    let divisions = {};
-    let isLive = false, timer = null;
-    let centerList = new Set();
+    let students = [], marks = {}, divisions = {};
+    let coachList = new Set();
+    let isLive = false, liveTimer = null;
+    let activeFilter = { type: 'none', val: '' };
 
     window.onload = () => {
-        document.getElementById('pDate').innerText = new Date().toLocaleString();
         fetchJudges();
-        fetchStudents();
-        
+        fetchCandidates();
         document.addEventListener('click', e => {
-            if(!e.target.closest('.drop-box')) document.querySelectorAll('.drop-content').forEach(d => d.classList.remove('show'));
-            if(!e.target.closest('.search-wrapper')) document.getElementById('suggBox').style.display = 'none';
+            if (!e.target.closest('.search-box')) document.getElementById('suggList').style.display = 'none';
         });
     };
 
     // --- 1. FETCHING ---
     async function fetchJudges() {
         try {
-            const res = await fetch(`${STATIC_API_URL}?type=judges`);
-            let d = await res.json();
-            // Robust parsing if data comes as string
-            if (typeof d === 'string') d = JSON.parse(d);
+            const res = await fetch(JUDGE_LINK);
+            const d = await res.json();
+            renderJudges(d);
+        } catch (e) {
+            console.warn("Direct Drive Fetch Failed (CORS). Using Fallback.");
+            // FALLBACK DATA (Uncomment if needed)
             
-            const j1 = d.find(x => String(x.num) === "1") || d[0];
-            const j2 = d.find(x => String(x.num) === "2") || d[1];
-            const j3 = d.find(x => String(x.num) === "3") || d[2];
-            document.getElementById('j1n').innerText = j1?.name || "Judge 1";
-            document.getElementById('j2n').innerText = j2?.name || "Judge 2";
-            document.getElementById('j3n').innerText = j3?.name || "Judge 3";
-        } catch(e) { console.log("J Err", e); }
+            const d = [
+              { "name": "Gourab Tripathi", "num": "1" },
+              { "name": "Bidisha Dey", "num": "2" },
+              { "name": "Deep Jana", "num": "3" }
+            ];
+            renderJudges(d);
+            
+        }
     }
 
-    async function fetchStudents(manual=false) {
+    function renderJudges(d) {
+        const j1 = d.find(x => String(x.num) === "1");
+        const j2 = d.find(x => String(x.num) === "2");
+        const j3 = d.find(x => String(x.num) === "3");
+        document.getElementById('j1').innerText = j1?.name || "-";
+        document.getElementById('j2').innerText = j2?.name || "-";
+        document.getElementById('j3').innerText = j3?.name || "-";
+    }
+
+    async function fetchCandidates(manual=false) {
         try {
-            const res = await fetch(`${STATIC_API_URL}?type=students`);
+            const res = await fetch(`${STATIC_API}?type=students`);
             students = await res.json();
-            processDivisions();
+            coachList.clear();
+            students.forEach(s => { if(s["COACH NAME"]) coachList.add(s["COACH NAME"]); });
+            processData(); 
             if(manual) alert("Candidates Refreshed!");
             fetchMarks();
-        } catch(e) { console.error("Stu Error", e); }
+        } catch(e) { console.error(e); }
     }
 
     async function fetchMarks(manual=false) {
         try {
-            const res = await fetch(`${MARKS_API_URL}?type=marks`);
+            const res = await fetch(DYNAMIC_API);
             const data = await res.json();
-            marksMap = {};
+            marks = {};
             data.forEach(row => {
                 const id = row["TRACK NO"];
-                if(id) marksMap[id] = row;
+                if(id) marks[id] = row;
             });
-            updateScoresOnly();
+            updateValues(); 
             if(manual) alert("Marks Updated!");
-            if(isLive) flashBtn();
-        } catch(e) { console.error("Marks Error", e); }
+        } catch(e) { console.error(e); }
     }
 
     // --- 2. LOGIC ---
-    function processDivisions() {
+    function processData() {
         divisions = {};
-        let tempGroups = new Set();
-        centerList.clear();
-
         let buckets = {};
         students.forEach(s => {
             const key = `${s.GROUP} - ${s.SEX}`;
-            tempGroups.add(key);
-            if(s["CENTER NAME"]) centerList.add(s["CENTER NAME"]);
             if(!buckets[key]) buckets[key] = [];
             buckets[key].push(s);
         });
 
-        groups = Array.from(tempGroups).sort();
-        updateFilterUI();
-
-        Object.keys(buckets).forEach(key => {
-            const list = buckets[key];
-            const sorted = interleaveByCoach(list);
-            for (let i = 0; i < sorted.length; i += 10) {
-                const chunk = sorted.slice(i, i + 10);
-                const divName = `${key} - Division ${String.fromCharCode(65 + (i/10))}`;
-                divisions[divName] = chunk;
+        Object.keys(buckets).forEach(k => {
+            const sorted = roundRobinSort(buckets[k]);
+            for(let i=0; i<sorted.length; i+=10) {
+                const divName = `${k} - Division ${String.fromCharCode(65 + (i/10))}`;
+                divisions[divName] = sorted.slice(i, i+10);
             }
         });
-        renderStructure();
+        renderAll();
     }
 
-    function interleaveByCoach(list) {
+    function roundRobinSort(list) {
         let coaches = {};
         list.forEach(s => {
-            const c = s["COACH NAME"] || "Unknown";
+            const c = s["COACH NAME"] || "Unk";
             if(!coaches[c]) coaches[c] = [];
             coaches[c].push(s);
         });
-        let result = [], coachNames = Object.keys(coaches);
-        let maxLen = Math.max(...Object.values(coaches).map(arr => arr.length));
-        for(let i=0; i<maxLen; i++) {
-            coachNames.forEach(cName => { if(coaches[cName][i]) result.push(coaches[cName][i]); });
+        let res = [], keys = Object.keys(coaches);
+        let max = Math.max(...Object.values(coaches).map(a=>a.length));
+        for(let i=0; i<max; i++) {
+            keys.forEach(k => { if(coaches[k][i]) res.push(coaches[k][i]); });
         }
-        return result;
+        return res;
     }
 
     // --- 3. RENDERING ---
-    function renderStructure() {
-        const liveContainer = document.getElementById('view-live');
-        const judgeContainer = document.getElementById('view-judgment');
-        liveContainer.innerHTML = "";
-        judgeContainer.innerHTML = "";
+    function renderAll() {
+        const live = document.getElementById('view-live');
+        const judge = document.getElementById('view-judgment');
+        live.innerHTML = ""; judge.innerHTML = "";
 
         Object.keys(divisions).sort().forEach(divName => {
-            // CSS Hiding Logic for Filter
-            const baseGroup = divName.split(" - Division")[0];
-            const divId = divName.replace(/[^a-zA-Z0-9]/g, '');
-            const isHidden = (!selGroups.has('ALL') && !selGroups.has(baseGroup)) ? 'hidden' : '';
-
             const athletes = divisions[divName];
-            
+            let visibleCount = 0;
+
             let rows = athletes.map(s => {
                 const id = s["TRACK NO"];
-                return `<tr class="stu-row" data-track="${id}" data-center="${s['CENTER NAME']}">
-                    <td class="col-stu">
-                        <div class="stu-inf">
-                            <span class="s-id">🆔 ${id}</span>
-                            <span class="s-nm">${s["NAME OF THE ATHLETES"]}</span>
-                            <span class="s-ch">👨‍🏫 ${s["COACH NAME"]}</span>
-                            <div class="s-meta-print">📍 ${s["CENTER NAME"]} | Age: ${s["AGE"]} | ${s["GROUP"]}</div>
-                        </div>
+                let show = true;
+                if (activeFilter.type === 'coach' && activeFilter.val && !s["COACH NAME"].toLowerCase().includes(activeFilter.val)) show = false;
+                if (activeFilter.type === 'track' && activeFilter.val && String(id).toLowerCase() !== activeFilter.val) show = false;
+                
+                if(show) visibleCount++;
+                const displayStyle = show ? '' : 'display:none;';
+
+                return `<tr style="${displayStyle}">
+                    <td class="col-left">
+                        <span class="s-id">${id}</span>
+                        <span class="s-name">${s["NAME OF THE ATHLETES"]}</span>
+                        <span class="s-coach">${s["COACH NAME"]}</span>
+                        <div style="font-size:0.8rem; color:#666;">Age: ${s["AGE"]} | ${s["CENTER NAME"]}</div>
                     </td>
-                    ${renderCells(id, 1)} ${renderCells(id, 2)}
-                    ${renderCells(id, 3)} ${renderCells(id, "OPTIONAL")}
-                    <td class="tot-j1 total-col" id="t-${id}-j1">-</td>
-                    <td class="tot-j2 total-col" id="t-${id}-j2">-</td>
-                    <td class="tot-j3 total-col" id="t-${id}-j3">-</td>
-                    <td class="grand-col"><span class="grand" id="t-${id}-grand">-</span></td>
+                    ${cols(id, 1)} ${cols(id, 2)} ${cols(id, 3)} ${cols(id, "OPTIONAL")}
+                    <td class="score-col tot" id="t-${id}-1">-</td>
+                    <td class="score-col tot" id="t-${id}-2">-</td>
+                    <td class="score-col tot" id="t-${id}-3">-</td>
+                    <td class="grand-col"><span class="grand" id="t-${id}-all">-</span></td>
                 </tr>`;
             }).join('');
 
-            liveContainer.innerHTML += `
-                <div class="div-card ${isHidden}" id="card-${divId}" data-grp="${baseGroup}">
-                    <div class="div-header"><span class="div-title">${divName}</span> <span>${athletes.length} Athletes</span></div>
-                    <div class="t-wrap">
-                        <table>
+            if (visibleCount > 0 || activeFilter.type === 'none') {
+                live.innerHTML += `
+                    <div class="card">
+                        <div class="card-head"><span>${divName}</span><span>${visibleCount} Athletes</span></div>
+                        <div style="overflow-x:auto"><table>
                             <thead><tr>
-                                <th class="col-stu">Athlete</th>
-                                <th class="score-col">Asana 1</th><th class="score-col">Asana 2</th><th class="score-col">Asana 3</th><th class="score-col">Optional</th>
-                                <th class="bg-j1 total-col">J1 Tot</th><th class="bg-j2 total-col">J2 Tot</th><th class="bg-j3 total-col">J3 Tot</th>
-                                <th class="grand-col">Grand</th>
+                                <th class="col-left">Athlete Details</th>
+                                <th class="score-col">Asana 1</th><th class="score-col">Asana 2</th><th class="score-col">Asana 3</th><th class="score-col">Opt</th>
+                                <th class="score-col">J1</th><th class="score-col">J2</th><th class="score-col">J3</th><th class="grand-col">Total</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
-                        </table>
-                    </div>
-                </div>`;
-            
-            judgeContainer.innerHTML += `<div id="podium-${divId}" class="${isHidden}"></div>`;
+                        </table></div>
+                    </div>`;
+                
+                judge.innerHTML += `<div id="podium-${divName.replace(/[^a-zA-Z0-9]/g,'')}"></div>`;
+            }
         });
     }
 
-    function renderCells(id, num) {
-        let l = num === "OPTIONAL" ? "OPT" : `A${num}`;
-        return `<td class="score-col"><div class="score-grid">
-            <div class="sc-box bg-j1" id="s-${id}-${l}-j1">-</div>
-            <div class="sc-box bg-j2" id="s-${id}-${l}-j2">-</div>
-            <div class="sc-box bg-j3" id="s-${id}-${l}-j3">-</div>
-        </div></td>`;
+    function cols(id, n) {
+        let l = n==="OPTIONAL"?"O":`A${n}`;
+        return `<td class="score-col">
+            <span class="sc-box sc-j1" id="s-${id}-${l}-1">-</span>
+            <span class="sc-box sc-j2" id="s-${id}-${l}-2">-</span>
+            <span class="sc-box sc-j3" id="s-${id}-${l}-3">-</span>
+        </td>`;
     }
 
-    function updateScoresOnly() {
+    // --- 4. UPDATES ---
+    function updateValues() {
         Object.keys(divisions).forEach(divName => {
             const athletes = divisions[divName];
             athletes.forEach(s => {
                 const id = s["TRACK NO"];
-                const sc = marksMap[id] || {};
-                let tJ1=0, tJ2=0, tJ3=0;
+                const sc = marks[id] || {};
+                let t1=0, t2=0, t3=0;
 
-                [1, 2, 3, "OPTIONAL"].forEach(a => {
-                    let l = a === "OPTIONAL" ? "OPT" : `A${a}`;
-                    let suf = a === "OPTIONAL" ? "OPTIONAL" : `ASANA ${a}`;
-                    let v1=Number(sc[`${suf} (Judge 1)`]||0), v2=Number(sc[`${suf} (Judge 2)`]||0), v3=Number(sc[`${suf} (Judge 3)`]||0);
-                    setTxt(`s-${id}-${l}-j1`, v1||'-'); setTxt(`s-${id}-${l}-j2`, v2||'-'); setTxt(`s-${id}-${l}-j3`, v3||'-');
-                    tJ1+=v1; tJ2+=v2; tJ3+=v3;
+                [1,2,3,"OPTIONAL"].forEach(a => {
+                    let l = a==="OPTIONAL"?"O":`A${a}`;
+                    let k = a==="OPTIONAL"?"OPTIONAL":`ASANA ${a}`;
+                    let v1=Number(sc[`${k} (Judge 1)`]||0), v2=Number(sc[`${k} (Judge 2)`]||0), v3=Number(sc[`${k} (Judge 3)`]||0);
+                    setTxt(`s-${id}-${l}-1`, v1||'-'); setTxt(`s-${id}-${l}-2`, v2||'-'); setTxt(`s-${id}-${l}-3`, v3||'-');
+                    t1+=v1; t2+=v2; t3+=v3;
                 });
 
-                setTxt(`t-${id}-j1`, Math.round(tJ1));
-                setTxt(`t-${id}-j2`, Math.round(tJ2));
-                setTxt(`t-${id}-j3`, Math.round(tJ3));
-                setTxt(`t-${id}-grand`, Math.round(tJ1+tJ2+tJ3));
-
-                s.stats = { j1: tJ1, j2: tJ2, j3: tJ3, grand: Math.round(tJ1+tJ2+tJ3) };
+                setTxt(`t-${id}-1`, t1); setTxt(`t-${id}-2`, t2); setTxt(`t-${id}-3`, t3);
+                let g = t1+t2+t3;
+                setTxt(`t-${id}-all`, Math.round(g));
+                s.score = { grand: g, j1: t1, j2: t2 };
             });
-            updatePodium(divName, athletes);
+            renderPodium(divName, athletes);
         });
     }
 
-    function setTxt(id, val) { const el = document.getElementById(id); if(el) el.innerText = val; }
+    function setTxt(id, v) { const e = document.getElementById(id); if(e) e.innerText = v; }
 
-    function updatePodium(divName, athletes) {
-        let sorted = [...athletes].sort((a,b) => {
-            let sa = a.stats || {grand:0}, sb = b.stats || {grand:0};
-            return (sb.grand - sa.grand) || (sb.j1 - sa.j1) || (sb.j2 - sa.j2);
-        });
-        const pid = divName.replace(/[^a-zA-Z0-9]/g, '');
-        const div = document.getElementById(`podium-${pid}`);
+    function renderPodium(divName, list) {
+        let sorted = [...list].sort((a,b) => (b.score?.grand||0)-(a.score?.grand||0) || (b.score?.j1||0)-(a.score?.j1||0));
+        let top3 = sorted.slice(0,3);
+        let pid = divName.replace(/[^a-zA-Z0-9]/g,'');
+        let div = document.getElementById(`podium-${pid}`);
         if(!div) return;
 
-        const [s1, s2, s3] = sorted;
         div.innerHTML = `
-            <div class="div-card">
-                <div class="div-header"><span class="div-title">🏆 ${divName} Results</span></div>
-                <div class="podium-wrap">
-                    <div class="p-col p2">${s2 ? wCard(s2, '🥈', '2nd') : ''}</div>
-                    <div class="p-col p1">${s1 ? wCard(s1, '🥇', '1st') : ''}</div>
-                    <div class="p-col p3">${s3 ? wCard(s3, '🥉', '3rd') : ''}</div>
-                </div>
-                <div style="padding:0 20px 20px;">
-                    ${sorted.map((s,i) => {
-                        let tie = (i>0 && sorted[i-1].stats.grand === s.stats.grand) ? '⚠️ Tie' : '';
-                        return `<div class="rank-row r-${i+1}">
-                            <div class="r-idx">${i+1}</div>
-                            <div style="flex:1"><div class="s-nm">${s["NAME OF THE ATHLETES"]}</div><div class="s-ch">${s["COACH NAME"]} | 🆔 ${s["TRACK NO"]}</div></div>
-                            <div style="text-align:right"><div style="font-weight:900;color:var(--primary);font-size:1.1rem">${s.stats?.grand || 0}</div><small style="color:#d97706">${tie}</small></div>
-                        </div>`;
-                    }).join('')}
+            <div class="card">
+                <div class="card-head">🏆 ${divName} Results</div>
+                <div class="podium">
+                    <div class="p-col p2">${winHtml(top3[1], 2, 'silver')}</div>
+                    <div class="p-col p1">${winHtml(top3[0], 1, 'gold')}</div>
+                    <div class="p-col p3">${winHtml(top3[2], 3, 'bronze')}</div>
                 </div>
             </div>`;
     }
 
-    function wCard(s, ico, rnk) {
-        return `<div class="w-card"><div class="medal">${ico}</div><div class="w-nm">${s["NAME OF THE ATHLETES"]}</div><div class="w-det">${s["COACH NAME"]}</div><div class="w-sc">${s.stats?.grand || 0}</div></div><div class="stand">${rnk}</div>`;
+    function winHtml(s, rank, color) {
+        if(!s) return '';
+        return `<div class="winner">
+            <div class="w-rank">${rank}</div>
+            <strong>${s["NAME OF THE ATHLETES"]}</strong><br>
+            <small>${s["COACH NAME"]}</small>
+            <div class="w-score">${Math.round(s.score?.grand||0)}</div>
+        </div><div class="bar"></div>`;
     }
 
-    // --- UI HELPERS ---
-    function switchTab(view, btn) {
-        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.getElementById(`view-${view}`).classList.add('active');
-        document.querySelectorAll('.sw-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
-
-    function updateFilterUI() {
-        const list = document.getElementById('grpList');
-        list.innerHTML = groups.map(g => `<div class="fc-item" onclick="togG('${g}')"><input type="checkbox" checked> ${g}</div>`).join('');
-    }
-    
-    function filterGrpList(val) {
-        document.querySelectorAll('#grpList .fc-item').forEach(el => {
-            el.style.display = el.innerText.toLowerCase().includes(val.toLowerCase()) ? 'flex' : 'none';
-        });
-    }
-
-    // --- NEW FILTERING LOGIC (CSS Toggle) ---
-    function toggleAllGrp() {
-        const chk = document.getElementById('cbAll').checked;
-        selGroups = chk ? new Set(['ALL']) : new Set();
-        document.querySelectorAll('#grpList input').forEach(i => i.checked = chk);
-        document.getElementById('grpTxt').innerText = chk ? "All Groups" : "Select Groups";
-        applyFilter(); // Use applyFilter instead of renderStructure
-    }
-
-    function togG(g) {
-        const items = document.querySelectorAll('#grpList input');
-        if(selGroups.has('ALL')) selGroups = new Set(groups);
+    // --- 5. SEARCH & UTILS ---
+    function showSugg(val) {
+        const type = document.getElementById('filterType').value;
+        const box = document.getElementById('suggList');
+        if(type !== 'coach' || val.length < 1) { box.style.display = 'none'; return; }
         
-        let target;
-        items.forEach((inp, idx) => { if(groups[idx] === g) target = inp; });
-        if(target) target.checked = !target.checked;
+        const m = Array.from(coachList).filter(c => c.toLowerCase().includes(val.toLowerCase()));
+        box.innerHTML = m.map(c => `<div class="sugg-opt" onclick="selSugg('${c}')">${c}</div>`).join('');
+        box.style.display = m.length ? 'block' : 'none';
+    }
 
-        selGroups.clear();
-        let allChecked = true;
-        items.forEach((inp, idx) => {
-            if(inp.checked) selGroups.add(groups[idx]);
-            else allChecked = false;
-        });
-
-        if(allChecked) { selGroups = new Set(['ALL']); document.getElementById('cbAll').checked = true; }
-        else document.getElementById('cbAll').checked = false;
-        
-        document.getElementById('grpTxt').innerText = selGroups.has('ALL') ? "All Groups" : `${selGroups.size} Selected`;
-        applyFilter();
+    function selSugg(val) {
+        document.getElementById('filterIn').value = val;
+        document.getElementById('suggList').style.display = 'none';
     }
 
     function applyFilter() {
-        // Fast CSS Hiding
-        document.querySelectorAll('.div-card').forEach(card => {
-            const grp = card.getAttribute('data-grp');
-            if (selGroups.has('ALL') || selGroups.has(grp)) {
-                card.classList.remove('hidden');
-                // Also show corresponding podium
-                const pid = card.id.replace('card-', 'podium-');
-                const p = document.getElementById(pid);
-                if(p) p.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-                const pid = card.id.replace('card-', 'podium-');
-                const p = document.getElementById(pid);
-                if(p) p.classList.add('hidden');
-            }
-        });
+        activeFilter = {
+            type: document.getElementById('filterType').value,
+            val: document.getElementById('filterIn').value.toLowerCase()
+        };
+        renderAll();
     }
 
-    function handleSearch(val) {
-        const mode = document.getElementById('searchMode').value;
-        const box = document.getElementById('suggBox');
-        
-        // Suggestion Logic for Center
-        if(mode === 'center' && val) {
-            const m = Array.from(centerList).filter(c => c.toLowerCase().includes(val.toLowerCase()));
-            box.innerHTML = m.map(c => `<div class="sugg-item" onclick="setSearch('${c}')">${c}</div>`).join('');
-            box.style.display = m.length ? 'block' : 'none';
-        } else {
-            box.style.display = 'none';
-        }
-
-        // Exact Filtering Logic
-        const rows = document.querySelectorAll('.stu-row');
-        rows.forEach(r => {
-            const t = r.getAttribute('data-track').toLowerCase();
-            const c = r.getAttribute('data-center').toLowerCase();
-            let vis = true;
-            
-            if (val) {
-                if (mode === 'track') vis = (t === val.toLowerCase()); // Exact Match
-                if (mode === 'center') vis = c.includes(val.toLowerCase());
-            }
-            r.style.display = vis ? '' : 'none';
-        });
+    function setTab(view, btn) {
+        document.querySelectorAll('.section').forEach(e => e.classList.remove('active'));
+        document.getElementById(`view-${view}`).classList.add('active');
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
     }
 
-    function setSearch(v) {
-        document.getElementById('mainSearch').value = v;
-        document.getElementById('suggBox').style.display = 'none';
-        handleSearch(v);
+    function printPage(mode) {
+        document.body.className = (mode === 'list') ? 'print-list' : 'print-report';
+        window.print();
+        document.body.className = '';
     }
 
     function toggleLive() {
         isLive = !isLive;
-        const btn = document.getElementById('liveBtn');
+        const b = document.getElementById('btnLive');
         if(isLive) {
-            btn.classList.add('active'); document.getElementById('liveTxt').innerText = "LIVE ON";
-            timer = setInterval(() => fetchMarks(), 30000); // 30s
+            b.classList.add('on'); document.getElementById('txtLive').innerText = "LIVE ON";
+            liveTimer = setInterval(() => fetchMarks(), 30000);
         } else {
-            btn.classList.remove('active'); document.getElementById('liveTxt').innerText = "OFFLINE";
-            clearInterval(timer);
+            b.classList.remove('on'); document.getElementById('txtLive').innerText = "OFFLINE";
+            clearInterval(liveTimer);
         }
-    }
-    
-    function flashBtn() {
-        const b = document.getElementById('liveBtn');
-        b.classList.add('flash'); setTimeout(()=>b.classList.remove('flash'), 1000);
-    }
-
-    function printMode(mode) {
-        document.body.className = (mode === 'names') ? 'print-names' : 'print-res';
-        document.getElementById('pTitle').innerText = (mode === 'names') ? 'Organizer Name List' : 'Competition Results';
-        window.print();
-        document.body.className = '';
     }
 </script>
 </body>
