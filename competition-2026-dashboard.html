@@ -194,7 +194,7 @@
         
         <div class="drop-box" style="margin-left:auto;">
             <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
-                🖨️ Actions ▼
+                🖨️ Export ▼
             </button>
             <div id="printDrop" class="drop-content right">
                 <div class="fc-item" onclick="printPage('report')">🖨️ Report (Print)</div>
@@ -235,17 +235,33 @@
     };
 
     // --- 1. FETCHING ---
+    // --- 1. FETCHING JUDGES ---
+    // --- 1. FETCHING JUDGES ---
     async function fetchJudges() {
         try {
+            // 1. Call your Static API (not Drive directly)
             const res = await fetch(`${STATIC_API}?type=judges`);
-            const d = await res.json();
-            const j1 = d.find(x => String(x.num) === "1");
-            const j2 = d.find(x => String(x.num) === "2");
-            const j3 = d.find(x => String(x.num) === "3");
-            document.getElementById('j1').innerText = j1?.name || "-";
-            document.getElementById('j2').innerText = j2?.name || "-";
-            document.getElementById('j3').innerText = j3?.name || "-";
-        } catch (e) { console.warn("Judge Fetch Error", e); }
+            const response = await res.json();
+
+            // 2. Check for success (like your login code)
+            if (response.status === 'success') {
+                const judges = response.data; // This is your array
+
+                // 3. Find and Display
+                const j1 = judges.find(x => String(x.num) === "1");
+                const j2 = judges.find(x => String(x.num) === "2");
+                const j3 = judges.find(x => String(x.num) === "3");
+
+                document.getElementById('j1').innerText = j1 ? j1.name : "-";
+                document.getElementById('j2').innerText = j2 ? j2.name : "-";
+                document.getElementById('j3').innerText = j3 ? j3.name : "-";
+            } else {
+                console.error("API Error:", response.message);
+            }
+        } catch (e) {
+            console.error("Fetch Failed:", e);
+            document.getElementById('j1').innerText = "Error";
+        }
     }
 
     async function fetchCandidates(manual=false) {
@@ -366,7 +382,7 @@
                         <div style="overflow-x:auto"><table>
                             <thead><tr>
                                 <th class="col-left">Athlete Details</th>
-                                <th class="score-col">A1</th><th class="score-col">A2</th><th class="score-col">A3</th><th class="score-col">Opt</th>
+                                <th class="score-col">ASAN 1</th><th class="score-col">ASAN 2</th><th class="score-col">ASAN 3</th><th class="score-col">OPTIONAL</th>
                                 <th class="score-col">J1</th><th class="score-col">J2</th><th class="score-col">J3</th><th class="grand-col">Total</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
@@ -437,7 +453,7 @@
                 <td class="r-pos">${rank}</td>
                 <td>
                     <b>${s["NAME OF THE ATHLETES"]}</b>
-                    <div style="font-size:0.8rem;color:#666">${s["COACH NAME"]} | 🆔 ${s["TRACK NO"]}</div>
+                    <div style="font-size:0.8rem;color:#666"> COACH NAME: ${s["COACH NAME"]} | TRACK NO: ${s["TRACK NO"]}</div>
                 </td>
                 <td style="text-align:right;">
                     <span style="font-weight:900;color:var(--primary);font-size:1.1rem">${s.score.grand}</span>
