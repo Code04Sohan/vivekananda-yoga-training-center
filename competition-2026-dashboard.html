@@ -300,16 +300,41 @@
         } catch (e) { console.error("Judge API Error", e); }
     }
 
+    // --- HELPER TO FIX ALL CAPS NAMES ---
+    function toProperCase(str) {
+        return str.replace(/\w\S*/g, function(txt){
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    }
+
     async function fetchCandidates(manual=false) {
         try {
             const res = await fetch(`${STATIC_API}?type=students`);
             students = await res.json();
+            
             let grpSet = new Set();
             coachList.clear();
+
+            // --- CLEAN DATA HERE (The Fix) ---
             students.forEach(s => { 
+                // 1. Fix Group Names (Remove spaces)
+                if(s.GROUP) s.GROUP = s.GROUP.trim();
+                
+                // 2. Fix Sex (Remove spaces)
+                if(s.SEX) s.SEX = s.SEX.trim();
+
+                // 3. Fix Coach Names (Remove spaces + Fix CAPS)
+                // This merges "SANTA JANA", "Santa Jana", and "Santa Jana " into one.
+                if(s["COACH NAME"]) {
+                    let cleanName = s["COACH NAME"].trim();
+                    s["COACH NAME"] = toProperCase(cleanName);
+                    coachList.add(s["COACH NAME"]); 
+                }
+                
                 grpSet.add(`${s.GROUP} - ${s.SEX}`);
-                if(s["COACH NAME"]) coachList.add(s["COACH NAME"]); 
             });
+            // --------------------------------
+
             groups = Array.from(grpSet).sort();
             updateGroupFilter();
             processData(); 
@@ -340,8 +365,13 @@
     function processData() {
         divisions = {};
         let buckets = {};
+        
         students.forEach(s => {
-            const key = `${s.GROUP} - ${s.SEX}`;
+            // FIX: .trim() removes accidental spaces from Group and Sex
+            const groupName = (s.GROUP || "").trim();
+            const sex = (s.SEX || "").trim();
+            const key = `${groupName} - ${sex}`;
+            
             if(!buckets[key]) buckets[key] = [];
             buckets[key].push(s);
         });
@@ -349,7 +379,9 @@
         Object.keys(buckets).forEach(k => {
             const sorted = roundRobinSort(buckets[k]);
             for(let i=0; i<sorted.length; i+=10) {
-                const divName = `${k} - Division ${String.fromCharCode(65 + (i/10))}`;
+                // Determine Division Letter (A, B, C...)
+                const divLetter = String.fromCharCode(65 + (i/10));
+                const divName = `${k} - Division ${divLetter}`;
                 divisions[divName] = sorted.slice(i, i+10);
             }
         });
