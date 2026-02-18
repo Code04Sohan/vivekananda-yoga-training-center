@@ -303,3 +303,31 @@ window.applySameCoach = function () {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+
+// =========================================================
+// 🛑 EMERGENCY STOP: CLOSE REGISTRATIONS
+// Copy and paste this at the VERY BOTTOM of entry_API.js
+// =========================================================
+
+// 1. Hide the form interface
+formView.innerHTML = `
+    <div style="text-align: center; padding: 60px 20px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🚫</div>
+        <h2 style="color: #d9534f; font-size: 2rem; margin-bottom: 15px; font-weight: bold;">
+            REGISTRATION CLOSED
+        </h2>
+        <p style="font-size: 1.2rem; color: #555; line-height: 1.6;">
+            The registration period has ended.<br>
+            We are no longer accepting new entries.
+        </p>
+        <div style="margin-top: 30px; font-weight: 500; color: #333;">
+            — Thank You —
+        </div>
+    </div>
+`;
+
+// 2. Hide the submit button (Double Safety)
+if (submitBtn) {
+    submitBtn.style.display = 'none';
+}
