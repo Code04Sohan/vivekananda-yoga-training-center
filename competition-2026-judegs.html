@@ -34,6 +34,18 @@
     .spinner { border: 4px solid rgba(234, 88, 12, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+    /* ANIMATIONS (NEW) */
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .anim-next { animation: slideInRight 0.3s ease-out forwards; }
+    .anim-prev { animation: slideInLeft 0.3s ease-out forwards; }
+
     /* STATUS PANEL */
     #status-panel {
       position: fixed; right: 0; top: 50%; transform: translateY(-50%);
@@ -146,7 +158,7 @@
   </div>
 
   <div id="app-header" class="app-header hidden">
-    <div class="brand">UCMAYPSF Purba Medinipur District Chapter- 2026</div>
+    <div class="brand">UCMAYPSF- 2026</div>
     <div class="header-right">
       <div class="node-badge"><span class="status-dot dot-green"></span> <span>Online</span></div>
       <img id="header-logo" src="" alt="Logo" class="header-logo-img">
@@ -249,7 +261,6 @@
       .then(r => r.json())
       .then(res => {
         if(res.status === 'success') {
-          // Store PIN in currentUser for security layer
           currentUser = { name: res.data.name, num: res.data.num, pin: p };
           activeApiUrl = CONFIG.API_POOL[res.data.num];
           
@@ -281,41 +292,66 @@
           if(res.status === 'success') {
             roundData = t.map((id, i) => ({
               uid: ['A','B','C'][i], track: id,
-              info: res.data[id] || {name:'Unknown ID', group:'-'}, // removed coach
+              info: res.data[id] || {name:'Unknown ID', group:'-'}, 
               scores: {a1:'', a2:'', a3:'', opt:''}
             }));
-            currentStepIndex = 0; renderGrid(); switchScreen('scoring-screen');
+            currentStepIndex = 0; 
+            renderGrid(1); // Trigger animation on start
+            switchScreen('scoring-screen');
           } else { alert(res.message); }
         })
         .catch(() => { hideLoad(); alert("Failed to fetch data. Check your connection."); });
     }
 
-    function renderGrid() {
+    function renderGrid(direction = 0) {
       const step = CONFIG.SCORING.STEPS[currentStepIndex];
       document.getElementById('step-label').innerText = step.label;
       document.getElementById('step-max').innerText = `Max: ${step.max}`;
       document.getElementById('btn-prev').disabled = (currentStepIndex === 0);
       document.getElementById('btn-next').disabled = (currentStepIndex === CONFIG.SCORING.STEPS.length - 1);
 
-      const g = document.getElementById('grid'); g.innerHTML = '';
+      // Animation Class Logic
+      let animClass = '';
+      if (direction === 1) animClass = 'anim-next';
+      if (direction === -1) animClass = 'anim-prev';
+
+      const g = document.getElementById('grid'); 
+      g.innerHTML = '';
+      
       roundData.forEach((s, i) => {
         const currentVal = s.scores[step.key];
+        // Apply animation class to the card
         g.innerHTML += `
-        <div class="score-card">
+        <div class="score-card ${animClass}">
           <div class="student-details">
             <div class="sd-track">Track No - ${s.track}</div>
             <div class="sd-name">${s.info.name}</div>
             <div class="sd-group">Group : ${s.info.group}</div>
           </div>
           <div class="input-wrapper">
-            <input type="number" class="score-input ${isError(currentVal, step.max) ? 'error' : ''}" value="${currentVal}" placeholder="-" oninput="val(this,${i},'${step.key}', ${step.max})">
+            <input type="number" 
+                   class="score-input ${isError(currentVal, step.max) ? 'error' : ''}" 
+                   value="${currentVal}" 
+                   placeholder="-" 
+                   oninput="val(this,${i},'${step.key}', ${step.max})">
           </div>
         </div>`;
       });
     }
 
     function isError(val, max) { const v = parseFloat(val); return (!isNaN(v) && v > max); }
-    function changeStep(d) { currentStepIndex += d; if(currentStepIndex < 0) currentStepIndex = 0; if(currentStepIndex >= CONFIG.SCORING.STEPS.length) currentStepIndex = CONFIG.SCORING.STEPS.length - 1; renderGrid(); }
+    
+    function changeStep(d) { 
+      const oldIndex = currentStepIndex;
+      currentStepIndex += d; 
+      if(currentStepIndex < 0) currentStepIndex = 0; 
+      if(currentStepIndex >= CONFIG.SCORING.STEPS.length) currentStepIndex = CONFIG.SCORING.STEPS.length - 1; 
+      
+      if (oldIndex !== currentStepIndex) {
+        renderGrid(d); 
+      }
+    }
+    
     function val(el, i, k, max) { roundData[i].scores[k] = el.value; el.classList.remove('error'); if(parseFloat(el.value) > max) el.classList.add('error'); }
 
     function attemptCancel() {
@@ -330,10 +366,9 @@
       if(crit) return alert("❌ Score Error: Check limits.");
       if(empty && !confirm("⚠️ Warning: Empty fields. Submit anyway?")) return;
 
-      // Include PIN in payload
       const payload = { 
         judgeNum: currentUser.num,
-        pin: currentUser.pin, // Security PIN
+        pin: currentUser.pin, 
         students: roundData.map(s => ({ 
           trackNo: s.track, 
           scores: { a1: s.scores.a1===''?0:s.scores.a1, a2: s.scores.a2===''?0:s.scores.a2, a3: s.scores.a3===''?0:s.scores.a3, opt: s.scores.opt===''?0:s.scores.opt } 
