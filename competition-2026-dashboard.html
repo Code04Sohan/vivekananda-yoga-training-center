@@ -9,10 +9,14 @@
             --primary: #ea580c; --dark: #c2410c; --bg: #fff7ed; --surface: #ffffff;
             --text: #1f2937; --gray: #6b7280;
             --gold: #f59e0b; --silver: #64748b; --bronze: #b45309;
+            --j1-light: #fff7ed; --j1-dark: #9a3412; --j1-border: #fed7aa;
+            --j2-light: #eff6ff; --j2-dark: #1e40af; --j2-border: #bfdbfe;
+            --j3-light: #f0fdf4; --j3-dark: #166534; --j3-border: #bbf7d0;
         }
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 20px; min-height: 100vh; }
-        
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column;}
+        .container { max-width: 1800px; margin: 0 auto; padding: 20px; width: 100%; flex: 1; padding-bottom: 60px; }
+
         /* HEADER */
         header { background: var(--surface); padding: 15px 25px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-bottom: 4px solid var(--primary); margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
         .brand { display: flex; align-items: center; gap: 15px; }
@@ -47,14 +51,14 @@
         .fc-item input { margin-right: 8px; accent-color: var(--primary); transform: scale(1.1); }
 
         /* SEARCH BAR */
-        .search-box { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: hidden; background: white; flex-grow: 1; max-width: 350px; position: relative; }
+        .search-box { display: flex; border: 1px solid #d1d5db; border-radius: 8px; overflow: visible; background: white; flex-grow: 1; max-width: 350px; position: relative; }
         .search-type { border: none; background: #f9fafb; padding: 0 10px; font-weight: 600; border-right: 1px solid #ddd; cursor: pointer; font-size: 0.85rem; color: var(--text); }
         .search-in { border: none; padding: 8px; width: 100%; outline: none; font-size: 0.9rem; }
-        .btn-apply { background: var(--primary); color: white; border: none; padding: 0 12px; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+        .btn-apply { background: var(--primary); color: white; border: none; padding: 0 12px; font-weight: 700; cursor: pointer; font-size: 0.85rem; border-top-right-radius: 8px; border-bottom-right-radius: 8px; }
         
-        .sugg-list { position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; width: 100%; max-height: 200px; overflow-y: auto; display: none; z-index: 200; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .sugg-opt { padding: 8px; cursor: pointer; border-bottom: 1px solid #eee; font-size: 0.9rem; }
-        .sugg-opt:hover { background: #fff7ed; }
+        .sugg-list { position: absolute; top: 105%; left: 0; background: white; border: 1px solid #ddd; width: 100%; max-height: 300px; overflow-y: auto; display: none; z-index: 999; box-shadow: 0 10px 20px rgba(0,0,0,0.15); border-radius: 8px; }
+        .sugg-opt { padding: 10px; cursor: pointer; border-bottom: 1px solid #f3f4f6; font-size: 0.9rem; }
+        .sugg-opt:hover { background: #fff7ed; color: var(--primary); font-weight: 600; }
 
         /* BUTTONS */
         .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; background: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
@@ -63,8 +67,6 @@
         .btn-live.on { background: #22c55e; color: white; }
         .btn-live .dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; opacity: 0.6; }
         .btn-live.on .dot { background: white; opacity: 1; animation: pulse 1s infinite; }
-        .btn-live.flash { animation: flashGreen 0.5s ease-in-out; }
-        @keyframes flashGreen { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
         /* VIEWS */
@@ -80,19 +82,25 @@
         /* TABLE */
         table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         th { background: #f9fafb; padding: 10px; text-align: center; color: var(--gray); font-size: 0.75rem; border-bottom: 2px solid #e5e7eb; }
-        td { padding: 8px; text-align: center; border-bottom: 1px solid #f3f4f6; }
+        td { padding: 8px; text-align: center; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
         
-        .col-left { text-align: left; padding-left: 15px; border-right: 2px solid #eee; width: 250px; }
-        .s-id { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
-        .s-name { display: block; font-weight: 700; font-size: 1rem; color: var(--text); }
-        .s-coach { font-size: 0.8rem; color: var(--primary); }
+        .col-left { text-align: left; padding-left: 15px; border-right: 2px solid #eee; width: 220px; }
+        .s-id { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; color: var(--text); margin-right: 5px; }
+        .s-name { display: block; font-weight: 800; font-size: 1.05rem; color: var(--dark); margin-top: 4px; }
+        .s-coach { font-size: 0.8rem; color: #666; font-style: italic; display: block; margin-top: 2px; }
         .s-meta-print { display: none; font-size: 0.8rem; color: #444; margin-top: 2px; }
 
-        .sc-box { background: #fff; border: 1px solid #ddd; padding: 4px; border-radius: 4px; font-weight: bold; font-family: monospace; display: inline-block; width: 30px; margin: 0 1px; }
-        .sc-j1 { border-color: #fed7aa; background: #fff7ed; color: #9a3412; }
-        .sc-j2 { border-color: #bfdbfe; background: #eff6ff; color: #1e40af; }
-        .sc-j3 { border-color: #bbf7d0; background: #f0fdf4; color: #166534; }
-        .grand { background: var(--primary); color: white; padding: 4px 10px; border-radius: 6px; font-weight: 900; }
+        /* SCORES */
+        .sc-box { background: #fff; border: 1px solid #ddd; padding: 4px; border-radius: 4px; font-weight: bold; font-family: monospace; display: inline-block; width: 30px; margin: 0 1px; font-size: 0.85rem; }
+        .sc-j1 { border-color: var(--j1-border); background: var(--j1-light); color: var(--j1-dark); }
+        .sc-j2 { border-color: var(--j2-border); background: var(--j2-light); color: var(--j2-dark); }
+        .sc-j3 { border-color: var(--j3-border); background: var(--j3-light); color: var(--j3-dark); }
+        
+        /* TOTALS COLOR CODED */
+        .tot-j1 { background-color: #fff7ed !important; color: #ea580c; font-weight: 700; border-left: 2px solid #fdba74; }
+        .tot-j2 { background-color: #eff6ff !important; color: #2563eb; font-weight: 700; border-left: 2px solid #93c5fd; }
+        .tot-j3 { background-color: #f0fdf4 !important; color: #16a34a; font-weight: 700; border-left: 2px solid #86efac; }
+        .grand { background: var(--primary); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 900; font-size: 1rem; }
 
         /* JUDGMENT */
         .podium { display: flex; align-items: flex-end; justify-content: center; height: 320px; gap: 10px; padding: 20px; margin-bottom: 20px; }
@@ -106,19 +114,52 @@
         .p2 .bar { height: 130px; background: var(--silver); } .p2 .winner { border: 2px solid var(--silver); }
         .p3 .bar { height: 90px; background: var(--bronze); } .p3 .winner { border: 2px solid var(--bronze); }
 
-        .rank-row { display: flex; padding: 10px 15px; border-bottom: 1px solid #eee; align-items: center; gap: 15px; }
-        .r-idx { font-weight: 900; font-size: 1.2rem; width: 30px; text-align: center; color: #ddd; }
-        .r-1 .r-idx { color: var(--gold); } .r-2 .r-idx { color: var(--silver); } .r-3 .r-idx { color: var(--bronze); }
+        /* Full Ranking List Alignment Fix */
+        .rank-table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+        .rank-table th { background: #eee; font-size: 0.8rem; padding: 8px; text-align: center; }
+        .rank-table th:first-child { text-align: left; }
+        .rank-table th:last-child { text-align: right; }
+        .rank-table td { padding: 10px 15px; border-bottom: 1px solid #eee; font-size: 0.95rem; vertical-align: middle; }
+        
+        .col-rank { text-align: left; width: 60px; }
+        .col-name { text-align: center; } /* Center Name */
+        .col-score { text-align: right; width: 100px; } /* Right align score */
+        
+        .r-idx { font-weight: 900; font-size: 1.1rem; color: #ccc; }
+        .r-1 .r-idx { color: var(--gold); text-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 1.3rem; }
+        .r-2 .r-idx { color: var(--silver); }
+        .r-3 .r-idx { color: var(--bronze); }
         .tie-reason { font-size: 0.75rem; color: #d97706; background: #fff7ed; padding: 2px 6px; border-radius: 4px; margin-left: 8px; white-space: nowrap; }
 
-        /* PRINT & FOOTER */
-        footer { text-align: center; padding: 20px; margin-top: auto; border-top: 1px solid #eee; color: #999; font-size: 0.8rem; }
-        .badge-pw { position: fixed; bottom: 10px; right: 10px; background: rgba(255,255,255,0.8); border: 1px solid #ddd; padding: 3px 8px; border-radius: 12px; font-size: 0.7rem; color: #888; text-decoration: none; z-index: 999; }
+        /* FOOTER & TOAST */
+        .page-footer { text-align: center; padding: 20px; margin-top: auto; border-top: 1px solid #eee; color: #999; font-size: 0.8rem; padding-bottom: 40px; }
+        .page-footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
         
+        .signature-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 4px;
+            font-size: 0.7rem;
+            color: #aaa;
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            pointer-events: none; /* Let clicks pass through if needed */
+        }
+        .signature-footer a { color: #888; text-decoration: none; pointer-events: auto; }
+        .signature-footer a:hover { color: var(--primary); }
+
+        #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 999; right: 30px; bottom: 50px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: translateY(100px); transition: transform 0.3s, visibility 0.3s; }
+        #toast.show { visibility: visible; transform: translateY(0); }
+
+        /* PRINT */
         .print-only { display: none; }
         @media print {
             body { background: white; padding: 0; }
-            header, .toolbar, footer, .badge-pw { display: none !important; }
+            header, .toolbar, .page-footer, .signature-footer, #toast { display: none !important; }
             .section { display: block !important; }
             .print-only { display: block; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; }
             .card { box-shadow: none; border: 1px solid #000; break-inside: avoid; margin-bottom: 20px; }
@@ -127,8 +168,10 @@
             body.print-list .score-col, body.print-list .grand-col { display: none !important; }
             body.print-list .col-left { width: 100%; border: none; }
             body.print-list .sc-box { display: none; }
+            
             body.print-report .sc-box { border: none !important; background: none !important; color: black !important; }
             body.print-report .grand { background: none !important; color: black !important; border: 2px solid black; }
+            body.print-report .tot-j1, body.print-report .tot-j2, body.print-report .tot-j3 { background: none !important; border: 1px solid #ccc; color: black; }
             .s-meta-print { display: block !important; }
         }
     </style>
@@ -181,7 +224,7 @@
                 <option value="coach">Coach</option>
                 <option value="track">Track No</option>
             </select>
-            <input type="text" class="search-in" id="filterIn" placeholder="Search..." onkeyup="showSugg(this.value)">
+            <input type="text" class="search-in" id="filterIn" placeholder="Search..." onfocus="if(this.value==='' && document.getElementById('filterType').value==='coach') showSugg('')" onkeyup="showSugg(this.value)">
             <button class="btn-apply" onclick="applyFilter()">Apply</button>
             <div id="suggList" class="sugg-list"></div>
         </div>
@@ -194,7 +237,7 @@
         
         <div class="drop-box" style="margin-left:auto;">
             <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
-                🖨️ Export ▼
+                🖨️ Actions ▼
             </button>
             <div id="printDrop" class="drop-content right">
                 <div class="fc-item" onclick="printPage('report')">🖨️ Report (Print)</div>
@@ -209,13 +252,18 @@
     <div id="view-judgment" class="section"></div>
 </div>
 
-<footer style="text-align:center; padding:20px; font-size:0.8rem; color:#888;">
-    www.soumenyoga.in | Powered by BAHA Interactive
-</footer>
+<div id="toast">✅ Data Updated Successfully</div>
+
+<div class="page-footer">
+    <a href="http://www.soumenyoga.in" target="_blank">www.soumenyoga.in</a>
+</div>
+<div class="signature-footer">
+    Powered by <a href="https://code04sohan.github.io/cv/" target="_blank">BAHA Interactive</a>
+</div>
 
 <script>
     // --- CONFIGURATION ---
-    const STATIC_API = "https://script.google.com/macros/s/AKfycbxtZybHhdGDowz6esQvOxr10Gr9ZHvyTGzLVlOO6WBU_kjaNbev9QMUSDxmSSzanjidqw/exec"; 
+    const STATIC_API = "https://script.google.com/macros/s/AKfycbzqkosI5mLF7OofxwiTOBiuoIqsg1oW-O-DTfdhY4c-WYqVJQq1lLUaBaoiWJQw_LJK4w/exec"; 
     const DYNAMIC_API = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
 
     // --- STATE ---
@@ -235,33 +283,20 @@
     };
 
     // --- 1. FETCHING ---
-    // --- 1. FETCHING JUDGES ---
-    // --- 1. FETCHING JUDGES ---
     async function fetchJudges() {
         try {
-            // 1. Call your Static API (not Drive directly)
             const res = await fetch(`${STATIC_API}?type=judges`);
             const response = await res.json();
-
-            // 2. Check for success (like your login code)
             if (response.status === 'success') {
-                const judges = response.data; // This is your array
-
-                // 3. Find and Display
+                const judges = response.data;
                 const j1 = judges.find(x => String(x.num) === "1");
                 const j2 = judges.find(x => String(x.num) === "2");
                 const j3 = judges.find(x => String(x.num) === "3");
-
                 document.getElementById('j1').innerText = j1 ? j1.name : "-";
                 document.getElementById('j2').innerText = j2 ? j2.name : "-";
                 document.getElementById('j3').innerText = j3 ? j3.name : "-";
-            } else {
-                console.error("API Error:", response.message);
             }
-        } catch (e) {
-            console.error("Fetch Failed:", e);
-            document.getElementById('j1').innerText = "Error";
-        }
+        } catch (e) { console.error("Judge API Error", e); }
     }
 
     async function fetchCandidates(manual=false) {
@@ -277,7 +312,7 @@
             groups = Array.from(grpSet).sort();
             updateGroupFilter();
             processData(); 
-            if(manual) alert("Candidates Refreshed!");
+            if(manual) showToast("Candidates List Refreshed");
             fetchMarks();
         } catch(e) { console.error(e); }
     }
@@ -292,7 +327,7 @@
                 if(id) marks[id] = row;
             });
             updateValues(); 
-            if(manual) alert("Marks Updated!");
+            if(manual) showToast("Marks Updated");
             if(isLive) {
                 const b = document.getElementById('btnLive');
                 b.classList.add('flash'); setTimeout(()=>b.classList.remove('flash'), 1000);
@@ -364,13 +399,13 @@
                     <td class="col-left">
                         <span class="s-id">${id}</span>
                         <span class="s-name">${s["NAME OF THE ATHLETES"]}</span>
-                        <span class="s-coach">${s["COACH NAME"]}</span>
+                        <span class="s-coach">Coach: ${s["COACH NAME"]}</span>
                         <div class="s-meta-print">📍 ${s["CENTER NAME"]} | Age: ${s["AGE"]} | ${s["GROUP"]}</div>
                     </td>
                     ${cols(id, 1)} ${cols(id, 2)} ${cols(id, 3)} ${cols(id, "OPTIONAL")}
-                    <td class="score-col tot" id="t-${id}-1">-</td>
-                    <td class="score-col tot" id="t-${id}-2">-</td>
-                    <td class="score-col tot" id="t-${id}-3">-</td>
+                    <td class="score-col tot tot-j1" id="t-${id}-1">-</td>
+                    <td class="score-col tot tot-j2" id="t-${id}-2">-</td>
+                    <td class="score-col tot tot-j3" id="t-${id}-3">-</td>
                     <td class="grand-col"><span class="grand" id="t-${id}-all">-</span></td>
                 </tr>`;
             }).join('');
@@ -381,9 +416,9 @@
                         <div class="card-head"><span>${divName}</span><span>${visibleCount} Athletes</span></div>
                         <div style="overflow-x:auto"><table>
                             <thead><tr>
-                                <th class="col-left">Athlete Details</th>
-                                <th class="score-col">ASAN 1</th><th class="score-col">ASAN 2</th><th class="score-col">ASAN 3</th><th class="score-col">OPTIONAL</th>
-                                <th class="score-col">J1</th><th class="score-col">J2</th><th class="score-col">J3</th><th class="grand-col">Total</th>
+                                <th class="col-left">Athlete</th>
+                                <th class="score-col">A1</th><th class="score-col">A2</th><th class="score-col">A3</th><th class="score-col">Opt</th>
+                                <th class="score-col">J1 Total</th><th class="score-col">J2 Total</th><th class="score-col">J3 Total</th><th class="grand-col">Total</th>
                             </tr></thead>
                             <tbody>${rows}</tbody>
                         </table></div>
@@ -450,12 +485,12 @@
             }
 
             return `<tr class="${rowClass}">
-                <td class="r-pos">${rank}</td>
-                <td>
+                <td class="col-rank"><span class="r-idx">${rank}</span></td>
+                <td class="col-name">
                     <b>${s["NAME OF THE ATHLETES"]}</b>
-                    <div style="font-size:0.8rem;color:#666"> COACH NAME: ${s["COACH NAME"]} | TRACK NO: ${s["TRACK NO"]}</div>
+                    <div style="font-size:0.8rem;color:#666">${s["COACH NAME"]} | 🆔 ${s["TRACK NO"]}</div>
                 </td>
-                <td style="text-align:right;">
+                <td class="col-score">
                     <span style="font-weight:900;color:var(--primary);font-size:1.1rem">${s.score.grand}</span>
                     <span class="tie-reason">${tieMsg}</span>
                 </td>
@@ -490,61 +525,16 @@
         </div><div class="bar">${medal}</div>`;
     }
 
-    // --- CSV EXPORT ---
-    function exportExcel(mode) {
-        let csv = [];
-        // Header
-        if(mode === 'results') {
-            csv.push(['Division', 'Rank', 'Track No', 'Name', 'Coach', 'Center', 'Asana 1', 'Asana 2', 'Asana 3', 'Optional', 'J1 Total', 'J2 Total', 'J3 Total', 'Grand Total']);
-        } else {
-            csv.push(['Division', 'Track No', 'Name', 'Coach', 'Center', 'Age Group', 'Sex', 'Age']);
-        }
-
-        Object.keys(divisions).sort().forEach(divName => {
-            let athletes = divisions[divName];
-            
-            // Sort if results, otherwise original order
-            if(mode === 'results') {
-                athletes = [...athletes].sort((a,b) => (b.score?.grand||0)-(a.score?.grand||0));
-            }
-
-            athletes.forEach((s, idx) => {
-                if(mode === 'results') {
-                    const id = s["TRACK NO"];
-                    const sc = marks[id] || {};
-                    // Quick sum for export
-                    let t1=0,t2=0,t3=0, gt=0;
-                    // (Simplified logic: grab stored stats or recalc)
-                    gt = s.score?.grand || 0;
-                    t1 = s.score?.j1 || 0;
-                    t2 = s.score?.j2 || 0;
-                    t3 = s.score?.j3 || 0;
-                    
-                    csv.push([
-                        divName, idx+1, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"],
-                        '-', '-', '-', '-', // Asana breakups hard to flatten, skipping for summary
-                        t1, t2, t3, gt
-                    ]);
-                } else {
-                    csv.push([
-                        divName, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"], 
-                        s["GROUP"], s["SEX"], s["AGE"]
-                    ]);
-                }
-            });
-        });
-
-        const blob = new Blob([csv.map(r => r.map(c => `"${c}"`).join(',')).join('\n')], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `YogaPro_${mode}_${new Date().toISOString().slice(0,10)}.csv`;
-        a.click();
-    }
-
-    // --- UTILS ---
     function setTxt(id, v) { const e = document.getElementById(id); if(e) e.innerText = v; }
     
+    // --- UTILS ---
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.innerText = "✅ " + msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
     function updateGroupFilter() {
         const list = document.getElementById('grpList');
         list.innerHTML = groups.map(g => `<div class="fc-item" onclick="togG('${g}')"><input type="checkbox" checked> ${g}</div>`).join('');
@@ -579,10 +569,22 @@
     function showSugg(val) {
         const type = document.getElementById('filterType').value;
         const box = document.getElementById('suggList');
-        if(type !== 'coach' || val.length < 1) { box.style.display = 'none'; return; }
-        const m = Array.from(coachList).filter(c => c.toLowerCase().includes(val.toLowerCase()));
-        box.innerHTML = m.map(c => `<div class="sugg-opt" onclick="selSugg('${c}')">${c}</div>`).join('');
-        box.style.display = m.length ? 'block' : 'none';
+        if(type !== 'coach') { box.style.display = 'none'; return; }
+        
+        // Show all if empty, else filter
+        let m = [];
+        if(val === '') {
+            m = Array.from(coachList).sort();
+        } else {
+            m = Array.from(coachList).filter(c => c.toLowerCase().includes(val.toLowerCase())).sort();
+        }
+
+        if(m.length > 0) {
+            box.innerHTML = m.map(c => `<div class="sugg-opt" onclick="selSugg('${c}')">${c}</div>`).join('');
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
     }
 
     function selSugg(val) {
@@ -622,6 +624,52 @@
             b.classList.remove('on'); document.getElementById('txtLive').innerText = "OFFLINE";
             clearInterval(liveTimer);
         }
+    }
+
+    // --- CSV EXPORT ---
+    function exportExcel(mode) {
+        let csv = [];
+        if(mode === 'results') {
+            csv.push(['Division', 'Rank', 'Track No', 'Name', 'Coach', 'Center', 'Asana 1', 'Asana 2', 'Asana 3', 'Optional', 'J1 Total', 'J2 Total', 'J3 Total', 'Grand Total']);
+        } else {
+            csv.push(['Division', 'Track No', 'Name', 'Coach', 'Center', 'Age Group', 'Sex', 'Age']);
+        }
+
+        Object.keys(divisions).sort().forEach(divName => {
+            let athletes = divisions[divName];
+            if(mode === 'results') {
+                athletes = [...athletes].sort((a,b) => (b.score?.grand||0)-(a.score?.grand||0));
+            }
+
+            athletes.forEach((s, idx) => {
+                if(mode === 'results') {
+                    const id = s["TRACK NO"];
+                    const sc = marks[id] || {};
+                    let t1 = s.score?.j1 || 0;
+                    let t2 = s.score?.j2 || 0;
+                    let t3 = s.score?.j3 || 0;
+                    let gt = s.score?.grand || 0;
+                    
+                    csv.push([
+                        divName, idx+1, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"],
+                        '-', '-', '-', '-',
+                        t1, t2, t3, gt
+                    ]);
+                } else {
+                    csv.push([
+                        divName, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"], 
+                        s["GROUP"], s["SEX"], s["AGE"]
+                    ]);
+                }
+            });
+        });
+
+        const blob = new Blob([csv.map(r => r.map(c => `"${c}"`).join(',')).join('\n')], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `YogaPro_${mode}_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
     }
 </script>
 </body>
