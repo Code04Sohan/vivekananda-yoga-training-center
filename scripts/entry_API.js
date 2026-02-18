@@ -311,23 +311,23 @@ window.applySameCoach = function () {
 // =========================================================
 
 // 1. Hide the form interface
-// formView.innerHTML = `
-//     <div style="text-align: center; padding: 60px 20px;">
-//         <div style="font-size: 4rem; margin-bottom: 20px;">🚫</div>
-//         <h2 style="color: #d9534f; font-size: 2rem; margin-bottom: 15px; font-weight: bold;">
-//             REGISTRATION CLOSED
-//         </h2>
-//         <p style="font-size: 1.2rem; color: #ffffff; line-height: 1.6;">
-//             The registration period has ended.<br>
-//             We are no longer accepting new entries.
-//         </p>
-//         <div style="margin-top: 30px; font-weight: 500; color: #ffffff;">
-//             — Thank You —
-//         </div>
-//     </div>
-// `;
+formView.innerHTML = `
+    <div style="text-align: center; padding: 60px 20px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🚫</div>
+        <h2 style="color: #d9534f; font-size: 2rem; margin-bottom: 15px; font-weight: bold;">
+            REGISTRATION CLOSED
+        </h2>
+        <p style="font-size: 1.2rem; color: #ffffff; line-height: 1.6;">
+            The registration period has ended.<br>
+            We are no longer accepting new entries.
+        </p>
+        <div style="margin-top: 30px; font-weight: 500; color: #ffffff;">
+            — Thank You —
+        </div>
+    </div>
+`;
 
-// // 2. Hide the submit button (Double Safety)
-// if (submitBtn) {
-//     submitBtn.style.display = 'none';
-// }
+// 2. Hide the submit button (Double Safety)
+if (submitBtn) {
+    submitBtn.style.display = 'none';
+}
