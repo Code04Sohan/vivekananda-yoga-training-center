@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Yoga PRO - Judge Portal</title>
+  <title>Yoga Judge Portal</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   
   <style>
+    /* --- THEME --- */
     :root {
       --primary: #ea580c; --primary-dark: #c2410c; --secondary: #991b1b; --gold: #d97706;
       --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); 
@@ -32,7 +33,7 @@
     .spinner { border: 4px solid rgba(234, 88, 12, 0.1); border-top: 4px solid var(--primary); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* DISCREET SIDEBAR HEALTH PANEL */
+    /* STATUS PANEL */
     #status-panel {
       position: fixed; right: 0; top: 50%; transform: translateY(-50%);
       background: rgba(255, 255, 255, 0.8); padding: 10px 5px;
@@ -43,15 +44,11 @@
       width: 30px; overflow: hidden; white-space: nowrap;
     }
     #status-panel:hover { width: 140px; background: #fff; padding: 15px; }
-    
-    .status-item { display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between; opacity: 0; transition: 0.2s; }
-    #status-panel:hover .status-item { opacity: 1; }
-    
-    /* Dots visible when collapsed */
     .mini-dots { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 6px; }
     .mini-dot { width: 6px; height: 6px; border-radius: 50%; background: #ccc; }
     #status-panel:hover .mini-dots { display: none; }
-
+    .status-item { display: flex; align-items: center; margin-bottom: 8px; justify-content: space-between; opacity: 0; transition: 0.2s; }
+    #status-panel:hover .status-item { opacity: 1; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
     .dot-green { background: var(--green-success); box-shadow: 0 0 5px var(--green-success); }
     .dot-red { background: var(--red-error); }
@@ -92,7 +89,7 @@
     .track-inp { text-transform: uppercase; font-size: 20px; letter-spacing: 2px; font-weight: 700; color: var(--primary-dark); padding: 16px; border-radius: 12px; }
 
     /* SCORING SCREEN */
-    #scoring-screen { width: 96%; max-width: 800px; padding-top: 90px; padding-bottom: 100px; margin-bottom: auto;}
+    #scoring-screen { width: 96%; max-width: 800px; padding-top: 90px; padding-bottom: 100px; }
     .step-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; background: var(--glass); padding: 10px 15px; border-radius: 12px; border: var(--glass-border); box-shadow: var(--shadow); }
     .step-btn { background: rgba(255,247,237,0.8); border: 1px solid var(--primary); color: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-weight: bold; }
     .step-btn:disabled { border-color: #ddd; color: #ccc; background: transparent; cursor: not-allowed; }
@@ -104,6 +101,7 @@
     .sd-track { color: var(--primary); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;}
     .sd-name { font-size: 18px; font-weight: 700; color: var(--text-main); line-height: 1.2; margin-bottom: 4px; }
     .sd-group { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+    
     .input-wrapper { display: flex; flex-direction: column; align-items: center; min-width: 90px; }
     .score-input { width: 80px; height: 60px; font-size: 28px; text-align: center; background: #fff; border: 2px solid #e5e7eb; border-radius: 12px; color: var(--text-main); font-weight: 700; transition: all 0.2s ease; }
     .score-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15); transform: scale(1.05); }
@@ -113,10 +111,8 @@
     .btn-submit { width: 100%; max-width: 400px; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 20px -5px rgba(234, 88, 12, 0.4); cursor: pointer; }
     .btn-cancel-safe { background: transparent; border: 2px solid #ddd; color: #999; padding: 12px 30px; border-radius: 30px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
     
-    /* APP FOOTER */
     .app-footer { margin-top: auto; padding: 20px; color: var(--text-muted); font-size: 12px; font-weight: 500; text-align: center; width: 100%; border-top: 1px solid rgba(0,0,0,0.05); }
     .app-footer a { color: var(--primary); text-decoration: none; font-weight: 700; }
-    .app-footer a:hover { text-decoration: underline; }
 
   </style>
 </head>
@@ -132,16 +128,16 @@
        <div class="mini-dot" id="dot-n3"></div>
     </div>
     <div style="margin-bottom:10px; font-weight:700; color:var(--primary-dark); text-align:center;">Online</div>
-    <div class="status-item"><span>Auth Link</span> <div id="stat-auth" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>API 1</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>API 2</span> <div id="stat-n2" class="status-dot dot-yellow"></div></div>
-    <div class="status-item"><span>API 3</span> <div id="stat-n3" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>auth_api</span> <div id="stat-auth" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>exam_api1</span> <div id="stat-n1" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>exam_api12</span> <div id="stat-n2" class="status-dot dot-yellow"></div></div>
+    <div class="status-item"><span>exam_api13</span> <div id="stat-n3" class="status-dot dot-yellow"></div></div>
   </div>
 
   <div id="login-screen">
     <img id="login-logo" src="" alt="Logo" class="logo-img">
-    <h2 style="color:var(--text-main); margin:0 0 5px 0; font-weight:700;">YOGA PRO</h2>
-    <p style="color:var(--text-muted); margin:0 0 30px 0; font-size:14px;">Sign in to access the scoring-fields</scoring-fields></p>
+    <h2 style="color:var(--text-main); margin:0 0 5px 0; font-weight:700;">UCMAYPSF-2026</h2>
+    <p style="color:var(--text-muted); margin:0 0 30px 0; font-size:14px;">Sign in to access the scoring-screen</p>
     <div class="input-box"><i class="material-icons">person_outline</i><input id="user" class="inp" type="text" placeholder="Username"></div>
     <div class="input-box"><i class="material-icons">lock_outline</i><input id="pin" class="inp" type="password" placeholder="Access PIN"></div>
     <button id="login-btn" class="btn-primary" onclick="handleLogin()">LOGIN</button>
@@ -174,7 +170,7 @@
       <div class="track-row"><label>Student A Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder=""></div>
       <div class="track-row"><label>Student B Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder=""></div>
       <div class="track-row"><label>Student C Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder=""></div>
-      <button class="btn-primary" onclick="startRound()" style="margin-top:30px; padding: 16px;">FETCH DATA & START</button>
+      <button class="btn-primary" onclick="startRound()" style="margin-top:30px; padding: 16px;">START ROUND</button>
     </div>
   </div>
 
@@ -195,7 +191,7 @@
   </div>
 
   <div class="app-footer">
-    Powered By <a href="https://code04sohan.github.io/cv" target="_blank">BAHA Interactive</a>
+    Technical Services Powered By <a href="https://code04sohan.github.io/cv" target="_blank">BAHA Interactive</a>
   </div>
 
   <script>
@@ -206,7 +202,7 @@
         "2": "https://script.google.com/macros/s/AKfycbwxnLPRQIJeaMaVKkckre6j3XTXCow6HAOkn0g5mPC2ktVmxZelkOGxrG8j3N3n38TQ/exec", 
         "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
       },
-      PATHS: { DASHBOARD: "competition-2026-dashboard.html", LOGO: "resources/yoga_dp.jpeg" },
+      PATHS: { DASHBOARD: "test-portal.html", LOGO: "resources/yoga_dp.jpeg" },
       SCORING: {
         STEPS: [ { key: 'a1', label: 'ASANA 1', max: 10 }, { key: 'a2', label: 'ASANA 2', max: 10 }, { key: 'a3', label: 'ASANA 3', max: 10 }, { key: 'opt', label: 'OPTIONAL', max: 20 } ]
       }
@@ -223,10 +219,8 @@
     function goToDashboard() { window.location.href = CONFIG.PATHS.DASHBOARD; }
 
     function checkSystemHealth() {
-      // Check Auth Node
       fetch(CONFIG.AUTH_NODE_URL + "?action=ping", {mode:'no-cors'})
         .then(()=>updateStatus('auth',true)).catch(()=>updateStatus('auth',false));
-      // Check Scoring Nodes
       Object.keys(CONFIG.API_POOL).forEach(k => 
         fetch(CONFIG.API_POOL[k]+"?action=ping",{mode:'no-cors'})
           .then(()=>updateStatus('n'+k,true)).catch(()=>updateStatus('n'+k,false))
@@ -247,7 +241,6 @@
       if(!u || !p) return alert("Please enter your credentials.");
       showLoad("Verifying Identity...");
       
-      // CALL NEW AUTH NODE
       fetch(CONFIG.AUTH_NODE_URL, {
         method: "POST",
         body: JSON.stringify({ user: u, pin: p })
@@ -255,12 +248,13 @@
       .then(r => r.json())
       .then(res => {
         if(res.status === 'success') {
-          currentUser = { name: res.data.name, num: res.data.num };
+          // Store PIN in currentUser for security layer
+          currentUser = { name: res.data.name, num: res.data.num, pin: p };
           activeApiUrl = CONFIG.API_POOL[res.data.num];
           
           document.getElementById('judge-lbl').innerText = res.data.name;
           document.getElementById('header-avatar').src = `https://ui-avatars.com/api/?name=${res.data.name}&background=ea580c&color=ffffff&rounded=true&size=64`;
-          document.getElementById('status-panel').classList.add('hidden'); // Hide status on login
+          document.getElementById('status-panel').classList.add('hidden');
           
           hideLoad(); switchScreen('track-screen');
         } else {
@@ -286,7 +280,7 @@
           if(res.status === 'success') {
             roundData = t.map((id, i) => ({
               uid: ['A','B','C'][i], track: id,
-              info: res.data[id] || {name:'Unknown ID', group:'-', coach:'-'},
+              info: res.data[id] || {name:'Unknown ID', group:'-'}, // removed coach
               scores: {a1:'', a2:'', a3:'', opt:''}
             }));
             currentStepIndex = 0; renderGrid(); switchScreen('scoring-screen');
@@ -335,7 +329,15 @@
       if(crit) return alert("❌ Score Error: Check limits.");
       if(empty && !confirm("⚠️ Warning: Empty fields. Submit anyway?")) return;
 
-      const payload = { judgeNum: currentUser.num, students: roundData.map(s => ({ trackNo: s.track, scores: { a1: s.scores.a1===''?0:s.scores.a1, a2: s.scores.a2===''?0:s.scores.a2, a3: s.scores.a3===''?0:s.scores.a3, opt: s.scores.opt===''?0:s.scores.opt } })) };
+      // Include PIN in payload
+      const payload = { 
+        judgeNum: currentUser.num,
+        pin: currentUser.pin, // Security PIN
+        students: roundData.map(s => ({ 
+          trackNo: s.track, 
+          scores: { a1: s.scores.a1===''?0:s.scores.a1, a2: s.scores.a2===''?0:s.scores.a2, a3: s.scores.a3===''?0:s.scores.a3, opt: s.scores.opt===''?0:s.scores.opt } 
+        })) 
+      };
       
       showLoad("Submitting Scores...");
       fetch(activeApiUrl, { method:"POST", body:JSON.stringify(payload) })
