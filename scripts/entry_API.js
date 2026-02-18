@@ -317,11 +317,11 @@ formView.innerHTML = `
         <h2 style="color: #d9534f; font-size: 2rem; margin-bottom: 15px; font-weight: bold;">
             REGISTRATION CLOSED
         </h2>
-        <p style="font-size: 1.2rem; color: #ffffff; line-height: 1.6;">
+        <p style="font-size: 1.2rem; color: #555; line-height: 1.6;">
             The registration period has ended.<br>
             We are no longer accepting new entries.
         </p>
-        <div style="margin-top: 30px; font-weight: 500; color: #ffffff;">
+        <div style="margin-top: 30px; font-weight: 500; color: #333;">
             — Thank You —
         </div>
     </div>
