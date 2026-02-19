@@ -256,7 +256,7 @@
 <div id="toast">✅ Data Updated Successfully</div>
 
 <div class="page-footer">
-    <a href="http://www.soumenyoga.in" target="_blank">www.soumenyoga.in</a>
+    <a href="http://www.soumenyoga.in" target="_blank">visit www.soumenyoga.in</a>
 </div>
 <div class="signature-footer">
     Powered by <a href="https://code04sohan.github.io/cv/" target="_blank">BAHA Interactive</a>
@@ -652,7 +652,7 @@
         const b = document.getElementById('btnLive');
         if(isLive) {
             b.classList.add('on'); document.getElementById('txtLive').innerText = "LIVE ON";
-            liveTimer = setInterval(() => fetchMarks(), 30000);
+            liveTimer = setInterval(() => fetchMarks(true), 30000);
         } else {
             b.classList.remove('on'); document.getElementById('txtLive').innerText = "OFFLINE";
             clearInterval(liveTimer);
