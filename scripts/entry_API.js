@@ -311,7 +311,7 @@ window.applySameCoach = function () {
 // =========================================================
 
 // 1. Hide the form interface
-formView.innerHTML = `
+//formView.innerHTML = `
     <div style="text-align: center; padding: 60px 20px;">
         <div style="font-size: 4rem; margin-bottom: 20px;">🚫</div>
         <h2 style="color: #d9534f; font-size: 2rem; margin-bottom: 15px; font-weight: bold;">
@@ -328,6 +328,6 @@ formView.innerHTML = `
 `;
 
 // 2. Hide the submit button (Double Safety)
-if (submitBtn) {
+//if (submitBtn) {
     submitBtn.style.display = 'none';
 }
