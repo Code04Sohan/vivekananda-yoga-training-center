@@ -1,0 +1,284 @@
+:root {
+    --primary: #002a5c; /* Logo Gold */
+    --primary-dark: #001a33; /* Darker Gold for gradients/hover */
+    --navy-blue: #002a5c; /* Logo Navy */
+    --text-dark: #001a33; /* Very dark navy for text readability */
+    --error: #e74c3c;
+    --success: #27ae60;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #051324; /* Changed from #333 to a deep dark navy */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    /* Changed to a Navy Blue gradient to match the MYST text */
+    background: linear-gradient(135deg, rgba(0, 42, 92, 0.95), rgba(18, 90, 145, 0.95));
+    padding: 30px 20px;
+    text-align: center;
+    color: white;
+}
+
+.logo-container {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 15px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    background: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#orgLogo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.header h2 {
+    margin: 5px 0 5px 0;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.4;
+}
+
+.header p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.95;
+}
+
+.form-body {
+    padding: 30px;
+    flex-grow: 1;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #222;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    font-family: inherit;
+    background: #ffffff;
+    border: 2px solid transparent;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primary);
+    outline: none;
+    /* Changed focus ring from pink to matching gold */
+    box-shadow: 0 0 0 4px rgba(212, 155, 37, 0.3);
+}
+
+input[readonly] {
+    background-color: #e9ecef;
+    color: #555;
+    cursor: default;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background: #777;
+    cursor: not-allowed;
+}
+
+.loader {
+    display: none;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid white;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* SUCCESS PAGE STYLES */
+#successView {
+    display: none;
+    text-align: center;
+    padding: 0px 20px 10px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    flex-grow: 1;
+}
+
+.sl-card {
+    background: #e8f8f0;
+    border: 2px dashed var(--success);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+    color: var(--success);
+    font-weight: bold;
+    font-size: 1.6rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.map-container {
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    height: 200px;
+    width: 100%;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+#errorMsg {
+    background: #ffe6e6;
+    color: var(--error);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+    border-left: 5px solid var(--error);
+    font-weight: 500;
+}
+
+/* --- FOOTER CREDIT SECTION --- */
+.footer-credit {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #444;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.footer-credit a {
+    color: var(--navy-blue); /* Changed to navy for better contrast on light background */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-credit a:hover {
+    text-decoration: underline;
+}
+
+/* --- CUSTOM AUTOCOMPLETE CSS --- */
+.autocomplete-wrapper {
+    position: relative;
+}
+
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.suggestion-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f2f5;
+    color: var(--primary);
+}
+
+/* Highlight matching text */
+.match {
+    font-weight: bold;
+    color: var(--primary);
+}
+

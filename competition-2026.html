@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCMAYPSF STATE CHAPTER 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/competition-2026.css">
+    <link rel="icon" type="image/png" href="resources/logo.jpg">
+    
+    <meta property="og:title" content="UCMAYPSF Purba Medinipur District Chapter- 2026">
+    <meta property="og:description" content="Official Participant Registration Form for the 2026 Yoga Competition. Register now!">
+    <meta property="og:image" content="https://www.soumenyoga.in/resources/yoga_dp.jpeg">
+    <meta property="og:url" content="https://www.soumenyoga.in/competition-2026">
+    <meta property="og:type" content="website">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header">
+        <div class="logo-container">
+            <img id="orgLogo" src="" alt="Logo">
+        </div>
+        <h2>UCMAYPSF STATE CHAPTER 2026</h2>
+        <p>Participant Registration for Purba Medinipur</p>
+    </div>
+
+    <div class="form-body" id="formView">
+        <div id="errorMsg"></div>
+        <form id="yogaForm">
+            
+            <div class="form-group">
+                <label>🔢 Registration Num.</label>
+                <input type="text" name="regNum" required placeholder="Enter Registration Number">
+            </div>
+
+            <div class="form-group">
+                <label>👤 Name of the Athlete</label>
+                <input type="text" name="name" required placeholder="Full Name">
+            </div>
+
+            <div class="form-group">
+                <label>⚧ Sex</label>
+                <select name="sex" required>
+                    <option value="" disabled selected hidden>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>📅 Date of Birth</label>
+                <input type="date" name="dob" id="dobField" required>
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>👤 Age</label>
+                    <input type="number" name="age" id="ageField" readonly placeholder="Auto">
+                </div>
+                <div class="form-group" style="flex: 2;">
+                    <label>🏆 Group</label>
+                    <input type="text" name="group" id="groupField" readonly placeholder="Auto-Select">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🧘 Coach Name</label>
+                <div class="autocomplete-wrapper">
+                    <input type="text" name="coach" id="coachField" required 
+                           placeholder="Tap to select or type to search..." autocomplete="off">
+                    <div id="suggestions" class="suggestions-list"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🏷️ Type</label>
+                <select name="type" required>
+                    <option value="" disabled selected hidden>Select Category Type</option>
+                    <option value="Traditional/Athletic Yoga">1. Traditional/Athletic Yoga</option>
+                    <option value="Hand Balance (HB)">2. Hand Balance (HB)</option>
+                    <option value="Leg Balance (LB)">3. Leg Balance (LB)</option>
+                    <option value="Twisting (TW)">4. Twisting (TW)</option>
+                    <option value="Forward Bending (FB)">5. Forward Bending (FB)</option>
+                    <option value="Back Bending (BB)">6. Back Bending (BB)</option>
+                    <option value="Artistic Yoga">7. Artistic Yoga</option>
+                    <option value="Mom's Category">8. Mom's Category</option>
+                    <option value="Dance">9. Dance</option>
+                </select>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn">
+                <span id="btnText">Submit Registration</span>
+                <div class="loader" id="btnLoader"></div>
+            </button>
+        </form>
+    </div>
+
+    <div id="successView">
+        <p style="color: #27ae60; margin-top: 0; margin-bottom: 5px;">✅ Registration completed successfully.</p>
+        
+        <div class="sl-card">
+            <div id="resultLabel" style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">SERIAL(Sl.) NO</div>
+            <span id="slDisplay">...</span>
+        </div>
+        
+        <p style="font-size: 0.9rem; font-weight: 600; color: #333; margin-top: 20px;">Competition Location</p>
+        <div class="map-container">
+            
+
+        <button class="btn" id="btnSameCoach" onclick="applySameCoach()" style="background: #2980b9; margin-top: 25px; display: none;">
+            Register Next as Coach: <span id="lastCoachName">Current Coach</span>
+        </button>
+
+        <button class="btn" onclick="resetForm()" style="background: #34495e; margin-top: 10px;">
+            Register Another (New Coach) 
+        </button>
+    </div>
+
+    <div class="footer-credit">
+        Powered by <a href="https://code04sohan.github.io/cv/" target="_blank"> MYST - Management of Yoga Sports & Tournaments</a>.<br>
+        Contact <a href="https://code04sohan.github.io/cv/" target="_blank">us</a> for support.
+
+</div>
+
+<script src="scripts\entry_API.js"></script>
+
+</body>
+</html>
