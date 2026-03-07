@@ -202,6 +202,7 @@
         </button>
         <div id="userDropdown" class="dropdown-content">
           <div onclick="goToDashboard()"><i class="material-icons" style="vertical-align:middle; font-size:18px; margin-right:8px; color:var(--primary);">dashboard</i> Dashboard</div>
+          <div onclick="syncDatabase()"><i class="material-icons" style="vertical-align:middle; font-size:18px; margin-right:8px; color:var(--gold);">sync</i> Sync</div>
           <div onclick="window.location.reload()" style="border-top:1px solid #f3f4f6; color:var(--red-error);"><i class="material-icons" style="vertical-align:middle; font-size:18px; margin-right:8px;">logout</i> Logout</div>
         </div>
       </div>
@@ -336,6 +337,7 @@
       if(!t.length) return alert("Please enter at least one track number.");
       showLoad("Setting up Round...");
       fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}&judgeNum=${currentUser.num}`)
+      
         .then(r => r.json())
         .then(res => {
           hideLoad();
@@ -439,6 +441,28 @@
     function reset() { ['track-a','track-b','track-c','track-d','track-e'].forEach(x => document.getElementById(x).value=''); document.getElementById('scoring-screen').classList.add('hidden'); document.getElementById('track-screen').classList.remove('hidden'); }
     function toggleDropdown() { document.getElementById("userDropdown").classList.toggle("show"); }
     window.onclick = function(e) { if (!e.target.closest('.user-menu')) { document.getElementById("userDropdown").classList.remove('show'); }}
+
+    function syncDatabase() {
+      // Hide the dropdown menu
+      document.getElementById("userDropdown").classList.remove('show');
+      
+      // Double check before syncing
+      if(!confirm("Are you sure you want to sync? Use this if the Admin made manual changes to the Google Sheet.")) return;
+      
+      showLoad("Syncing Database...");
+      
+      // Call the sync action on the judge's specific API Node
+      fetch(`${activeApiUrl}?action=sync`)
+        .then(r => r.text()) 
+        .then(text => {
+          hideLoad();
+          alert(text); // This will show the "✅ Cache cleared!" message
+        })
+        .catch(e => {
+          hideLoad();
+          alert("Failed to sync database. Please check your connection.");
+        });
+    }
   </script>
 </body>
 </html>
