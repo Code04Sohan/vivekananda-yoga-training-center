@@ -372,21 +372,42 @@
       g.innerHTML = '';
       
       roundData.forEach((s, i) => {
-        const currentVal = s.scores[step.key];
-        // Apply animation class to the card
+        let currentVal = s.scores[step.key];
+        let customMax = step.max;
+        let lockInput = false;
+
+        // --- NEW LOGIC: Dynamic Optional Scoring ---
+        if (step.key === 'opt' && s.info.group) {
+          if (s.info.group.includes("Group A")) {
+            customMax = 0;
+            currentVal = 0; 
+            s.scores[step.key] = 0; // Automatically save 0
+            lockInput = true; // Lock the input
+          } else if (s.info.group.includes("Group E")) {
+            customMax = 10;
+          }
+        }
+        // -------------------------------------------
+
+        // If custom max is different, show a red label next to the group name
+        const groupLabelModifier = (step.key === 'opt' && customMax !== step.max) 
+          ? ` <span style="color:var(--red-error); font-weight:700;">(Max: ${customMax})</span>` 
+          : '';
+
         g.innerHTML += `
         <div class="score-card ${animClass}">
           <div class="student-details">
             <div class="sd-track">Track No - ${s.track}</div>
             <div class="sd-name">${s.info.name}</div>
-            <div class="sd-group">Group : ${s.info.group}</div>
+            <div class="sd-group">Group : ${s.info.group}${groupLabelModifier}</div>
           </div>
           <div class="input-wrapper">
             <input type="number" 
-                   class="score-input ${isError(currentVal, step.max) ? 'error' : ''}" 
+                   class="score-input ${isError(currentVal, customMax) ? 'error' : ''}" 
                    value="${currentVal}" 
                    placeholder="-" 
-                   oninput="val(this,${i},'${step.key}', ${step.max})">
+                   ${lockInput ? 'readonly style="background-color: #e2e8f0; color: #94a3b8; cursor: not-allowed;"' : ''}
+                   oninput="val(this,${i},'${step.key}', ${customMax})">
           </div>
         </div>`;
       });
@@ -415,8 +436,24 @@
 
     function submit() {
       let crit = false, empty = false;
-      roundData.forEach(s => { CONFIG.SCORING.STEPS.forEach(step => { const v = parseFloat(s.scores[step.key]); if(!isNaN(v) && v > step.max) crit = true; if(s.scores[step.key] === '') empty = true; }); });
-      if(crit) return alert("❌ Score Error: Check limits.");
+      
+      roundData.forEach(s => { 
+        CONFIG.SCORING.STEPS.forEach(step => { 
+          // --- NEW LOGIC: Dynamic validation limits ---
+          let currentMax = step.max;
+          if (step.key === 'opt' && s.info.group) {
+            if (s.info.group.includes("Group A")) currentMax = 0;
+            else if (s.info.group.includes("Group E")) currentMax = 10;
+          }
+          // --------------------------------------------
+
+          const v = parseFloat(s.scores[step.key]); 
+          if(!isNaN(v) && v > currentMax) crit = true; 
+          if(s.scores[step.key] === '') empty = true; 
+        }); 
+      });
+
+      if(crit) return alert("❌ Score Error: One or more scores exceed the allowed limit for that group.");
       if(empty && !confirm("⚠️ Warning: Empty fields. Submit anyway?")) return;
 
       const payload = { 
