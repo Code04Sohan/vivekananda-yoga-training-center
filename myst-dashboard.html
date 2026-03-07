@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UCMAYPSF Purba Medinipur District Chapter- 2026</title>
-    <link rel="icon" type="image/png" href="resources/logo.jpg">
+    <title>Rakshachak Sabuj Sangha Yoga Competition - 2026</title>
+    <link rel="icon" type="image/png" href="resources/MYST_dp.jpeg">
     <style>
         :root {
-            --primary: #ea580c; --dark: #c2410c; --bg: #fff7ed; --surface: #ffffff;
-            --text: #1f2937; --gray: #6b7280;
-            --gold: #f59e0b; --silver: #64748b; --bronze: #b45309;
-            --j1-light: #fff7ed; --j1-dark: #9a3412; --j1-border: #fed7aa;
-            --j2-light: #eff6ff; --j2-dark: #1e40af; --j2-border: #bfdbfe;
-            --j3-light: #f0fdf4; --j3-dark: #166534; --j3-border: #bbf7d0;
+            --primary: #2980b9; --dark: #2471a3; --bg: #f0f4f8; --surface: #ffffff;
+            --text: #2c3e50; --gray: #7f8c8d;
+            --gold: #f39c12; --silver: #bdc3c7; --bronze: #cd7f32;
+            --j1-light: #ebf5fb; --j1-dark: #2471a3; --j1-border: #a9cce3;
+            --j2-light: #f4f6f7; --j2-dark: #2c3e50; --j2-border: #d5d8dc;
+            --j3-light: #e8f8f5; --j3-dark: #117a65; --j3-border: #a3e4d7;
         }
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column;}
@@ -98,9 +98,10 @@
         .sc-j3 { border-color: var(--j3-border); background: var(--j3-light); color: var(--j3-dark); }
         
         /* TOTALS COLOR CODED */
-        .tot-j1 { background-color: #fff7ed !important; color: #ea580c; font-weight: 700; border-left: 2px solid #fdba74; }
-        .tot-j2 { background-color: #eff6ff !important; color: #2563eb; font-weight: 700; border-left: 2px solid #93c5fd; }
-        .tot-j3 { background-color: #f0fdf4 !important; color: #16a34a; font-weight: 700; border-left: 2px solid #86efac; }
+        /* Update the total score column colors to match the blue theme */
+        .tot-j1 { background-color: var(--j1-light) !important; color: var(--j1-dark); font-weight: 700; border-left: 2px solid var(--j1-border); }
+        .tot-j2 { background-color: var(--j2-light) !important; color: var(--j2-dark); font-weight: 700; border-left: 2px solid var(--j2-border); }
+        .tot-j3 { background-color: var(--j3-light) !important; color: var(--j3-dark); font-weight: 700; border-left: 2px solid var(--j3-border); }
         .grand { background: var(--primary); color: white; padding: 6px 12px; border-radius: 6px; font-weight: 900; font-size: 1rem; }
 
         /* JUDGMENT */
@@ -156,41 +157,17 @@
         #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 999; right: 30px; bottom: 50px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: translateY(100px); transition: transform 0.3s, visibility 0.3s; }
         #toast.show { visibility: visible; transform: translateY(0); }
 
-        /* PRINT */
-        .print-only { display: none; }
-        @media print {
-            body { background: white; padding: 0; }
-            header, .toolbar, .page-footer, .signature-footer, #toast { display: none !important; }
-            .section { display: block !important; }
-            .print-only { display: block; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; }
-            .card { box-shadow: none; border: 1px solid #000; break-inside: avoid; margin-bottom: 20px; }
-            .card-head { background: #eee !important; color: black !important; border-bottom: 1px solid #000; }
-            
-            body.print-list .score-col, body.print-list .grand-col { display: none !important; }
-            body.print-list .col-left { width: 100%; border: none; }
-            body.print-list .sc-box { display: none; }
-            
-            body.print-report .sc-box { border: none !important; background: none !important; color: black !important; }
-            body.print-report .grand { background: none !important; color: black !important; border: 2px solid black; }
-            body.print-report .tot-j1, body.print-report .tot-j2, body.print-report .tot-j3 { background: none !important; border: 1px solid #ccc; color: black; }
-            .s-meta-print { display: block !important; }
-        }
     </style>
 </head>
 <body>
 
-<div class="print-only">
-    <h1 id="pTitle">Competition Report</h1>
-    <p>Report Generated: <span id="pDate"></span></p>
-</div>
-
 <div class="container">
     <header>
         <div class="brand">
-            <img src="resources/yoga_dp.jpeg" onerror="this.style.display='none'">
+            <img src="resources/MYST_dp.jpeg" onerror="this.style.display='none'">
             <div>
-                <h1>UCMAYPSF Purba Medinipur District Chapter- 2026</h1>
-                <small>Championship Management System</small>
+                <h1>MYST - Management of Yoga Sports & Tournaments</h1>
+                <small>Rakshachak Sabuj Sangha Yoga Competition - 2026</small>
             </div>
         </div>
         <div class="header-right">
@@ -199,7 +176,7 @@
                 <div class="judge-item"><span class="judge-lbl">J2</span><span class="judge-val" id="j2">...</span></div>
                 <div class="judge-item"><span class="judge-lbl">J3</span><span class="judge-val" id="j3">...</span></div>
             </div>
-            <a href="competition-2026-judegs.html" class="btn-portal">👨‍⚖️ Portal</a>
+            <a href="myst-judegs.html" class="btn-portal">👨‍⚖️ Portal</a>
         </div>
     </header>
 
@@ -238,11 +215,21 @@
         
         <div class="drop-box" style="margin-left:auto;">
             <button class="drop-btn" onclick="document.getElementById('printDrop').classList.toggle('show')">
-                🖨️ Actions ▼
+                ⚙️ Settings
             </button>
             <div id="printDrop" class="drop-content right">
-                <div class="fc-item" onclick="printPage('report')">🖨️ Report (Print)</div>
-                <div class="fc-item" onclick="printPage('list')">📋 List (Print)</div>
+                <div style="padding: 5px 10px; font-size: 0.8rem; font-weight: bold; color: var(--gray);">SPLIT GROUPS BY:</div>
+                <select id="divSizeSelect" class="dd-search" onchange="changeDivSize(this.value)">
+                    <option value="none">None (Don't Split)</option>
+                    <option value="5">5 Candidates</option>
+                    <option value="10">10 Candidates</option>
+                    <option value="15">15 Candidates</option>
+                    <option value="20">20 Candidates</option>
+                    <option value="25">25 Candidates</option>
+                    <option value="30">30 Candidates</option>
+                    <option value="35">35 Candidates</option>
+                </select>
+                <hr style="border:0; border-top:1px solid #eee; margin: 5px 0;">
                 <div class="fc-item" onclick="exportExcel('results')">📥 Excel (Results)</div>
                 <div class="fc-item" onclick="exportExcel('list')">📥 Excel (List)</div>
             </div>
@@ -259,7 +246,7 @@
     <a href="http://www.soumenyoga.in" target="_blank">visit www.soumenyoga.in</a>
 </div>
 <div class="signature-footer">
-    Powered by <a href="https://code04sohan.github.io/cv/" target="_blank">BAHA Interactive</a>
+    Powered by <a href="https://code04sohan.github.io/cv/" target="_blank">MYST - Management of Yoga Sports & Tournaments</a>
 </div>
 
 <script>
@@ -267,11 +254,15 @@
     const STATIC_API = "https://script.google.com/macros/s/AKfycbzqkosI5mLF7OofxwiTOBiuoIqsg1oW-O-DTfdhY4c-WYqVJQq1lLUaBaoiWJQw_LJK4w/exec"; 
     const DYNAMIC_API = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
 
+    // Configurable division sizes
+    const DIVISION_OPTIONS = ['none', 5, 10, 15, 20, 25, 30, 35];
+
     // --- STATE ---
     let students = [], marks = {}, divisions = {};
     let groups = [], selGroups = new Set(['ALL']), coachList = new Set();
     let isLive = false, liveTimer = null;
     let activeFilter = { type: 'none', val: '' };
+    let currentDivSize = 'none'; // Default to no divisions
 
     window.onload = () => {
         document.getElementById('pDate').innerText = new Date().toLocaleString();
@@ -362,12 +353,16 @@
     }
 
     // --- 2. LOGIC ---
+    function changeDivSize(val) {
+        currentDivSize = val;
+        processData(); // Re-calculate splits and render
+    }
+
     function processData() {
         divisions = {};
         let buckets = {};
         
         students.forEach(s => {
-            // FIX: .trim() removes accidental spaces from Group and Sex
             const groupName = (s.GROUP || "").trim();
             const sex = (s.SEX || "").trim();
             const key = `${groupName} - ${sex}`;
@@ -375,6 +370,53 @@
             if(!buckets[key]) buckets[key] = [];
             buckets[key].push(s);
         });
+
+        Object.keys(buckets).forEach(k => {
+            const sorted = roundRobinSort(buckets[k]);
+            
+            if (currentDivSize === 'none') {
+                divisions[k] = sorted; // Keep everyone together
+            } else {
+                let size = parseInt(currentDivSize);
+                for(let i=0; i<sorted.length; i+=size) {
+                    const divLetter = String.fromCharCode(65 + (i/size));
+                    const divName = `${k} - Division ${divLetter}`;
+                    divisions[divName] = sorted.slice(i, i+size);
+                }
+            }
+        });
+        renderAll();
+    }
+
+    // Advanced Track No Matcher (Supports "001", "001,002", or "001-015")
+    function matchTrack(trackId, query) {
+        if (!query) return true;
+        let q = String(query).toUpperCase().trim();
+        let t = String(trackId).toUpperCase().trim();
+        
+        // Comma separated (e.g., "001, 002")
+        if (q.includes(',')) {
+            let parts = q.split(',').map(p => p.trim());
+            return parts.includes(t);
+        }
+        // Range (e.g., "001-015")
+        if (q.includes('-')) {
+            let parts = q.split('-');
+            if (parts.length === 2) {
+                let start = parts[0].trim();
+                let end = parts[1].trim();
+                
+                // If they are numbers, compare mathematically
+                if (!isNaN(start) && !isNaN(end) && !isNaN(t)) {
+                    return parseInt(t, 10) >= parseInt(start, 10) && parseInt(t, 10) <= parseInt(end, 10);
+                }
+                // Otherwise string compare
+                return t >= start && t <= end;
+            }
+        }
+        // Exact match
+        return t === q;
+    }
 
         Object.keys(buckets).forEach(k => {
             const sorted = roundRobinSort(buckets[k]);
@@ -386,7 +428,7 @@
             }
         });
         renderAll();
-    }
+    
 
     function roundRobinSort(list) {
         let coaches = {};
@@ -423,7 +465,7 @@
                 const id = s["TRACK NO"];
                 let show = true;
                 if (activeFilter.type === 'coach' && activeFilter.val && !s["COACH NAME"].toLowerCase().includes(activeFilter.val)) show = false;
-                if (activeFilter.type === 'track' && activeFilter.val && String(id).toLowerCase() !== activeFilter.val) show = false;
+                if (activeFilter.type === 'track' && activeFilter.val && !matchTrack(id, activeFilter.val)) show = false;
                 
                 if(show) visibleCount++;
                 const displayStyle = show ? '' : 'display:none;';
@@ -669,7 +711,24 @@
         }
 
         Object.keys(divisions).sort().forEach(divName => {
+            // Check Group Filter
+            const baseGroup = divName.includes(" - Division") ? divName.split(" - Division")[0] : divName;
+            let showGroup = (selGroups.has('ALL') || selGroups.has(baseGroup));
+            if (!showGroup) return;
+
             let athletes = divisions[divName];
+
+            // Apply Active Search Filter to Excel Export
+            athletes = athletes.filter(s => {
+                const id = s["TRACK NO"];
+                if (activeFilter.type === 'coach' && activeFilter.val && !s["COACH NAME"].toLowerCase().includes(activeFilter.val)) return false;
+                if (activeFilter.type === 'track' && activeFilter.val && !matchTrack(id, activeFilter.val)) return false;
+                return true;
+            });
+
+            if(athletes.length === 0) return; // Skip empty groups after filter
+
+            // Sort by score if exporting results
             if(mode === 'results') {
                 athletes = [...athletes].sort((a,b) => (b.score?.grand||0)-(a.score?.grand||0));
             }
@@ -678,15 +737,12 @@
                 if(mode === 'results') {
                     const id = s["TRACK NO"];
                     const sc = marks[id] || {};
-                    let t1 = s.score?.j1 || 0;
-                    let t2 = s.score?.j2 || 0;
-                    let t3 = s.score?.j3 || 0;
                     let gt = s.score?.grand || 0;
                     
                     csv.push([
                         divName, idx+1, s["TRACK NO"], s["NAME OF THE ATHLETES"], s["COACH NAME"], s["CENTER NAME"],
-                        '-', '-', '-', '-',
-                        t1, t2, t3, gt
+                        sc["ASANA 1 (Judge 1)"] || '-', sc["ASANA 2 (Judge 1)"] || '-', sc["ASANA 3 (Judge 1)"] || '-', sc["OPTIONAL (Judge 1)"] || '-',
+                        s.score?.j1 || 0, s.score?.j2 || 0, s.score?.j3 || 0, gt
                     ]);
                 } else {
                     csv.push([
@@ -696,6 +752,11 @@
                 }
             });
         });
+
+        if(csv.length === 1) {
+            alert("No data matches your current filters to export.");
+            return;
+        }
 
         const blob = new Blob([csv.map(r => r.map(c => `"${c}"`).join(',')).join('\n')], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
