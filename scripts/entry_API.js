@@ -108,13 +108,13 @@ dobField.addEventListener('change', function () {
     let age = today.getFullYear() - dobDate.getFullYear();
 
     // 2. Compare months (Ignore days)
-    const currentMonth = today.getMonth(); // 0-11
-    const birthMonth = dobDate.getMonth();
+    // const currentMonth = today.getMonth(); // 0-11
+    // const birthMonth = dobDate.getMonth();
 
     // If current month is before birth month, subtract 1 year
-    if (currentMonth < birthMonth) {
-        age--;
-    }
+    // if (currentMonth < birthMonth) {
+    //     age--;
+    // }
     // --- 🟢 END NEW LOGIC ---
 
     // Prevent negative age if they select a future year
