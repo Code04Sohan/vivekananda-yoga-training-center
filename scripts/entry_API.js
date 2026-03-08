@@ -103,18 +103,19 @@ dobField.addEventListener('change', function () {
     const today = new Date();
     if (!this.value) return;
 
-    // --- 🟢 NEW AGE CALCULATION LOGIC (MONTH BASED) ---
-    // 1. Initial year difference
+    // --- 🟢 STRICT AGE CALCULATION (AS OF JAN 1ST CURRENT YEAR) ---
+    // 1. Initial year difference (e.g., 2026 - 2018 = 8)
     let age = today.getFullYear() - dobDate.getFullYear();
 
-    // 2. Compare months (Ignore days)
-    // const currentMonth = today.getMonth(); // 0-11
-    // const birthMonth = dobDate.getMonth();
+    // 2. Get the birth month and day
+    const birthMonth = dobDate.getMonth(); // 0 is Jan, 2 is March, etc.
+    const birthDay = dobDate.getDate();    // 1-31
 
-    // If current month is before birth month, subtract 1 year
-    // if (currentMonth < birthMonth) {
-    //     age--;
-    // }
+    // 3. If they are born AFTER January 1st, subtract a year
+    // Example: March 26 (Month 2, Day 26) triggers this and drops age from 8 to 7.
+    if (birthMonth > 0 || (birthMonth === 0 && birthDay > 1)) {
+        age--;
+    }
     // --- 🟢 END NEW LOGIC ---
 
     // Prevent negative age if they select a future year
