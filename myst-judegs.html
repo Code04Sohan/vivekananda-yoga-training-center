@@ -236,7 +236,7 @@
 
       <div id="stage-selector" class="track-row hidden" style="background: #fffbea; padding: 15px; border-radius: 12px; border: 1px solid #fde047; margin-bottom: 20px;">
         <label style="color: var(--gold);">📍 Select Stage</label>
-        <select id="judgeStage" class="inp track-inp" style="pointer-events: auto; background: #fff; border-color: var(--gold); color: var(--text-main);">
+        <select id="judgeStage" class="inp track-inp" style="pointer-events: auto; background: #fff; border-color: var(--gold); color: var(--text-main);" onchange="saveStagePreference()"></select>
           <option value="STAGE 1">STAGE 1</option>
           <option value="STAGE 2">STAGE 2</option>
           <option value="STAGE 3">STAGE 3</option>
@@ -302,18 +302,30 @@
         document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('status-panel').classList.add('hidden');
         
-        // Hide the main footer at the bottom if it exists
         const footers = document.querySelectorAll('.app-footer');
         if(footers.length > 1) footers[1].classList.add('hidden');
         
-        // Show Lock Screen
         document.getElementById('lock-screen').classList.remove('hidden');
-        return; // STOP the rest of the app from loading
+        return; 
       }
 
       // 2. NORMAL BOOT (If IS_ACTIVE is true)
       document.getElementById('login-logo').src = CONFIG.PATHS.LOGO;
       document.getElementById('header-logo').src = CONFIG.PATHS.LOGO;
+      
+      // --- NEW: RESTORE BROWSER MEMORY (Pro Mode & Stage) ---
+      const savedProMode = localStorage.getItem('myst_pro_mode_active');
+      if (savedProMode === 'true') {
+        document.getElementById('proModeToggle').checked = true;
+        toggleProMode(); // Trigger the UI to update
+      }
+
+      const savedStage = localStorage.getItem('myst_preferred_stage');
+      if (savedStage) {
+        document.getElementById('judgeStage').value = savedStage;
+      }
+      // ------------------------------------------------------
+
       checkSystemHealth(); 
     };
 
@@ -372,8 +384,13 @@
     let isProMode = false;
 
     // --- NEW PRO MODE TOGGLE LOGIC ---
+    // --- NEW PRO MODE TOGGLE LOGIC ---
     function toggleProMode() {
       isProMode = document.getElementById('proModeToggle').checked;
+      
+      // Save the state to the browser's memory
+      localStorage.setItem('myst_pro_mode_active', isProMode); 
+      
       const container = document.getElementById('track-inputs-container');
       
       if (isProMode) {
@@ -382,9 +399,8 @@
         document.getElementById('stage-selector').classList.remove('hidden');
         document.getElementById('track-inst').innerText = "Click 'FETCH BATCH' to pull the next queue automatically.";
         document.getElementById('btn-start').innerText = "FETCH NEXT BATCH ⚡";
-        container.classList.add('pro-active'); // Locks the input fields
+        container.classList.add('pro-active'); 
         
-        // Clear current inputs
         ['track-a','track-b','track-c','track-d','track-e'].forEach(x => document.getElementById(x).value='');
       } else {
         document.getElementById('lbl-pro').classList.remove('active');
@@ -392,8 +408,14 @@
         document.getElementById('stage-selector').classList.add('hidden');
         document.getElementById('track-inst').innerText = "Enter the candidate track numbers for this round.";
         document.getElementById('btn-start').innerText = "START ROUND";
-        container.classList.remove('pro-active'); // Unlocks the input fields
+        container.classList.remove('pro-active'); 
       }
+    }
+
+    // NEW FUNCTION: Save stage selection
+    function saveStagePreference() {
+      const selectedStage = document.getElementById('judgeStage').value;
+      localStorage.setItem('myst_preferred_stage', selectedStage);
     }
 
     // --- UPDATED START ROUND (Handles both Manual & Pro) ---
