@@ -81,28 +81,45 @@ T<!DOCTYPE html>
     
     #toast { visibility: hidden; min-width: 250px; background-color: var(--text-main); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px); font-size: 0.9rem; transition: 0.3s; opacity: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     #toast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* LOGIN & LAYOUT CLASSES */
+    .hidden { display: none !important; }
+    #login-screen { width: 90%; max-width: 380px; margin: 80px auto; background: var(--glass); padding: 40px 30px; border-radius: 24px; border: var(--glass-border); box-shadow: var(--shadow); text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .input-box { position: relative; margin-bottom: 20px; width: 100%; text-align: left;}
+    .input-box i { position: absolute; left: 15px; top: 14px; color: var(--primary); }
+    .input-box .inp { padding-left: 45px; width: 100%; }
+    .btn-logout { background: #fef2f2; color: var(--red-error); border: 1px solid #fecaca; padding: 8px 15px; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.85rem; transition: 0.2s; }
+    .btn-logout:hover { background: var(--red-error); color: white; }
   </style>
 </head>
 <body>
 
-  <div id="loader" class="overlay">
-    <div class="spinner"></div>
-    <h3 style="color:var(--primary-dark); margin-top:15px;" id="loader-text">Loading...</h3>
-  </div>
-
+  <div id="loader" class="overlay"><div class="spinner"></div><h3 style="color:var(--primary-dark); margin-top:15px;" id="loader-text">Loading...</h3></div>
   <div id="toast">✅ Action Successful!</div>
 
-  <header>
-    <div class="brand">
-      <img src="resources/MYST_dp.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=MYST&background=2980b9&color=fff'" alt="Logo">
-      <div>
-        <h1>MYST - Management of Yoga Sports & Tournaments</h1>
-        <span>Queue Management System</span>
-      </div>
-    </div>
-  </header>
+  <div id="login-screen">
+    <img src="resources/MYST_dp.jpeg" alt="Logo" style="width:90px; height:90px; border-radius:50%; border:3px solid var(--primary); margin-bottom:20px; box-shadow: 0 4px 15px rgba(41,128,185,0.2);">
+    <h2 style="margin:0 0 5px; color:var(--text-main); font-weight: 700;">Coordinator Login</h2>
+    <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;">Stage Management Portal</p>
+    <div class="input-box"><i class="material-icons">person_outline</i><input id="user" class="inp" type="text" placeholder="Username"></div>
+    <div class="input-box"><i class="material-icons">lock_outline</i><input id="pin" class="inp" type="password" placeholder="Access PIN"></div>
+    <button class="btn btn-primary" onclick="handleLogin()" style="width: 100%; padding: 14px;">LOGIN</button>
+    <div id="login-error" style="color:var(--red-error); margin-top:15px; font-size:13px; font-weight: 500; display:none;"></div>
+  </div>
 
-  <div class="container">
+  <div id="app-content" class="hidden">
+    <header>
+      <div class="brand">
+        <img src="resources/MYST_dp.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=MYST&background=2980b9&color=fff'" alt="Logo">
+        <div>
+          <h1>MYST - Management of Yoga Sports & Tournaments</h1>
+          <span>Queue Management</span>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()"><i class="material-icons" style="font-size:16px;">logout</i> Logout</button>
+    </header>
+
+    <div class="container">
     
     <div class="col-left">
       <div class="card">
@@ -110,7 +127,7 @@ T<!DOCTYPE html>
         
         <div class="form-group">
           <label>📍 Select Stage</label>
-          <select id="stageSelect" class="inp" style="background-color: #f8fafc; border-color: var(--primary);">
+          <select id="stageSelect" class="inp" style="background-color: #f8fafc; border-color: var(--primary);" onchange="saveStage()">
             </select>
         </div>
 
@@ -172,6 +189,9 @@ T<!DOCTYPE html>
       // 🔴 PASTE YOUR ACTIVE GOOGLE APPS SCRIPT URL HERE
       API_URL: "https://script.google.com/macros/s/AKfycbxT3WxS5X4BEbY7UVX_udMZNKtkLHWx66yKoBISpzlFOvtvblKFGYtEhW8_8i2k3YlBIQ/exec", 
       
+      // 🔴 PASTE YOUR AUTH SCRIPT URL HERE
+      AUTH_URL: "https://script.google.com/macros/s/AKfycbz_hIgvIovZEGagvvfkbZuH7d_U7kqBSAnuNh97R_w1WvIfYidEXGppHCD_UjoMYwZ3/exec",
+
       // Define your active stages here
       STAGES: ["STAGE 1", "STAGE 2", "STAGE 3", "STAGE 4", "STAGE 5"]
     };
@@ -180,7 +200,7 @@ T<!DOCTYPE html>
     // INITIALIZATION
     // ==========================================
     window.onload = function() {
-      // Populate Stage Dropdown
+      // 1. Populate Stage Dropdown
       const stageSelect = document.getElementById('stageSelect');
       CONFIG.STAGES.forEach(stage => {
         const opt = document.createElement('option');
@@ -189,9 +209,75 @@ T<!DOCTYPE html>
         stageSelect.appendChild(opt);
       });
 
-      // Fetch initial data
-      fetchQueue();
+      // 2. Check Login Status
+      const isLoggedIn = localStorage.getItem('myst_stage_auth');
+      if (isLoggedIn === 'true') {
+        showApp();
+      }
     };
+
+    function showApp() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app-content').classList.remove('hidden');
+      
+      // Restore saved stage if it exists
+      const savedStage = localStorage.getItem('myst_stage_id');
+      if (savedStage) {
+        document.getElementById('stageSelect').value = savedStage;
+      }
+      
+      fetchQueue();
+    }
+
+    // ==========================================
+    // AUTHENTICATION & MEMORY
+    // ==========================================
+    function handleLogin() {
+      const u = document.getElementById('user').value.trim();
+      const p = document.getElementById('pin').value.trim();
+      const errBox = document.getElementById('login-error');
+      
+      if(!u || !p) {
+        errBox.innerText = "Please enter Username and PIN.";
+        errBox.style.display = 'block';
+        return;
+      }
+      
+      showLoader("Verifying...");
+      errBox.style.display = 'none';
+
+      fetch(CONFIG.AUTH_URL, {
+        method: "POST",
+        body: JSON.stringify({ user: u, pin: p })
+      })
+      .then(r => r.json())
+      .then(res => {
+        hideLoader();
+        if(res.status === 'success') {
+          // Save login state to browser memory
+          localStorage.setItem('myst_stage_auth', 'true');
+          showApp();
+        } else {
+          errBox.innerText = "Incorrect Username or PIN."; 
+          errBox.style.display = 'block';
+        }
+      })
+      .catch((e) => { 
+        hideLoader(); 
+        errBox.innerText = "Network Error: Auth System Unreachable."; 
+        errBox.style.display = 'block';
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem('myst_stage_auth');
+      window.location.reload();
+    }
+
+    function saveStage() {
+      const selected = document.getElementById('stageSelect').value;
+      localStorage.setItem('myst_stage_id', selected);
+    }
 
     // ==========================================
     // ACTIONS
