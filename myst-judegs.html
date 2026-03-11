@@ -235,14 +235,16 @@
       </div>
 
       <div id="stage-selector" class="track-row hidden" style="background: #fffbea; padding: 15px; border-radius: 12px; border: 1px solid #fde047; margin-bottom: 20px;">
-        <label style="color: var(--gold);">📍 Select Stage</label>
-        <select id="judgeStage" class="inp track-inp" style="pointer-events: auto; background: #fff; border-color: var(--gold); color: var(--text-main);" onchange="saveStagePreference()"></select>
+        <label style="color: var(--gold); margin-bottom: 8px; display: block;">📍 Select Stage</label>
+        
+        <select id="judgeStage" onchange="saveStagePreference()" style="width: 100%; padding: 14px 15px; border-radius: 10px; border: 2px solid var(--gold); background: #fff; color: var(--primary-dark); font-size: 16px; font-weight: 700; cursor: pointer; outline: none;">
           <option value="STAGE 1">STAGE 1</option>
           <option value="STAGE 2">STAGE 2</option>
           <option value="STAGE 3">STAGE 3</option>
           <option value="STAGE 4">STAGE 4</option>
           <option value="STAGE 5">STAGE 5</option>
         </select>
+        
       </div>
 
       <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;" id="track-inst">Enter the candidate track numbers for this round.</p>
