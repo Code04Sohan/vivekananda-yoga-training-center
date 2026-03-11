@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Stage Coordinator | MYST 2026</title>
+  <link rel="icon" type="image/png" href="resources/MYST_dp.jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <style>
+    /* --- THEME --- */
+    :root {
+      --primary: #2980b9; 
+      --primary-dark: #2471a3; 
+      --secondary: #34495e; 
+      --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); 
+      --glass: rgba(255, 255, 255, 0.98); 
+      --glass-border: 1px solid rgba(41, 128, 185, 0.2);
+      --shadow: 0 10px 30px -10px rgba(41, 128, 185, 0.15);
+      --text-main: #2c3e50; 
+      --text-muted: #7f8c8d; 
+      --red-error: #e74c3c; 
+      --green-success: #27ae60;
+      --yellow-wait: #f39c12;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', sans-serif; }
+    body { margin: 0; background: var(--bg-gradient); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* HEADER */
+    header { background: var(--glass); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 100; }
+    .brand { display: flex; align-items: center; gap: 15px; }
+    .brand img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary); }
+    .brand h1 { margin: 0; font-size: 1.2rem; color: var(--primary-dark); text-transform: uppercase; font-weight: 800; line-height: 1.2;}
+    .brand span { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+
+    /* MAIN LAYOUT */
+    .container { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+    .col-left { flex: 1; min-width: 300px; max-width: 400px; }
+    .col-right { flex: 2; min-width: 300px; }
+
+    /* CARDS */
+    .card { background: var(--glass); border-radius: 16px; border: var(--glass-border); box-shadow: var(--shadow); padding: 25px; margin-bottom: 20px; }
+    .card-header { font-size: 1.1rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+    
+    /* INPUTS & BUTTONS */
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .inp { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(41, 128, 185, 0.3); background: #fff; color: var(--text-main); font-size: 15px; font-weight: 600; transition: 0.2s; text-transform: uppercase; }
+    .inp:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15); }
+    
+    .btn { padding: 14px 20px; border-radius: 10px; border: none; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; text-transform: uppercase; }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 15px rgba(41, 128, 185, 0.3); }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    .btn-danger { background: #fff; color: var(--red-error); border: 2px solid var(--red-error); margin-top: 15px; }
+    .btn-danger:hover { background: #fef2f2; }
+    .btn-refresh { background: #f0f4f8; color: var(--primary); border: 1px solid var(--primary); padding: 6px 12px; font-size: 12px; border-radius: 6px; width: auto; }
+
+    /* TABLE */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { background: #f8fafc; padding: 12px; text-align: left; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+    td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-weight: 500; vertical-align: middle; }
+    tr:hover td { background: #f8fafc; }
+    
+    .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .b-stage { background: #ebf5fb; color: var(--primary-dark); }
+    .b-batch { background: #fef3c7; color: #b45309; }
+    
+    /* STATUS DOTS */
+    .j-status { display: flex; gap: 10px; }
+    .j-dot { display: flex; flex-direction: column; align-items: center; font-size: 0.65rem; color: var(--text-muted); font-weight: 700; }
+    .dot { width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; margin-bottom: 3px; }
+    .dot.done { background: var(--green-success); box-shadow: 0 0 5px rgba(39, 174, 96, 0.4); }
+
+    /* LOADER & TOAST */
+    .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(255,255,255,0.8); z-index: 999; display: none; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(4px); }
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    
+    #toast { visibility: hidden; min-width: 250px; background-color: var(--text-main); color: #fff; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 50%; bottom: 30px; transform: translateX(-50%) translateY(20px); font-size: 0.9rem; transition: 0.3s; opacity: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    #toast.show { visibility: visible; transform: translateX(-50%) translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <div id="loader" class="overlay">
+    <div class="spinner"></div>
+    <h3 style="color:var(--primary-dark); margin-top:15px;" id="loader-text">Loading...</h3>
+  </div>
+
+  <div id="toast">✅ Action Successful!</div>
+
+  <header>
+    <div class="brand">
+      <img src="resources/MYST_dp.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=MYST&background=2980b9&color=fff'" alt="Logo">
+      <div>
+        <h1>Stage Coordinator</h1>
+        <span>Queue Management System</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <div class="col-left">
+      <div class="card">
+        <div class="card-header">Queue Candidates</div>
+        
+        <div class="form-group">
+          <label>📍 Select Stage</label>
+          <select id="stageSelect" class="inp" style="background-color: #f8fafc; border-color: var(--primary);">
+            </select>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 20px 0;">
+        
+        <label>🔢 Enter Track Numbers (Up to 5)</label>
+        <div class="form-group"><input type="text" id="t1" class="inp" placeholder="Track 1 (e.g., 001)"></div>
+        <div class="form-group"><input type="text" id="t2" class="inp" placeholder="Track 2"></div>
+        <div class="form-group"><input type="text" id="t3" class="inp" placeholder="Track 3"></div>
+        <div class="form-group"><input type="text" id="t4" class="inp" placeholder="Track 4"></div>
+        <div class="form-group"><input type="text" id="t5" class="inp" placeholder="Track 5"></div>
+
+        <button class="btn btn-primary" onclick="sendToQueue()" style="margin-top: 20px;">
+          <i class="material-icons">send</i> Send to Queue
+        </button>
+      </div>
+
+      <div class="card" style="background: #fffafa; border-color: #fee2e2;">
+        <div class="card-header" style="color: var(--red-error);">Maintenance</div>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0;">Remove all fully completed rows (J1, J2, and J3 Done) to speed up system performance.</p>
+        <button class="btn btn-danger" onclick="clearQueue()">
+          <i class="material-icons">delete_sweep</i> Clear Completed
+        </button>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="card" style="height: 100%;">
+        <div class="card-header">
+          Live Queue Status
+          <button class="btn btn-refresh" onclick="fetchQueue()"><i class="material-icons" style="font-size:16px;">refresh</i> Refresh</button>
+        </div>
+        
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Batch</th>
+                <th>Stage</th>
+                <th>Track No</th>
+                <th>Status (J1/J2/J3)</th>
+              </tr>
+            </thead>
+            <tbody id="queueTableBody">
+              <tr><td colspan="4" style="text-align:center; color:#999; padding:30px;">Loading queue data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ==========================================
+    // CONFIGURATION
+    // ==========================================
+    const CONFIG = {
+      // 🔴 PASTE YOUR ACTIVE GOOGLE APPS SCRIPT URL HERE
+      API_URL: "https://script.google.com/macros/s/AKfycbxT3WxS5X4BEbY7UVX_udMZNKtkLHWx66yKoBISpzlFOvtvblKFGYtEhW8_8i2k3YlBIQ/exec", 
+      
+      // Define your active stages here
+      STAGES: ["STAGE 1", "STAGE 2", "STAGE 3", "STAGE 4", "STAGE 5"]
+    };
+
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    window.onload = function() {
+      // Populate Stage Dropdown
+      const stageSelect = document.getElementById('stageSelect');
+      CONFIG.STAGES.forEach(stage => {
+        const opt = document.createElement('option');
+        opt.value = stage;
+        opt.innerText = stage;
+        stageSelect.appendChild(opt);
+      });
+
+      // Fetch initial data
+      fetchQueue();
+    };
+
+    // ==========================================
+    // ACTIONS
+    // ==========================================
+    function sendToQueue() {
+      const stageId = document.getElementById('stageSelect').value;
+      const tracks = [
+        document.getElementById('t1').value,
+        document.getElementById('t2').value,
+        document.getElementById('t3').value,
+        document.getElementById('t4').value,
+        document.getElementById('t5').value
+      ].map(t => t.trim().toUpperCase()).filter(t => t !== ""); // Filter out empty inputs
+
+      if (tracks.length === 0) {
+        alert("Please enter at least one Track Number to queue.");
+        return;
+      }
+
+      showLoader("Sending to queue...");
+      
+      const payload = {
+        action: 'queueTracks',
+        stageId: stageId,
+        tracks: tracks
+      };
+
+      fetch(CONFIG.API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        hideLoader();
+        if (data.status === 'success') {
+          showToast(`✅ Successfully sent ${tracks.length} tracks to Batch ${data.batchNo}`);
+          // Clear inputs
+          ['t1','t2','t3','t4','t5'].forEach(id => document.getElementById(id).value = '');
+          document.getElementById('t1').focus();
+          fetchQueue(); // Refresh table
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        hideLoader();
+        alert("Network Error: Could not send data.");
+        console.error(err);
+      });
+    }
+
+    function clearQueue() {
+      if(!confirm("Are you sure? This will permanently remove all fully completed rows from the queue sheet.")) return;
+      
+      showLoader("Clearing completed tracks...");
+      
+      fetch(CONFIG.API_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: 'clearQueue' })
+      })
+      .then(res => res.json())
+      .then(data => {
+        hideLoader();
+        if (data.status === 'success') {
+          showToast(`🧹 ${data.message}`);
+          fetchQueue(); // Refresh table
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        hideLoader();
+        alert("Network Error: Could not clear queue.");
+      });
+    }
+
+    function fetchQueue() {
+      const tbody = document.getElementById('queueTableBody');
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:20px;">Refreshing...</td></tr>';
+      
+      fetch(`${CONFIG.API_URL}?action=getQueue`)
+      .then(res => res.json())
+      .then(result => {
+        if (result.status === 'success') {
+          renderTable(result.data);
+        } else {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red; padding:20px;">Error: ${result.message}</td></tr>`;
+        }
+      })
+      .catch(err => {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red; padding:20px;">Failed to fetch queue data.</td></tr>`;
+      });
+    }
+
+    // ==========================================
+    // RENDER LOGIC
+    // ==========================================
+    function renderTable(queueData) {
+      const tbody = document.getElementById('queueTableBody');
+      tbody.innerHTML = '';
+
+      if (queueData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:30px;">The queue is currently empty.</td></tr>';
+        return;
+      }
+
+      // Sort newest at the top (optional, adjust as preferred)
+      // queueData.reverse(); 
+
+      queueData.forEach(row => {
+        const j1Class = row.j1Done ? 'done' : '';
+        const j2Class = row.j2Done ? 'done' : '';
+        const j3Class = row.j3Done ? 'done' : '';
+        
+        // Optional logic: if all three are done, lower opacity slightly so it's visibly "completed"
+        const isFullyDone = (row.j1Done && row.j2Done && row.j3Done);
+        const rowStyle = isFullyDone ? 'opacity: 0.5; background: #f8fafc;' : '';
+
+        const tr = document.createElement('tr');
+        tr.style = rowStyle;
+        tr.innerHTML = `
+          <td><span class="badge b-batch">B-${row.batchNo}</span></td>
+          <td><span class="badge b-stage">${row.stageId}</span></td>
+          <td style="font-weight: 800; color: var(--primary-dark); font-size: 1.05rem;">${row.trackNo}</td>
+          <td>
+            <div class="j-status">
+              <div class="j-dot"><div class="dot ${j1Class}"></div>J1</div>
+              <div class="j-dot"><div class="dot ${j2Class}"></div>J2</div>
+              <div class="j-dot"><div class="dot ${j3Class}"></div>J3</div>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ==========================================
+    // UTILS
+    // ==========================================
+    function showLoader(msg) {
+      document.getElementById('loader-text').innerText = msg;
+      document.getElementById('loader').style.display = 'flex';
+    }
+    
+    function hideLoader() {
+      document.getElementById('loader').style.display = 'none';
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+  </script>
+</body>
+</html>

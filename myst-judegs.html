@@ -145,6 +145,18 @@
       box-shadow: var(--shadow); text-align: center; max-width: 400px; width: 90%;
     }
     .lock-icon { font-size: 64px; color: var(--red-error); margin-bottom: 20px; }
+
+    /* PRO MODE TOGGLE */
+    .mode-toggle { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; background: rgba(41, 128, 185, 0.1); padding: 10px; border-radius: 12px; }
+    .mode-lbl { font-size: 14px; font-weight: 700; color: var(--text-muted); transition: 0.3s; }
+    .mode-lbl.active { color: var(--primary-dark); }
+    .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(24px); }
+    .pro-active .track-inp { background-color: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; pointer-events: none; }
   </style>
 </head>
 <body>
@@ -212,13 +224,38 @@
   <div id="track-screen" class="hidden">
     <div class="track-card">
       <h3 style="color:var(--text-main); margin-bottom:5px; font-weight:700;">Enter Round Details</h3>
-      <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;">Enter the candidate track numbers for this round.</p>
-      <div class="track-row"><label>Candidate [A] Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder="Track No"></div>
-      <div class="track-row"><label>Candidate [B] Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder="Track No"></div>
-      <div class="track-row"><label>Candidate [C] Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder="Track No"></div>
-      <div class="track-row"><label>Candidate [D] Track No.</label><input id="track-d" class="inp track-inp" type="text" placeholder="Track No"></div>
-      <div class="track-row"><label>Candidate [E] Track No.</label><input id="track-e" class="inp track-inp" type="text" placeholder="Track No"></div>
-      <button class="btn-primary" onclick="startRound()" style="margin-top:30px; padding: 16px;">START ROUND</button>
+      
+      <div class="mode-toggle">
+        <span id="lbl-manual" class="mode-lbl active">Manual</span>
+        <label class="switch">
+          <input type="checkbox" id="proModeToggle" onchange="toggleProMode()">
+          <span class="slider"></span>
+        </label>
+        <span id="lbl-pro" class="mode-lbl" style="color: var(--gold);">Pro Mode <i class="material-icons" style="font-size: 14px; vertical-align: middle;">bolt</i></span>
+      </div>
+
+      <div id="stage-selector" class="track-row hidden" style="background: #fffbea; padding: 15px; border-radius: 12px; border: 1px solid #fde047; margin-bottom: 20px;">
+        <label style="color: var(--gold);">📍 Select Stage</label>
+        <select id="judgeStage" class="inp track-inp" style="pointer-events: auto; background: #fff; border-color: var(--gold); color: var(--text-main);">
+          <option value="STAGE 1">STAGE 1</option>
+          <option value="STAGE 2">STAGE 2</option>
+          <option value="STAGE 3">STAGE 3</option>
+          <option value="STAGE 4">STAGE 4</option>
+          <option value="STAGE 5">STAGE 5</option>
+        </select>
+      </div>
+
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:30px;" id="track-inst">Enter the candidate track numbers for this round.</p>
+      
+      <div id="track-inputs-container">
+        <div class="track-row"><label>Candidate [A] Track No.</label><input id="track-a" class="inp track-inp" type="text" placeholder="Track No"></div>
+        <div class="track-row"><label>Candidate [B] Track No.</label><input id="track-b" class="inp track-inp" type="text" placeholder="Track No"></div>
+        <div class="track-row"><label>Candidate [C] Track No.</label><input id="track-c" class="inp track-inp" type="text" placeholder="Track No"></div>
+        <div class="track-row"><label>Candidate [D] Track No.</label><input id="track-d" class="inp track-inp" type="text" placeholder="Track No"></div>
+        <div class="track-row"><label>Candidate [E] Track No.</label><input id="track-e" class="inp track-inp" type="text" placeholder="Track No"></div>
+      </div>
+      
+      <button class="btn-primary" onclick="startRound()" style="margin-top:30px; padding: 16px;" id="btn-start">START ROUND</button>
     </div>
   </div>
 
@@ -251,7 +288,7 @@
         "2": "https://script.google.com/macros/s/AKfycbwxnLPRQIJeaMaVKkckre6j3XTXCow6HAOkn0g5mPC2ktVmxZelkOGxrG8j3N3n38TQ/exec", 
         "3": "https://script.google.com/macros/s/AKfycbzoDbEF93MRI6bC_NI1jIrhNAdIjnHvuriAtQy3XAFrPkuRTE5HGgQaa1IuHIbo6tqEwA/exec"
       },
-      PATHS: { DASHBOARD: "competition-2026-dashboard.html", LOGO: "resources/MYST_dp.jpeg" },
+      PATHS: { DASHBOARD: "myst-dashboard.html", LOGO: "resources/MYST_dp.jpeg" },
       SCORING: {
         STEPS: [ { key: 'a1', label: 'ASANA 1', max: 10 }, { key: 'a2', label: 'ASANA 2', max: 10 }, { key: 'a3', label: 'ASANA 3', max: 10 }, { key: 'opt', label: 'OPTIONAL', max: 20 } ]
       }
@@ -332,28 +369,88 @@
       });
     }
 
-    function startRound() {
-      const t = ['a','b','c','d','e'].map(x => document.getElementById('track-'+x).value.trim().toUpperCase()).filter(Boolean);
-      if(!t.length) return alert("Please enter at least one track number.");
-      showLoad("Setting up Round...");
-      fetch(`${activeApiUrl}?action=getStudents&tracks=${t.join(',')}&judgeNum=${currentUser.num}`)
+    let isProMode = false;
+
+    // --- NEW PRO MODE TOGGLE LOGIC ---
+    function toggleProMode() {
+      isProMode = document.getElementById('proModeToggle').checked;
+      const container = document.getElementById('track-inputs-container');
       
+      if (isProMode) {
+        document.getElementById('lbl-manual').classList.remove('active');
+        document.getElementById('lbl-pro').classList.add('active');
+        document.getElementById('stage-selector').classList.remove('hidden');
+        document.getElementById('track-inst').innerText = "Click 'FETCH BATCH' to pull the next queue automatically.";
+        document.getElementById('btn-start').innerText = "FETCH NEXT BATCH ⚡";
+        container.classList.add('pro-active'); // Locks the input fields
+        
+        // Clear current inputs
+        ['track-a','track-b','track-c','track-d','track-e'].forEach(x => document.getElementById(x).value='');
+      } else {
+        document.getElementById('lbl-pro').classList.remove('active');
+        document.getElementById('lbl-manual').classList.add('active');
+        document.getElementById('stage-selector').classList.add('hidden');
+        document.getElementById('track-inst').innerText = "Enter the candidate track numbers for this round.";
+        document.getElementById('btn-start').innerText = "START ROUND";
+        container.classList.remove('pro-active'); // Unlocks the input fields
+      }
+    }
+
+    // --- UPDATED START ROUND (Handles both Manual & Pro) ---
+    function startRound() {
+      let fetchUrl = "";
+      
+      if (isProMode) {
+        const stageId = document.getElementById('judgeStage').value;
+        showLoad(`Fetching next batch for ${stageId}...`);
+        // Fetches by Stage ID instead of Tracks
+        fetchUrl = `${activeApiUrl}?action=getStudents&stageId=${stageId}&judgeNum=${currentUser.num}`;
+      } else {
+        const t = ['a','b','c','d','e'].map(x => document.getElementById('track-'+x).value.trim().toUpperCase()).filter(Boolean);
+        if(!t.length) return alert("Please enter at least one track number.");
+        showLoad("Setting up Round...");
+        // Legacy: Fetches by manual Tracks
+        fetchUrl = `${activeApiUrl}?action=getStudents&tracks=${t.join(',')}&judgeNum=${currentUser.num}`;
+      }
+
+      fetch(fetchUrl)
         .then(r => r.json())
         .then(res => {
           hideLoad();
           if(res.status === 'success') {
-            // Added 'D' and 'E' to the UID array
-            roundData = t.map((id, i) => ({
+            
+            // If Pro Mode, populate the grayed-out input boxes visually 
+            // to show the Judge exactly what tracks were auto-selected.
+            let fetchedTracks = res.autoFilledTracks || [];
+            if (isProMode && fetchedTracks.length > 0) {
+              const inputIds = ['track-a','track-b','track-c','track-d','track-e'];
+              inputIds.forEach(id => document.getElementById(id).value = ''); // Clear first
+              fetchedTracks.forEach((track, i) => {
+                if(i < 5) document.getElementById(inputIds[i]).value = track;
+              });
+            }
+            
+            // In manual mode, process the typed boxes. In Pro mode, process the fetched tracks.
+            let tracksToProcess = isProMode ? fetchedTracks : ['a','b','c','d','e'].map(x => document.getElementById('track-'+x).value.trim().toUpperCase()).filter(Boolean);
+
+            roundData = tracksToProcess.map((id, i) => ({
               uid: ['A','B','C','D','E'][i], track: id,
               info: res.data[id] || {name:'Unknown ID', group:'-'}, 
               scores: {a1:'', a2:'', a3:'', opt:''}
             }));
+            
             currentStepIndex = 0; 
             renderGrid(1); 
             switchScreen('scoring-screen');
-          } else { alert(res.message); }
+          } else { 
+            alert(res.message); 
+          }
         })
-        .catch(() => { hideLoad(); alert("Failed to fetch data. Check your connection."); });
+        .catch((err) => { 
+          hideLoad(); 
+          alert("Failed to fetch data. Check your connection."); 
+          console.error(err);
+        });
     }
 
     function renderGrid(direction = 0) {
