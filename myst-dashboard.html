@@ -157,6 +157,51 @@
         #toast { visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 12px; position: fixed; z-index: 999; right: 30px; bottom: 50px; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); transform: translateY(100px); transition: transform 0.3s, visibility 0.3s; }
         #toast.show { visibility: visible; transform: translateY(0); }
 
+        /* --- TV MODE --- */
+        #tv-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b1120; color: white; z-index: 99999; overflow-y: auto; display: none; flex-direction: column; font-family: 'Poppins', sans-serif; }
+        #tv-mode.active { display: flex; }
+        
+        .tv-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; background: #1e293b; border-bottom: 4px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .tv-brand { display: flex; align-items: center; gap: 20px; }
+        .tv-brand img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--gold); }
+        .tv-brand h1 { margin: 0; font-size: 2.2rem; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .tv-brand p { margin: 5px 0 0 0; color: #94a3b8; font-size: 1.2rem; }
+        
+        .tv-controls { display: flex; gap: 15px; align-items: center; }
+        .tv-select { background: #0f172a; color: var(--gold); border: 2px solid var(--gold); padding: 12px 20px; font-size: 1.2rem; font-weight: 700; border-radius: 8px; outline: none; cursor: pointer; }
+        .btn-close-tv { background: #ef4444; color: white; border: none; padding: 12px 24px; font-size: 1.2rem; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        
+        .tv-marquee { background: var(--primary); color: #fff; padding: 12px; font-size: 1.3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        .tv-body { padding: 30px 40px; flex: 1; display: flex; flex-direction: column; gap: 40px; }
+        .tv-section-title { font-size: 1.8rem; font-weight: 900; margin: 0 0 20px 0; color: #cbd5e1; display: flex; align-items: center; gap: 15px; text-transform: uppercase; }
+        .tv-section-title.live { color: #22c55e; }
+        .tv-section-title.live::before { content: ''; display: inline-block; width: 15px; height: 15px; background: #22c55e; border-radius: 50%; animation: pulse 1.5s infinite; }
+        
+        .tv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; }
+        
+        .tv-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 15px 25px -5px rgba(0,0,0,0.5); position: relative; overflow: hidden; animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .tv-card::before { content:''; position: absolute; top:0; left:0; width:100%; height:4px; background: #334155; }
+        .tv-card.live-card::before { background: #22c55e; }
+        .tv-card.recent-card::before { background: var(--gold); }
+        
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tv-track { font-size: 2rem; font-weight: 900; color: var(--gold); margin-bottom: 5px; letter-spacing: 1px; }
+        .tv-name { font-size: 1.4rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 5px; }
+        .tv-group { font-size: 1rem; color: #94a3b8; font-weight: 600; margin-bottom: 15px; }
+        
+        .tv-scores-box { background: #020617; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; border: 1px solid #1e293b; }
+        .tv-score-col { display: flex; flex-direction: column; gap: 5px; }
+        .tv-score-lbl { font-size: 0.8rem; color: #64748b; font-weight: 700; text-transform: uppercase; }
+        .tv-score-val { font-size: 1.3rem; font-weight: 800; color: #e2e8f0; }
+        
+        .tv-grand-total { margin-top: 15px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); padding: 10px; border-radius: 12px; }
+        .tv-grand-lbl { font-size: 0.9rem; color: #22c55e; font-weight: bold; text-transform: uppercase; display: block; }
+        .tv-grand-val { font-size: 2.5rem; font-weight: 900; color: #22c55e; line-height: 1; }
+
+        @media (max-width: 1400px) { .tv-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+
     </style>
 </head>
 <body>
@@ -172,9 +217,9 @@
         </div>
         <div class="header-right">
             <div class="judges-panel">
-                <div class="judge-item"><span class="judge-lbl">J1</span><span class="judge-val" id="j1">...</span></div>
-                <div class="judge-item"><span class="judge-lbl">J2</span><span class="judge-val" id="j2">...</span></div>
-                <div class="judge-item"><span class="judge-lbl">J3</span><span class="judge-val" id="j3">...</span></div>
+                <div class="judge-item"><span class="judge-lbl">J1</span><span class="judge-val" id="j1">JUDGE 1</span></div>
+                <div class="judge-item"><span class="judge-lbl">J2</span><span class="judge-val" id="j2">JUDGE 2</span></div>
+                <div class="judge-item"><span class="judge-lbl">J3</span><span class="judge-val" id="j3">JUDGE 3</span></div>
             </div>
             <a href="myst-judegs.html" class="btn-portal">👨‍⚖️ Portal</a>
         </div>
@@ -209,8 +254,13 @@
 
         <button class="btn" onclick="fetchCandidates(true)">🔄 Candidates</button>
         <button class="btn" onclick="fetchMarks(true)">🔄 Marks</button>
+
         <button class="btn btn-live" id="btnLive" onclick="toggleLive()">
             <div class="dot"></div> <span id="txtLive">OFFLINE</span>
+        </button>
+
+        <button class="btn" style="background: var(--dark); color: white; border: none; font-weight: 900;" onclick="openTVMode()">
+            📺 TV MODE
         </button>
         
         <div class="drop-box" style="margin-left:auto;">
@@ -240,6 +290,46 @@
     <div id="view-judgment" class="section"></div>
 </div>
 
+<div id="tv-mode">
+    <div class="tv-header">
+        <div class="tv-brand">
+            <img src="resources/MYST_dp.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=MYST&background=2980b9&color=fff'">
+            <div>
+                <h1>MYST - Management of Yoga Sports & Tournaments</h1>
+                <p id="tv-date-title">Tournament Date</p>
+            </div>
+        </div>
+        <div class="tv-controls">
+            <select id="tvStageSelect" class="tv-select" onchange="renderTVMode()">
+                <option value="STAGE 1">STAGE 1</option>
+                <option value="STAGE 2">STAGE 2</option>
+                <option value="STAGE 3">STAGE 3</option>
+                <option value="STAGE 4">STAGE 4</option>
+                <option value="STAGE 5">STAGE 5</option>
+            </select>
+            <button class="btn-close-tv" onclick="closeTVMode()">✖ Exit</button>
+        </div>
+    </div>
+    
+    <div class="tv-marquee">
+        <marquee scrollamount="8">🔥 Welcome to the Rakshachak Sabuj Sangha Yoga Competition 2026! | Stay Focused, Breathe Deeply, and Give Your Best! | Live Scores Updating Automatically... 🔥</marquee>
+    </div>
+
+    <div class="tv-body">
+        <div>
+            <h2 class="tv-section-title live">LIVE ON STAGE (Batch <span id="tv-live-batch">-</span>)</h2>
+            <div id="tv-live-grid" class="tv-grid">
+                </div>
+        </div>
+
+        <div>
+            <h2 class="tv-section-title">RECENTLY FINISHED (Batch <span id="tv-recent-batch">-</span>)</h2>
+            <div id="tv-recent-grid" class="tv-grid">
+                </div>
+        </div>
+    </div>
+</div>
+
 <div id="toast">✅ Data Updated Successfully</div>
 
 <div class="page-footer">
@@ -253,6 +343,7 @@
     // --- CONFIGURATION ---
     const STATIC_API = "https://script.google.com/macros/s/AKfycbzqkosI5mLF7OofxwiTOBiuoIqsg1oW-O-DTfdhY4c-WYqVJQq1lLUaBaoiWJQw_LJK4w/exec"; 
     const DYNAMIC_API = "https://script.google.com/macros/s/AKfycbzGX1rXMwOUaX1zi74bpqUU5kN1It0GzWwzwUuU2oZDVh94Rgxjp64PKhz1ssNvKG2nAg/exec";
+    const QUEUE_API = "https://script.google.com/macros/s/AKfycbxT3WxS5X4BEbY7UVX_udMZNKtkLHWx66yKoBISpzlFOvtvblKFGYtEhW8_8i2k3YlBIQ/exec";
 
     // Configurable division sizes
     const DIVISION_OPTIONS = ['none', 5, 10, 15, 20, 25, 30, 35];
@@ -263,6 +354,8 @@
     let isLive = false, liveTimer = null;
     let activeFilter = { type: 'none', val: '' };
     let currentDivSize = 'none'; // Default to no divisions
+    let tvQueueData = [];        // <-- ADDED FOR TV MODE
+    let isTVModeOpen = false;    // <-- ADDED FOR TV MODE
 
     window.onload = () => {
         document.getElementById('pDate').innerText = new Date().toLocaleString();
@@ -694,7 +787,8 @@
         const b = document.getElementById('btnLive');
         if(isLive) {
             b.classList.add('on'); document.getElementById('txtLive').innerText = "LIVE ON";
-            liveTimer = setInterval(() => fetchMarks(true), 30000);
+            // Also update TV Mode every 30s
+            liveTimer = setInterval(() => { fetchMarks(true); fetchTVQueue(); }, 30000); 
         } else {
             b.classList.remove('on'); document.getElementById('txtLive').innerText = "OFFLINE";
             clearInterval(liveTimer);
@@ -764,6 +858,129 @@
         a.href = url;
         a.download = `YogaPro_${mode}_${new Date().toISOString().slice(0,10)}.csv`;
         a.click();
+    }
+
+    // ==========================================
+    // TV MODE LOGIC
+    // ==========================================
+    function openTVMode() {
+        document.getElementById('tv-mode').classList.add('active');
+        document.getElementById('tv-date-title').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        isTVModeOpen = true;
+        
+        // Request Fullscreen
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) { elem.requestFullscreen(); }
+        else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); } // Safari
+        
+        fetchTVQueue();
+    }
+
+    function closeTVMode() {
+        document.getElementById('tv-mode').classList.remove('active');
+        isTVModeOpen = false;
+        
+        // Exit Fullscreen
+        if (document.exitFullscreen) { document.exitFullscreen(); }
+        else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+    }
+
+    async function fetchTVQueue() {
+        if(!isTVModeOpen) return; // Save data if TV is closed
+        try {
+            const res = await fetch(`${QUEUE_API}?action=getQueue`);
+            const result = await res.json();
+            if (result.status === 'success') {
+                tvQueueData = result.data;
+                renderTVMode();
+            }
+        } catch(e) { console.error("TV Queue Error", e); }
+    }
+
+    function renderTVMode() {
+        if(!isTVModeOpen) return;
+        const stageId = document.getElementById('tvStageSelect').value;
+        
+        // 1. Filter queue for current stage & group by batch
+        const stageQueue = tvQueueData.filter(q => q.stageId === stageId);
+        const batches = {};
+        
+        stageQueue.forEach(q => {
+            if(!batches[q.batchNo]) batches[q.batchNo] = { isCompleted: true, tracks: [] };
+            batches[q.batchNo].tracks.push(q.trackNo);
+            // If any judge is not done, the batch is NOT completed
+            if (!q.j1Done || !q.j2Done || !q.j3Done) {
+                batches[q.batchNo].isCompleted = false;
+            }
+        });
+
+        // 2. Identify Live Batch (Oldest incomplete) and Recent Batch (Highest complete, or Live - 1)
+        const batchNumbers = Object.keys(batches).map(Number).sort((a,b) => a-b);
+        let liveBatchNo = null;
+        let recentBatchNo = null;
+
+        for (let b of batchNumbers) {
+            if (!batches[b].isCompleted && liveBatchNo === null) {
+                liveBatchNo = b;
+                break;
+            }
+        }
+        
+        // Recent is strictly the highest completed batch that is less than the Live batch
+        for (let i = batchNumbers.length - 1; i >= 0; i--) {
+            if (batches[batchNumbers[i]].isCompleted) {
+                recentBatchNo = batchNumbers[i];
+                break;
+            }
+        }
+
+        // 3. Render
+        document.getElementById('tv-live-batch').innerText = liveBatchNo || 'None';
+        document.getElementById('tv-recent-batch').innerText = recentBatchNo || 'None';
+        
+        const liveContainer = document.getElementById('tv-live-grid');
+        const recentContainer = document.getElementById('tv-recent-grid');
+        
+        liveContainer.innerHTML = liveBatchNo ? buildTVCards(batches[liveBatchNo].tracks, 'live-card') : '<h3 style="color:#64748b; width:100%; text-align:center; grid-column:1/-1;">No active candidates on this stage</h3>';
+        
+        recentContainer.innerHTML = recentBatchNo ? buildTVCards(batches[recentBatchNo].tracks, 'recent-card') : '<h3 style="color:#64748b; width:100%; text-align:center; grid-column:1/-1;">No recent batches</h3>';
+    }
+
+    function buildTVCards(trackArray, cardClass) {
+        // Build cards by mapping tracks to students[] and marks[]
+        return trackArray.map(track => {
+            // Find student info
+            const student = students.find(s => String(s["TRACK NO"]).trim().toUpperCase() === track) || { "NAME OF THE ATHLETES": "Unknown", "GROUP": "-" };
+            
+            // Find scores
+            const sc = marks[track] || {};
+            let t1=0, t2=0, t3=0;
+            [1,2,3,"OPTIONAL"].forEach(a => {
+                let k = a==="OPTIONAL"?"OPTIONAL":`ASANA ${a}`;
+                t1 += Number(sc[`${k} (Judge 1)`]||0);
+                t2 += Number(sc[`${k} (Judge 2)`]||0);
+                t3 += Number(sc[`${k} (Judge 3)`]||0);
+            });
+            let grand = Math.round(t1+t2+t3);
+
+            return `
+            <div class="tv-card ${cardClass}">
+                <div class="tv-track">${track}</div>
+                <div class="tv-name">${student["NAME OF THE ATHLETES"]}</div>
+                <div class="tv-group">${student["GROUP"]}</div>
+                
+                <div class="tv-scores-box">
+                    <div class="tv-score-col"><span class="tv-score-lbl">J1</span><span class="tv-score-val">${t1||'-'}</span></div>
+                    <div class="tv-score-col"><span class="tv-score-lbl">J2</span><span class="tv-score-val">${t2||'-'}</span></div>
+                    <div class="tv-score-col"><span class="tv-score-lbl">J3</span><span class="tv-score-val">${t3||'-'}</span></div>
+                </div>
+                
+                <div class="tv-grand-total">
+                    <span class="tv-grand-lbl">Total Score</span>
+                    <span class="tv-grand-val">${grand||'-'}</span>
+                </div>
+            </div>`;
+        }).join('');
     }
 </script>
 </body>
