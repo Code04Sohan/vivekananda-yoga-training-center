@@ -277,6 +277,7 @@
     function saveStage() {
       const selected = document.getElementById('stageSelect').value;
       localStorage.setItem('myst_stage_id', selected);
+      fetchQueue();
     }
 
     // ==========================================
@@ -379,15 +380,17 @@
       const tbody = document.getElementById('queueTableBody');
       tbody.innerHTML = '';
 
-      if (queueData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999; padding:30px;">The queue is currently empty.</td></tr>';
+      // --- NEW: Filter data to match the currently selected stage ---
+      const activeStage = document.getElementById('stageSelect').value;
+      const filteredQueue = queueData.filter(row => row.stageId === activeStage);
+
+      if (filteredQueue.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#999; padding:30px;">The queue is currently empty for ${activeStage}.</td></tr>`;
         return;
       }
 
-      // Sort newest at the top (optional, adjust as preferred)
-      // queueData.reverse(); 
-
-      queueData.forEach(row => {
+      // Render the filtered list
+      filteredQueue.forEach(row => {
         const j1Class = row.j1Done ? 'done' : '';
         const j2Class = row.j2Done ? 'done' : '';
         const j3Class = row.j3Done ? 'done' : '';
