@@ -46,17 +46,25 @@
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* --- MOBILE RESPONSIVE REPORT WRAPPER --- */
-    /* This allows the A4 card to exist perfectly for PDF, but mobile users can scroll it */
-    #report-view { display: flex; flex-direction: column; padding: 20px; width: 100%; align-items: center; }
-    .nav-buttons { width: 100%; max-width: 800px; display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; }
-    .btn-back { background: #e2e8f0; color: var(--text-main); width: auto; padding: 12px 20px; }
-    .btn-download { background: var(--gold); color: white; width: auto; padding: 12px 25px; box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3); flex: 1; }
+    #report-view { display: flex; flex-direction: column; padding: 15px; width: 100%; max-width: 100vw; align-items: center; overflow-x: hidden; }
     
-    .report-scroll-wrapper { width: 100%; max-width: 800px; overflow-x: auto; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); background: white; }
+    .nav-buttons { width: 100%; max-width: 800px; display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; flex-wrap: wrap; }
+    .btn-back { background: #e2e8f0; color: var(--text-main); width: auto; padding: 12px 20px; flex: 1; min-width: 100px; justify-content: center;}
+    .btn-download { background: var(--gold); color: white; width: auto; padding: 12px 20px; box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3); flex: 2; justify-content: center; min-width: 200px; }
     
+    .report-scroll-wrapper { 
+      width: 100%; 
+      max-width: 800px; 
+      min-width: 0; /* CRITICAL FIX: Stops the mobile screen from stretching */
+      overflow-x: auto; 
+      -webkit-overflow-scrolling: touch; /* Enables smooth swiping on iPhones */
+      border-radius: 12px; 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+      background: white; 
+    }
     /* --- A4 REPORT CARD STYLE --- */
-    #report-card { width: 800px; background: white; padding: 40px; position: relative; overflow: hidden; margin: 0 auto; }
-    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.03; width: 500px; z-index: 1; pointer-events: none; }
+    #report-card { width: 700px; background: white; padding: 35px; position: relative; overflow: hidden; margin: 0 auto; }
+    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.03; width: 450px; z-index: 10; pointer-events: none; }
 
     .report-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 25px; z-index: 2; position: relative; }
     .brand-col { display: flex; align-items: center; gap: 20px; }
@@ -97,6 +105,25 @@
     .sig-box { text-align: center; width: 200px; }
     .sig-line { border-top: 2px solid var(--text-main); margin-bottom: 8px; }
     .sig-box span { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+
+    /* --- MOBILE SCREENS STYLING --- */
+    @media (max-width: 600px) {
+      .hero-logo { width: 100px; height: 100px; margin-bottom: 15px; }
+      .hero-title { font-size: 2.8rem; }
+      .hero-subtitle { font-size: 0.85rem; letter-spacing: 1.5px; margin-bottom: 20px; }
+      .hero-org { font-size: 0.85rem; padding: 8px 15px; margin-bottom: 25px; line-height: 1.4; }
+      
+      .search-card { padding: 25px 20px; border-radius: 16px; }
+      .search-box input { font-size: 16px; padding: 14px 14px 14px 45px; }
+      .search-box i { top: 15px; font-size: 22px; }
+      .btn { padding: 14px; font-size: 15px; }
+      
+      #report-card { 
+        /* Adds a tiny margin inside the scroll so it doesn't touch the phone edges */
+        margin: 0; 
+        border-right: 15px solid white; 
+      }
+    }
   </style>
 </head>
 <body>
