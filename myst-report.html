@@ -144,7 +144,14 @@
       <button class="btn btn-search" onclick="fetchReport()">
         <i class="material-icons">search</i> Generate Report
       </button>
+      
       <div class="loader" id="loader"></div>
+      <div class="loading-text" id="loading-text">Connecting to Server...</div>
+      
+      <div class="tip-box" id="tip-box">
+        <i class="material-icons">lightbulb</i> <b>TIP:</b> Once your scorecard is generated, please download it as a PDF to save it. Avoid fetching it multiple times.
+      </div>
+
       <div id="error-msg" style="color: var(--red-error); font-size: 14px; font-weight: 600; margin-top: 15px; display: none;"></div>
     </div>
   </div>
@@ -247,39 +254,62 @@
     function fetchReport() {
       const track = document.getElementById('trackInput').value.trim();
       const err = document.getElementById('error-msg');
+      const loaderTxt = document.getElementById('loading-text');
+      const tipBox = document.getElementById('tip-box');
+      
       if(!track) {
         err.innerText = "Please enter a Track Number.";
         err.style.display = 'block';
         return;
       }
 
+      // Hide errors and search button, show loader and tip
       err.style.display = 'none';
-      document.getElementById('loader').style.display = 'block';
       document.querySelector('.btn-search').style.display = 'none';
+      document.getElementById('loader').style.display = 'block';
+      loaderTxt.style.display = 'block';
+      tipBox.style.display = 'block';
 
-      fetch(`${CONFIG.REPORT_API}?action=getReport&trackNo=${track}`)
-        .then(r => r.json())
-        .then(res => {
-          document.getElementById('loader').style.display = 'none';
-          document.querySelector('.btn-search').style.display = 'flex';
-          
-          if(res.status === 'success') {
-            populateCard(res.data);
+      // --- DYNAMIC LOADING ANIMATION SEQUENCE ---
+      loaderTxt.innerText = "Connecting to Secure Server...";
+      
+      setTimeout(() => { loaderTxt.innerText = "Scanning Candidate Database..."; }, 1500);
+      setTimeout(() => { loaderTxt.innerText = "Compiling Judge Scores..."; }, 3000);
+      setTimeout(() => { loaderTxt.innerText = "Generating Final Scorecard..."; }, 4500);
+
+      // --- ARTIFICIAL DELAY (5.5 SECONDS) TO PROTECT GAS SERVERS ---
+      setTimeout(() => {
+        
+        // Actually fetch the data after the delay finishes
+        fetch(`${CONFIG.REPORT_API}?action=getReport&trackNo=${track}`)
+          .then(r => r.json())
+          .then(res => {
+            // Reset UI
+            document.getElementById('loader').style.display = 'none';
+            loaderTxt.style.display = 'none';
+            tipBox.style.display = 'none';
+            document.querySelector('.btn-search').style.display = 'flex';
             
-            // Hide Landing, Show Report
-            document.getElementById('landing-page').classList.add('hidden');
-            document.getElementById('report-view').classList.remove('hidden');
-          } else {
-            err.innerText = res.message;
+            if(res.status === 'success') {
+              populateCard(res.data);
+              document.getElementById('landing-page').classList.add('hidden');
+              document.getElementById('report-view').classList.remove('hidden');
+            } else {
+              err.innerText = res.message;
+              err.style.display = 'block';
+            }
+          })
+          .catch(e => {
+            document.getElementById('loader').style.display = 'none';
+            loaderTxt.style.display = 'none';
+            tipBox.style.display = 'none';
+            document.querySelector('.btn-search').style.display = 'flex';
+            
+            err.innerText = "Network Error: Could not reach the server.";
             err.style.display = 'block';
-          }
-        })
-        .catch(e => {
-          document.getElementById('loader').style.display = 'none';
-          document.querySelector('.btn-search').style.display = 'flex';
-          err.innerText = "Network Error: Could not reach the server.";
-          err.style.display = 'block';
-        });
+          });
+          
+      }, 5500); // 5500ms = 5.5 seconds delay
     }
 
     function goBack() {
