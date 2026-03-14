@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Scorecard | MYST 2026</title>
+  <link rel="icon" type="image/png" href="resources/MYST_dp.jpeg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #2980b9; --primary-dark: #2471a3; 
+      --gold: #f39c12; --gold-light: #fef3c7; --gold-dark: #b45309;
+      --bg: #f8fafc; --text-main: #1e293b; --text-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text-main); margin: 0; padding: 0; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+    
+    .hidden { display: none !important; }
+
+    /* --- LANDING PAGE (BEAUTIFUL SEARCH) --- */
+    #landing-page { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); text-align: center; }
+    .hero-logo { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--gold); padding: 5px; background: #fff; box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3); margin-bottom: 25px; animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .hero-title { font-size: 3.5rem; font-weight: 900; color: var(--gold); margin: 0; line-height: 1; letter-spacing: 2px; }
+    .hero-subtitle { font-size: 1.1rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 3px; margin: 10px 0 30px 0; }
+    .hero-org { font-size: 1.2rem; font-weight: 600; color: #fff; margin-bottom: 40px; background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); }
+    
+    @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    .search-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); width: 100%; max-width: 450px; }
+    .search-card h3 { margin: 0 0 20px 0; color: var(--primary-dark); font-weight: 800; text-transform: uppercase; }
+    .search-box { position: relative; width: 100%; margin-bottom: 20px; }
+    .search-box i { position: absolute; left: 15px; top: 16px; color: var(--primary); font-size: 22px; }
+    .search-box input { width: 100%; padding: 15px 15px 15px 50px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--primary-dark); outline: none; transition: 0.3s; }
+    .search-box input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(41, 128, 185, 0.1); }
+    
+    .btn { padding: 16px; width: 100%; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-search { background: var(--primary); color: white; box-shadow: 0 8px 20px rgba(41, 128, 185, 0.3); }
+    .btn-search:hover { background: var(--primary-dark); transform: translateY(-2px); }
+    
+    .loader { display: none; margin: 20px auto; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* --- MOBILE RESPONSIVE REPORT WRAPPER --- */
+    /* This allows the A4 card to exist perfectly for PDF, but mobile users can scroll it */
+    #report-view { display: flex; flex-direction: column; padding: 20px; width: 100%; align-items: center; }
+    .nav-buttons { width: 100%; max-width: 800px; display: flex; justify-content: space-between; margin-bottom: 20px; gap: 10px; }
+    .btn-back { background: #e2e8f0; color: var(--text-main); width: auto; padding: 12px 20px; }
+    .btn-download { background: var(--gold); color: white; width: auto; padding: 12px 25px; box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3); flex: 1; }
+    
+    .report-scroll-wrapper { width: 100%; max-width: 800px; overflow-x: auto; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); background: white; }
+    
+    /* --- A4 REPORT CARD STYLE --- */
+    #report-card { width: 800px; background: white; padding: 40px; position: relative; overflow: hidden; margin: 0 auto; }
+    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.03; width: 500px; z-index: 1; pointer-events: none; }
+
+    .report-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 25px; z-index: 2; position: relative; }
+    .brand-col { display: flex; align-items: center; gap: 20px; }
+    .brand-col img { width: 85px; height: 85px; border-radius: 50%; border: 3px solid var(--gold); padding: 3px; }
+    .brand-col h1 { margin: 0; font-size: 32px; color: var(--gold); font-weight: 900; letter-spacing: 1px; line-height: 1; }
+    .brand-col p { margin: 5px 0 0 0; color: var(--gold-dark); font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+    .report-title { text-align: right; }
+    .report-title h2 { margin: 0; color: var(--primary-dark); font-size: 20px; font-weight: 900; text-transform: uppercase; }
+    .report-title p { margin: 5px 0 0 0; font-weight: 700; color: var(--text-muted); font-size: 12px; }
+
+    .org-banner { text-align: center; background: var(--primary-dark); color: white; padding: 8px; font-weight: 800; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; border-radius: 8px; margin-bottom: 25px; z-index: 2; position: relative; }
+
+    /* Expanded Details Grid */
+    .details-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 15px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 25px; z-index: 2; position: relative; }
+    .cd-item { display: flex; flex-direction: column; }
+    .cd-lbl { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .cd-val { font-size: 15px; font-weight: 800; color: var(--primary-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .val-large { font-size: 18px; color: var(--primary-dark); }
+    .val-gold { color: var(--gold-dark); }
+
+    /* Marks Table */
+    table { width: 100%; border-collapse: collapse; margin-bottom: 25px; z-index: 2; position: relative; }
+    th, td { padding: 12px; text-align: center; border: 1px solid #cbd5e1; }
+    th { background: var(--primary); color: white; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
+    td { font-size: 15px; font-weight: 600; color: var(--text-main); }
+    .row-header { background: #f8fafc; font-weight: 800; text-align: left; width: 20%; color: var(--primary-dark); }
+    .j-col { width: 20%; background: #fff; }
+    .sum-col { background: var(--gold-light); font-weight: 800; color: var(--gold-dark); width: 20%; }
+    
+    .row-total td { background: var(--primary-dark); color: white; font-weight: 800; font-size: 16px; border-color: var(--primary-dark); }
+    .row-total .row-header { background: var(--primary); color: white; }
+
+    .grand-box { display: flex; justify-content: space-between; align-items: center; background: #fffbeb; border: 2px solid var(--gold); padding: 15px 30px; border-radius: 12px; margin-bottom: 30px; z-index: 2; position: relative; }
+    .grand-box span { font-size: 18px; font-weight: 800; color: var(--gold-dark); text-transform: uppercase; }
+    .grand-box .score { font-size: 38px; font-weight: 900; color: var(--primary-dark); line-height: 1; }
+
+    .signatures { display: flex; justify-content: space-between; padding-top: 20px; z-index: 2; position: relative; }
+    .sig-box { text-align: center; width: 200px; }
+    .sig-line { border-top: 2px solid var(--text-main); margin-bottom: 8px; }
+    .sig-box span { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+  </style>
+</head>
+<body>
+
+  <div id="landing-page">
+    <img src="resources/MYST_dp.jpeg" class="hero-logo" onerror="this.src='https://ui-avatars.com/api/?name=MYST&background=2980b9&color=fff'">
+    <h1 class="hero-title">MYST</h1>
+    <div class="hero-subtitle">Management of Yoga Sports & Tournaments</div>
+    
+    <div class="hero-org" id="ui-org-name">Loading Event...</div>
+
+    <div class="search-card">
+      <h3>Download Scorecard</h3>
+      <div class="search-box">
+        <i class="material-icons">badge</i>
+        <input type="text" id="trackInput" placeholder="Enter Track No" onkeypress="if(event.key==='Enter') fetchReport()">
+      </div>
+      <button class="btn btn-search" onclick="fetchReport()">
+        <i class="material-icons">search</i> Generate Report
+      </button>
+      <div class="loader" id="loader"></div>
+      <div id="error-msg" style="color: var(--red-error); font-size: 14px; font-weight: 600; margin-top: 15px; display: none;"></div>
+    </div>
+  </div>
+
+  <div id="report-view" class="hidden">
+    
+    <div class="nav-buttons">
+      <button class="btn btn-back" onclick="goBack()"><i class="material-icons">arrow_back</i> Back</button>
+      <button class="btn btn-download" onclick="downloadPDF()"><i class="material-icons">picture_as_pdf</i> Download PDF</button>
+    </div>
+
+    <div class="report-scroll-wrapper">
+      <div id="report-card">
+        <img src="resources/MYST_dp.jpeg" class="watermark" onerror="this.style.display='none'">
+        
+        <div class="report-header">
+          <div class="brand-col">
+            <img src="resources/MYST_dp.jpeg" onerror="this.src='https://ui-avatars.com/api/?name=MYST&background=2980b9&color=fff'">
+            <div>
+              <h1>MYST</h1>
+              <p>Management of Yoga Sports & Tournaments</p>
+            </div>
+          </div>
+          <div class="report-title">
+            <h2>Official Scorecard</h2>
+            <p id="date-text"></p>
+          </div>
+        </div>
+
+        <div class="org-banner" id="report-org-name">Event Name</div>
+
+        <div class="details-grid">
+          <div class="cd-item"><span class="cd-lbl">Track No.</span><span class="cd-val val-large val-gold" id="r-track">---</span></div>
+          <div class="cd-item"><span class="cd-lbl">Athlete Name</span><span class="cd-val val-large" id="r-name">---</span></div>
+          <div class="cd-item"><span class="cd-lbl">Group Division</span><span class="cd-val" id="r-group">---</span></div>
+          
+          <div class="cd-item"><span class="cd-lbl">Sex</span><span class="cd-val" id="r-sex">---</span></div>
+          <div class="cd-item"><span class="cd-lbl">Date of Birth</span><span class="cd-val" id="r-dob">---</span></div>
+          <div class="cd-item"><span class="cd-lbl">Age</span><span class="cd-val" id="r-age">---</span></div>
+          
+          <div class="cd-item" style="grid-column: 1 / span 2;"><span class="cd-lbl">Coach Name</span><span class="cd-val" id="r-coach">---</span></div>
+          <div class="cd-item"><span class="cd-lbl">Center / Club</span><span class="cd-val" id="r-center">---</span></div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th class="row-header" style="background: var(--primary-dark);">Round</th>
+              <th>Judge 1</th>
+              <th>Judge 2</th>
+              <th>Judge 3</th>
+              <th class="sum-col" style="background: var(--gold); color: white;">Asana Sum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="row-header">Asana 1</td><td class="j-col" id="r-j1-a1">-</td><td class="j-col" id="r-j2-a1">-</td><td class="j-col" id="r-j3-a1">-</td><td class="sum-col" id="r-sum-a1">-</td></tr>
+            <tr><td class="row-header">Asana 2</td><td class="j-col" id="r-j1-a2">-</td><td class="j-col" id="r-j2-a2">-</td><td class="j-col" id="r-j3-a2">-</td><td class="sum-col" id="r-sum-a2">-</td></tr>
+            <tr><td class="row-header">Asana 3</td><td class="j-col" id="r-j1-a3">-</td><td class="j-col" id="r-j2-a3">-</td><td class="j-col" id="r-j3-a3">-</td><td class="sum-col" id="r-sum-a3">-</td></tr>
+            <tr><td class="row-header">Optional</td><td class="j-col" id="r-j1-opt">-</td><td class="j-col" id="r-j2-opt">-</td><td class="j-col" id="r-j3-opt">-</td><td class="sum-col" id="r-sum-opt">-</td></tr>
+            <tr class="row-total">
+              <td class="row-header">Total Scored</td>
+              <td id="r-j1-tot">-</td><td id="r-j2-tot">-</td><td id="r-j3-tot">-</td>
+              <td style="background: #22c55e; border-color:#22c55e;">-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="grand-box">
+          <span>Final Grand Total</span>
+          <div class="score" id="r-grand">0</div>
+        </div>
+
+        <div class="signatures">
+          <div class="sig-box"><div class="sig-line"></div><span>Chief Judge</span></div>
+          <div class="sig-box"><div class="sig-line"></div><span>Tournament Director</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // CONFIGURATION
+    // ==========================================
+    const CONFIG = {
+      // 🔴 PASTE YOUR NEW REPORT.GS WEB APP URL HERE
+      REPORT_API: "https://script.google.com/macros/s/AKfycbyN8YPqgWsdLcifvYDWR_bH88TpGfnp8SoXVD_QBYXAxkGV2vXDnKRw3XJuIHgQfmJePQ/exec", 
+      
+      ORG_NAME: "Rakshachak Sabuj Sangha Yoga Competition - 2026"
+    };
+
+    // Initialize text
+    document.getElementById('ui-org-name').innerText = CONFIG.ORG_NAME;
+    document.getElementById('report-org-name').innerText = CONFIG.ORG_NAME;
+    document.getElementById('date-text').innerText = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+    // ==========================================
+    // LOGIC
+    // ==========================================
+    function fetchReport() {
+      const track = document.getElementById('trackInput').value.trim();
+      const err = document.getElementById('error-msg');
+      if(!track) {
+        err.innerText = "Please enter a Track Number.";
+        err.style.display = 'block';
+        return;
+      }
+
+      err.style.display = 'none';
+      document.getElementById('loader').style.display = 'block';
+      document.querySelector('.btn-search').style.display = 'none';
+
+      fetch(`${CONFIG.REPORT_API}?action=getReport&trackNo=${track}`)
+        .then(r => r.json())
+        .then(res => {
+          document.getElementById('loader').style.display = 'none';
+          document.querySelector('.btn-search').style.display = 'flex';
+          
+          if(res.status === 'success') {
+            populateCard(res.data);
+            
+            // Hide Landing, Show Report
+            document.getElementById('landing-page').classList.add('hidden');
+            document.getElementById('report-view').classList.remove('hidden');
+          } else {
+            err.innerText = res.message;
+            err.style.display = 'block';
+          }
+        })
+        .catch(e => {
+          document.getElementById('loader').style.display = 'none';
+          document.querySelector('.btn-search').style.display = 'flex';
+          err.innerText = "Network Error: Could not reach the server.";
+          err.style.display = 'block';
+        });
+    }
+
+    function goBack() {
+      document.getElementById('report-view').classList.add('hidden');
+      document.getElementById('landing-page').classList.remove('hidden');
+      document.getElementById('trackInput').value = '';
+      document.getElementById('trackInput').focus();
+    }
+
+    function populateCard(data) {
+      // Candidate DB Info
+      document.getElementById('r-track').innerText = data.trackNo;
+      document.getElementById('r-name').innerText = data.name;
+      document.getElementById('r-group').innerText = data.group;
+      document.getElementById('r-sex').innerText = data.sex;
+      document.getElementById('r-dob').innerText = data.dob;
+      document.getElementById('r-age').innerText = data.age;
+      document.getElementById('r-coach').innerText = data.coach;
+      document.getElementById('r-center').innerText = data.center;
+
+      // Marks DB Info
+      let j1Tot = 0, j2Tot = 0, j3Tot = 0;
+
+      ['a1', 'a2', 'a3', 'opt'].forEach(key => {
+        const v1 = Number(data.j1[key]) || 0;
+        const v2 = Number(data.j2[key]) || 0;
+        const v3 = Number(data.j3[key]) || 0;
+
+        document.getElementById(`r-j1-${key}`).innerText = v1 || '-';
+        document.getElementById(`r-j2-${key}`).innerText = v2 || '-';
+        document.getElementById(`r-j3-${key}`).innerText = v3 || '-';
+        document.getElementById(`r-sum-${key}`).innerText = v1 + v2 + v3;
+
+        j1Tot += v1; j2Tot += v2; j3Tot += v3;
+      });
+
+      document.getElementById('r-j1-tot').innerText = j1Tot;
+      document.getElementById('r-j2-tot').innerText = j2Tot;
+      document.getElementById('r-j3-tot').innerText = j3Tot;
+      
+      document.getElementById('r-grand').innerText = Math.round(j1Tot + j2Tot + j3Tot);
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById('report-card');
+      const track = document.getElementById('r-track').innerText;
+      const name = document.getElementById('r-name').innerText.replace(/\s+/g, '_');
+      
+      const opt = {
+        margin:       0.3,
+        filename:     `MYST_Scorecard_${track}_${name}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Change button state
+      const btn = document.querySelector('.btn-download');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="material-icons">hourglass_empty</i> Generating PDF...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+
+      // Generate PDF
+      html2pdf().set(opt).from(element).save().then(() => {
+        btn.innerHTML = originalText;
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      });
+    }
+  </script>
+</body>
+</html>
