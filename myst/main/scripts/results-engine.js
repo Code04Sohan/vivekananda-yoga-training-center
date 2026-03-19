@@ -102,6 +102,7 @@ async function calculateGroupResults() {
                 rawResults.push({
                     trackNo: trackNo,
                     name: c.name || scoreData.candidateName,
+                    coachName: c.coachName || 'Independent',
                     division: c.division || scoreData.division || 'Unassigned',
                     district: c.state || c.district || scoreData.state || 'Unknown',
                     totalOpt: totalOpt,
@@ -157,14 +158,16 @@ async function calculateGroupResults() {
 // 3. Render Preview UI
 function renderResultsTable(standings) {
     const container = document.getElementById('results-table-container');
-    let html = `<table class="w-full text-left border-collapse text-sm"><thead class="bg-gray-900 border-b border-gray-700 text-xs uppercase text-gray-400"><tr><th class="p-3">Division</th><th class="p-3">Rank</th><th class="p-3">Track</th><th class="p-3">Athlete</th><th class="p-3">District</th><th class="p-3 text-right">Final Score</th></tr></thead><tbody class="divide-y divide-gray-800">`;
+    let html = `<table class="w-full text-left border-collapse text-sm"><thead class="bg-gray-900 border-b border-gray-700 text-xs uppercase text-gray-400"><tr><th class="p-3">Division</th><th class="p-3">Rank</th><th class="p-3">Track</th><th class="p-3">Athlete</th><th class="p-3">Coach</th><th class="p-3">District</th><th class="p-3 text-right">Final Score</th></tr></thead><tbody class="divide-y divide-gray-800">`;
     standings.forEach(s => {
         const isPodium = s.rank <= 3;
         html += `<tr class="${isPodium ? "bg-gray-800/80 font-bold" : "text-gray-400"} hover:bg-gray-700">
             <td class="p-3 text-brand-400 font-bold text-xs uppercase tracking-widest">${s.division}</td>
             <td class="p-3 text-lg">${isPodium ? s.medal : s.rank}</td>
             <td class="p-3 font-mono text-xs">${s.trackNo}</td>
-            <td class="p-3 text-white">${s.name}</td><td class="p-3">${s.district}</td>
+            <td class="p-3 text-white">${s.name}</td>
+            <td class="p-3 text-gray-400 text-xs italic">${s.coachName}</td>
+            <td class="p-3">${s.district}</td>
             <td class="p-3 text-right text-blue-400 font-black text-lg">${s.finalScore}</td></tr>`;
     });
     container.innerHTML = html + `</tbody></table>`;

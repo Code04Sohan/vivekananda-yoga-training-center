@@ -43,20 +43,29 @@
 </div>
 
     <header id="global-top-bar" class="bg-gray-950 border-b border-gray-800 px-4 md:px-6 py-4 flex justify-between items-center z-20 shrink-0 shadow-md">
+        
         <div class="flex items-center space-x-3 md:space-x-4">
             <button id="btn-mobile-menu" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
-            <h1 class="text-xl md:text-2xl font-black tracking-wider text-white">MYST <span class="text-blue-500 text-xs md:text-sm font-bold uppercase tracking-widest align-middle ml-1 md:ml-2">Admin</span></h1>
+            
+            <img src="https://www.soumenyoga.in/resources/MYST_dp.jpeg" alt="MYST Logo" class="h-8 w-8 md:h-10 md:w-10 object-contain" onerror="this.style.display='none'">
+            
+            <h1 class="text-xl md:text-2xl font-black tracking-wider text-white">MYST <span class="text-brand-500 not-italic font-bold text-sm border border-brand-500 px-2 rounded ml-1">ADMIN</span></h1>
             
             <div id="system-status" class="hidden sm:flex items-center bg-gray-800 px-3 py-1 rounded-full border border-gray-700">
-                <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse mr-2"></div>
-                <span id="db-connection-status" class="text-xs font-mono text-gray-300 uppercase">DB: Connected</span>
+                <div class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></div>
+                <span class="text-[10px] uppercase tracking-widest font-bold text-gray-300">DB: Connected</span>
             </div>
         </div>
 
         <div class="flex items-center space-x-4">
             
+            <div class="hidden md:flex flex-col text-right mr-2 border-r border-gray-700 pr-4">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Developed By</span>
+                <span class="text-sm font-black text-blue-400 leading-tight">Sohan Adhikari</span>
+            </div>
+
             <div id="master-controls" class="hidden md:flex items-center space-x-3 bg-gray-800 px-4 py-2 rounded-lg border border-red-900/50">
                 <label for="scoring-portal-toggle" class="text-sm font-bold text-gray-300 uppercase tracking-wide">Portal Status:</label>
                 <select id="scoring-portal-toggle" class="bg-gray-900 text-white text-sm font-bold border border-gray-700 rounded px-3 py-1 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
@@ -64,11 +73,8 @@
                     <option value="CLOSED" class="text-red-500">🔴 CLOSED (Paused)</option>
                 </select>
             </div>
-
-            <button id="btn-logout" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-600 text-sm font-bold py-2 px-4 rounded transition-colors shadow-lg active:scale-95">
-                Logout
-            </button>
             
+            <button id="btn-logout" class="bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 px-4 py-2 rounded text-sm font-bold transition-colors shadow">Logout</button>
         </div>
     </header>
 
@@ -93,6 +99,8 @@
 
             <section id="view-home" class="h-full flex flex-col items-center justify-center text-center" style="display: none;">
                 <div class="bg-gray-900/80 p-16 rounded-[2.5rem] border border-gray-700/50 shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-md max-w-4xl w-full mx-4">
+                    
+                    <img src="./logo.png" alt="MYST Logo" class="h-24 w-24 md:h-32 md:w-32 mx-auto mb-6 object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]" onerror="this.style.display='none'">
                     
                     <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter italic mb-4">
                         MYST <span class="text-blue-500 not-italic font-bold text-3xl md:text-4xl border-4 border-blue-500/80 px-5 py-2 rounded-2xl ml-2 align-middle shadow-[0_0_30px_rgba(59,130,246,0.3)] bg-blue-950/30">ADMIN</span>
@@ -475,20 +483,37 @@
         </div>
     </div>
 
-    <div id="modal-factory-reset" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
-        <div class="bg-gray-900 p-8 rounded-2xl border border-red-700 shadow-2xl w-full max-w-lg text-center">
-            <div class="w-16 h-16 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500"><span class="text-3xl">⚠️</span></div>
-            <h3 class="text-2xl font-black text-white mb-2 tracking-tighter uppercase">Factory Reset</h3>
-            <p class="text-sm text-gray-400 mb-6">This will permanently delete ALL candidates and ALL locked rosters from the database. This action CANNOT be undone.</p>
+    <div id="modal-factory-reset" class="fixed inset-0 bg-gray-950/90 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-gray-900 border border-red-900/50 p-8 rounded-2xl shadow-2xl w-full max-w-lg text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-red-600 animate-pulse"></div>
             
-            <div class="text-left mb-6">
-                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Type "confirm" to proceed</label>
-                <input type="text" id="input-confirm-reset" placeholder="confirm" class="w-full bg-gray-950 border border-red-900 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500 mt-1 text-center font-mono">
+            <div class="w-20 h-20 bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/50">
+                <span class="text-4xl text-red-500">☢️</span>
             </div>
             
-            <div class="flex space-x-3">
-                <button id="btn-cancel-reset" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded-xl transition-colors">Cancel</button>
-                <button id="btn-execute-reset" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Wipe Database</button>
+            <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-2">Factory Reset</h2>
+            <p class="text-red-400 font-bold text-sm uppercase tracking-widest mb-4">Warning: Destructive Action</p>
+            
+            <p class="text-gray-400 text-sm mb-6 leading-relaxed">
+                This will permanently delete ALL imported candidates, ALL active queue tickets, and ALL submitted scores. 
+                <br><br><strong class="text-white">This action cannot be undone.</strong>
+            </p>
+
+            <div class="bg-blue-900/20 border border-blue-800 rounded-lg p-4 mb-6">
+                <p class="text-xs text-blue-300 font-bold uppercase tracking-wider mb-3">Recommendation: Backup Before Reset</p>
+                <button id="btn-goto-backup" class="w-full bg-blue-800/50 hover:bg-blue-700 text-blue-100 border border-blue-600 font-bold py-2 rounded transition-colors text-sm shadow">
+                    💾 Go to Live Leaderboard to Download Backup
+                </button>
+            </div>
+
+            <div class="bg-gray-950 rounded-lg p-4 mb-6 border border-gray-800">
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 text-left">Type 'confirm' to unlock</label>
+                <input type="text" id="input-confirm-reset" placeholder="..." class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white text-center font-mono focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors">
+            </div>
+
+            <div class="flex space-x-4">
+                <button id="btn-cancel-reset" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-4 rounded-xl transition-colors">Cancel</button>
+                <button id="btn-execute-reset" disabled class="flex-1 bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-xl uppercase tracking-widest transition-colors disabled:opacity-30 disabled:cursor-not-allowed">Wipe Database</button>
             </div>
         </div>
     </div>

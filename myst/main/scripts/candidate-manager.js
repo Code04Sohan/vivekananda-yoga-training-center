@@ -221,6 +221,7 @@ function setupFactoryReset() {
     const inputConfirm = document.getElementById('input-confirm-reset');
     const btnCancel = document.getElementById('btn-cancel-reset');
     const btnExecute = document.getElementById('btn-execute-reset');
+    const btnGotoBackup = document.getElementById('btn-goto-backup');
 
     if (!btnTrigger) return;
 
@@ -237,6 +238,20 @@ function setupFactoryReset() {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
     });
+
+    if (btnGotoBackup) {
+        btnGotoBackup.addEventListener('click', () => {
+            // Close the modal
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            
+            // Virtually click the sidebar navigation button
+            const navDashboard = document.getElementById('nav-live-dashboard');
+            if (navDashboard) {
+                navDashboard.click();
+            }
+        });
+    }
 
     // Validation Listener
     inputConfirm.addEventListener('input', (e) => {

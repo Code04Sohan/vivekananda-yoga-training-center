@@ -165,6 +165,18 @@ async function lockStaffToMat(docId, cardElement) {
         return;
     }
 
+    // ==========================================
+    // NEW: DUPLICATE JUDGE FAIL-SAFE
+    // ==========================================
+    const allJudges = [headJudge, ...panelJudges]; // Combine all 5 assigned seats
+    const uniqueJudges = new Set(allJudges);       // A Set automatically removes duplicates
+    
+    if (uniqueJudges.size !== 5) {
+        alert("⚠️ DUPLICATE JUDGE DETECTED!\nYou cannot assign the same judge to multiple seats on the same mat. Please correct the panel.");
+        return;
+    }
+    // ==========================================
+
     try {
         await updateDoc(doc(db, 'active_mats', docId), {
             coordinator: coordinator,
