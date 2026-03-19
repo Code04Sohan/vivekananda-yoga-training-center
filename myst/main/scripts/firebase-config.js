@@ -16,10 +16,10 @@ import { initializeFirestore, persistentLocalCache } from "https://www.gstatic.c
 // ============================================================================
 
 // The 4 random chunks of the encoded, reversed key
-const p1 = "QWlWck5PZ2pyW";
-const p2 = "FIwUW9aenBxMl";
-const p3 = "hjdWpyZi1HMUh";
-const p4 = "xNTNDeVNheklB";
+const p1 = "c1hkV1Y1enI2V"; 
+const p2 = "TJBbi1xeWtmdE"; 
+const p3 = "kxUlJncTF2R1R"; 
+const p4 = "tc09BeVNheklB";
 // The browser instantly unlocks it in 3 steps:
 // Step 1: Join the 4 parts together
 const joinedBase64 = p1 + p2 + p3 + p4;
@@ -33,17 +33,18 @@ const actualApiKey = reversedKey.split('').reverse().join('');
 const firebaseConfig = {
     apiKey: actualApiKey,
 
-    authDomain: "myst-database.firebaseapp.com",
+    authDomain: "myst-backup.firebaseapp.com",
 
-    projectId: "myst-database",
+    projectId: "myst-backup",
 
-     storageBucket: "myst-database.firebasestorage.app",
+    storageBucket: "myst-backup.firebasestorage.app",
 
-    messagingSenderId: "6669157577",
+    messagingSenderId: "915511456528",
 
-    appId: "1:6669157577:web:aba496cf40e6f17b16b918",
+    appId: "1:915511456528:web:6a5f41baf70c0c660c2b95",
 
-    measurementId: "G-SW9F2G95JX"
+    measurementId: "G-JMQVF9TQDH"
+
 };
 
 // Initialize the App
