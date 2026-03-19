@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYST Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gray: { 850: '#1f2937', 950: '#030712' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+    
+    <div id="auth-overlay" class="fixed inset-0 bg-gray-950 z-[100] flex items-center justify-center p-4">
+    <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-md text-center">
+        <h1 class="text-3xl font-black text-white mb-2 tracking-tighter italic">MYST <span class="text-blue-500 not-italic font-bold text-sm border border-blue-500 px-2 rounded ml-1">ADMIN</span></h1>
+        <p class="text-gray-400 text-sm mb-8 italic">Authorized Access Only | MYST Admins</p>
+        
+        <form id="login-form" class="space-y-4">
+            <div class="text-left">
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Admin ID (Email)</label>
+                <input type="email" id="admin-email" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1">
+            </div>
+            <div class="text-left pb-4">
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Security Key (Password)</label>
+                <input type="password" id="admin-password" required class="w-full bg-gray-900 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 mt-1">
+            </div>
+            <button type="submit" id="btn-admin-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95">
+                🔓 login
+            </button>
+        </form>
+        <p id="login-error" class="text-red-500 text-xs mt-4 font-bold hidden italic"></p>
+    </div>
+</div>
+
+    <header id="global-top-bar" class="bg-gray-950 border-b border-gray-800 px-4 md:px-6 py-4 flex justify-between items-center z-20 shrink-0 shadow-md">
+        <div class="flex items-center space-x-3 md:space-x-4">
+            <button id="btn-mobile-menu" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <h1 class="text-xl md:text-2xl font-black tracking-wider text-white">MYST <span class="text-blue-500 text-xs md:text-sm font-bold uppercase tracking-widest align-middle ml-1 md:ml-2">Admin</span></h1>
+            
+            <div id="system-status" class="hidden sm:flex items-center bg-gray-800 px-3 py-1 rounded-full border border-gray-700">
+                <div class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse mr-2"></div>
+                <span id="db-connection-status" class="text-xs font-mono text-gray-300 uppercase">DB: Connected</span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            
+            <div id="master-controls" class="hidden md:flex items-center space-x-3 bg-gray-800 px-4 py-2 rounded-lg border border-red-900/50">
+                <label for="scoring-portal-toggle" class="text-sm font-bold text-gray-300 uppercase tracking-wide">Portal Status:</label>
+                <select id="scoring-portal-toggle" class="bg-gray-900 text-white text-sm font-bold border border-gray-700 rounded px-3 py-1 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                    <option value="OPEN" class="text-green-500">🟢 OPEN (Judges Active)</option>
+                    <option value="CLOSED" class="text-red-500">🔴 CLOSED (Paused)</option>
+                </select>
+            </div>
+
+            <button id="btn-logout" class="bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white border border-gray-600 text-sm font-bold py-2 px-4 rounded transition-colors shadow-lg active:scale-95">
+                Logout
+            </button>
+            
+        </div>
+    </header>
+
+    <div id="app-wrapper" class="flex flex-1 overflow-hidden relative">
+
+        <nav id="sidebar-nav" class="absolute md:relative z-40 h-full w-64 bg-gray-950 border-r border-gray-800 flex flex-col p-4 shrink-0 overflow-y-auto space-y-2 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <button id="nav-home" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium mb-4">System Home</button>
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 px-2">Management</p>
+            <button id="nav-candidate-manager" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Master Candidate List</button>
+            <button id="nav-staff-provisioning" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Staff Provisioning</button>
+            <button id="nav-data-importer" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Data Importer</button>
+            <button id="nav-mat-control" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Stage Master Control</button>
+            <button id="nav-stage-manager" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Stage Manager</button>
+            
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mt-6 mb-2 px-2">Operations</p>
+            <button id="nav-live-dashboard" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Live Leaderboard</button>
+            <button id="nav-results-engine" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium font-bold">Results Calculator</button>
+            <button id="nav-results-explorer" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium">Published Results</button>
+        </nav>
+
+        <main id="workspace" class="flex-1 bg-gray-900 p-4 md:p-8 overflow-y-auto w-full">
+
+            <section id="view-home" class="h-full flex flex-col items-center justify-center text-center" style="display: none;">
+                <div class="bg-gray-900/80 p-16 rounded-[2.5rem] border border-gray-700/50 shadow-[0_0_50px_rgba(0,0,0,0.5)] backdrop-blur-md max-w-4xl w-full mx-4">
+                    
+                    <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter italic mb-4">
+                        MYST <span class="text-blue-500 not-italic font-bold text-3xl md:text-4xl border-4 border-blue-500/80 px-5 py-2 rounded-2xl ml-2 align-middle shadow-[0_0_30px_rgba(59,130,246,0.3)] bg-blue-950/30">ADMIN</span>
+                    </h1>
+                    
+                    <h2 class="text-xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-600 tracking-[0.2em] uppercase mb-8">
+                        Management of Yoga Sports & Tournaments
+                    </h2>
+                    
+                    <div class="w-32 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto rounded-full mb-8 opacity-70"></div>
+                    
+                    <p class="text-gray-400 italic text-lg max-w-xl mx-auto font-medium">
+                        Welcome to the central command terminal. <br> Please select a module from the sidebar to begin tournament operations.
+                    </p>
+                </div>
+            </section>
+
+            <section id="view-staff-provisioning" class="max-w-6xl mx-auto" style="display: none;">
+                <h2 class="text-3xl font-bold mb-6 text-white border-b border-gray-800 pb-3">Staff Provisioning</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg lg:col-span-1 h-fit">
+                        <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center">➕ Add Staff to DB</h3>
+                        <p class="text-xs text-gray-400 mb-4 italic">Create account in Firebase Auth, then paste details here.</p>
+                        <div class="space-y-3">
+                            <input type="text" id="new-staff-uid" placeholder="Auth UID (e.g. jX9...)" class="w-full text-sm bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500">
+                            <input type="text" id="new-staff-name" placeholder="Full Name" class="w-full text-sm bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500">
+                            <input type="email" id="new-staff-email" placeholder="Email Address" class="w-full text-sm bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500">
+                            <select id="new-staff-role" class="w-full text-sm bg-gray-900 border border-gray-600 rounded px-3 py-2 text-white focus:border-blue-500">
+                                <option value="JUDGE">Judge</option>
+                                <option value="STAGE_MGR">STAGE_MGR</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                            <button onclick="addNewStaff()" class="w-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-bold py-3 rounded shadow mt-2 transition-transform active:scale-95">Link Account</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg lg:col-span-3">
+                        <h3 class="text-lg font-semibold text-green-400 mb-4 flex items-center">🛡️ Active Staff Roster</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-900 text-gray-400 text-xs uppercase tracking-wider">
+                                        <th class="p-3">Staff Member (Name & Email)</th>
+                                        <th class="p-3">Auth UID</th>
+                                        <th class="p-3 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="active-staff-tbody" class="divide-y divide-gray-700"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="view-candidate-manager" class="max-w-7xl mx-auto" style="display: none;">
+                
+                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
+                    <h2 class="text-3xl font-bold text-white">Master Candidate List</h2>
+                    <button id="btn-trigger-factory-reset" class="bg-red-900/40 hover:bg-red-800 text-red-200 border border-red-700 text-sm font-bold py-2 px-4 rounded shadow-lg transition-colors flex items-center">
+                        ⚠️ DELETE ALL CANDIDATE DATA
+                    </button>
+                </div> 
+                
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 flex flex-wrap gap-4 mb-6">
+                    <input type="text" id="search-candidate" placeholder="Search by Track No or Name..." class="flex-1 min-w-[200px] bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white">
+                    <select id="filter-candidate-category" class="bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500"><option value="All">All Categories</option></select>
+                    <select id="filter-candidate-gender" class="bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500"><option value="All">All Genders</option></select>
+                    <select id="filter-candidate-district" class="bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500"><option value="All">All Districts</option></select>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-x-auto max-h-[600px] overflow-y-auto w-full">
+                    <table class="min-w-full w-full text-left border-collapse whitespace-nowrap">
+                        <thead class="bg-gray-900 border-b border-gray-700 text-xs uppercase tracking-wider text-gray-400 sticky top-0 shadow z-10">
+                            <tr>
+                                <th class="p-4 w-1/12">Track No</th>
+                                <th class="p-4 w-3/12">Name</th>
+                                <th class="p-4 w-1/12">Gender</th> 
+                                <th class="p-4 w-2/12">District</th> 
+                                <th class="p-4 w-3/12">Age Group</th>
+                                <th class="p-4 w-1/12">Status</th>
+                                <th class="p-4 w-1/12 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="candidate-manager-tbody" class="divide-y divide-gray-700 text-sm"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-data-importer" class="max-w-3xl mx-auto" style="display: none;">
+                <h2 class="text-3xl font-bold mb-6 text-white border-b border-gray-800 pb-3">Data Importer</h2>
+                <div class="bg-gray-800 p-8 rounded-xl border border-gray-700 shadow-lg text-center">
+                    <form id="csv-upload-form" class="space-y-4">
+                        <input type="file" id="csv-file-input" accept=".csv" required class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-500 bg-gray-900 border border-gray-700 p-2 cursor-pointer rounded-lg">
+                        <button type="submit" id="btn-upload-csv" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition-colors">Upload & Generate Track Numbers</button>
+                    </form>
+                    <div id="upload-status-console" class="mt-6 text-left bg-gray-900 p-4 rounded-lg border border-gray-700 h-32 overflow-y-auto font-mono text-xs text-gray-400 whitespace-pre"></div>
+                </div>
+            </section>
+
+            <section id="view-stage-manager" class="max-w-6xl mx-auto" style="display: none;">
+                <h2 class="text-3xl font-bold mb-6 text-white border-b border-gray-800 pb-3">Stage Manager (Queue Pusher)</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg lg:col-span-1">
+                        <label class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Target Mat</label>
+                        <select id="queue-mat-select" class="w-full bg-gray-900 border border-gray-600 rounded px-4 py-3 text-white mb-6 focus:ring-2 focus:ring-blue-500 font-bold text-lg">
+                            <option value="">-- Select Mat --</option>
+                            </select>
+
+                        <h3 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-3 italic">Batch Entry (Track Nos)</h3>
+                        <div class="space-y-3 mb-6" id="queue-inputs-container">
+                            <input type="text" placeholder="Candidate 1 Track" class="queue-input w-full bg-gray-900 border border-gray-600 rounded px-4 py-3 text-white text-center font-mono text-xl focus:border-blue-500 transition-colors placeholder:text-gray-600 placeholder:text-sm">
+                            <input type="text" placeholder="Candidate 2 Track" class="queue-input w-full bg-gray-900 border border-gray-600 rounded px-4 py-3 text-white text-center font-mono text-xl focus:border-blue-500 transition-colors placeholder:text-gray-600 placeholder:text-sm">
+                            <input type="text" placeholder="Candidate 3 Track" class="queue-input w-full bg-gray-900 border border-gray-600 rounded px-4 py-3 text-white text-center font-mono text-xl focus:border-blue-500 transition-colors placeholder:text-gray-600 placeholder:text-sm">
+                            <input type="text" placeholder="Candidate 4 Track" class="queue-input w-full bg-gray-900 border border-gray-600 rounded px-4 py-3 text-white text-center font-mono text-xl focus:border-blue-500 transition-colors placeholder:text-gray-600 placeholder:text-sm">
+                            <input type="text" placeholder="Candidate 5 Track" class="queue-input w-full bg-gray-900 border border-gray-600 rounded px-4 py-3 text-white text-center font-mono text-xl focus:border-blue-500 transition-colors placeholder:text-gray-600 placeholder:text-sm">
+                        </div>
+
+                        <button id="btn-push-queue" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-xl shadow-lg transition-transform active:scale-95 text-lg uppercase tracking-tight">
+                            🚀 Push to Mat Queue
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg lg:col-span-2 flex flex-col">
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-3">
+                            <h3 class="text-lg font-bold text-gray-300 uppercase tracking-tight">Live Mat Queue</h3>
+                            <button id="btn-clear-completed-queue" class="bg-red-900/40 hover:bg-red-800 text-red-200 border border-red-700 text-xs font-bold py-2 px-4 rounded shadow transition-colors">
+                                🧹 Clear Completed
+                            </button>
+                        </div>
+                        
+                        <div class="flex-1 overflow-y-auto overflow-x-auto border border-gray-700 rounded-lg bg-gray-900 max-h-[450px]">
+                            <table class="w-full text-center border-collapse min-w-[500px] md:min-w-full">
+                                <thead class="bg-gray-950 sticky top-0 shadow border-b border-gray-700">
+                                    <tr>
+                                        <th class="p-3 text-xs uppercase text-gray-500">Batch</th>
+                                        <th class="p-3 text-xs uppercase text-gray-300 font-bold">Track No</th>
+                                        <th class="p-3 text-xs uppercase text-gray-500">J1</th>
+                                        <th class="p-3 text-xs uppercase text-gray-500">J2</th>
+                                        <th class="p-3 text-xs uppercase text-gray-500">J3</th>
+                                        <th class="p-3 text-xs uppercase text-gray-500">J4</th>
+                                        <th class="p-3 text-xs uppercase text-gray-500">J5</th>
+                                        <th class="p-3 text-xs uppercase text-red-500">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="live-queue-tbody" class="divide-y divide-gray-800 text-sm">
+                                    <tr><td colspan="8" class="p-8 text-gray-500 italic">Select a Mat to view its live queue.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-mat-control" class="max-w-6xl mx-auto" style="display: none;">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
+                    <h2 class="text-3xl font-bold text-white">Live Mat Control (Staff Assignments)</h2>
+                    <button id="btn-add-mat" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded shadow-lg">+ Add Mat</button>
+                </div>
+                
+                <div id="active-mats-container" class="grid grid-cols-1 xl:grid-cols-2 gap-6"></div>
+
+                <div class="mat-card bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden" id="mat-template" style="display: none;">
+                    <div class="bg-gray-950 px-6 py-3 border-b border-gray-700 flex justify-between items-center">
+                        <h3 class="text-lg font-bold text-blue-400 uppercase tracking-widest">MAT <span class="mat-number">X</span></h3>
+                    </div>
+                    <div class="p-6 space-y-6">
+                        <div class="judge-assignment bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+                            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-800 pb-2">Staff Assignment Panel</h4>
+                            
+                            <div class="space-y-3" id="judge-select-grid">
+                                <label class="flex items-center pb-2 border-b border-gray-800">
+                                    <span class="w-28 text-purple-400 font-bold text-xs uppercase tracking-wider">Coordinator</span> 
+                                    <select class="select-coordinator flex-1 bg-gray-950 border border-gray-600 rounded px-3 py-2 text-sm text-gray-300 focus:border-purple-500"></select>
+                                </label>
+                                
+                                <label class="flex items-center mt-2"><span class="w-28 text-yellow-500 font-bold text-xs uppercase tracking-wider">J1 (Head)</span> <select class="select-judge-head flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm"></select></label>
+                                <label class="flex items-center"><span class="w-28 text-gray-400 text-xs uppercase tracking-wider">J2</span> <select class="select-judge-panel flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm"></select></label>
+                                <label class="flex items-center"><span class="w-28 text-gray-400 text-xs uppercase tracking-wider">J3</span> <select class="select-judge-panel flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm"></select></label>
+                                <label class="flex items-center"><span class="w-28 text-gray-400 text-xs uppercase tracking-wider">J4</span> <select class="select-judge-panel flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm"></select></label>
+                                <label class="flex items-center"><span class="w-28 text-gray-400 text-xs uppercase tracking-wider">J5</span> <select class="select-judge-panel flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm"></select></label>
+                            </div>
+                            
+                            <button class="btn-lock-judges w-full mt-5 bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded-lg shadow uppercase tracking-wider transition-colors">Lock Staff Panel</button>
+                        </div>
+                        
+                        <button class="btn-close-mat w-full text-red-500 hover:text-red-400 text-xs font-bold py-3 border border-red-900/30 rounded uppercase tracking-widest bg-gray-950 transition-colors">Terminate Mat Session</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-live-dashboard" class="max-w-7xl mx-auto" style="display: none;">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
+                    <h2 class="text-3xl font-bold text-white flex items-center">
+                        <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3"></span> Live Global Leaderboard
+                    </h2>
+                    
+                    <div class="flex space-x-3">
+                        <button id="btn-backup-scores" class="bg-blue-900/40 hover:bg-blue-800 text-blue-200 border border-blue-700 text-sm font-bold py-2 px-4 rounded shadow-lg transition-colors flex items-center">
+                            💾 Backup Scores (JSON)
+                        </button>
+                        
+                        <label class="bg-purple-900/40 hover:bg-purple-800 text-purple-200 border border-purple-700 text-sm font-bold py-2 px-4 rounded shadow-lg transition-colors flex items-center cursor-pointer">
+                            <input type="file" id="file-restore-scores" accept=".json" class="hidden">
+                            ♻️ Restore Scores
+                        </label>
+
+                        <button id="btn-wipe-scores" class="bg-red-900/40 hover:bg-red-800 text-red-200 border border-red-700 text-sm font-bold py-2 px-4 rounded shadow-lg transition-colors flex items-center">
+                            ⚠️ DELETE ALL SCORECARDS
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 p-4 rounded-lg border border-gray-700 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <input type="text" id="dash-search-track" placeholder="🔍 Search Track No..." 
+                        class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+                    
+                    <select id="dash-group-select" class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- All Groups --</option>
+                    </select>
+                    
+                    <select id="dash-gender-select" class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- All Genders --</option>
+                    </select>
+                    
+                    <select id="dash-district-select" class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">-- All Districts --</option>
+                    </select>
+                </div>
+                <div class="bg-gray-800 rounded-xl border border-gray-700 shadow-xl overflow-hidden">
+                    <table class="w-full text-left border-collapse"><thead class="bg-gray-900 border-b border-gray-700 text-xs uppercase tracking-wider text-gray-400"><tr><th class="p-4">Track</th><th class="p-4">Candidate</th><th class="p-4">Scorecard Audit</th><th class="p-4 text-right">Prelim Sum</th><th class="p-4 text-center">Overwrites</th></tr></thead><tbody id="live-dashboard-tbody" class="divide-y divide-gray-700"></tbody></table>
+                </div>
+                
+            </section>
+
+            <section id="view-results-engine" class="max-w-6xl mx-auto" style="display: none;">
+                <h2 class="text-3xl font-bold mb-6 text-white border-b border-gray-800 pb-3 italic">🏆 Final Standings & Medal Analytics</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
+                        <h3 class="text-lg font-bold text-gray-300 mb-4 border-b border-gray-700 pb-2 uppercase tracking-tight">Olympic Tie-Breakers</h3>
+                        <label class="flex items-center space-x-3 mb-3 cursor-pointer"><input type="checkbox" id="setting-tie-optional" checked class="w-4 h-4 text-blue-600"> <span class="text-sm">Priority 1: Optional Asana Marks</span></label>
+                        <label class="flex items-center space-x-3 cursor-pointer"><input type="checkbox" id="setting-tie-headjudge" checked class="w-4 h-4 text-blue-600"> <span class="text-sm">Priority 2: Head Judge (J1) Override</span></label>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg flex flex-col justify-center space-y-3">
+                        <select id="res-category-select"
+                            class="w-full bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500">
+                            <option value="">-- Select Age Group --</option>
+                        </select>
+                    
+                        <div class="flex space-x-3">
+                            <select id="res-gender-select"
+                                class="flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- Select Gender --</option>
+                            </select>
+                    
+                            <select id="res-district-select"
+                                class="flex-1 bg-gray-900 border border-gray-600 rounded px-3 py-2 text-sm text-white focus:ring-2 focus:ring-blue-500">
+                                <option value="">-- All Districts (Optional) --</option>
+                            </select>
+                        </div>
+                    
+                        <button id="btn-calculate-results"
+                            class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg shadow-lg mt-2 transition-transform active:scale-95">
+                            📊 Calculate Group Standings
+                        </button>
+                    </div>
+                </div>
+
+                <div id="official-results-preview" class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg mb-12 min-h-[150px]">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Division Podium Preview</h3>
+                    <div id="results-table-container" class="overflow-x-auto text-center text-gray-600 italic py-8">Select category, gender, and division to calculate podium.</div>
+                </div>
+                
+                <button id="btn-publish-results" class="w-full bg-green-700 hover:bg-green-600 text-white font-black py-4 rounded-xl shadow-2xl transition-transform active:scale-95 border-b-4 border-green-900 flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <span class="mr-3">🏅</span> PUBLISH DIVISION PODIUM TO DATABASE
+                </button>
+
+                <div class="mt-16 pt-8 border-t border-gray-800">
+                    <h2 class="text-2xl font-black mb-6 text-yellow-500 flex items-center uppercase tracking-tighter">🏅 District Medal Analytics</h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg lg:col-span-1 flex flex-col justify-center space-y-3">
+                            <button id="btn-calculate-district-medals" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded shadow-lg border border-gray-600 transition-colors">🔄 Aggregate Medals</button>
+                            <button id="btn-broadcast-district" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded shadow-lg transition-transform active:scale-95 uppercase tracking-wide">📡 Global Tally Broadcast</button>
+                            
+                            <button id="btn-download-district-csv" class="w-full bg-green-700 hover:bg-green-600 text-white font-bold py-3 rounded shadow-lg border border-green-600 transition-colors mt-2">⬇️ Download Tally CSV</button>
+                        </div>
+                        
+                        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg lg:col-span-2 overflow-hidden">
+                            <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Medal Standings Local Preview</h3>
+                            <div id="district-tally-preview" class="overflow-y-auto max-h-64 rounded-lg bg-gray-950 border border-gray-900 p-4"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 border border-purple-900/50 p-6 rounded-xl">
+                        <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-3">
+                            <h3 class="text-lg font-black text-white uppercase tracking-tighter flex items-center">
+                                <span class="text-purple-500 mr-2">📺</span> Currently on Big Screens
+                            </h3>
+                            <div class="flex space-x-3">
+                                <button id="btn-delete-tally"
+                                    class="bg-red-900/40 hover:bg-red-800 border border-red-700 text-red-200 px-4 py-2 rounded text-xs font-bold transition-colors shadow">
+                                    🗑️ Delete Live Tally
+                                </button>
+                                <button id="btn-view-live-broadcast"
+                                    class="bg-purple-900/40 hover:bg-purple-800 border border-purple-700 text-purple-200 px-4 py-2 rounded text-xs font-bold transition-colors shadow">
+                                    Fetch Live Tally Data
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="live-broadcast-container" class="hidden">
+                            <p id="live-broadcast-time" class="text-xs text-gray-400 italic mb-3"></p>
+                            <div id="live-broadcast-table" class="overflow-x-auto bg-gray-950 rounded-lg border border-gray-800"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-results-explorer" class="max-w-7xl mx-auto" style="display: none;">
+                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
+                    <h2 class="text-3xl font-black text-white uppercase tracking-tighter">📂 Published Results Explorer</h2>
+                    <div class="flex space-x-3">
+                        <button id="btn-wipe-results" class="bg-red-900/40 hover:bg-red-800 text-red-200 border border-red-700 px-4 py-2 rounded text-sm font-bold transition-colors shadow">
+                            ⚠️ Delete All Results
+                        </button>
+                        <button id="btn-refresh-explorer" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-2 rounded text-sm font-bold transition-colors shadow">
+                            🔄 Refresh List
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="explorer-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                    <p class="text-gray-500 italic col-span-3">Loading published results...</p>
+                </div>
+
+                <div id="explorer-details" class="bg-gray-950 border border-gray-700 rounded-xl p-6 hidden shadow-2xl mb-8">
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-edit-score" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-4xl">
+            <h3 class="text-xl font-black text-white mb-4 border-b border-gray-700 pb-3 flex items-center uppercase tracking-tight italic">
+                <span class="text-red-500 mr-2 font-bold uppercase not-italic text-sm px-2 bg-red-900/20 border border-red-500 rounded">Admin Override</span> 
+                Track: <span id="edit-score-track" class="text-blue-500 ml-2"></span>
+            </h3>
+            
+            <div class="overflow-x-auto mb-6">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead class="bg-gray-900 text-gray-400 uppercase text-xs">
+                        <tr>
+                            <th class="p-3">Judge</th>
+                            <th class="p-3">Asan 1</th>
+                            <th class="p-3">Asan 2</th>
+                            <th class="p-3">Optional</th>
+                        </tr>
+                    </thead>
+                    <tbody id="typo-matrix-table" class="divide-y divide-gray-700">
+                        </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-between items-center border-t border-gray-700 pt-4">
+                <button id="btn-void-score" class="bg-red-900/40 hover:bg-red-700 text-red-400 hover:text-white px-4 py-2 rounded font-bold text-sm border border-red-800 transition-colors">
+                    🗑️ Void Scorecard
+                </button>
+                
+                <div class="flex space-x-3">
+                    <button id="btn-close-modal" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded font-bold text-sm transition-colors">Cancel</button>
+                    <button id="btn-save-admin-override" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded font-bold text-sm shadow-lg transition-colors">
+                        Save Override to Vault
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-factory-reset" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-red-700 shadow-2xl w-full max-w-lg text-center">
+            <div class="w-16 h-16 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500"><span class="text-3xl">⚠️</span></div>
+            <h3 class="text-2xl font-black text-white mb-2 tracking-tighter uppercase">Factory Reset</h3>
+            <p class="text-sm text-gray-400 mb-6">This will permanently delete ALL candidates and ALL locked rosters from the database. This action CANNOT be undone.</p>
+            
+            <div class="text-left mb-6">
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Type "confirm" to proceed</label>
+                <input type="text" id="input-confirm-reset" placeholder="confirm" class="w-full bg-gray-950 border border-red-900 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500 mt-1 text-center font-mono">
+            </div>
+            
+            <div class="flex space-x-3">
+                <button id="btn-cancel-reset" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded-xl transition-colors">Cancel</button>
+                <button id="btn-execute-reset" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Wipe Database</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-wipe-scores" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-[100] hidden items-center justify-center p-4">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-red-700 shadow-2xl w-full max-w-lg text-center">
+            <div class="w-16 h-16 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-4 border border-red-500"><span class="text-3xl">⚠️</span></div>
+            <h3 class="text-2xl font-black text-white mb-2 tracking-tighter uppercase">Wipe Live Scorecards</h3>
+            <p class="text-sm text-gray-400 mb-6">This will permanently delete ALL active scorecards from the live dashboard. Once deleted, they can only be restored via a JSON backup.</p>
+            
+            <button id="btn-modal-backup-scores" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-[0_0_15px_rgba(37,99,235,0.4)] transition-transform active:scale-95 mb-8 flex justify-center items-center uppercase tracking-widest text-sm border border-blue-400">
+                💾 Download Backup Before Wiping
+            </button>
+
+            <div class="text-left mb-6 border-t border-gray-800 pt-6">
+                <label class="text-xs font-bold text-gray-500 uppercase ml-1">Type "confirm" to proceed</label>
+                <input type="text" id="input-confirm-wipe-scores" placeholder="confirm" class="w-full bg-gray-950 border border-red-900 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500 mt-1 text-center font-mono">
+            </div>
+            
+            <div class="flex space-x-3">
+                <button id="btn-cancel-wipe-scores" class="flex-1 bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 rounded-xl transition-colors">Cancel</button>
+                <button id="btn-execute-wipe-scores" class="flex-1 bg-red-700 hover:bg-red-600 text-white font-bold py-3 rounded-xl shadow-lg transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Wipe Scorecards</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const views = ['home', 'staff-provisioning', 'data-importer', 'stage-manager', 'mat-control', 'live-dashboard', 'results-engine', 'candidate-manager', 'results-explorer'];
+        
+        views.forEach(view => {
+            const navBtn = document.getElementById(`nav-${view}`);
+            if (navBtn) { 
+                navBtn.addEventListener('click', (e) => {
+                    views.forEach(v => {
+                        const btn = document.getElementById(`nav-${v}`);
+                        const section = document.getElementById(`view-${v}`);
+                        
+                        if (btn) btn.className = "sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium";
+                        if (section) section.style.display = 'none';
+                    });
+                    
+                    e.target.className = "sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors bg-blue-600/10 text-blue-400 font-semibold border border-blue-500/20";
+                    
+                    // SMART DISPLAY TOGGLE: Only 'home' needs flex-centering!
+                    const activeSection = document.getElementById(`view-${view}`);
+                    if (view === 'home') {
+                        activeSection.style.display = 'flex';
+                    } else {
+                        activeSection.style.display = 'block';
+                    }
+                });
+            }
+        });
+
+        // Automatically load Home on login
+        document.getElementById('nav-home')?.click();
+
+        // --- MOBILE MENU TOGGLE LOGIC ---
+        const btnMenu = document.getElementById('btn-mobile-menu');
+        const sidebar = document.getElementById('sidebar-nav');
+        
+        if (btnMenu && sidebar) {
+            // Open/Close sidebar on hamburger click
+            btnMenu.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Auto-close sidebar on mobile when a tab is clicked
+            const navButtons = sidebar.querySelectorAll('.sidebar-btn');
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.innerWidth < 768) { 
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                });
+            });
+        }
+    </script>
+    <script type="module" src="./scripts/admin.js"></script>
+</body>
+</html>

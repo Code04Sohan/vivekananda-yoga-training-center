@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYST Score Injector</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-white font-sans flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="bg-gray-900 p-8 rounded-xl border border-gray-700 shadow-2xl w-full max-w-lg">
+        <h1 class="text-3xl font-black mb-2 text-blue-500 uppercase tracking-widest text-center">Data Injector</h1>
+        <p class="text-gray-400 text-sm mb-6 text-center italic">Auto-generates 5-Judge scorecards (2+1 Format)</p>
+        
+        <div id="auth-section" class="space-y-4">
+            <input type="email" id="admin-email" placeholder="Admin Email" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-3">
+            <input type="password" id="admin-pass" placeholder="Admin Password" class="w-full bg-gray-800 border border-gray-700 rounded px-4 py-3">
+            <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-3 rounded transition-colors">Login to Firestore</button>
+        </div>
+
+        <div id="injector-section" class="hidden flex-col items-center mt-4">
+            <p id="db-status" class="text-green-400 font-mono text-xs mb-6 uppercase tracking-widest">✅ Auth Success</p>
+            <button id="btn-inject" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded shadow-lg text-lg transition-transform active:scale-95">
+                🚀 INJECT RANDOM SCORES
+            </button>
+            <div id="console-log" class="w-full mt-6 bg-black p-4 rounded border border-gray-800 h-48 overflow-y-auto font-mono text-xs text-gray-400 whitespace-pre-wrap">Waiting to start...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        
+        // IMPORTANT: Copy your exact Firebase config here
+        const firebaseConfig = {
+            apiKey: "AIzaSyBphRfgnwzBIZSwMo4jgEH3NF2P_Ww9JxM",
+            authDomain: "myst-database.firebaseapp.com",
+            projectId: "myst-database",
+            storageBucket: "myst-database.firebasestorage.app",
+            messagingSenderId: "6669157577",
+            appId: "1:6669157577:web:aba496cf40e6f17b16b918",
+            measurementId: "G-SW9F2G95JX"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const log = (msg) => {
+            const consoleEl = document.getElementById('console-log');
+            consoleEl.innerText += `\n> ${msg}`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        };
+
+        // --- AUTH ---
+        document.getElementById('btn-login').addEventListener('click', async () => {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('injector-section').classList.remove('hidden');
+                document.getElementById('injector-section').classList.add('flex');
+                log("Logged in successfully. Ready to fetch data.");
+            } catch (error) { alert(error.message); }
+        });
+
+        // --- INJECTOR LOGIC ---
+        document.getElementById('btn-inject').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-inject');
+            btn.disabled = true;
+            btn.innerText = "⏳ INJECTING...";
+
+            try {
+                // 1. Get 5 Judge UIDs
+                log("Fetching Judges...");
+                const judgesSnap = await getDocs(query(collection(db, 'users'), where('role', '==', 'JUDGE')));
+                const judgeUids = [];
+                judgesSnap.forEach(d => judgeUids.push(d.id));
+                
+                if (judgeUids.length < 5) {
+                    log(`⚠️ Only found ${judgeUids.length} judges. Injector needs at least 5 judges in the DB.`);
+                    btn.disabled = false; btn.innerText = "🚀 INJECT RANDOM SCORES";
+                    return;
+                }
+                log(`Found ${judgeUids.length} judges. Using first 5 for the matrix.`);
+
+                // 2. Get Candidates
+                log("Fetching Candidates...");
+                const candSnap = await getDocs(collection(db, 'candidates'));
+                const candidates = [];
+                candSnap.forEach(d => candidates.push({ id: d.id, ...d.data() }));
+                log(`Found ${candidates.length} candidates.`);
+
+                // 3. Batch Injection Loop
+                const batch = writeBatch(db);
+                let injectedCount = 0;
+                let skippedCount = 0;
+
+                // Random Score Generators
+                const randAsan = () => parseFloat((Math.random() * (9.5 - 6.0) + 6.0).toFixed(1)); // 6.0 to 9.5
+                const randOpt = () => parseFloat((Math.random() * (19.0 - 13.0) + 13.0).toFixed(1)); // 13.0 to 19.0
+
+                for (const c of candidates) {
+                    // Skip if J1 already scored them (Meaning you or another script already did this one)
+                    if (c.j1_status === true) {
+                        skippedCount++;
+                        continue; 
+                    }
+
+                    const trackNo = c.trackNo || c.id;
+                    const scoreRef = doc(db, 'scores', trackNo);
+                    
+                    const masterScorecard = {
+                        timestamp: new Date().toISOString(),
+                        status: 'active',
+                        candidateName: c.name || "Unknown",
+                        division: c.division || "Unassigned",
+                        group: c.groupName || c.group || "Unassigned",
+                        state: c.district || c.state || "Unknown"
+                    };
+
+                    // Generate scores for J1 through J5 (Updated for 2+1 format)
+                    ['j1', 'j2', 'j3', 'j4', 'j5'].forEach(jSeat => {
+                        masterScorecard[`${jSeat}_a1`] = randAsan();
+                        masterScorecard[`${jSeat}_a2`] = randAsan();
+                        // Removed a3 here to match the new rules!
+                        masterScorecard[`${jSeat}_opt`] = randOpt();
+                    });
+
+                    // Add scorecard to batch
+                    batch.set(scoreRef, masterScorecard, { merge: true });
+
+                    // Update candidate to show they are fully scored
+                    const candRef = doc(db, 'candidates', trackNo);
+                    batch.update(candRef, {
+                        j1_status: true, j2_status: true, j3_status: true, j4_status: true, j5_status: true
+                    });
+
+                    injectedCount++;
+                    log(`Drafted Scorecard for Track: ${trackNo}`);
+                }
+
+                if (injectedCount > 0) {
+                    log("Committing batch to Firestore Vault...");
+                    await batch.commit();
+                    log(`✅ SUCCESS! Injected ${injectedCount} complete scorecards. Skipped ${skippedCount} already scored.`);
+                } else {
+                    log(`✅ Finished. Skipped ${skippedCount} candidates. No new scorecards needed.`);
+                }
+
+            } catch (error) {
+                log(`❌ ERROR: ${error.message}`);
+                console.error(error);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "🚀 INJECT RANDOM SCORES";
+            }
+        });
+    </script>
+</body>
+</html>
