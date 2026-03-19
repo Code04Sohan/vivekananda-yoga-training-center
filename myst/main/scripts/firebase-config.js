@@ -16,10 +16,10 @@ import { initializeFirestore, persistentLocalCache } from "https://www.gstatic.c
 // ============================================================================
 
 // The 4 random chunks of the encoded, reversed key
-const p1 = "a21wcW1xaFBnM";
-const p2 = "mNnaWQxR09nYz"; 
-const p3 = "JCeEVQQWsyekh"; 
-const p4 = "1bzhDeVNheklB";
+const p1 = "QWlWck5PZ2pyW";
+const p2 = "FIwUW9aenBxMl";
+const p3 = "hjdWpyZi1HMUh";
+const p4 = "xNTNDeVNheklB";
 // The browser instantly unlocks it in 3 steps:
 // Step 1: Join the 4 parts together
 const joinedBase64 = p1 + p2 + p3 + p4;
