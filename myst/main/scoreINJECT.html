@@ -33,7 +33,7 @@
         import { collection, getDocs, doc, query, where, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         
         // 2. Import the actual authenticated connection from YOUR stealth config!
-        import { auth, db } from './firebase-config.js';
+        import { auth, db } from './scripts/firebase-config.js';
 
         const log = (msg) => {
             const consoleEl = document.getElementById('console-log');
