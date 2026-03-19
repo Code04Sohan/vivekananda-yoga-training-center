@@ -9,7 +9,7 @@ import { initializeFirestore, persistentLocalCache } from "https://www.gstatic.c
 
 // Your SINGLE Firebase Project Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBphRfgnwzBIZSwMo4jgEH3NF2P_Ww9JxM",
+    apiKey: "AIzaSyC35qH1G-frjucX2qpzZoQ0RXrjgONrViA",
 
     authDomain: "myst-database.firebaseapp.com",
 
