@@ -125,20 +125,21 @@ function showExplorerDetails(data) {
     details.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
-// ==========================================
-// CSV GENERATOR EXPORT LOGIC
-// ==========================================
+// ============================================================================
+// CSV GENERATOR EXPORT LOGIC (UPDATED WITH COACH NAME)
+// ============================================================================
 function downloadResultCSV(data) {
-    // 1. Setup the Headers
-    const headers = ["Division", "Rank", "Medal", "Track No", "Athlete Name", "District", "Total Optional Marks", "Head Judge (J1) Marks", "Final Olympic Score"];
+    // 1. Setup the Headers (Added "Coach Name" here)
+    const headers = ["Division", "Rank", "Medal", "Track No", "Athlete Name", "Coach Name", "District", "Total Optional Marks", "Head Judge (J1) Marks", "Final Olympic Score"];
     
-    // 2. Map the data rows (We wrap strings in quotes to prevent commas in names from breaking the CSV)
+    // 2. Map the data rows (Added s.coachName here)
     const rows = data.standings.map(s => [
         `"${s.division || 'Unassigned'}"`,
         s.rank,
         `"${s.medal !== '-' ? s.medal : ''}"`,
         s.trackNo,
         `"${s.name}"`,
+        `"${s.coachName || 'Independent'}"`, // Extracts the coach or defaults to Independent
         `"${s.district}"`,
         s.totalOpt || 0,
         s.j1Score || 0,
@@ -170,6 +171,7 @@ function downloadResultCSV(data) {
     link.click();
     document.body.removeChild(link);
 }
+
 
 async function wipeAllResults() {
     if (!confirm("⚠️ DANGER: Are you sure you want to delete ALL published results?")) return;
