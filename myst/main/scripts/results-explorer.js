@@ -82,7 +82,6 @@ function showExplorerDetails(data) {
                     ✖ Close View
                 </button>
             </div>
-        // ... (Keep the buttons section above this the same)
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-sm">
