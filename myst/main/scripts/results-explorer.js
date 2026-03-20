@@ -82,18 +82,29 @@ function showExplorerDetails(data) {
                     ✖ Close View
                 </button>
             </div>
+        // ... (Keep the buttons section above this the same)
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse text-sm">
                 <thead class="bg-gray-900 text-gray-400 uppercase text-xs">
-                    <tr><th class="p-3">Div</th><th class="p-3">Rank</th><th class="p-3">Track No</th><th class="p-3">Athlete</th><th class="p-3">District</th><th class="p-3 text-right">Final Score</th></tr>
+                    <tr><th class="p-3">Div</th><th class="p-3">Rank</th><th class="p-3">Track No</th><th class="p-3">Athlete</th><th class="p-3">Coach</th><th class="p-3">District</th><th class="p-3 text-right">Final Score</th></tr>
                 </thead>
                 <tbody class="divide-y divide-gray-800">
     `;
     
     data.standings.forEach(s => {
         const isPodium = s.rank <= 3;
-        html += `<tr class="hover:bg-gray-800 ${isPodium ? 'text-gray-200' : 'text-gray-500'}"><td class="p-3 font-bold text-brand-400">${s.division}</td><td class="p-3 text-lg">${isPodium ? s.medal : s.rank}</td><td class="p-3 font-mono text-xs">${s.trackNo}</td><td class="p-3 font-bold">${s.name}</td><td class="p-3">${s.district}</td><td class="p-3 text-right font-black ${isPodium ? 'text-blue-400' : 'text-gray-400'}">${s.finalScore}</td></tr>`;
+        
+        // Added the Coach Cell (s.coachName) to match the new header
+        html += `<tr class="hover:bg-gray-800 ${isPodium ? 'text-gray-200' : 'text-gray-500'}">
+            <td class="p-3 font-bold text-brand-400">${s.division || ''}</td>
+            <td class="p-3 text-lg">${isPodium ? s.medal : s.rank}</td>
+            <td class="p-3 font-mono text-xs">${s.trackNo}</td>
+            <td class="p-3 font-bold">${s.name}</td>
+            <td class="p-3 text-gray-400 text-xs italic">${s.coachName || 'Independent'}</td>
+            <td class="p-3">${s.district}</td>
+            <td class="p-3 text-right font-black ${isPodium ? 'text-blue-400' : 'text-gray-400'}">${s.finalScore}</td>
+        </tr>`;
     });
     
     details.innerHTML = html + `</tbody></table></div>`;

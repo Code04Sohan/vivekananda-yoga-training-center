@@ -168,9 +168,14 @@ function renderCandidateTable(candidates) {
             ? `<span class="text-yellow-500 font-bold text-xs block">${c.division}</span>` 
             : `<span class="text-gray-600 text-xs italic block">Unassigned</span>`;
 
+        const coachDisplay = `<span class="text-purple-400 text-[10px] uppercase tracking-wider font-bold block mt-1">Coach: ${c.coachName || 'Independent'}</span>`; //UPDATE_TODAY
+
         tr.innerHTML = `
             <td class="p-4 font-mono text-blue-400 font-bold">${c.trackNo}</td>
-            <td class="p-4 font-bold text-white">${c.name} ${divisionDisplay}</td>
+            <td class="p-4 font-bold text-white">
+                ${c.name} 
+                ${divisionDisplay}
+                ${coachDisplay} </td>
             <td class="p-4 text-gray-400 font-semibold">${c.gender || 'N/A'}</td>
             <td class="p-4 text-gray-400">${c.district || 'N/A'}</td>
             <td class="p-4 text-gray-400 text-sm">${c.groupName}</td>
