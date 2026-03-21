@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MYST Judge Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#4f46e5', 600: '#4338ca' }, 
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Hide number input arrows for clean scoring boxes */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    
+        input[type=number] {
+            -moz-appearance-none: textfield;
+        }
+    
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+    
+        .input-error {
+            border-color: #ef4444 !important;
+            background-color: #fef2f2 !important;
+            color: #b91c1c !important;
+        }
+
+        /* Hides the default arrow on the dropdown */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans h-[100dvh] flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white">
+
+    <div id="auth-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex items-center justify-center p-4">
+        <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-2xl w-full max-w-md text-center">
+            <h1 class="text-3xl font-black text-white mb-2 tracking-tighter italic">MYST <span class="text-brand-500 not-italic font-bold text-sm border border-brand-500 px-2 rounded ml-1">JUDGE</span></h1>
+            <p class="text-slate-400 text-sm mb-8 italic">Authorized Access Only</p>
+            
+            <form id="login-form" class="space-y-4">
+                <div class="text-left">
+                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Judge ID (Email)</label>
+                    <input type="email" id="judge-email" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 mt-1">
+                </div>
+                <div class="text-left pb-4">
+                    <label class="text-xs font-bold text-slate-500 uppercase ml-1">Security Key</label>
+                    <input type="password" id="judge-password" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 mt-1">
+                </div>
+                <button type="submit" id="btn-judge-login" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95">
+                    🔓 Authenticate Tablet
+                </button>
+            </form>
+            <p id="login-error" class="text-red-500 text-xs mt-4 font-bold hidden italic"></p>
+        </div>
+    </div>
+
+    <div id="overlay-portal-closed" class="fixed inset-0 bg-slate-900/95 z-[90] hidden items-center justify-center p-4 backdrop-blur-sm">
+        <div class="text-center">
+            <div class="w-20 h-20 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500"><span class="text-4xl">🛑</span></div>
+            <h2 class="text-3xl font-black text-white uppercase tracking-widest mb-2">Scoring Paused</h2>
+            <p class="text-slate-400">The Admin has temporarily closed the scoring portal.</p>
+        </div>
+    </div>
+
+    <div id="overlay-judge-blocked" class="fixed inset-0 bg-red-950 z-[95] hidden items-center justify-center p-4">
+        <div class="text-center bg-red-900/30 p-8 rounded-2xl border border-red-800">
+            <span class="text-5xl block mb-4">⛔</span>
+            <h2 class="text-2xl font-black text-red-500 uppercase tracking-widest mb-2">Access Revoked</h2>
+            <p class="text-red-200 text-sm">Your account has been blocked by the Administrator.</p>
+            <button id="btn-blocked-logout" class="mt-6 bg-red-800 hover:bg-red-700 text-white px-6 py-2 rounded font-bold text-sm">Log Out</button>
+        </div>
+    </div>
+
+    <div id="app-wrapper" class="flex-1 flex flex-col hidden h-full w-full max-w-2xl mx-auto bg-slate-50 border-x border-slate-200 relative shadow-2xl">
+        
+        <header class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0 z-30">
+            <div>
+                <h1 class="text-xl font-black tracking-wider italic leading-tight">MYST <span
+                        class="text-brand-400 not-italic text-sm ml-1 px-1 border border-brand-400 rounded">JUDGE</span></h1>
+                <p class="text-xs text-slate-400 font-medium mt-1"><span id="header-judge-name"
+                        class="text-slate-200">Loading...</span> | <span id="header-seat-assignment"
+                        class="text-yellow-500 font-bold">Unassigned</span></p>
+        
+                <div class="mt-2 flex space-x-4 text-[10px] uppercase tracking-wider font-bold">
+                    <p class="text-slate-500">Portal: <span id="portal-status-display" class="text-slate-300">Loading...</span>
+                    </p>
+                    <p class="text-slate-500">Staff: <span id="staff-provisioning-display"
+                            class="text-slate-300">Loading...</span></p>
+                </div>
+            </div>
+            
+            <details class="relative">
+                <summary class="cursor-pointer text-slate-400 hover:text-white p-2 focus:outline-none transition-colors">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </summary>
+                <div class="absolute right-0 mt-3 w-40 bg-slate-800 rounded-lg shadow-xl border border-slate-700 z-50 overflow-hidden">
+                    <button id="btn-logout" class="w-full text-left px-5 py-3 text-sm text-red-400 hover:bg-slate-700 hover:text-red-300 font-black tracking-widest uppercase transition-colors">
+                        🚪 Logout
+                    </button>
+                </div>
+            </details>
+        </header>
+
+        <main id="view-lobby" class="flex-1 flex items-center justify-center bg-slate-100 p-4">
+            <div class="bg-white p-10 rounded-2xl shadow-xl text-center max-w-md w-full border border-slate-200">
+                <div class="w-16 h-16 border-4 border-slate-200 border-t-brand-600 rounded-full animate-spin mx-auto mb-6"></div>
+                <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight mb-2">Awaiting Assignment</h2>
+                <p class="text-slate-500 text-sm">Please wait for the Administrator to assign you to a Mat and Judge Seat.</p>
+            </div>
+        </main>
+
+        <main id="view-queue-receiver" class="flex-1 overflow-y-auto bg-slate-100 p-4 lg:p-8 hidden">
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                
+                <div class="bg-slate-800 p-6 text-center relative">
+                    <h2 class="text-sm font-bold text-brand-400 uppercase tracking-widest mb-1">MAT <span id="queue-mat-number" class="text-white text-lg">X</span></h2>
+                    <p class="text-xs text-slate-400">Coordinator: <span id="queue-coordinator-name" class="text-white font-semibold">Loading...</span></p>
+                </div>
+
+                <div class="p-8">
+                    <div id="queue-status-banner" class="bg-slate-100 border border-slate-300 rounded-lg p-4 text-center mb-8 flex flex-col items-center justify-center transition-colors">
+                        <span class="animate-pulse text-2xl mb-2" id="queue-status-icon">⏳</span>
+                        <h3 id="queue-status-text" class="text-sm font-bold text-slate-600 uppercase tracking-widest">Waiting for Coordinator</h3>
+                    </div>
+
+                    <div class="space-y-4 mb-8">
+                        <input type="text" readonly placeholder="SLOT 1" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
+                        <input type="text" readonly placeholder="SLOT 2" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
+                        <input type="text" readonly placeholder="SLOT 3" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
+                        <input type="text" readonly placeholder="SLOT 4" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
+                        <input type="text" readonly placeholder="SLOT 5" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
+                    </div>
+
+                    <button id="btn-go-scoring" disabled class="w-full bg-slate-300 text-slate-500 font-black py-5 rounded-xl text-xl uppercase tracking-widest transition-all duration-300 shadow-none cursor-not-allowed">
+                        Awaiting Batch...
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <main id="view-scoring-engine" class="flex-1 flex flex-col bg-slate-50 hidden h-full overflow-hidden">
+            
+            <div class="bg-white border-b border-slate-200 px-4 py-3 flex justify-between items-center shrink-0 shadow-sm">
+                <span id="scoring-batch-count" class="bg-brand-100 text-brand-700 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider">0 Athletes Validated</span>
+                <button id="btn-cancel-scoring" class="text-red-500 hover:bg-red-50 border border-red-200 px-3 py-1 rounded text-xs font-bold flex items-center transition-colors">
+                    ✖ Abort Batch
+                </button>
+            </div>
+
+            <div class="text-center py-6 shrink-0 bg-slate-50">
+                <h2 id="current-stage-title" class="text-3xl font-black text-slate-900 uppercase tracking-tighter">ASAN 1</h2>
+                <p id="current-stage-subtitle" class="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">Mandatory Posture</p>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-4 py-2 w-full max-w-2xl mx-auto" id="scoring-cards-container"></div>
+
+            <div class="shrink-0 w-full glass-panel border-t border-slate-200 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-20">
+                <div class="max-w-3xl mx-auto space-y-4">
+                    
+                    <div class="flex justify-between items-center">
+                        <button id="btn-prev-stage" class="px-6 py-3 border border-slate-300 rounded-lg text-slate-600 font-bold hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors w-32">
+                            &lt; Back
+                        </button>
+                        
+                        <div class="flex space-x-2" id="stage-dots">
+                            <div class="w-2.5 h-2.5 rounded-full bg-brand-600 transition-colors" id="dot-0"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors" id="dot-1"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors" id="dot-2"></div>
+                        </div>
+
+                        <button id="btn-next-stage" class="px-6 py-3 bg-slate-800 text-white rounded-lg font-bold hover:bg-slate-700 transition-colors shadow-md w-32">
+                            Next &gt;
+                        </button>
+                    </div>
+
+                    <button id="btn-submit-scores" disabled class="w-full bg-slate-200 text-slate-500 font-black py-4 rounded-xl text-lg uppercase tracking-widest transition-all duration-300 shadow-none cursor-not-allowed border border-slate-300">
+                        Awaiting Valid Scores...
+                    </button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <template id="athlete-card-template">
+    <div class="athlete-card bg-white border border-slate-200 rounded-xl p-5 mb-4 shadow-sm flex justify-between items-center transition-all focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500">
+        <div class="flex-1">
+            <div class="flex items-center space-x-2 mb-1">
+                <span class="athlete-division text-[10px] font-black text-brand-600 uppercase tracking-widest block">DIVISION</span>
+                <span class="text-slate-300 text-[10px] font-bold">|</span>
+                <span class="athlete-group text-[10px] font-black text-slate-500 uppercase tracking-widest block">GROUP NAME</span>
+            </div>
+            <h3 class="athlete-name text-lg font-black text-slate-800 leading-tight uppercase">ATHLETE NAME</h3>
+            <p class="athlete-track text-xs text-slate-400 font-mono mt-1">TRACK-001</p>
+        </div>
+        <div class="w-24 shrink-0">
+                <input type="number" step="0.1" inputmode="decimal" placeholder="0.0" class="score-input w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-2 py-4 text-center text-3xl font-black text-slate-800 focus:outline-none focus:bg-white focus:border-brand-500 transition-colors">
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="./scripts/judge-panel.js"></script>
+    
+    <script>
+        document.addEventListener('click', function(event) {
+            const details = document.querySelector('details');
+            if (details.open && !details.contains(event.target)) {
+                details.removeAttribute('open');
+            }
+        });
+    </script>
+</body>
+</html>
