@@ -82,7 +82,7 @@ export function initAuth() {
                 console.log("User signed out successfully.");
                 
                 // Redirect smoothly to the login screen
-                window.location.replace('index.html'); 
+                window.location.replace('D:/GitPulls/vivekananda-yoga-training-center/index.html'); 
             } catch (error) {
                 console.error("Logout Error:", error);
                 cleanLogoutBtn.innerText = "Logout";
