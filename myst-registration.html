@@ -24,7 +24,8 @@
         <div class="logo-container">
             <img id="orgLogo" src="" alt="Logo">
         </div>
-        <h2>Rakshachak Sabuj Sangha Yoga Competition - 2026</h2>
+        <h2>5th North Bengal Yogasana Chanpionship - 2K26</h2>
+        <p>Organised by:- BABLA YOGA TRAINING CENTRE</p>
         <p>Participant Registration</p>
     </div>
 
@@ -46,20 +47,22 @@
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>📅 Date of Birth (Age auto calculated)</label>
-                <input type="date" name="dob" id="dobField" required>
+            <div id="autoAgeWrapper" style="display: none; gap: 15px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>📅 Date of Birth</label>
+                    <input type="date" name="dob" id="dobField">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>👤 Calculated Age</label>
+                    <input type="number" name="age" id="ageField" readonly placeholder="Auto" style="background: #f0f4f8;">
+                </div>
             </div>
 
-            <div style="display: flex; gap: 15px;">
-                <div class="form-group" style="flex: 1;">
-                    <label>👤 Age</label>
-                    <input type="number" name="age" id="ageField" readonly placeholder="Auto">
-                </div>
-                <div class="form-group" style="flex: 2;">
-                    <label>🏆 Group (Auto Select)</label>
-                    <input type="text" name="group" id="groupField" readonly placeholder="Auto-Select">
-                </div>
+            <div class="form-group">
+                <label>🏆 Age Group</label>
+                <select name="group" id="groupField" required>
+                    <option value="" disabled selected hidden>Select Age Group</option>
+                    </select>
             </div>
 
             <div class="form-group">
@@ -78,17 +81,17 @@
         </form>
     </div>
 
-    <div id="successView">
-        <p style="color: #27ae60; margin-top: 0; margin-bottom: 5px;">✅ Registration completed successfully. Please note the candidate's Track No</p>
+    <div id="successView" style="display: none;">
+        <p style="color: #27ae60; margin-top: 0; margin-bottom: 5px;">✅ Registration completed successfully.</p>
 
         <div class="sl-card">
-            <div id="resultLabel" style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">TRACK NO</div>
+            <div id="resultLabel" style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">SL NO</div>
             <span id="slDisplay">...</span>
         </div>
         
         <p style="font-size: 0.9rem; font-weight: 600; color: #333; margin-top: 20px;">Competition Location</p>
         <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d444.641537085597!2d87.86597664487874!3d22.42870184591253!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0298103f0931d9%3A0x40668f61d52a1092!2sRakshachak%20Sabuj%20Sangha!5e1!3m2!1sen!2sin!4v1772818405511!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            
         </div>
 
         <button class="btn" id="btnSameCoach" onclick="applySameCoach()" style="background: #2980b9; margin-top: 25px; display: none;">
