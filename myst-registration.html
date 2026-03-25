@@ -84,18 +84,22 @@
     <div id="successView" style="display: none;">
         <p style="color: #27ae60; margin-top: 0; margin-bottom: 5px;">✅ Registration completed successfully.</p>
 
+        <img id="thankYouImg" src="" alt="Thank You" style="display: none; width: 100%; max-width: 400px; height: auto; border-radius: 12px; margin: 15px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+
         <div class="sl-card">
             <div id="resultLabel" style="font-size: 0.8rem; color: #555; font-weight: normal; margin-bottom: 5px;">SL NO</div>
             <span id="slDisplay">...</span>
         </div>
         
-        <p style="font-size: 0.9rem; font-weight: 600; color: #333; margin-top: 20px;">Competition Location</p>
-        <div class="map-container">
-            
+        <div id="mapSection" style="display: none;">
+            <p style="font-size: 0.9rem; font-weight: 600; color: #333; margin-top: 20px;">Competition Location</p>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d444.641537085597!2d87.86597664487874!3d22.42870184591253!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0298103f0931d9%3A0x40668f61d52a1092!2sRakshachak%20Sabuj%20Sangha!5e1!3m2!1sen!2sin!4v1772818405511!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
         </div>
 
         <button class="btn" id="btnSameCoach" onclick="applySameCoach()" style="background: #2980b9; margin-top: 25px; display: none;">
-            Register Next as Coach: <span id="lastCoachName">Current Coach</span>
+            Register Next as Academy: <span id="lastCoachName">Current Coach</span>
         </button>
 
         <button class="btn" onclick="resetForm()" style="background: #34495e; margin-top: 10px;">
@@ -103,9 +107,10 @@
         </button>
     </div>
 
+
     <div class="footer-credit">
-        Powered by <a href="https://code04sohan.github.io/cv/" target="_blank"><br>Management of Yoga Sports & Tournaments</a>.<br>
-        Contact <a href="https://code04sohan.github.io/cv/" target="_blank">us</a> for support.
+        Powered by <a href="https://www.soumenyoga.in" target="_blank"><br>Management of Yoga Sports & Tournaments</a>.<br>
+        Contact <a href="http://wa.me/9734444092" target="_blank">us</a> for support.
     </div>
 
 </div>

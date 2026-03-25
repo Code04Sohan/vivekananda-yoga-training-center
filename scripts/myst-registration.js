@@ -10,6 +10,11 @@ const CONFIG = {
     backgroundImage: "resources/babla_bg.jpeg",
     logoImage: "resources/babla_dp.jpeg",
 
+    // 🟢 POST-REGISTRATION DISPLAY TOGGLES
+    showThankYouImage: true,                         
+    thankYouImage: "resources/babla_tky.jpeg",       
+    showMapLocation: false,
+
     // 🟢 REGISTRATION MODE TOGGLE
     registrationOpen: true, // Set to false to instantly close the form
     autoCalculateAge: false, // Set to 'true' to auto-calculate DOB -> Age -> Group
@@ -29,6 +34,7 @@ const CONFIG = {
 
     // 🟢 Coach Database
     coachDatabase: [
+        "SELF", 
         "MRINAL YOGA CENTRE", 
         "BABLA YOGA TRAINING CENTRE", 
         "SHIVAM YOGA CENTRE",
@@ -188,15 +194,33 @@ form.addEventListener('submit', function (e) {
     .then(result => {
         if (result.result === 'success') {
             const athleteName = document.querySelector('input[name="name"]').value;
-            // Update the label text to SL NO
+            
             document.getElementById('resultLabel').textContent = athleteName.toUpperCase() + " - SL NO";
+            
             lastCoachVal = coachField.value;
             lastCoachNameSpan.textContent = lastCoachVal;
             btnSameCoach.style.display = "block";
             formView.style.display = 'none';
             successView.style.display = 'block';
-            // Fetch the slNo variable from the backend
             slDisplay.textContent = result.slNo; 
+            
+            // --- NEW: Toggle Thank You Image ---
+            const tyImg = document.getElementById('thankYouImg');
+            if (CONFIG.showThankYouImage) {
+                tyImg.src = CONFIG.thankYouImage;
+                tyImg.style.display = 'block';
+            } else {
+                tyImg.style.display = 'none';
+            }
+
+            // --- NEW: Toggle Map Section ---
+            const mapSec = document.getElementById('mapSection');
+            if (CONFIG.showMapLocation) {
+                mapSec.style.display = 'block';
+            } else {
+                mapSec.style.display = 'none';
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
             throw new Error(result.error);
