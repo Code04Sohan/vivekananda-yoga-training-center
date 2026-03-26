@@ -29,7 +29,8 @@ const CONFIG = {
         { min: 21, max: 30, name: "GROUP-E (21+ 30)" },
         { min: 31, max: 40, name: "GROUP-F (31+ 40)" },
         { min: 41, max: 50, name: "GROUP-G (41+ 50)" },
-        { min: 51, max: 150, name: "GROUP-H (50 Above)" }
+        { min: 51, max: 60, name: "GROUP-H (50+ 60)" },
+        { min: 61, max: 150, name: "GROUP-I (60 Above)" }
     ],
 
     // 🟢 Coach Database
