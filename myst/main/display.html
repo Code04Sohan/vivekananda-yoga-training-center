@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYST Live Display</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Smooth CSS Marquee Animations */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%; /* Start off-screen */
+            animation: marquee 25s linear infinite;
+        }
+        .marquee-fast {
+            animation: marquee 20s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* Hide scrollbars for a clean TV display look */
+        ::-webkit-scrollbar { display: none; }
+        body { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-950 text-white font-sans h-screen flex flex-col overflow-hidden">
+
+    <div id="auth-screen" class="absolute inset-0 z-50 flex items-center justify-center bg-gray-950">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl w-full max-w-md">
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-black text-blue-500 uppercase tracking-widest">Display Node</h1>
+                <p class="text-gray-400 text-sm italic">Authenticate to access live database</p>
+            </div>
+            <div class="space-y-4">
+                <input type="email" id="display-email" placeholder="Staff Email" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
+                <input type="password" id="display-pass" placeholder="Password" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
+                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-lg uppercase tracking-widest transition-transform active:scale-95">Connect Display</button>
+                <p id="login-error" class="text-red-500 text-xs text-center hidden font-bold"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="setup-screen" class="absolute inset-0 z-40 hidden items-center justify-center bg-gray-950/90 backdrop-blur-sm">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl w-full max-w-md text-center">
+            <h2 class="text-2xl font-black text-white uppercase tracking-widest mb-2">Bind Display</h2>
+            <p class="text-gray-400 text-sm mb-6">Select which Mat this TV should broadcast</p>
+            
+            <select id="select-mat" class="w-full bg-gray-950 border border-blue-500 text-white rounded-lg px-4 py-3 mb-4 text-lg font-bold outline-none cursor-pointer">
+                <option value="">-- Fetching Active Mats... --</option>
+            </select>
+            
+            <button id="btn-bind-mat" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-lg uppercase tracking-widest transition-transform active:scale-95 shadow-[0_0_15px_rgba(22,163,74,0.4)] disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                Lock & Broadcast
+            </button>
+        </div>
+    </div>
+
+    <div id="main-display" class="hidden flex-col h-full w-full">
+        
+        <div class="bg-blue-900/40 border-b border-blue-800 text-blue-200 text-sm font-bold py-1 marquee-container shadow-md tracking-wider">
+            <div class="marquee-content">
+                🌟 Welcome to MYST! Best of luck to all participants! Give your best performance on the mat! 🌟 Practice makes progress! 🌟
+            </div>
+        </div>
+
+        <header class="flex items-center justify-between px-8 py-4 bg-gray-900/80 border-b border-gray-800">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.5)] border-2 border-blue-400">
+                    <span class="font-black text-2xl tracking-tighter">M</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-black uppercase tracking-widest text-white leading-tight">MYST</h1>
+                    <h2 class="text-xs text-blue-400 font-bold uppercase tracking-widest">Maharishi Yoga State Tournament</h2>
+                </div>
+            </div>
+            
+            <div class="text-right">
+                <div id="display-mat-number" class="text-5xl font-black text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">MAT --</div>
+                <div class="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Live Scoreboard</div>
+            </div>
+        </header>
+
+        <main class="flex-grow p-8 flex flex-col justify-center">
+            <div class="bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-black text-gray-400 uppercase text-sm tracking-widest">
+                        <tr>
+                            <th class="p-4 w-24">Track</th>
+                            <th class="p-4">Athlete Name</th>
+                            <th class="p-4 text-center">Division</th>
+                            <th class="p-4 text-center text-blue-400/50">J1</th>
+                            <th class="p-4 text-center text-blue-400/50">J2</th>
+                            <th class="p-4 text-center text-blue-400/50">J3</th>
+                            <th class="p-4 text-center text-blue-400/50">J4</th>
+                            <th class="p-4 text-center text-blue-400/50">J5</th>
+                            <th class="p-4 text-right text-green-400 text-lg">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="live-scores-tbody" class="divide-y divide-gray-800 text-xl font-bold">
+                        <tr>
+                            <td colspan="9" class="p-12 text-center text-gray-500 italic">Awaiting candidates from Stage Manager...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <div class="bg-gray-800 text-yellow-400 text-sm font-bold py-1 marquee-container border-t border-gray-700">
+            <div class="marquee-content marquee-fast uppercase tracking-widest">
+                📢 Contact admin for advertisement here • 📢 Contact admin for advertisement here • 📢 Contact admin for advertisement here
+            </div>
+        </div>
+
+        <footer class="bg-black text-gray-400 py-3 px-6 flex justify-between items-center text-sm font-bold uppercase tracking-wider border-t border-gray-900">
+            <div class="flex gap-6">
+                <span class="flex items-center gap-2"><span class="text-green-500 text-lg">📱</span> +91 XXXXX XXXXX</span>
+                <span class="flex items-center gap-2"><span class="text-red-500 text-lg">✉️</span> info@soumenyoga.in</span>
+            </div>
+            <div class="text-blue-500 flex items-center gap-2">
+                <span class="text-lg">🌐</span> www.soumenyoga.in
+            </div>
+        </footer>
+
+    </div>
+
+    <script type="module" src="./scripts/display-engine.js"></script>
+</body>
+</html>
