@@ -3,8 +3,8 @@
 // Single Database Architecture
 // ============================================================================
 
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { auth, db } from './firebase-config.js';
 
 let isSystemBooted = false;
@@ -19,8 +19,9 @@ import { initDistrictResults } from './district-results.js';
 import { initCandidateManager } from './candidate-manager.js';
 import { initStageManager } from './stage-manager.js';
 import { initResultsExplorer } from './results-explorer.js';
-// --- JUDGE AUTH ---
 import { initJudgePanel } from './judge-panel.js';
+// --- NEW: IMPORT DISPLAY ENGINE ---
+import { initDisplay } from './display-app.js';
 
 export function initAuth() {
     const loginForm = document.getElementById('login-form');
@@ -29,6 +30,7 @@ export function initAuth() {
     const errorMsg = document.getElementById('login-error');
     const btnLogin = document.getElementById('btn-admin-login') || document.getElementById('btn-judge-login');
     const btnLogout = document.getElementById('btn-logout');
+
     onAuthStateChanged(auth, async (user) => {
         if (user) {
             await verifyUserRole(user.uid, errorMsg);
@@ -42,49 +44,34 @@ export function initAuth() {
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             errorMsg.classList.add('hidden');
-            btnLogin.innerText = "⏳ Unlocking Vault...";
-            btnLogin.disabled = true;
+            if (btnLogin) { btnLogin.innerText = "⏳ Authenticating..."; btnLogin.disabled = true; }
 
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, emailInput.value, passInput.value);
                 await verifyUserRole(userCredential.user.uid, errorMsg);
             } catch (error) {
-                console.error("Login Failed:", error);
                 errorMsg.innerText = "Access Denied: Invalid Credentials.";
                 errorMsg.classList.remove('hidden');
-                btnLogin.innerText = "🔓 Unlock MYST Vault";
-                btnLogin.disabled = false;
+                if (btnLogin) { btnLogin.innerText = "Connect / Login"; btnLogin.disabled = false; }
             }
         });
     }
 
     // Handle Logout
     if (btnLogout) {
-    // 1. Clone and replace the button to instantly destroy any duplicate event listeners
         const cleanLogoutBtn = btnLogout.cloneNode(true);
         btnLogout.parentNode.replaceChild(cleanLogoutBtn, btnLogout);
 
-        // 2. Attach a single, clean listener
         cleanLogoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-
-            // FIX 1: Instantly disable the "Stay or Leave" popup so the redirect is smooth
             window.onbeforeunload = null; 
-
-            // FIX 2: Change button text so user doesn't double-click
             cleanLogoutBtn.innerText = "Logging out...";
             cleanLogoutBtn.disabled = true;
 
             try {
-                // Note: The permission-denied errors might still flash in the console 
-                // for a millisecond here. That is 100% normal and harmless in Firebase!
                 await signOut(auth);
-                console.log("User signed out successfully.");
-                
-                // Redirect smoothly to the login screen
-                window.location.replace('D:/GitPulls/vivekananda-yoga-training-center/index.html'); 
+                window.location.replace('index.html'); 
             } catch (error) {
-                console.error("Logout Error:", error);
                 cleanLogoutBtn.innerText = "Logout";
                 cleanLogoutBtn.disabled = false;
             }
@@ -98,90 +85,90 @@ async function verifyUserRole(uid, errorElement) {
         const userDocRef = doc(db, 'users', uid);
         const userSnap = await getDoc(userDocRef);
 
-        if (!userSnap.exists()) throw new Error("User profile not found in database.");
+        if (!userSnap.exists()) throw new Error("User profile not found.");
 
         const role = userSnap.data().role;
+        
+        // --- SMART PAGE DETECTION ---
+        const isDisplayPage = window.location.pathname.includes('display.html');
+        const isJudgePage = window.location.pathname.includes('judge.html');
 
-        // Hide all sidebar buttons by default for safety
+        // Hide all sidebar buttons by default
         const allNavButtons = document.querySelectorAll('.sidebar-btn');
         allNavButtons.forEach(btn => btn.style.display = 'none');
-
-        // NEW: Hide the Global Portal Status controls by default
         const masterControls = document.getElementById('master-controls');
         if (masterControls) masterControls.style.display = 'none';
 
         // ==========================================
-        // SWITCHBOARD LOGIC
+        // SWITCHBOARD ROUTING LOGIC
         // ==========================================
         
         if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
-            console.log("✅ Admin verified.");
             
-            // Show all UI tabs AND the Portal Status controls
+            // If Admin opens the TV display, boot ONLY the display engine
+            if (isDisplayPage) {
+                if (!isSystemBooted) { initDisplay(); isSystemBooted = true; }
+                unlockDashboard();
+                return;
+            }
+            
+            // Redirect from wrong pages
+            if (isJudgePage) { window.location.href = 'index.html'; return; }
+            
+            // Standard Admin Boot
             allNavButtons.forEach(btn => btn.style.display = 'block');
             if (masterControls) masterControls.style.display = 'flex';
 
-            // 🛡️ THE GLOBAL ARMOR: Only boot if it hasn't booted yet
             if (!isSystemBooted) {
-                console.log("🚀 Booting full Admin system...");
-                initCandidateManager();
-                initSystemToggles();
-                initStaffManager();
-                initCSVImporter();
-                initStageManager(uid, role); 
-                initMatController();
-                initLiveDashboard();
-                initResultsEngine();
-                initResultsExplorer();
-                initDistrictResults(); // (If you have this)
-                
-                isSystemBooted = true; // Lock the door behind us
+                initCandidateManager(); initSystemToggles(); initStaffManager();
+                initCSVImporter(); initStageManager(uid, role); initMatController();
+                initLiveDashboard(); initResultsEngine(); initResultsExplorer();
+                initDistrictResults(); 
+                isSystemBooted = true; 
             }
-
             unlockDashboard();
 
         } else if (role === 'STAGE_MGR') {
-            console.log("✅ Stage Coordinator verified.");
-
-            // FIX: Show ONLY the Queue Pusher (Stage Manager tab)
-            const navStageManager = document.getElementById('nav-stage-manager');
             
+            // Stage Managers can also run the TV display safely
+            if (isDisplayPage) {
+                if (!isSystemBooted) { initDisplay(); isSystemBooted = true; }
+                unlockDashboard();
+                return;
+            }
+            
+            if (isJudgePage) { window.location.href = 'index.html'; return; }
+
+            const navStageManager = document.getElementById('nav-stage-manager');
             if (navStageManager) navStageManager.style.display = 'block';
 
-            // 🛡️ THE GLOBAL ARMOR for Stage Coordinators
             if (!isSystemBooted) {
-                console.log("🚀 Booting Stage Coordinator controls...");
-                // FIX: Pass uid and role to trigger the Smart Lock logic!
                 initStageManager(uid, role); 
-                
-                isSystemBooted = true; // Lock the door behind us
+                isSystemBooted = true; 
             }
-
             unlockDashboard();
-            
-            // FIX: Auto-click the Stage Manager tab
             if (navStageManager) navStageManager.click();
 
         } else if (role === 'JUDGE') {
-            console.log("✅ Judge verified.");
+            
+            if (!isJudgePage) { window.location.href = 'judge.html'; return; }
 
-            // 🛑 SECURITY REDIRECT: If they logged in on the Admin page, kick them to the Judge page
-            if (!window.location.pathname.includes('judge.html')) {
-                console.log("Redirecting Judge to correct portal...");
-                window.location.href = 'judge.html';
-                return; // Stop running code on this page
-            }
-
-            // 🛡️ THE GLOBAL ARMOR for Judges
             if (!isSystemBooted) {
-                console.log("🚀 Booting Judge Tablet UI...");
-                
-                // We pass the UID so the tablet knows EXACTLY who is sitting there
                 initJudgePanel(uid); 
-                
                 isSystemBooted = true; 
             }
+            unlockDashboard();
 
+        // 🟢 NEW ROLE: DEDICATED TV DISPLAY NODE 🟢
+        } else if (role === 'DISPLAY') {
+            
+            // Force them to the display screen
+            if (!isDisplayPage) { window.location.href = 'display.html'; return; }
+
+            if (!isSystemBooted) {
+                initDisplay(); 
+                isSystemBooted = true; 
+            }
             unlockDashboard();
 
         } else {
@@ -207,7 +194,7 @@ function unlockDashboard() {
 
     if (overlay) overlay.style.display = 'none';
     if (topBar) topBar.style.display = 'flex';
-    if (appWrapper) appWrapper.style.display = 'flex'; // Changed from flex-col to flex for compatibility
+    if (appWrapper) appWrapper.style.display = 'flex'; 
 }
 
 function showLoginScreen() {
@@ -219,16 +206,15 @@ function showLoginScreen() {
     if (topBar) topBar.style.display = 'none';
     if (appWrapper) appWrapper.style.display = 'none';
     
-    // Check for Admin button OR Judge button
     const btnAdminLogin = document.getElementById('btn-admin-login');
     const btnJudgeLogin = document.getElementById('btn-judge-login');
     
     if (btnAdminLogin) {
-        btnAdminLogin.innerText = "🔓 Unlock MYST Vault";
+        btnAdminLogin.innerText = "Connect / Login";
         btnAdminLogin.disabled = false;
     }
     if (btnJudgeLogin) {
-        btnJudgeLogin.innerText = "🔓 Authenticate Tablet";
+        btnJudgeLogin.innerText = "Authenticate Tablet";
         btnJudgeLogin.disabled = false;
     }
 }

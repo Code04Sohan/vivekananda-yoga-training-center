@@ -3,69 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYST Live Display</title>
+    <title>MYST Live Display Node</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Smooth CSS Marquee Animations */
-        .marquee-container {
-            overflow: hidden;
-            white-space: nowrap;
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
-        .marquee-content {
-            display: inline-block;
-            padding-left: 100%; /* Start off-screen */
-            animation: marquee 25s linear infinite;
-        }
-        .marquee-fast {
-            animation: marquee 20s linear infinite;
-        }
-        @keyframes marquee {
-            0% { transform: translateX(0%); }
-            100% { transform: translateX(-100%); }
-        }
+        /* Smooth Marquee Animations */
+        .marquee-container { overflow: hidden; white-space: nowrap; width: 100%; display: flex; align-items: center; }
+        .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-100%); } }
         
-        /* Hide scrollbars for a clean TV display look */
+        /* Podium Visual Heights */
+        .podium-1 { height: 180px; }
+        .podium-2 { height: 130px; }
+        .podium-3 { height: 100px; }
+        
+        /* Smooth transitions for batch swapping */
+        .batch-transition { transition: all 0.5s ease-in-out; }
+        
+        /* Hide scrollbars for TV Broadcast Look */
         ::-webkit-scrollbar { display: none; }
         body { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-gray-950 text-white font-sans h-screen flex flex-col overflow-hidden">
 
-    <div id="auth-screen" class="absolute inset-0 z-50 flex items-center justify-center bg-gray-950">
+    <div id="auth-overlay" class="absolute inset-0 z-50 flex items-center justify-center bg-gray-950">
         <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl w-full max-w-md">
             <div class="text-center mb-6">
                 <h1 class="text-3xl font-black text-blue-500 uppercase tracking-widest">Display Node</h1>
-                <p class="text-gray-400 text-sm italic">Authenticate to access live database</p>
+                <p class="text-gray-400 text-sm italic">Authenticate to access the matrix</p>
             </div>
-            <div class="space-y-4">
-                <input type="email" id="display-email" placeholder="Staff Email" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
-                <input type="password" id="display-pass" placeholder="Password" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
-                <button id="btn-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-lg uppercase tracking-widest transition-transform active:scale-95">Connect Display</button>
+            
+            <form id="login-form" class="space-y-4">
+                <input type="email" id="admin-email" placeholder="Staff Email" required class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
+                <input type="password" id="admin-password" placeholder="Password" required class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
+                <button type="submit" id="btn-admin-login" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-lg uppercase tracking-widest transition-transform active:scale-95">Connect Display</button>
                 <p id="login-error" class="text-red-500 text-xs text-center hidden font-bold"></p>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div id="setup-screen" class="absolute inset-0 z-40 hidden items-center justify-center bg-gray-950/90 backdrop-blur-sm">
-        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl w-full max-w-md text-center">
-            <h2 class="text-2xl font-black text-white uppercase tracking-widest mb-2">Bind Display</h2>
-            <p class="text-gray-400 text-sm mb-6">Select which Mat this TV should broadcast</p>
-            
-            <select id="select-mat" class="w-full bg-gray-950 border border-blue-500 text-white rounded-lg px-4 py-3 mb-4 text-lg font-bold outline-none cursor-pointer">
-                <option value="">-- Fetching Active Mats... --</option>
-            </select>
-            
-            <button id="btn-bind-mat" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-lg uppercase tracking-widest transition-transform active:scale-95 shadow-[0_0_15px_rgba(22,163,74,0.4)] disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                Lock & Broadcast
+    <div id="app-wrapper" class="hidden flex-col h-full w-full relative">
+        
+        <div class="absolute top-4 right-4 z-50">
+            <button id="btn-open-settings" class="bg-gray-800 hover:bg-gray-700 p-3 rounded-full text-white shadow-lg border border-gray-600 transition-colors opacity-20 hover:opacity-100">
+                ⚙️
             </button>
         </div>
-    </div>
 
-    <div id="main-display" class="hidden flex-col h-full w-full">
-        
+        <div id="settings-modal" class="absolute inset-0 z-40 hidden items-center justify-center bg-gray-950/90 backdrop-blur-sm">
+            <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800 shadow-2xl w-full max-w-lg text-center">
+                <h2 class="text-2xl font-black text-white uppercase tracking-widest mb-4">Display Configuration</h2>
+                
+                <div class="flex justify-center mb-6 bg-gray-950 p-1 rounded-lg border border-gray-800">
+                    <button id="btn-mode-live" class="flex-1 py-2 rounded text-sm font-bold bg-blue-600 text-white transition-colors">Live Scoring</button>
+                    <button id="btn-mode-podium" class="flex-1 py-2 rounded text-sm font-bold text-gray-500 hover:text-white transition-colors">Podium Results</button>
+                </div>
+
+                <div id="settings-live" class="space-y-4">
+                    <p class="text-gray-400 text-sm">Select Mat to Broadcast</p>
+                    <select id="select-mat" class="w-full bg-gray-950 border border-blue-500 text-white rounded-lg px-4 py-3 text-lg font-bold outline-none cursor-pointer">
+                        <option value="">-- Fetching Active Mats... --</option>
+                    </select>
+                </div>
+
+                <div id="settings-podium" class="space-y-4 hidden">
+                    <p class="text-gray-400 text-sm">Select Published Result Category</p>
+                    <select id="select-result-category" class="w-full bg-gray-950 border border-purple-500 text-white rounded-lg px-4 py-3 text-lg font-bold outline-none cursor-pointer">
+                        <option value="">-- Fetching Published Results... --</option>
+                    </select>
+                </div>
+
+                <div class="mt-8 flex gap-4">
+                    <button id="btn-close-settings" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-lg">Hide</button>
+                    <button id="btn-apply-settings" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-black py-3 rounded-lg uppercase tracking-widest shadow-[0_0_15px_rgba(22,163,74,0.4)]">Broadcast</button>
+                </div>
+            </div>
+        </div>
+
         <div class="bg-blue-900/40 border-b border-blue-800 text-blue-200 text-sm font-bold py-1 marquee-container shadow-md tracking-wider">
             <div class="marquee-content">
                 🌟 Welcome to MYST! Best of luck to all participants! Give your best performance on the mat! 🌟 Practice makes progress! 🌟
@@ -82,56 +96,129 @@
                     <h2 class="text-xs text-blue-400 font-bold uppercase tracking-widest">Maharishi Yoga State Tournament</h2>
                 </div>
             </div>
-            
-            <div class="text-right">
-                <div id="display-mat-number" class="text-5xl font-black text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)]">MAT --</div>
-                <div class="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Live Scoreboard</div>
+            <div class="text-right flex flex-col justify-center">
+                <div id="display-header-title" class="text-5xl font-black text-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)] uppercase tracking-tight">--</div>
+                <div id="display-header-subtitle" class="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Standby Mode</div>
             </div>
         </header>
 
-        <main class="flex-grow p-8 flex flex-col justify-center">
-            <div class="bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-black text-gray-400 uppercase text-sm tracking-widest">
-                        <tr>
-                            <th class="p-4 w-24">Track</th>
-                            <th class="p-4">Athlete Name</th>
-                            <th class="p-4 text-center">Division</th>
-                            <th class="p-4 text-center text-blue-400/50">J1</th>
-                            <th class="p-4 text-center text-blue-400/50">J2</th>
-                            <th class="p-4 text-center text-blue-400/50">J3</th>
-                            <th class="p-4 text-center text-blue-400/50">J4</th>
-                            <th class="p-4 text-center text-blue-400/50">J5</th>
-                            <th class="p-4 text-right text-green-400 text-lg">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody id="live-scores-tbody" class="divide-y divide-gray-800 text-xl font-bold">
-                        <tr>
-                            <td colspan="9" class="p-12 text-center text-gray-500 italic">Awaiting candidates from Stage Manager...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
+        <main class="flex-grow p-8 flex flex-col justify-center relative overflow-hidden bg-gray-950">
+            
+            <div id="view-live-scoring" class="w-full h-full hidden flex-col gap-6">
+                
+                <div class="bg-gray-900 rounded-2xl border border-blue-800/50 shadow-[0_0_30px_rgba(37,99,235,0.15)] overflow-hidden flex-grow flex flex-col">
+                    <div class="bg-blue-900/30 py-2 text-center border-b border-blue-800/50">
+                        <h3 class="text-blue-400 font-black tracking-widest uppercase text-sm">🔴 Currently On Stage (Batch <span id="current-batch-id">--</span>)</h3>
+                    </div>
+                    <div class="flex-grow p-4">
+                        <table class="w-full text-left border-collapse h-full">
+                            <thead class="text-gray-400 uppercase text-xs tracking-widest border-b border-gray-800">
+                                <tr>
+                                    <th class="p-4 w-24">Track</th>
+                                    <th class="p-4">Athlete Name</th>
+                                    <th class="p-4 text-center">Div</th>
+                                    <th class="p-4 text-center text-blue-400/50">J1</th>
+                                    <th class="p-4 text-center text-blue-400/50">J2</th>
+                                    <th class="p-4 text-center text-blue-400/50">J3</th>
+                                    <th class="p-4 text-center text-blue-400/50">J4</th>
+                                    <th class="p-4 text-center text-blue-400/50">J5</th>
+                                    <th class="p-4 text-right text-green-400 text-lg">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="live-stage-tbody" class="text-2xl font-bold divide-y divide-gray-800/50 batch-transition">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
 
-        <div class="bg-gray-800 text-yellow-400 text-sm font-bold py-1 marquee-container border-t border-gray-700">
-            <div class="marquee-content marquee-fast uppercase tracking-widest">
-                📢 Contact admin for advertisement here • 📢 Contact admin for advertisement here • 📢 Contact admin for advertisement here
+                <div class="bg-gray-900/60 rounded-xl border border-gray-800 overflow-hidden h-48 opacity-80">
+                    <div class="bg-gray-950 py-2 px-6 border-b border-gray-800 flex justify-between items-center">
+                        <h3 class="text-gray-500 font-bold tracking-widest uppercase text-xs">🟡 Upcoming Batch</h3>
+                        <span id="upcoming-batch-id" class="text-xs font-mono text-gray-600">--</span>
+                    </div>
+                    <div class="p-0 overflow-y-auto">
+                        <table class="w-full text-left border-collapse text-gray-400 text-sm">
+                            <tbody id="live-upcoming-tbody" class="divide-y divide-gray-800 batch-transition">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-podium" class="w-full h-full hidden flex-col">
+                
+                <div class="flex justify-center items-end gap-6 h-64 mb-8 mt-2">
+                    
+                    <div class="w-56 flex flex-col items-center transform transition-all hover:-translate-y-2">
+                        <div id="podium-2-name" class="font-black text-2xl text-center mb-1 text-gray-300">--</div>
+                        <div id="podium-2-score" class="font-bold text-md text-gray-500 mb-3 tracking-widest uppercase">-- pts</div>
+                        <div class="w-full bg-gradient-to-b from-gray-300 to-gray-500 rounded-t-lg podium-2 flex items-start justify-center pt-4 shadow-[0_0_20px_rgba(156,163,175,0.2)] border-t-4 border-gray-200 relative">
+                            <span class="text-5xl font-black text-gray-800 drop-shadow-md">2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-64 flex flex-col items-center transform transition-all hover:-translate-y-2">
+                        <div class="text-5xl mb-3 animate-bounce">👑</div>
+                        <div id="podium-1-name" class="font-black text-3xl text-center mb-1 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.6)]">--</div>
+                        <div id="podium-1-score" class="font-bold text-lg text-yellow-600 mb-3 tracking-widest uppercase">-- pts</div>
+                        <div class="w-full bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-t-lg podium-1 flex items-start justify-center pt-6 shadow-[0_0_40px_rgba(250,204,21,0.4)] border-t-4 border-yellow-200 relative z-10">
+                            <span class="text-7xl font-black text-yellow-900 drop-shadow-md">1</span>
+                        </div>
+                    </div>
+
+                    <div class="w-56 flex flex-col items-center transform transition-all hover:-translate-y-2">
+                        <div id="podium-3-name" class="font-black text-2xl text-center mb-1 text-orange-400">--</div>
+                        <div id="podium-3-score" class="font-bold text-md text-gray-500 mb-3 tracking-widest uppercase">-- pts</div>
+                        <div class="w-full bg-gradient-to-b from-orange-400 to-orange-600 rounded-t-lg podium-3 flex items-start justify-center pt-4 shadow-[0_0_20px_rgba(251,146,60,0.2)] border-t-4 border-orange-300 relative">
+                            <span class="text-5xl font-black text-orange-900 drop-shadow-md">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-900 rounded-2xl border border-gray-800 shadow-2xl overflow-hidden flex-grow flex flex-col">
+                    <div class="bg-black/80 py-3 text-center border-b border-gray-800">
+                        <h3 class="text-gray-400 font-bold tracking-widest uppercase text-sm">Official Leaderboard</h3>
+                    </div>
+                    <div class="flex-grow p-0 overflow-y-auto relative">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-gray-950 text-gray-500 sticky top-0 uppercase text-xs tracking-widest z-10 shadow-md">
+                                <tr>
+                                    <th class="p-4 pl-8 w-24">Rank</th>
+                                    <th class="p-4">Athlete Name</th>
+                                    <th class="p-4 text-center">Division</th>
+                                    <th class="p-4 text-center">District</th>
+                                    <th class="p-4 text-right pr-8">Final Score</th>
+                                </tr>
+                            </thead>
+                            <tbody id="podium-list-tbody" class="text-xl font-bold divide-y divide-gray-800">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        
+        <div class="bg-gray-900 text-yellow-500 text-sm font-bold py-2 marquee-container border-t border-gray-800 shadow-[0_-10px_20px_rgba(0,0,0,0.5)]">
+            <div class="marquee-content uppercase tracking-widest flex gap-12">
+                <span>📢 Contact admin for advertisement here</span>
+                <span>•</span>
+                <span>📧 info@soumenyoga.in</span>
+                <span>•</span>
+                <span>🌐 www.soumenyoga.in</span>
+                <span>•</span>
+                <span>📢 Contact admin for advertisement here</span>
             </div>
         </div>
-
-        <footer class="bg-black text-gray-400 py-3 px-6 flex justify-between items-center text-sm font-bold uppercase tracking-wider border-t border-gray-900">
-            <div class="flex gap-6">
-                <span class="flex items-center gap-2"><span class="text-green-500 text-lg">📱</span> +91 XXXXX XXXXX</span>
-                <span class="flex items-center gap-2"><span class="text-red-500 text-lg">✉️</span> info@soumenyoga.in</span>
-            </div>
-            <div class="text-blue-500 flex items-center gap-2">
-                <span class="text-lg">🌐</span> www.soumenyoga.in
-            </div>
-        </footer>
-
     </div>
 
-    <script type="module" src="./scripts/display-engine.js"></script>
+    <!-- Hook into the Main Switchboard -->
+    <script type="module">
+        import { initAuth } from './auth-service.js';
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initAuth();
+        });
+    </script>
 </body>
 </html>
