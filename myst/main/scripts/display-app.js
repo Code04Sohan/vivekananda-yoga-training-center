@@ -174,52 +174,107 @@ function renderLiveView() {
 
     const tbodyStage = document.getElementById('live-stage-tbody');
     const tbodyUpcoming = document.getElementById('live-upcoming-tbody');
+    const tbodyRecent = document.getElementById('live-recent-tbody');
+    
     const lblStageBatch = document.getElementById('current-batch-id');
     const lblUpcomingBatch = document.getElementById('upcoming-batch-id');
+    const lblRecentBatch = document.getElementById('recent-batch-id');
 
-    // Find the ordered batch numbers
+    // 1. Sort Batches
     const batchNumbers = Object.keys(currentBatches).map(Number).sort((a, b) => a - b);
 
     if (batchNumbers.length === 0) {
-        lblStageBatch.innerText = "--";
-        lblUpcomingBatch.innerText = "--";
-        tbodyStage.innerHTML = `<tr><td colspan="9" class="p-12 text-center text-gray-500 italic">No athletes currently assigned to this mat.</td></tr>`;
-        tbodyUpcoming.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-600 italic">Queue is empty.</td></tr>`;
+        lblStageBatch.innerText = "--"; lblUpcomingBatch.innerText = "--"; lblRecentBatch.innerText = "--";
+        tbodyStage.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-500 italic">No athletes assigned to this mat.</td></tr>`;
+        tbodyUpcoming.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-gray-600 italic text-xs">Queue empty</td></tr>`;
+        tbodyRecent.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-gray-600 italic text-xs">No recent scores</td></tr>`;
         return;
     }
 
-    // Identify Active (First) and Upcoming (Second)
-    const activeBatchNo = batchNumbers[0];
-    const upcomingBatchNo = batchNumbers.length > 1 ? batchNumbers[1] : null;
+    // 2. Identify Active Batch (First batch that is NOT 100% fully scored)
+    let activeBatchNo = null;
+    for (let bNum of batchNumbers) {
+        const batchItems = currentBatches[bNum];
+        const isFullyScored = batchItems.every(q => q.j1_status && q.j2_status && q.j3_status && q.j4_status && q.j5_status);
+        if (!isFullyScored) {
+            activeBatchNo = bNum;
+            break;
+        }
+    }
+    
+    // If all batches are fully scored, keep the last batch on stage
+    if (activeBatchNo === null) activeBatchNo = batchNumbers[batchNumbers.length - 1];
 
-    const activeQueue = currentBatches[activeBatchNo] || [];
-    const upcomingQueue = upcomingBatchNo ? currentBatches[upcomingBatchNo] : [];
+    // 3. Identify Upcoming and Recent relative to Active
+    let upcomingBatchNo = null;
+    let recentBatchNo = null;
+    const activeIndex = batchNumbers.indexOf(activeBatchNo);
+    
+    if (activeIndex > 0) recentBatchNo = batchNumbers[activeIndex - 1];
+    if (activeIndex < batchNumbers.length - 1) upcomingBatchNo = batchNumbers[activeIndex + 1];
 
+    // Update Labels
     lblStageBatch.innerText = activeBatchNo;
     lblUpcomingBatch.innerText = upcomingBatchNo ? `Batch ${upcomingBatchNo}` : 'None';
+    lblRecentBatch.innerText = recentBatchNo ? `Batch ${recentBatchNo}` : 'None';
 
     // RENDER ON-STAGE BATCH
-    tbodyStage.innerHTML = activeQueue.map(q => generateLiveRow(q, true)).join('');
+    const activeQueue = currentBatches[activeBatchNo] || [];
+    tbodyStage.innerHTML = activeQueue.map(q => generateLiveRow(q)).join('');
 
-    // RENDER UPCOMING BATCH (Miniature rows)
-    if (upcomingQueue.length > 0) {
-        tbodyUpcoming.innerHTML = upcomingQueue.map(q => {
+    // RENDER UPCOMING BATCH (Mini rows)
+    if (upcomingBatchNo) {
+        tbodyUpcoming.innerHTML = currentBatches[upcomingBatchNo].map(q => {
             const c = candidatesMap[q.trackNo] || {};
             return `
-                <tr class="hover:bg-gray-800 transition-colors">
-                    <td class="p-2 pl-4 font-mono text-blue-500 w-20">${q.trackNo}</td>
-                    <td class="p-2 font-bold text-gray-300">${c.name || 'Unknown'}</td>
-                    <td class="p-2 pr-4 text-right text-yellow-500/70 font-bold text-xs uppercase">${c.division || ''}</td>
+                <tr class="hover:bg-gray-800 transition-colors animate-fade-in">
+                    <td class="py-1 px-4 font-mono text-blue-500 w-20 text-xs">${q.trackNo}</td>
+                    <td class="py-1 font-bold text-gray-400 text-xs">${c.name || 'Unknown'}</td>
+                    <td class="py-1 pr-4 text-right text-gray-500 font-bold text-[10px] uppercase">${c.groupName || c.division || ''}</td>
                 </tr>
             `;
         }).join('');
     } else {
-        tbodyUpcoming.innerHTML = `<tr><td colspan="3" class="p-4 text-center text-gray-600 italic">No upcoming batches.</td></tr>`;
+        tbodyUpcoming.innerHTML = `<tr><td colspan="3" class="py-1 text-center text-gray-600 italic text-xs">No upcoming batches.</td></tr>`;
+    }
+
+    // RENDER RECENT BATCH (Mini rows with scores)
+    if (recentBatchNo) {
+        tbodyRecent.innerHTML = currentBatches[recentBatchNo].map(q => {
+            const c = candidatesMap[q.trackNo] || {};
+            const finalScore = calculateFinalScore(q.trackNo);
+            return `
+                <tr class="hover:bg-gray-800 transition-colors animate-fade-in">
+                    <td class="py-1 px-4 font-mono text-green-500/70 w-20 text-xs">${q.trackNo}</td>
+                    <td class="py-1 font-bold text-gray-300 text-xs">${c.name || 'Unknown'}</td>
+                    <td class="py-1 text-gray-500 font-bold text-[10px] uppercase">${c.groupName || c.division || ''}</td>
+                    <td class="py-1 pr-4 text-right font-black text-green-400 text-sm">${finalScore}</td>
+                </tr>
+            `;
+        }).join('');
+    } else {
+        tbodyRecent.innerHTML = `<tr><td colspan="4" class="py-1 text-center text-gray-600 italic text-xs">No recent scores.</td></tr>`;
     }
 }
 
-// Math Engine for Table Rows
-function generateLiveRow(qItem, isLarge) {
+// Math Engine Helper for both Live and Recent
+function calculateFinalScore(trackNo) {
+    const s = scoresMap[trackNo] || {};
+    const getJ = (prefix) => {
+        let total = 0;
+        ['a1', 'a2', 'opt'].forEach(key => {
+            const val = parseFloat(s[`${prefix}_${key}`]);
+            if (!isNaN(val)) total += val;
+        });
+        return total;
+    };
+    const panel = [getJ('j1'), getJ('j2'), getJ('j3'), getJ('j4'), getJ('j5')];
+    const olympicTotal = panel.reduce((a,b)=>a+b, 0) - Math.max(...panel) - Math.min(...panel);
+    return olympicTotal.toFixed(2);
+}
+
+// On-Stage Row Generator
+function generateLiveRow(qItem) {
     const trackNo = qItem.trackNo;
     const c = candidatesMap[trackNo] || {};
     const s = scoresMap[trackNo] || {};
@@ -245,22 +300,23 @@ function generateLiveRow(qItem, isLarge) {
     const isFullyScored = qItem.j1_status && qItem.j2_status && qItem.j3_status && qItem.j4_status && qItem.j5_status;
 
     if (isFullyScored) {
-        const panel = [j1.total, j2.total, j3.total, j4.total, j5.total];
-        const olympicTotal = panel.reduce((a,b)=>a+b, 0) - Math.max(...panel) - Math.min(...panel);
-        finalScoreHtml = `<span class="text-green-400 font-black text-3xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)]">${olympicTotal.toFixed(2)}</span>`;
+        finalScoreHtml = `<span class="text-green-400 font-black text-3xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)] animate-fade-in">${calculateFinalScore(trackNo)}</span>`;
     }
 
+    // Notice the reduced padding (py-3) to ensure 5 rows easily fit without scrolling
     return `
-        <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50">
-            <td class="p-4 font-mono text-blue-400 font-bold">${trackNo}</td>
-            <td class="p-4 font-black tracking-wide">${c.name || 'Unknown'}</td>
-            <td class="p-4 text-center text-yellow-500 text-sm font-bold uppercase tracking-widest">${c.division || ''}</td>
-            <td class="p-4 text-center">${formatCell(j1, qItem.j1_status)}</td>
-            <td class="p-4 text-center">${formatCell(j2, qItem.j2_status)}</td>
-            <td class="p-4 text-center">${formatCell(j3, qItem.j3_status)}</td>
-            <td class="p-4 text-center">${formatCell(j4, qItem.j4_status)}</td>
-            <td class="p-4 text-center">${formatCell(j5, qItem.j5_status)}</td>
-            <td class="p-4 text-right">${finalScoreHtml}</td>
+        <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 animate-fade-in">
+            <td class="py-3 px-3 font-mono text-blue-400 font-bold">${trackNo}</td>
+            <td class="py-3 px-3 font-black tracking-wide leading-tight">
+                ${c.name || 'Unknown'}
+                <div class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-0.5 opacity-80">${c.groupName || c.division || ''}</div>
+            </td>
+            <td class="py-3 px-3 text-center">${formatCell(j1, qItem.j1_status)}</td>
+            <td class="py-3 px-3 text-center">${formatCell(j2, qItem.j2_status)}</td>
+            <td class="py-3 px-3 text-center">${formatCell(j3, qItem.j3_status)}</td>
+            <td class="py-3 px-3 text-center">${formatCell(j4, qItem.j4_status)}</td>
+            <td class="py-3 px-3 text-center">${formatCell(j5, qItem.j5_status)}</td>
+            <td class="py-3 px-3 text-right">${finalScoreHtml}</td>
         </tr>
     `;
 }
