@@ -38,7 +38,7 @@ export function initAuth() {
             showLoginScreen();
         }
     });
-    
+
     // Handle Login
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
@@ -64,13 +64,13 @@ export function initAuth() {
 
         cleanLogoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            window.onbeforeunload = null; 
+            window.onbeforeunload = null;
             cleanLogoutBtn.innerText = "Logging out...";
             cleanLogoutBtn.disabled = true;
 
             try {
                 await signOut(auth);
-                window.location.replace('index.html'); 
+                window.location.replace('index.html');
             } catch (error) {
                 cleanLogoutBtn.innerText = "Logout";
                 cleanLogoutBtn.disabled = false;
@@ -88,7 +88,7 @@ async function verifyUserRole(uid, errorElement) {
         if (!userSnap.exists()) throw new Error("User profile not found.");
 
         const role = userSnap.data().role;
-        
+
         // --- SMART PAGE DETECTION ---
         const isDisplayPage = window.location.pathname.includes('display.html');
         const isJudgePage = window.location.pathname.includes('judge.html');
@@ -100,21 +100,14 @@ async function verifyUserRole(uid, errorElement) {
         if (masterControls) masterControls.style.display = 'none';
 
         // ==========================================
-        // SWITCHBOARD ROUTING LOGIC
+        // SWITCHBOARD STRICT ROUTING LOGIC
         // ==========================================
-        
+
         if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
-            
-            // If Admin opens the TV display, boot ONLY the display engine
-            if (isDisplayPage) {
-                if (!isSystemBooted) { initDisplay(); isSystemBooted = true; }
-                unlockDashboard();
-                return;
-            }
-            
-            // Redirect from wrong pages
-            if (isJudgePage) { window.location.href = 'index.html'; return; }
-            
+
+            // SECURITY: If Admin logs in on Judge or Display page, kick them to Admin Dashboard
+            if (isJudgePage || isDisplayPage) { window.location.href = 'index.html'; return; }
+
             // Standard Admin Boot
             allNavButtons.forEach(btn => btn.style.display = 'block');
             if (masterControls) masterControls.style.display = 'flex';
@@ -123,65 +116,60 @@ async function verifyUserRole(uid, errorElement) {
                 initCandidateManager(); initSystemToggles(); initStaffManager();
                 initCSVImporter(); initStageManager(uid, role); initMatController();
                 initLiveDashboard(); initResultsEngine(); initResultsExplorer();
-                initDistrictResults(); 
-                isSystemBooted = true; 
+                initDistrictResults();
+                isSystemBooted = true;
             }
             unlockDashboard();
 
         } else if (role === 'STAGE_MGR') {
-            
-            // Stage Managers can also run the TV display safely
-            if (isDisplayPage) {
-                if (!isSystemBooted) { initDisplay(); isSystemBooted = true; }
-                unlockDashboard();
-                return;
-            }
-            
-            if (isJudgePage) { window.location.href = 'index.html'; return; }
+
+            // SECURITY: Kick Stage Managers to Admin Dashboard
+            if (isJudgePage || isDisplayPage) { window.location.href = 'index.html'; return; }
 
             const navStageManager = document.getElementById('nav-stage-manager');
             if (navStageManager) navStageManager.style.display = 'block';
 
             if (!isSystemBooted) {
-                initStageManager(uid, role); 
-                isSystemBooted = true; 
+                initStageManager(uid, role);
+                isSystemBooted = true;
             }
             unlockDashboard();
             if (navStageManager) navStageManager.click();
 
         } else if (role === 'JUDGE') {
-            
+
+            // SECURITY: Kick Judges to Judge Tablet
             if (!isJudgePage) { window.location.href = 'judge.html'; return; }
 
             if (!isSystemBooted) {
-                initJudgePanel(uid); 
-                isSystemBooted = true; 
+                initJudgePanel(uid);
+                isSystemBooted = true;
             }
             unlockDashboard();
 
-        // 🟢 NEW ROLE: DEDICATED TV DISPLAY NODE 🟢
+            // 🟢 STRICT TV DISPLAY NODE 🟢
         } else if (role === 'DISPLAY') {
-            
-            // Force them to the display screen
+
+            // SECURITY: Kick Display accounts to Display Screen
             if (!isDisplayPage) { window.location.href = 'display.html'; return; }
 
             if (!isSystemBooted) {
-                initDisplay(); 
-                isSystemBooted = true; 
+                initDisplay();
+                isSystemBooted = true;
             }
             unlockDashboard();
 
         } else {
             throw new Error("Insufficient Permissions");
         }
-        
+
     } catch (error) {
         console.error("Role Verification Failed:", error);
         if (errorElement) {
             errorElement.innerText = "Access Denied: Unauthorized Role.";
             errorElement.classList.remove('hidden');
         }
-        await signOut(auth); 
+        await signOut(auth);
         showLoginScreen();
     }
 }
@@ -194,21 +182,21 @@ function unlockDashboard() {
 
     if (overlay) overlay.style.display = 'none';
     if (topBar) topBar.style.display = 'flex';
-    if (appWrapper) appWrapper.style.display = 'flex'; 
+    if (appWrapper) appWrapper.style.display = 'flex';
 }
 
 function showLoginScreen() {
     const overlay = document.getElementById('auth-overlay');
     const topBar = document.getElementById('global-top-bar');
     const appWrapper = document.getElementById('app-wrapper');
-    
+
     if (overlay) overlay.style.display = 'flex';
     if (topBar) topBar.style.display = 'none';
     if (appWrapper) appWrapper.style.display = 'none';
-    
+
     const btnAdminLogin = document.getElementById('btn-admin-login');
     const btnJudgeLogin = document.getElementById('btn-judge-login');
-    
+
     if (btnAdminLogin) {
         btnAdminLogin.innerText = "Connect / Login";
         btnAdminLogin.disabled = false;
