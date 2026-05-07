@@ -16,7 +16,7 @@ const CONFIG = {
     showMapLocation: false,
 
     // 🟢 REGISTRATION MODE TOGGLE
-    registrationOpen: true, // Set to false to instantly close the form
+    registrationOpen: false, // Set to false to instantly close the form
     autoCalculateAge: false, // Set to 'true' to auto-calculate DOB -> Age -> Group
     competitionDate: "2026-05-17", // YYYY-MM-DD format for precise calculation
 
