@@ -107,8 +107,8 @@ function renderDashboard() {
         const sGender = c.gender || "";
         const sDist = c.state || c.district || score.state || "";
 
-        // HELPER: Sum judge's total
-        const getSum = (j) => (parseFloat(score[`${j}_a1`])||0) + (parseFloat(score[`${j}_a2`])||0) + (parseFloat(score[`${j}_opt`])||0);
+        // HELPER: Sum judge's total (Now includes a3)
+        const getSum = (j) => (parseFloat(score[`${j}_a1`])||0) + (parseFloat(score[`${j}_a2`])||0) + (parseFloat(score[`${j}_a3`])||0) + (parseFloat(score[`${j}_opt`])||0);
         
         const marks = {
             J1: getSum('j1'), J2: getSum('j2'), J3: getSum('j3'), J4: getSum('j4'), J5: getSum('j5')
@@ -174,6 +174,7 @@ function openOverrideModal(scoreId, trackNo) {
             <td class="p-2 font-bold text-gray-300 uppercase">${j}</td>
             <td class="p-2"><input type="number" step="0.1" id="edit-${j}_a1" value="${scoreData[`${j}_a1`] || ''}" class="w-16 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-white text-center"></td>
             <td class="p-2"><input type="number" step="0.1" id="edit-${j}_a2" value="${scoreData[`${j}_a2`] || ''}" class="w-16 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-white text-center"></td>
+            <td class="p-2"><input type="number" step="0.1" id="edit-${j}_a3" value="${scoreData[`${j}_a3`] || ''}" class="w-16 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-white text-center"></td>
             <td class="p-2"><input type="number" step="0.1" id="edit-${j}_opt" value="${scoreData[`${j}_opt`] || ''}" class="w-16 bg-purple-900/40 border border-purple-600 rounded px-2 py-1 text-white font-bold text-center"></td>
         </tr>`;
     });
@@ -197,9 +198,9 @@ async function saveAdminOverride() {
             updatedAt: new Date().toISOString()
         };
 
-        // Extract all 20 inputs
+        // Extract all inputs 
         ['j1', 'j2', 'j3', 'j4', 'j5'].forEach(j => {
-            ['a1', 'a2', 'opt'].forEach(asan => { // Removed 'a3'
+            ['a1', 'a2', 'a3', 'opt'].forEach(asan => { 
                 const val = parseFloat(document.getElementById(`edit-${j}_${asan}`).value);
                 if (!isNaN(val)) updatePayload[`${j}_${asan}`] = val;
             });

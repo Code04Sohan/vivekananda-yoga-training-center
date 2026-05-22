@@ -262,7 +262,7 @@ function calculateFinalScore(trackNo) {
     const s = scoresMap[trackNo] || {};
     const getJ = (prefix) => {
         let total = 0;
-        ['a1', 'a2', 'opt'].forEach(key => {
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => { // <-- ADDED 'a3'
             const val = parseFloat(s[`${prefix}_${key}`]);
             if (!isNaN(val)) total += val;
         });
@@ -281,7 +281,7 @@ function generateLiveRow(qItem) {
 
     const getJ = (prefix) => {
         let total = 0, isTyping = false;
-        ['a1', 'a2', 'opt'].forEach(key => {
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => { // <-- ADDED 'a3'
             const val = parseFloat(s[`${prefix}_${key}`]);
             if (!isNaN(val)) { total += val; isTyping = true; }
         });

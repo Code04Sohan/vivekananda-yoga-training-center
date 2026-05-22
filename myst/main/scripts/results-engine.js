@@ -91,7 +91,7 @@ async function calculateGroupResults() {
             
             if (targetCandidates[trackNo]) {
                 const c = targetCandidates[trackNo];
-                const getJudgeSum = (prefix) => (parseFloat(scoreData[`${prefix}_a1`])||0) + (parseFloat(scoreData[`${prefix}_a2`])||0) + (parseFloat(scoreData[`${prefix}_opt`])||0);
+                const getJudgeSum = (prefix) => (parseFloat(scoreData[`${prefix}_a1`])||0) + (parseFloat(scoreData[`${prefix}_a2`])||0) + (parseFloat(scoreData[`${prefix}_a3`])||0) + (parseFloat(scoreData[`${prefix}_opt`])||0);
                 const getOptSum = (prefix) => parseFloat(scoreData[`${prefix}_opt`]) || 0;
 
                 const j1 = getJudgeSum('j1'), j2 = getJudgeSum('j2'), j3 = getJudgeSum('j3'), j4 = getJudgeSum('j4'), j5 = getJudgeSum('j5');
