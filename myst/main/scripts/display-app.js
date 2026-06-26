@@ -1,6 +1,6 @@
 // ============================================================================
 // MYST LIVE DISPLAY ENGINE (SMART NODE)
-// Handles Live Scoring Matrices & Podium Broadcasts
+// Handles Live Scoring Matrices & Podium Broadcasts (Rigid 5-Row Grid Layout)
 // ============================================================================
 
 import { onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -22,13 +22,10 @@ let unsubQueue = null;
 // 1. SWITCHBOARD INITIALIZATION
 // ==========================================
 export function initDisplay() {
-    // Auto-open settings if nothing is configured yet
     if (!currentMatId && !currentCategoryId) {
         document.getElementById('settings-modal').classList.remove('hidden');
         document.getElementById('settings-modal').classList.add('flex');
     }
-    
-    // Boot the UI listeners and data engines
     bindSettingsUI();
     bootDisplayEngine();
 }
@@ -47,7 +44,6 @@ function bindSettingsUI() {
         modal.classList.add('hidden'); modal.classList.remove('flex');
     });
 
-    // Mode Toggles
     const btnLive = document.getElementById('btn-mode-live');
     const btnPodium = document.getElementById('btn-mode-podium');
     const viewLive = document.getElementById('settings-live');
@@ -69,7 +65,6 @@ function bindSettingsUI() {
         viewLive.classList.add('hidden');
     });
 
-    // Apply Button
     document.getElementById('btn-apply-settings').addEventListener('click', () => {
         currentMatId = document.getElementById('select-mat').value;
         currentCategoryId = document.getElementById('select-result-category').value;
@@ -85,7 +80,7 @@ function bindSettingsUI() {
             document.getElementById('display-header-title').innerText = matName;
             document.getElementById('display-header-subtitle').innerText = "Live Scoreboard";
             
-            listenToQueue(); // Restart queue listener for new mat
+            listenToQueue(); 
         } 
         else if (currentMode === 'podium' && currentCategoryId) {
             document.getElementById('view-live-scoring').classList.add('hidden');
@@ -95,7 +90,7 @@ function bindSettingsUI() {
             document.getElementById('display-header-title').innerText = "OFFICIAL PODIUM";
             document.getElementById('display-header-subtitle').innerText = currentCategoryId;
             
-            if (unsubQueue) { unsubQueue(); unsubQueue = null; } // Kill live listener to save reads
+            if (unsubQueue) { unsubQueue(); unsubQueue = null; } 
             renderPodiumView();
         }
     });
@@ -105,7 +100,6 @@ function bindSettingsUI() {
 // 3. THE DATA ENGINES (Caches)
 // ==========================================
 function bootDisplayEngine() {
-    // A. Listen for Active Mats (For Settings Dropdown)
     onSnapshot(collection(db, 'active_mats'), snap => {
         const select = document.getElementById('select-mat');
         const prevVal = select.value;
@@ -114,7 +108,6 @@ function bootDisplayEngine() {
         if (prevVal) select.value = prevVal;
     });
 
-    // B. Listen for Published Results (For Settings Dropdown & Podium Rendering)
     onSnapshot(collection(db, 'published_results'), snap => {
         const select = document.getElementById('select-result-category');
         const prevVal = select.value;
@@ -129,17 +122,15 @@ function bootDisplayEngine() {
         });
         if (prevVal) select.value = prevVal;
         
-        if (currentMode === 'podium') renderPodiumView(); // Auto-update if looking at podium
+        if (currentMode === 'podium') renderPodiumView(); 
     });
 
-    // C. Cache Candidates (For Live Names/Divisions)
     onSnapshot(collection(db, 'candidates'), snap => {
         candidatesMap = {};
         snap.forEach(doc => candidatesMap[doc.id] = doc.data());
         if (currentMode === 'live') renderLiveView();
     });
 
-    // D. Cache Live Scores (For the Matrix math)
     onSnapshot(collection(db, 'scores'), snap => {
         scoresMap = {};
         snap.forEach(doc => scoresMap[doc.id] = doc.data());
@@ -147,7 +138,6 @@ function bootDisplayEngine() {
     });
 }
 
-// Queue Listener (Only runs when in Live Mode)
 let currentBatches = {};
 function listenToQueue() {
     if (unsubQueue) unsubQueue();
@@ -155,7 +145,6 @@ function listenToQueue() {
     
     unsubQueue = onSnapshot(q, snap => {
         currentBatches = {};
-        // Group queue items by their Batch Number
         snap.forEach(docSnap => {
             const data = docSnap.data();
             const bNum = data.batchNo || 0;
@@ -164,6 +153,15 @@ function listenToQueue() {
         });
         renderLiveView();
     });
+}
+
+// HELPER: Pad array to exactly 5 elements
+function padToFive(arr) {
+    const result = [...(arr || [])];
+    while (result.length < 5) {
+        result.push(null);
+    }
+    return result.slice(0, 5);
 }
 
 // ==========================================
@@ -180,18 +178,17 @@ function renderLiveView() {
     const lblUpcomingBatch = document.getElementById('upcoming-batch-id');
     const lblRecentBatch = document.getElementById('recent-batch-id');
 
-    // 1. Sort Batches
     const batchNumbers = Object.keys(currentBatches).map(Number).sort((a, b) => a - b);
 
     if (batchNumbers.length === 0) {
         lblStageBatch.innerText = "--"; lblUpcomingBatch.innerText = "--"; lblRecentBatch.innerText = "--";
-        tbodyStage.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-gray-500 italic">No athletes assigned to this mat.</td></tr>`;
-        tbodyUpcoming.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-gray-600 italic text-xs">Queue empty</td></tr>`;
-        tbodyRecent.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-gray-600 italic text-xs">No recent scores</td></tr>`;
+        // Force 5 blank rows to hold structure
+        tbodyStage.innerHTML = padToFive([]).map(() => generateLiveRow(null)).join('');
+        tbodyUpcoming.innerHTML = padToFive([]).map(() => `<tr class="border-b border-gray-800/10"><td class="py-1 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-1 px-2 w-[55%] text-gray-900">-</td><td class="py-1 px-2 w-[30%] text-gray-900">-</td></tr>`).join('');
+        tbodyRecent.innerHTML = padToFive([]).map(() => `<tr class="border-b border-gray-800/10"><td class="py-1 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-1 px-2 w-[40%] text-gray-900">-</td><td class="py-1 px-2 w-[25%] text-gray-900">-</td><td class="py-1 px-2 w-[20%] text-gray-900">-</td></tr>`).join('');
         return;
     }
 
-    // 2. Identify Active Batch (First batch that is NOT 100% fully scored)
     let activeBatchNo = null;
     for (let bNum of batchNumbers) {
         const batchItems = currentBatches[bNum];
@@ -202,10 +199,8 @@ function renderLiveView() {
         }
     }
     
-    // If all batches are fully scored, keep the last batch on stage
     if (activeBatchNo === null) activeBatchNo = batchNumbers[batchNumbers.length - 1];
 
-    // 3. Identify Upcoming and Recent relative to Active
     let upcomingBatchNo = null;
     let recentBatchNo = null;
     const activeIndex = batchNumbers.indexOf(activeBatchNo);
@@ -213,56 +208,51 @@ function renderLiveView() {
     if (activeIndex > 0) recentBatchNo = batchNumbers[activeIndex - 1];
     if (activeIndex < batchNumbers.length - 1) upcomingBatchNo = batchNumbers[activeIndex + 1];
 
-    // Update Labels
     lblStageBatch.innerText = activeBatchNo;
     lblUpcomingBatch.innerText = upcomingBatchNo ? `Batch ${upcomingBatchNo}` : 'None';
     lblRecentBatch.innerText = recentBatchNo ? `Batch ${recentBatchNo}` : 'None';
 
-    // RENDER ON-STAGE BATCH
-    const activeQueue = currentBatches[activeBatchNo] || [];
+    // RENDER ON-STAGE BATCH (Locked to 5 Rows)
+    const activeQueue = padToFive(currentBatches[activeBatchNo]);
     tbodyStage.innerHTML = activeQueue.map(q => generateLiveRow(q)).join('');
 
-    // RENDER UPCOMING BATCH (Mini rows)
-    if (upcomingBatchNo) {
-        tbodyUpcoming.innerHTML = currentBatches[upcomingBatchNo].map(q => {
-            const c = candidatesMap[q.trackNo] || {};
-            return `
-                <tr class="hover:bg-gray-800 transition-colors animate-fade-in">
-                    <td class="py-1 px-4 font-mono text-blue-500 w-20 text-xs">${q.trackNo}</td>
-                    <td class="py-1 font-bold text-gray-400 text-xs">${c.name || 'Unknown'}</td>
-                    <td class="py-1 pr-4 text-right text-gray-500 font-bold text-[10px] uppercase">${c.groupName || c.division || ''}</td>
-                </tr>
-            `;
-        }).join('');
-    } else {
-        tbodyUpcoming.innerHTML = `<tr><td colspan="3" class="py-1 text-center text-gray-600 italic text-xs">No upcoming batches.</td></tr>`;
-    }
+    // RENDER UPCOMING BATCH (Locked to 5 Rows)
+    const upcomingQueue = padToFive(upcomingBatchNo ? currentBatches[upcomingBatchNo] : []);
+    tbodyUpcoming.innerHTML = upcomingQueue.map(q => {
+        if (!q) return `<tr class="border-b border-gray-800/10"><td class="py-1 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[55%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[30%] text-gray-900">-</td></tr>`;
+        const c = candidatesMap[q.trackNo] || {};
+        return `
+            <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30">
+                <td class="py-1 px-2 md:px-4 font-mono text-blue-500 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
+                <td class="py-1 px-2 md:px-4 font-bold text-gray-400 text-[10px] md:text-xs w-[55%] truncate">${c.name || 'Unknown'}</td>
+                <td class="py-1 px-2 md:px-4 text-right text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[30%] truncate">${c.groupName || c.division || ''}</td>
+            </tr>
+        `;
+    }).join('');
 
-    // RENDER RECENT BATCH (Mini rows with scores)
-    if (recentBatchNo) {
-        tbodyRecent.innerHTML = currentBatches[recentBatchNo].map(q => {
-            const c = candidatesMap[q.trackNo] || {};
-            const finalScore = calculateFinalScore(q.trackNo);
-            return `
-                <tr class="hover:bg-gray-800 transition-colors animate-fade-in">
-                    <td class="py-1 px-4 font-mono text-green-500/70 w-20 text-xs">${q.trackNo}</td>
-                    <td class="py-1 font-bold text-gray-300 text-xs">${c.name || 'Unknown'}</td>
-                    <td class="py-1 text-gray-500 font-bold text-[10px] uppercase">${c.groupName || c.division || ''}</td>
-                    <td class="py-1 pr-4 text-right font-black text-green-400 text-sm">${finalScore}</td>
-                </tr>
-            `;
-        }).join('');
-    } else {
-        tbodyRecent.innerHTML = `<tr><td colspan="4" class="py-1 text-center text-gray-600 italic text-xs">No recent scores.</td></tr>`;
-    }
+    // RENDER RECENT BATCH (Locked to 5 Rows)
+    const recentQueue = padToFive(recentBatchNo ? currentBatches[recentBatchNo] : []);
+    tbodyRecent.innerHTML = recentQueue.map(q => {
+        if (!q) return `<tr class="border-b border-gray-800/10"><td class="py-1 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[40%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[25%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[20%] text-gray-900">-</td></tr>`;
+        const c = candidatesMap[q.trackNo] || {};
+        const finalScore = calculateFinalScore(q.trackNo);
+        return `
+            <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30">
+                <td class="py-1 px-2 md:px-4 font-mono text-green-500/70 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
+                <td class="py-1 px-2 md:px-4 font-bold text-gray-300 text-[10px] md:text-xs w-[40%] truncate">${c.name || 'Unknown'}</td>
+                <td class="py-1 px-2 md:px-4 text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[25%] text-center truncate">${c.groupName || c.division || ''}</td>
+                <td class="py-1 px-2 md:px-4 text-right font-black text-green-400 text-xs md:text-sm w-[20%]">${finalScore}</td>
+            </tr>
+        `;
+    }).join('');
 }
 
-// Math Engine Helper for both Live and Recent
+// Math Engine Helper
 function calculateFinalScore(trackNo) {
     const s = scoresMap[trackNo] || {};
     const getJ = (prefix) => {
         let total = 0;
-        ['a1', 'a2', 'a3', 'opt'].forEach(key => { // <-- ADDED 'a3'
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => { 
             const val = parseFloat(s[`${prefix}_${key}`]);
             if (!isNaN(val)) total += val;
         });
@@ -273,15 +263,30 @@ function calculateFinalScore(trackNo) {
     return olympicTotal.toFixed(2);
 }
 
-// On-Stage Row Generator
+// On-Stage Row Generator (Generates Placeholder if Empty)
 function generateLiveRow(qItem) {
+    if (!qItem) {
+        return `
+            <tr class="border-b border-gray-800/10">
+                <td class="py-1.5 md:py-2 px-2 md:px-4 text-gray-900 font-mono">-</td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 text-gray-900 font-bold">-</td>
+                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 text-right text-gray-900">-</td>
+            </tr>
+        `;
+    }
+
     const trackNo = qItem.trackNo;
     const c = candidatesMap[trackNo] || {};
     const s = scoresMap[trackNo] || {};
 
     const getJ = (prefix) => {
         let total = 0, isTyping = false;
-        ['a1', 'a2', 'a3', 'opt'].forEach(key => { // <-- ADDED 'a3'
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => { 
             const val = parseFloat(s[`${prefix}_${key}`]);
             if (!isNaN(val)) { total += val; isTyping = true; }
         });
@@ -296,27 +301,26 @@ function generateLiveRow(qItem) {
         return `<span class="text-gray-700">-</span>`; 
     };
 
-    let finalScoreHtml = `<span class="text-gray-600 text-sm tracking-widest uppercase">Scoring</span>`;
+    let finalScoreHtml = `<span class="text-gray-600 text-[10px] md:text-xs tracking-widest uppercase">Scoring</span>`;
     const isFullyScored = qItem.j1_status && qItem.j2_status && qItem.j3_status && qItem.j4_status && qItem.j5_status;
 
     if (isFullyScored) {
-        finalScoreHtml = `<span class="text-green-400 font-black text-3xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)] animate-fade-in">${calculateFinalScore(trackNo)}</span>`;
+        finalScoreHtml = `<span class="text-green-400 font-black text-xl md:text-3xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)] animate-fade-in">${calculateFinalScore(trackNo)}</span>`;
     }
 
-    // Notice the reduced padding (py-3) to ensure 5 rows easily fit without scrolling
     return `
         <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 animate-fade-in">
-            <td class="py-3 px-3 font-mono text-blue-400 font-bold">${trackNo}</td>
-            <td class="py-3 px-3 font-black tracking-wide leading-tight">
+            <td class="py-1.5 md:py-2 px-2 md:px-4 font-mono text-blue-400 font-bold">${trackNo}</td>
+            <td class="py-1.5 md:py-2 px-2 md:px-4 font-black tracking-wide leading-tight truncate">
                 ${c.name || 'Unknown'}
-                <div class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-0.5 opacity-80">${c.groupName || c.division || ''}</div>
+                <div class="text-[8px] md:text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-0.5 opacity-80 truncate">${c.groupName || c.division || ''}</div>
             </td>
-            <td class="py-3 px-3 text-center">${formatCell(j1, qItem.j1_status)}</td>
-            <td class="py-3 px-3 text-center">${formatCell(j2, qItem.j2_status)}</td>
-            <td class="py-3 px-3 text-center">${formatCell(j3, qItem.j3_status)}</td>
-            <td class="py-3 px-3 text-center">${formatCell(j4, qItem.j4_status)}</td>
-            <td class="py-3 px-3 text-center">${formatCell(j5, qItem.j5_status)}</td>
-            <td class="py-3 px-3 text-right">${finalScoreHtml}</td>
+            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j1, qItem.j1_status)}</td>
+            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j2, qItem.j2_status)}</td>
+            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j3, qItem.j3_status)}</td>
+            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j4, qItem.j4_status)}</td>
+            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j5, qItem.j5_status)}</td>
+            <td class="py-1.5 md:py-2 px-2 md:px-4 text-right">${finalScoreHtml}</td>
         </tr>
     `;
 }
@@ -330,7 +334,6 @@ function renderPodiumView() {
     const data = publishedResultsMap[currentCategoryId];
     const standings = data.standings || [];
 
-    // Safe Fill Helper
     const fillPodium = (num, athlete) => {
         const nameEl = document.getElementById(`podium-${num}-name`);
         const scoreEl = document.getElementById(`podium-${num}-score`);
@@ -343,16 +346,13 @@ function renderPodiumView() {
         }
     };
 
-    // Fill Top 3
     fillPodium(1, standings.find(s => s.rank === 1));
     fillPodium(2, standings.find(s => s.rank === 2));
     fillPodium(3, standings.find(s => s.rank === 3));
 
-    // Fill Remaining Leaderboard
     const listBody = document.getElementById('podium-list-tbody');
     listBody.innerHTML = '';
     
-    // Get athletes 4th place and below
     const remaining = standings.filter(s => s.rank > 3);
     
     if (remaining.length === 0) {
@@ -363,11 +363,11 @@ function renderPodiumView() {
     remaining.forEach(s => {
         listBody.innerHTML += `
             <tr class="hover:bg-gray-800 transition-colors">
-                <td class="p-4 pl-8 font-black text-gray-500 w-24">#${s.rank}</td>
-                <td class="p-4 font-bold text-gray-300">${s.name}</td>
-                <td class="p-4 text-center text-blue-400/80 text-sm font-bold uppercase">${s.division || ''}</td>
-                <td class="p-4 text-center text-gray-400 text-sm">${s.district}</td>
-                <td class="p-4 text-right pr-8 text-gray-300 font-mono">${s.finalScore}</td>
+                <td class="p-2 md:p-4 md:pl-8 font-black text-gray-500 w-[15%]">#${s.rank}</td>
+                <td class="p-2 md:p-4 font-bold text-gray-300 w-[40%] truncate">${s.name}</td>
+                <td class="p-2 md:p-4 text-center text-blue-400/80 text-[10px] md:text-sm font-bold uppercase w-[15%] truncate">${s.division || ''}</td>
+                <td class="p-2 md:p-4 text-center text-gray-400 text-[10px] md:text-sm w-[15%] truncate">${s.district}</td>
+                <td class="p-2 md:p-4 text-right md:pr-8 text-gray-300 font-mono w-[15%]">${s.finalScore}</td>
             </tr>
         `;
     });
