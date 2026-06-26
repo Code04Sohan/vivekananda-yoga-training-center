@@ -25,6 +25,7 @@ let currentStageIndex = 0;
 const SCORING_STAGES = [
     { id: 'a1', title: 'ASAN 1', sub: 'Mandatory Posture', max: 10 },
     { id: 'a2', title: 'ASAN 2', sub: 'Mandatory Posture', max: 10 },
+    { id: 'a3', title: 'ASAN 3', sub: 'Mandatory Posture', max: 10 }, // <-- Added A3
     { id: 'opt', title: 'OPTIONAL', sub: 'Bonus Posture', max: 20 }
 ];
 
@@ -287,7 +288,7 @@ function startScoringBatch() {
     // 1. Initialize local score state for this batch
     localScores = {};
     currentQueue.forEach(c => {
-        localScores[c.trackNo] = { a1: '', a2: '', opt: '' };
+        localScores[c.trackNo] = { a1: '', a2: '', a3: '', opt: '' };
     });
 
     currentStageIndex = 0;
@@ -347,9 +348,9 @@ function renderScoringStage() {
     });
 
     // Update Dots & Navigation
-    for (let i = 0; i <= 2; i++) { // Changed 3 to 2
+    for (let i = 0; i <= 3; i++) { // <-- Changed 2 to 3 (because 0,1,2,3 = 4 dots)
         const dot = document.getElementById(`dot-${i}`);
-        if(dot) { // Added a safety check
+        if(dot) { 
             if (i === currentStageIndex) {
                 dot.classList.remove('bg-slate-300'); dot.classList.add('bg-brand-600', 'scale-125');
             } else {
@@ -364,7 +365,7 @@ function renderScoringStage() {
 
     btnPrev.disabled = currentStageIndex === 0;
 
-    if (currentStageIndex === 2) { // Changed 3 to 2
+    if (currentStageIndex === 3) { // <-- Changed 2 to 3 (Last stage is now index 3)
         btnNext.classList.add('hidden');
         btnSubmit.classList.remove('hidden');
     } else {
@@ -384,26 +385,26 @@ function navigateStage(direction) {
 
 function validateAllScores() {
     let isValid = true;
-    let totalFields = currentQueue.length * 4;
+    let totalFields = currentQueue.length * 4; // Expected 4 fields per athlete (a1, a2, a3, opt)
     let filledFields = 0;
 
     currentQueue.forEach(c => {
-        ['a1', 'a2', 'opt'].forEach(key => {
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => { // <-- Added 'a3' to the array
             const valText = localScores[c.trackNo][key];
             const val = parseFloat(valText);
-            const maxAllowed = key === 'opt' ? 20 : 10; // Determines max based on stage
+            const maxAllowed = key === 'opt' ? 20 : 10; 
             
             if (valText !== '' && !isNaN(val)) {
                 if (val > maxAllowed || val < 0) {
-                    isValid = false; // Invalid score detected, lock the button!
+                    isValid = false; 
                 } else {
-                    filledFields++; // Valid score
+                    filledFields++; 
                 }
             } else {
-                isValid = false; // Empty field detected
+                isValid = false; 
             }
         });
-    });
+    }); 
 
     const btnSubmit = document.getElementById('btn-submit-scores');
     
@@ -438,6 +439,7 @@ async function submitFinalScores() {
             const scoreUpdate = {};
             scoreUpdate[`${judgeSeat}_a1`] = parseFloat(s.a1);
             scoreUpdate[`${judgeSeat}_a2`] = parseFloat(s.a2);
+            scoreUpdate[`${judgeSeat}_a3`] = parseFloat(s.a3);
             scoreUpdate[`${judgeSeat}_opt`] = parseFloat(s.opt);
             scoreUpdate['timestamp'] = new Date().toISOString();
             scoreUpdate['status'] = 'active'; 
