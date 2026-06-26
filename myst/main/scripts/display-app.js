@@ -35,11 +35,11 @@ export function initDisplay() {
 // ==========================================
 function bindSettingsUI() {
     const modal = document.getElementById('settings-modal');
-    
+
     document.getElementById('btn-open-settings').addEventListener('click', () => {
         modal.classList.remove('hidden'); modal.classList.add('flex');
     });
-    
+
     document.getElementById('btn-close-settings').addEventListener('click', () => {
         modal.classList.add('hidden'); modal.classList.remove('flex');
     });
@@ -68,29 +68,29 @@ function bindSettingsUI() {
     document.getElementById('btn-apply-settings').addEventListener('click', () => {
         currentMatId = document.getElementById('select-mat').value;
         currentCategoryId = document.getElementById('select-result-category').value;
-        
+
         modal.classList.add('hidden'); modal.classList.remove('flex');
-        
+
         if (currentMode === 'live' && currentMatId) {
             document.getElementById('view-podium').classList.add('hidden');
             document.getElementById('view-live-scoring').classList.remove('hidden');
             document.getElementById('view-live-scoring').classList.add('flex');
-            
+
             const matName = document.getElementById('select-mat').options[document.getElementById('select-mat').selectedIndex].text;
             document.getElementById('display-header-title').innerText = matName;
             document.getElementById('display-header-subtitle').innerText = "Live Scoreboard";
-            
-            listenToQueue(); 
-        } 
+
+            listenToQueue();
+        }
         else if (currentMode === 'podium' && currentCategoryId) {
             document.getElementById('view-live-scoring').classList.add('hidden');
             document.getElementById('view-podium').classList.remove('hidden');
             document.getElementById('view-podium').classList.add('flex');
-            
+
             document.getElementById('display-header-title').innerText = "OFFICIAL PODIUM";
             document.getElementById('display-header-subtitle').innerText = currentCategoryId;
-            
-            if (unsubQueue) { unsubQueue(); unsubQueue = null; } 
+
+            if (unsubQueue) { unsubQueue(); unsubQueue = null; }
             renderPodiumView();
         }
     });
@@ -112,17 +112,17 @@ function bootDisplayEngine() {
         const select = document.getElementById('select-result-category');
         const prevVal = select.value;
         select.innerHTML = '<option value="">-- Select Result Category --</option>';
-        
+
         publishedResultsMap = {};
-        snap.forEach(doc => { 
+        snap.forEach(doc => {
             const d = doc.data();
             publishedResultsMap[doc.id] = d;
             const displayName = `${d.group} - ${d.gender} (${d.district})`;
-            select.innerHTML += `<option value="${doc.id}">${displayName}</option>`; 
+            select.innerHTML += `<option value="${doc.id}">${displayName}</option>`;
         });
         if (prevVal) select.value = prevVal;
-        
-        if (currentMode === 'podium') renderPodiumView(); 
+
+        if (currentMode === 'podium') renderPodiumView();
     });
 
     onSnapshot(collection(db, 'candidates'), snap => {
@@ -142,7 +142,7 @@ let currentBatches = {};
 function listenToQueue() {
     if (unsubQueue) unsubQueue();
     const q = query(collection(db, 'scoring_queue'), where('stageId', '==', currentMatId));
-    
+
     unsubQueue = onSnapshot(q, snap => {
         currentBatches = {};
         snap.forEach(docSnap => {
@@ -173,7 +173,7 @@ function renderLiveView() {
     const tbodyStage = document.getElementById('live-stage-tbody');
     const tbodyUpcoming = document.getElementById('live-upcoming-tbody');
     const tbodyRecent = document.getElementById('live-recent-tbody');
-    
+
     const lblStageBatch = document.getElementById('current-batch-id');
     const lblUpcomingBatch = document.getElementById('upcoming-batch-id');
     const lblRecentBatch = document.getElementById('recent-batch-id');
@@ -198,13 +198,13 @@ function renderLiveView() {
             break;
         }
     }
-    
+
     if (activeBatchNo === null) activeBatchNo = batchNumbers[batchNumbers.length - 1];
 
     let upcomingBatchNo = null;
     let recentBatchNo = null;
     const activeIndex = batchNumbers.indexOf(activeBatchNo);
-    
+
     if (activeIndex > 0) recentBatchNo = batchNumbers[activeIndex - 1];
     if (activeIndex < batchNumbers.length - 1) upcomingBatchNo = batchNumbers[activeIndex + 1];
 
@@ -217,31 +217,33 @@ function renderLiveView() {
     tbodyStage.innerHTML = activeQueue.map(q => generateLiveRow(q)).join('');
 
     // RENDER UPCOMING BATCH (Locked to 5 Rows)
+    // RENDER UPCOMING BATCH (Locked to 5 Rows)
     const upcomingQueue = padToFive(upcomingBatchNo ? currentBatches[upcomingBatchNo] : []);
     tbodyUpcoming.innerHTML = upcomingQueue.map(q => {
-        if (!q) return `<tr class="border-b border-gray-800/10"><td class="py-1 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[55%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[30%] text-gray-900">-</td></tr>`;
+        if (!q) return `<tr class="border-b border-gray-800/10 h-[20%]"><td class="py-0.5 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[55%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[30%] text-gray-900">-</td></tr>`;
         const c = candidatesMap[q.trackNo] || {};
         return `
-            <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30">
-                <td class="py-1 px-2 md:px-4 font-mono text-blue-500 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
-                <td class="py-1 px-2 md:px-4 font-bold text-gray-400 text-[10px] md:text-xs w-[55%] truncate">${c.name || 'Unknown'}</td>
-                <td class="py-1 px-2 md:px-4 text-right text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[30%] truncate">${c.groupName || c.division || ''}</td>
+            <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30 h-[20%]">
+                <td class="py-0.5 px-2 md:px-4 font-mono text-blue-500 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
+                <td class="py-0.5 px-2 md:px-4 font-bold text-gray-400 text-[10px] md:text-xs w-[55%] truncate">${c.name || 'Unknown'}</td>
+                <td class="py-0.5 px-2 md:px-4 text-right text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[30%] truncate">${c.groupName || c.division || ''}</td>
             </tr>
         `;
     }).join('');
 
     // RENDER RECENT BATCH (Locked to 5 Rows)
+    // RENDER RECENT BATCH (Locked to 5 Rows)
     const recentQueue = padToFive(recentBatchNo ? currentBatches[recentBatchNo] : []);
     tbodyRecent.innerHTML = recentQueue.map(q => {
-        if (!q) return `<tr class="border-b border-gray-800/10"><td class="py-1 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[40%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[25%] text-gray-900">-</td><td class="py-1 px-2 md:px-4 w-[20%] text-gray-900">-</td></tr>`;
+        if (!q) return `<tr class="border-b border-gray-800/10 h-[20%]"><td class="py-0.5 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[40%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[25%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[20%] text-gray-900">-</td></tr>`;
         const c = candidatesMap[q.trackNo] || {};
         const finalScore = calculateFinalScore(q.trackNo);
         return `
-            <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30">
-                <td class="py-1 px-2 md:px-4 font-mono text-green-500/70 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
-                <td class="py-1 px-2 md:px-4 font-bold text-gray-300 text-[10px] md:text-xs w-[40%] truncate">${c.name || 'Unknown'}</td>
-                <td class="py-1 px-2 md:px-4 text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[25%] text-center truncate">${c.groupName || c.division || ''}</td>
-                <td class="py-1 px-2 md:px-4 text-right font-black text-green-400 text-xs md:text-sm w-[20%]">${finalScore}</td>
+            <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30 h-[20%]">
+                <td class="py-0.5 px-2 md:px-4 font-mono text-green-500/70 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
+                <td class="py-0.5 px-2 md:px-4 font-bold text-gray-300 text-[10px] md:text-xs w-[40%] truncate">${c.name || 'Unknown'}</td>
+                <td class="py-0.5 px-2 md:px-4 text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[25%] text-center truncate">${c.groupName || c.division || ''}</td>
+                <td class="py-0.5 px-2 md:px-4 text-right font-black text-green-400 text-xs md:text-sm w-[20%]">${finalScore}</td>
             </tr>
         `;
     }).join('');
@@ -252,30 +254,31 @@ function calculateFinalScore(trackNo) {
     const s = scoresMap[trackNo] || {};
     const getJ = (prefix) => {
         let total = 0;
-        ['a1', 'a2', 'a3', 'opt'].forEach(key => { 
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => {
             const val = parseFloat(s[`${prefix}_${key}`]);
             if (!isNaN(val)) total += val;
         });
         return total;
     };
     const panel = [getJ('j1'), getJ('j2'), getJ('j3'), getJ('j4'), getJ('j5')];
-    const olympicTotal = panel.reduce((a,b)=>a+b, 0) - Math.max(...panel) - Math.min(...panel);
+    const olympicTotal = panel.reduce((a, b) => a + b, 0) - Math.max(...panel) - Math.min(...panel);
     return olympicTotal.toFixed(2);
 }
 
 // On-Stage Row Generator (Generates Placeholder if Empty)
+// On-Stage Row Generator (Generates Placeholder if Empty)
 function generateLiveRow(qItem) {
     if (!qItem) {
         return `
-            <tr class="border-b border-gray-800/10">
-                <td class="py-1.5 md:py-2 px-2 md:px-4 text-gray-900 font-mono">-</td>
-                <td class="py-1.5 md:py-2 px-2 md:px-4 text-gray-900 font-bold">-</td>
-                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
-                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
-                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
-                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
-                <td class="py-1.5 md:py-2 px-1 md:px-2 text-center text-gray-900">-</td>
-                <td class="py-1.5 md:py-2 px-2 md:px-4 text-right text-gray-900">-</td>
+            <tr class="border-b border-gray-800/10 h-[20%]">
+                <td class="py-0.5 md:py-1 px-2 md:px-4 text-gray-900 font-mono">-</td>
+                <td class="py-0.5 md:py-1 px-2 md:px-4 text-gray-900 font-bold">-</td>
+                <td class="py-0.5 md:py-1 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-0.5 md:py-1 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-0.5 md:py-1 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-0.5 md:py-1 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-0.5 md:py-1 px-1 md:px-2 text-center text-gray-900">-</td>
+                <td class="py-0.5 md:py-1 px-2 md:px-4 text-right text-gray-900">-</td>
             </tr>
         `;
     }
@@ -286,7 +289,7 @@ function generateLiveRow(qItem) {
 
     const getJ = (prefix) => {
         let total = 0, isTyping = false;
-        ['a1', 'a2', 'a3', 'opt'].forEach(key => { 
+        ['a1', 'a2', 'a3', 'opt'].forEach(key => {
             const val = parseFloat(s[`${prefix}_${key}`]);
             if (!isNaN(val)) { total += val; isTyping = true; }
         });
@@ -298,29 +301,29 @@ function generateLiveRow(qItem) {
     const formatCell = (jObj, isLocked) => {
         if (isLocked) return `<span class="text-white">${jObj.total.toFixed(1)}</span>`;
         if (jObj.isTyping) return `<span class="text-yellow-400 animate-pulse">${jObj.total.toFixed(1)}</span>`;
-        return `<span class="text-gray-700">-</span>`; 
+        return `<span class="text-gray-700">-</span>`;
     };
 
     let finalScoreHtml = `<span class="text-gray-600 text-[10px] md:text-xs tracking-widest uppercase">Scoring</span>`;
     const isFullyScored = qItem.j1_status && qItem.j2_status && qItem.j3_status && qItem.j4_status && qItem.j5_status;
 
     if (isFullyScored) {
-        finalScoreHtml = `<span class="text-green-400 font-black text-xl md:text-3xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)] animate-fade-in">${calculateFinalScore(trackNo)}</span>`;
+        finalScoreHtml = `<span class="text-green-400 font-black text-lg md:text-2xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)] animate-fade-in">${calculateFinalScore(trackNo)}</span>`;
     }
 
     return `
-        <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 animate-fade-in">
-            <td class="py-1.5 md:py-2 px-2 md:px-4 font-mono text-blue-400 font-bold">${trackNo}</td>
-            <td class="py-1.5 md:py-2 px-2 md:px-4 font-black tracking-wide leading-tight truncate">
+        <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 animate-fade-in h-[20%]">
+            <td class="py-0.5 md:py-1 px-2 md:px-4 font-mono text-blue-400 font-bold">${trackNo}</td>
+            <td class="py-0.5 md:py-1 px-2 md:px-4 font-black tracking-wide leading-tight truncate">
                 ${c.name || 'Unknown'}
                 <div class="text-[8px] md:text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-0.5 opacity-80 truncate">${c.groupName || c.division || ''}</div>
             </td>
-            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j1, qItem.j1_status)}</td>
-            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j2, qItem.j2_status)}</td>
-            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j3, qItem.j3_status)}</td>
-            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j4, qItem.j4_status)}</td>
-            <td class="py-1.5 md:py-2 px-1 md:px-2 text-center">${formatCell(j5, qItem.j5_status)}</td>
-            <td class="py-1.5 md:py-2 px-2 md:px-4 text-right">${finalScoreHtml}</td>
+            <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j1, qItem.j1_status)}</td>
+            <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j2, qItem.j2_status)}</td>
+            <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j3, qItem.j3_status)}</td>
+            <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j4, qItem.j4_status)}</td>
+            <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j5, qItem.j5_status)}</td>
+            <td class="py-0.5 md:py-1 px-2 md:px-4 text-right">${finalScoreHtml}</td>
         </tr>
     `;
 }
@@ -352,9 +355,9 @@ function renderPodiumView() {
 
     const listBody = document.getElementById('podium-list-tbody');
     listBody.innerHTML = '';
-    
+
     const remaining = standings.filter(s => s.rank > 3);
-    
+
     if (remaining.length === 0) {
         listBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-600 italic">No remaining standings.</td></tr>`;
         return;
