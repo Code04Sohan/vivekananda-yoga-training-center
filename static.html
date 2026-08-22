@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Moiré & Watermark Screen Protection</title>
+    <title>Extreme Moiré Screen Protection</title>
     <style>
         :root {
             --bg-color: #0b0f19;
-            --text-color: #f3f4f6;
-            --accent-color: #3b82f6;
+            --text-color: #e5e7eb;
+            --accent-color: #ef4444;
         }
         * {
             box-sizing: border-box;
@@ -16,7 +16,7 @@
             padding: 0;
         }
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             height: 100vh;
@@ -26,8 +26,8 @@
         }
         header {
             padding: 15px 24px;
-            background: rgba(17, 24, 39, 0.9);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: #000;
+            border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -35,14 +35,11 @@
         }
         h1 {
             font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
             color: #9ca3af;
         }
         .controls {
             display: flex;
             gap: 12px;
-            align-items: center;
         }
         button {
             background: #1f2937;
@@ -52,14 +49,11 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.85rem;
-            transition: background 0.2s;
-        }
-        button:hover {
-            background: #374151;
         }
         button.active {
             background: var(--accent-color);
             border-color: var(--accent-color);
+            font-weight: bold;
         }
         .workspace {
             position: relative;
@@ -70,46 +64,28 @@
             overflow: hidden;
         }
         
-        /* Secure Data Card */
+        /* Lower contrast on text container makes the moiré hit harder */
         .secure-container {
             width: 700px;
             max-width: 90%;
-            background: rgba(30, 41, 59, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            background: #111827;
+            border: 1px solid #374151;
             padding: 40px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 2;
         }
-        .secure-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 12px;
-        }
-        .classification {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
         .secure-content {
-            font-size: 1.05rem;
+            font-size: 1.2rem;
+            font-weight: 500;
             line-height: 1.6;
-            color: #e5e7eb;
-        }
-        .secure-content p {
-            margin-bottom: 15px;
+            color: #9ca3af; /* Dimmer text prevents camera HDR from rescuing it */
         }
         
-        /* Moiré Overlay Canvas */
+        /* 
+           MAGIC BULLET: mix-blend-mode: difference 
+           This causes the moving lines to dynamically INVERT the text colors 
+           as they pass over it. Cameras cannot reconstruct the fragments.
+        */
         #moire-canvas {
             position: absolute;
             top: 0;
@@ -118,23 +94,19 @@
             height: 100%;
             pointer-events: none;
             z-index: 10;
-            mix-blend-mode: overlay; 
-            opacity: 0.5;
+            mix-blend-mode: difference; 
+            opacity: 1; /* Max intensity */
         }
 
-        /* Dynamic Watermark Layer */
         #watermark-layer {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 5;
-            overflow: hidden;
             font-family: monospace;
-            color: rgba(255, 255, 255, 0.08);
-            font-size: 1.1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.15); /* Stronger watermark */
             white-space: nowrap;
             display: flex;
             flex-direction: column;
@@ -143,15 +115,12 @@
         .watermark-row {
             display: flex;
             width: 200%;
-            animation: drift 18s linear infinite;
+            animation: drift 10s linear infinite; /* Faster drift */
         }
         .watermark-row:nth-child(even) {
             animation-direction: reverse;
-            animation-duration: 22s;
         }
-        .watermark-item {
-            padding: 0 40px;
-        }
+        .watermark-item { padding: 0 40px; }
         @keyframes drift {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
@@ -161,56 +130,48 @@
 <body>
 
     <header>
-        <h1>SECURE DATA TERMINAL // Anti-Camera Protection</h1>
+        <h1>EXTREME SECURE TERMINAL</h1>
         <div class="controls">
-            <button id="toggle-moire" class="active" onclick="toggleMoire()">Moiré Pattern: ON</button>
-            <button id="toggle-watermark" class="active" onclick="toggleWatermark()">Watermark: ON</button>
+            <button id="toggle-moire" class="active" onclick="toggleMoire()">Extreme Moiré: ON</button>
         </div>
     </header>
 
     <div class="workspace">
-        <!-- Drifting Watermark Background Layer -->
         <div id="watermark-layer">
             <div class="watermark-row">
-                <span class="watermark-item">CONFIDENTIAL // USER: 8492-AX // SECURE ACCESS</span>
-                <span class="watermark-item">CONFIDENTIAL // USER: 8492-AX // SECURE ACCESS</span>
-                <span class="watermark-item">CONFIDENTIAL // USER: 8492-AX // SECURE ACCESS</span>
+                <span class="watermark-item">CONFIDENTIAL - 8492-AX</span>
+                <span class="watermark-item">CONFIDENTIAL - 8492-AX</span>
+                <span class="watermark-item">CONFIDENTIAL - 8492-AX</span>
             </div>
             <div class="watermark-row">
-                <span class="watermark-item">DO NOT PHOTOGRAPH // SCREEN CAPTURE RESTRICTED</span>
-                <span class="watermark-item">DO NOT PHOTOGRAPH // SCREEN CAPTURE RESTRICTED</span>
-                <span class="watermark-item">DO NOT PHOTOGRAPH // SCREEN CAPTURE RESTRICTED</span>
-            </div>
-            <div class="watermark-row">
-                <span class="watermark-item">NODE-ID: 409-SECURE // SESSION ID: #99214-X</span>
-                <span class="watermark-item">NODE-ID: 409-SECURE // SESSION ID: #99214-X</span>
-                <span class="watermark-item">NODE-ID: 409-SECURE // SESSION ID: #99214-X</span>
+                <span class="watermark-item">DO NOT PHOTOGRAPH</span>
+                <span class="watermark-item">DO NOT PHOTOGRAPH</span>
+                <span class="watermark-item">DO NOT PHOTOGRAPH</span>
             </div>
         </div>
 
-        <!-- High-Frequency Moiré Pattern Canvas Overlay -->
         <canvas id="moire-canvas"></canvas>
 
-        <!-- Main Readable Text Data -->
         <div class="secure-container">
-            <div class="secure-header">
-                <h2>Project Blueprint & Metrics</h2>
-                <span class="classification">Restricted Data</span>
-            </div>
+            <h2 style="color: #fff; margin-bottom: 20px;">Project Blueprint & Metrics</h2>
             <div class="secure-content">
-                <p><strong>Architecture Overview:</strong> The core processing engine implements decentralized sub-node data handling. All communications run on high-entropy post-quantum cryptographic channels.</p>
-                <p><strong>System Parameters:</strong> Channel throughput operates at 48.2 GB/s with an active redundancy threshold of 12ms. Core junction thermal metrics remain stable at 42°C under nominal capacity.</p>
-                <p><em>Security Notice:</em> Unauthorized smartphone photography, screen capture tools, or optical recording of this text terminal violates corporate data governance policies.</p>
+                <p>The core processing engine implements decentralized sub-node data handling. All communications run on high-entropy post-quantum channels.</p>
+                <br>
+                <p>Throughput operates at 48.2 GB/s with a redundancy threshold of 12ms. Core junction thermal metrics remain stable at 42°C.</p>
             </div>
         </div>
     </div>
 
     <script>
+        /* 
+           WARNING: This script generates high-frequency moving patterns. 
+           If you are sensitive to flashing lights, proceed with caution.
+        */
         const canvas = document.getElementById('moire-canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { alpha: false }); // Optimize for heavy rendering
         let animationId;
         let isMoireActive = true;
-        let isWatermarkActive = true;
+        let phase = 0;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -219,41 +180,47 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        let phase = 0;
-
         function drawMoire() {
-            if (!isMoireActive) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                return;
-            }
+            if (!isMoireActive) return;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-            ctx.lineWidth = 1;
+            // Black background to make 'difference' blending work aggressively
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            phase += 1.5; // Fast movement to defeat camera auto-focus & exposure
 
-            // Tight spacing (every 3 pixels) interferes with camera pixel sampling matrices
-            const spacing = 3;
-            phase += 0.2; // Motion frequency speed
-
-            // Pattern Group 1: Shifting diagonal lines
+            // ATTACK 1: Bayer Filter Clashing (Pure RGB dense grid)
+            // Spacing is extremely tight (2px - 3px) to match typical phone camera sensor pitch
+            ctx.lineWidth = 1.5;
+            
+            // Vertical Red & Blue lines
             ctx.beginPath();
-            for (let x = -canvas.height; x < canvas.width + canvas.height; x += spacing) {
-                let currentX = x + Math.sin(phase * 0.05 + x * 0.01) * 2;
-                ctx.moveTo(currentX, 0);
-                ctx.lineTo(currentX + canvas.height * 0.6, canvas.height);
+            for (let x = 0; x < canvas.width; x += 3) {
+                ctx.strokeStyle = (x % 6 === 0) ? '#FF0000' : '#0000FF';
+                let offset = Math.sin((phase + x) * 0.1) * 2;
+                ctx.moveTo(x + offset, 0);
+                ctx.lineTo(x + offset, canvas.height);
             }
             ctx.stroke();
 
-            // Pattern Group 2: High-frequency cross micro-grid overlay
+            // Horizontal Green lines
             ctx.beginPath();
-            ctx.strokeStyle = 'rgba(0, 240, 255, 0.25)';
-            const gridSpacing = 5;
-            for (let y = 0; y < canvas.height; y += gridSpacing) {
-                let currentY = y + Math.cos(phase * 0.08 + y * 0.02) * 1.5;
-                ctx.moveTo(0, currentY);
-                ctx.lineTo(canvas.width, currentY);
+            ctx.strokeStyle = '#00FF00';
+            for (let y = 0; y < canvas.height; y += 3) {
+                let offset = Math.cos((phase + y) * 0.1) * 2;
+                ctx.moveTo(0, y + offset);
+                ctx.lineTo(canvas.width, y + offset);
             }
             ctx.stroke();
+
+            // ATTACK 2: Rolling Shutter Tearing Bands
+            // Fast-moving horizontal black bars. Humans won't notice much due to 60fps refresh,
+            // but a camera snapshot will capture massive black bands cutting through the text.
+            ctx.fillStyle = '#FFFFFF'; // Flips to black via difference blend
+            let bandY1 = (phase * 20) % canvas.height;
+            let bandY2 = ((phase * 20) + canvas.height / 2) % canvas.height;
+            ctx.fillRect(0, bandY1, canvas.width, 30);
+            ctx.fillRect(0, bandY2, canvas.width, 30);
 
             animationId = requestAnimationFrame(drawMoire);
         }
@@ -265,28 +232,13 @@
             const btn = document.getElementById('toggle-moire');
             if (isMoireActive) {
                 btn.classList.add('active');
-                btn.innerText = 'Moiré Pattern: ON';
+                btn.innerText = 'Extreme Moiré: ON';
                 drawMoire();
             } else {
                 btn.classList.remove('active');
-                btn.innerText = 'Moiré Pattern: OFF';
+                btn.innerText = 'Extreme Moiré: OFF';
                 cancelAnimationFrame(animationId);
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-            }
-        }
-
-        function toggleWatermark() {
-            isWatermarkActive = !isWatermarkActive;
-            const layer = document.getElementById('watermark-layer');
-            const btn = document.getElementById('toggle-watermark');
-            if (isWatermarkActive) {
-                layer.style.display = 'flex';
-                btn.classList.add('active');
-                btn.innerText = 'Watermark: ON';
-            } else {
-                layer.style.display = 'none';
-                btn.classList.remove('active');
-                btn.innerText = 'Watermark: OFF';
             }
         }
     </script>
