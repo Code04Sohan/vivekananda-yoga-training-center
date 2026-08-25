@@ -1,509 +1,1258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="scroll-smooth" lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Vivekananda Yoga Training Center | Purba Medinipur , West Bengal , India</title>
     <meta name="description" content="Official portal for course registration, student ID search, and renewal at Vivekananda Yoga Training Center. Purba Medinipur, West Bengal. | Discover authentic Yoga, balance, and strength for all levels. Enroll or Renew Today.">
     <meta name="keywords" content="Vivekananda Yoga, Yoga Training Center, Yoga Training,Yoga Course Registration, Student Renewal, Purba Medinipur, West Bengal, India">
-    
     <meta name="author" content="Vivekananda Yoga Training Center">
     <meta name="designer" content="BAHA Interactive">
-
     <meta property="og:title" content="Vivekananda Yoga Training Center">
     <meta property="og:description" content="Join the trusted Vivekananda Yoga Training Center in Purba Medinipur, West Bengal. Discover authentic Yoga, balance, and strength for all levels. Enroll Today.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.soumenyoga.in/index.html">
     <meta property="og:image" content="resources/logo.jpg"> 
-    
     <link rel="icon" type="image/png" href="resources/logo.jpg">
 
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/style.css">
-</head>
-<body>
     
-    <main>
-        <h1 class="seo-hidden">Official Vivekananda Yoga Training Center - Purba Medinipur</h1>
-    </main>
 
-    <!-- 1. Navbar with Auto-Scroll Buttons -->
-    <nav class="navbar">
-        <div class="brand">
-            <img src="resources/logo.jpg" alt="Logo" class="brand-logo">
-            <div class="brand-text">
-                <h2>Vivekananda Yoga <br> Training Center</h2>
-                <p>Purba Medinipur • West Bengal • India</p>
-            </div>
+    <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "secondary": "#516447", "secondary-fixed-dim": "#b8cda9", "surface-bright": "#f5faff", "tertiary-fixed-dim": "#f8bb73",
+                    "background": "#f5faff", "surface-container": "#e8eff5", "secondary-fixed": "#d4e9c4", "on-primary-fixed-variant": "#802910",
+                    "on-tertiary-container": "#ffe7cf", "surface-tint": "#a04025", "error": "#ba1a1a", "outline": "#8a726c", "surface-container-low": "#eef4fb",
+                    "on-primary-fixed": "#3b0900", "surface-dim": "#d4dbe1", "secondary-container": "#d1e6c2", "on-background": "#161c21",
+                    "inverse-on-surface": "#ebf2f8", "inverse-surface": "#2a3136", "tertiary-fixed": "#ffddb9", "on-primary": "#ffffff",
+                    "surface": "#f5faff", "primary-container": "#af4b2f", "primary": "#8f341a", "error-container": "#ffdad6", "on-tertiary-fixed": "#2b1700",
+                    "on-error": "#ffffff", "tertiary": "#734808", "outline-variant": "#ddc0b9", "primary-fixed": "#ffdbd1", "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff", "surface-container-highest": "#dce3ea", "on-secondary-fixed-variant": "#3a4c31",
+                    "on-primary-container": "#ffe6df", "surface-container-high": "#e2e9ef", "tertiary-container": "#8f6021", "on-surface": "#161c21",
+                    "inverse-primary": "#ffb5a1", "surface-variant": "#dce3ea", "on-secondary-fixed": "#0f1f09", "primary-fixed-dim": "#ffb5a1",
+                    "on-tertiary-fixed-variant": "#663e00", "on-surface-variant": "#56423d", "on-error-container": "#93000a", "on-secondary": "#ffffff",
+                    "on-secondary-container": "#55684b"
+                },
+                borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                spacing: { "unit": "8px", "margin-desktop": "40px", "container-max": "1280px", "gutter": "24px", "margin-mobile": "16px", "safe": "env(safe-area-inset-bottom)" },
+                fontFamily: { "body-lg": ["Inter"], "display-lg": ["Noto Serif"], "label-sm": ["Inter"], "label-md": ["Inter"], "headline-lg": ["Noto Serif"], "headline-md": ["Noto Serif"], "body-md": ["Inter"] },
+            }
+        }
+    }
+    </script>
+    <style>
+        .animate-fade-in-up { opacity: 0; transform: translateY(40px); transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .animate-fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        .hero-blob { transition: all 1s ease; }
+        .hero-blob-container:hover .hero-blob { transform: scale(1.05) translate(10px, -10px); filter: blur(80px); }
+        .trainer-card-image { transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+        .trainer-block:hover .trainer-card-image { transform: scale(1.03); }
+        .masonry-grid { column-count: 1; column-gap: 24px; }
+        @media (min-width: 768px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        .masonry-item { break-inside: avoid; margin-bottom: 24px; }
+        .hover-lift { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .hover-lift:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .horizontal-scroll-container { overscroll-behavior-x: contain; scroll-snap-type: x mandatory; }
+        .scroll-item { scroll-snap-align: start; }
+        .premium-scrollbar::-webkit-scrollbar { height: 10px; }
+        .premium-scrollbar::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.05); border-radius: 10px; margin: 0 20px; }
+        .premium-scrollbar::-webkit-scrollbar-thumb { background: rgba(143, 52, 26, 0.4); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+        .premium-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(143, 52, 26, 0.7); }
+        .premium-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(143, 52, 26, 0.5) rgba(0, 0, 0, 0.05); }
+    
+        @media (prefers-reduced-motion: no-preference) {
+            .parallax-wrapper {
+                transform: translateY(var(--parallax-y, 0)) scale(1.15);
+                will-change: transform;
+                height: 100%;
+                width: 100%;
+            }
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 25px rgba(143,52,26,0.5)); }
+        }
+        .animate-breathe {
+            animation: breathe 3.5s ease-in-out infinite;
+        }
+</style>
+    <script src="scripts/config.js"></script>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
+    <!-- Zen Splash Screen -->
+    <div id="zen-splash" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-surface transition-opacity duration-1000 ease-in-out">
+        <div class="relative flex flex-col items-center justify-center">
+            <!-- Glowing background aura -->
+            <div class="absolute w-40 h-40 bg-primary/20 rounded-full blur-2xl animate-ping" style="animation-duration: 3s;"></div>
+            <!-- The Lotus / Spa icon -->
+            <span class="material-symbols-outlined text-primary text-[80px] relative z-10 animate-breathe" style="font-variation-settings: 'FILL' 1;">spa</span>
+            <span class="mt-8 font-display-md text-primary tracking-[0.3em] uppercase text-xs animate-pulse">www.soumenyoga.in</span>
         </div>
-        
-        <!-- Navigation Buttons -->
-        <div class="nav-links">
-            <a href="#intro" class="nav-btn"><i class="fas fa-play"></i> Intro</a>
-            <a href="#trainers" class="nav-btn"><i class="fas fa-user-friends"></i> Trainers</a>
-            <a href="#about" class="nav-btn"><i class="far fa-calendar-alt"></i> About</a>
-            <a href="#locations" class="nav-btn"><i class="fas fa-map-marker-alt"></i> Our Centers</a>
-            <a href="#pamphlet" class="nav-btn"><i class="far fa-images"></i> Pamphlet</a>
-            <a href="#gallery" class="nav-btn"><i class="far fa-images"></i> Gallery</a>
+    </div>
+
+    <!-- Navbar Desktop & Tablet -->
+    <nav class="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-container-max bg-surface/80 backdrop-blur-xl border border-outline-variant/30 z-50 rounded-full transition-all duration-500 shadow-sm">
+        <div class="flex justify-between items-center w-full px-8 py-3">
+            <a class="flex items-center gap-3 group" href="https://www.soumenyoga.in/">
+                <div class="w-12 h-12 rounded-full overflow-hidden border border-primary/20 shadow-sm transition-transform group-hover:scale-105">
+                    <img alt="Logo" class="w-full h-full object-cover" src="resources/logo.jpg"/>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[18px] font-display-lg font-bold text-on-background leading-none tracking-tight">Vivekananda Yoga</span>
+                    <span class="text-[10px] font-label-sm uppercase tracking-[0.2em] text-primary font-semibold">Training Center</span>
+                </div>
+            </a>
+            <div class="flex items-center gap-8">
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="#intro">
+                    Intro<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="#trainers">
+                    Trainers<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="#announcements">
+                    Events<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="#about">
+                    About<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="#locations">
+                    Centers<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="#gallery">
+                    Gallery<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='renewalPage.html'" class="text-on-surface font-label-md font-semibold hover:text-primary transition-all">Renew</button>
+                <button onclick="window.location.href='registration.html'" class="bg-primary text-on-primary px-8 py-3 rounded-full text-label-md font-bold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5">Enroll Now</button>
+            </div>
         </div>
     </nav>
-
-    <!-- TOP BANNER AD -->
-        <div class="competition-banner" id="topBanner">
-            <span><span class="badge-sale">NEW</span><strong>MYST</strong> - Management of Yoga Sports and Tournaments</span>
-            <button class="comp-btn-small" onclick="openAdModal()">View Details</button>
-        </div>
-    <!-- 2. Main Content Grid (Video + Trainers) -->
-    <div class="main-container">
-        <!-- Video Column (Placed first in HTML, so it's top on mobile) -->
-        <div class="video-section" id="intro">
-            <div class="live-badge-container">
-                <i class="fas fa-circle live-icon"></i>
-                <span class="live-text">LIVE Online Classes Available</span>
-            </div>
-            <div class="live-badge-container">
-                <span class="offline-text">offline Classes yearly</span>
-            </div>
-            <span class="section-label" style="margin-bottom: 15px;">Watch Introduction</span>
-            <div class="video-box">
-                <div class="video-container">
-                    <!-- Privacy enhanced link -->
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/CHZuHyPdeYU?si=Sftjp--6oQNde6rP&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
-                <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
-                    <i class="fas fa-play-circle"></i> Welcome To Vivekananda Yoga Training Center
-                </div>
-            </div>
-        </div>
-
-        <!-- Trainers Column -->
-        <div class="trainers-section" id="trainers">
-            <span class="section-label">Our Expert Trainers</span>
-            
-            <!-- Trainer 1 -->
-            <div class="trainer-card">
-                <img src="resources/soumen.jpg" alt="Trainer" class="trainer-img">
-                <div class="trainer-details">
-                    <h3>Mr. Soumen Santra</h3>
-                    <span class="trainer-role">Senior Yoga Trainer & Physiotherapist</span>
-                    <span class="trainer-role"><strong>Contact - 9734444092</strong></span>
-                    <div class="trainer-bio">
-                        Diploma in Yoga (T.P. & S.U)<br>
-                        Yoga Expert<br>
-                        Sports Master, International Judge(UCMAYPSF)<br>
-                        
-                    </div>
-                </div>
-            </div>
-
-            <!-- Trainer 2 -->
-            <div class="trainer-card">
-                <img src="resources/ranajoy.jpg" alt="Trainer" class="trainer-img">
-                <div class="trainer-details">
-                    <h3>Mr. Ranajoy Das</h3>
-                    <span class="trainer-role">Yoga Guru</span>
-                    <div class="trainer-bio">
-                        M.Sc. in Yoga & N.Pathy(1st Class)<br>
-                        D.P.T/B.P.T.Gold Medalist<br>
-                        Dip. in Sports Medicine & D.Y.T (1st Class)<br>
-                        National Yoga Judge & Coach(N.Y.K- Tamluk)
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- 3. SPLIT SECTION: ABOUT & PAMPHLET -->
-    <div class="split-section">
-        <div class="split-container">
-            
-            <!-- About Content (Left on PC, Bottom on Mobile) -->
-            <div class="about-box" id="about">
-                <h2>Our Yoga Training Course</h2>
-                <div class="about-subhead"><i class="fas fa-spa"></i> What You Will Learn</div>
-                
-                <p><strong>Yoga Philosophy:</strong> Introduction, aim, meaning, and yogic practices.</p>
-                
-                <ul class="curriculum-list">
-                    <li>Origin, history, and development of yoga.</li>
-                    <li>Yogic etymology, definition, objectives, and miscommunications.</li>
-                    <li>Introduction to Sankhya yoga darshan.</li>
-                    <li>Streams of yoga (Jnana, Raja, Bhakti, and Karma yoga).</li>
-                    <li>Life and messages by spiritual masters.</li>
-                    <li>Three gunas – sattva, rajas, tamas.</li>
-                    <li>Maya, prakriti, brahman, avidya.</li>
-                    <li>Atman, parmataman, jiva.</li>
-                    <li>Four internal components: mind, intellect, subconscious, and ego.</li>
-                    <li>Bahiranga and Antaranga yoga of Maharshi Patanjali.</li>
-                    <li>Practicing Abhyasa and cultivating Vairagya (detachment) essential for spiritual development.</li>
-                </ul>
-
-                <div class="about-subhead"><i class="fas fa-spa"></i> Yoga Asanas</div>
-                <ul class="curriculum-list">
-                    <li>The basic structure of the introductory course.</li>
-                    <li>Surya namaskar</li>
-                    <li>Deep relaxation / Yoga Nidra</li>
-                    <li>Bandhas and mudras</li>
-                    <li>Meditation techniques and prayers</li>
-                    <li>Concept of Yoga asana, pranayama and kriyas</li>
-                    <li>Concept and principle of Sukshma vyayama, sthulavyayama and Surya namaskar.</li>
-                </ul>
-
-            </div>
-
-            <!-- Pamphlet Image (Right on PC, Top on Mobile) -->
-            <div class="pamphlet-box"id=pamphlet>
-                <h3><i class="far fa-newspaper"></i> Official Pamphlet</h3>
-                <img 
-                    src="resources/pamphlets.jpg" 
-                    alt="Class Schedule Pamphlet" 
-                    class="pamphlet-img" 
-                    onclick="openLightbox(this.src)" 
-                >
-                <p style="margin-top:10px; font-size:0.8rem; color:#888;">(Tap image to zoom)</p>
-            </div>
-
-        </div>
-    </div>
     
-    <!-- 3. LOCATIONS SECTION -->
-    <div class="locations-section" id="locations">
-        <div class="locations-card">
-            <div class="locations-header">
-                <h2><i class="fas fa-map-marker-alt"></i> Our Training Centers</h2>
-                <p>We are present in multiple locations across Purba & Paschim Medinipur</p>
+    <!-- Navbar Mobile -->
+    <header class="md:hidden fixed top-4 left-1/2 -translate-x-1/2 w-[92%] rounded-full z-50 bg-surface/90 backdrop-blur-md shadow-sm border border-outline-variant/30">
+        <div class="flex justify-between items-center px-6 py-3">
+            <a href="https://www.soumenyoga.in/" class="flex items-center gap-3">
+                <img src="resources/logo.jpg" class="w-8 h-8 rounded-full" alt="logo">
+                <h1 class="font-headline-md text-base text-primary tracking-tight truncate">Vivekananda Yoga</h1>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="flex items-center gap-1 bg-error/10 text-error px-2 py-1 rounded-full font-label-sm text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>Live
+                </span>
             </div>
+        </div>
+    </header>
 
-            <div class="loc-grid">
-                <!-- Table Headers -->
-                <div class="loc-head">Center Name</div>
-                <div class="loc-head">Full Address</div>
-
-                <!-- 0. PAYAG -->
-                <div class="loc-row">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> Advance Yoga Class</div>
-                    <div class="loc-cell">Mecheda</div>
+    <!-- TOP BANNER AD (Premium Design) -->
+    <div class="w-full flex justify-center px-4 mt-[90px] md:mt-[110px] z-40 relative animate-fade-in-up">
+        <div class="bg-surface/85 backdrop-blur-xl border border-primary/30 shadow-[0_8px_32px_rgba(143,52,26,0.15)] rounded-full py-2 px-4 md:py-2.5 md:px-8 flex flex-row items-center justify-between md:justify-center gap-2 md:gap-6 hover:shadow-[0_12px_40px_rgba(143,52,26,0.25)] hover:border-primary/50 transition-all cursor-pointer group w-full md:w-max max-w-[400px] md:max-w-none mx-auto" onclick="openAdModal()">
+            
+            <div class="flex items-center gap-2 md:gap-3 shrink-0 overflow-hidden">
+                <div class="relative flex h-2 w-2 md:h-3 md:w-3 shrink-0">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-full w-full bg-error"></span>
                 </div>
-
-                <!-- 1. PAYAG -->
-                <div class="loc-row">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> PAYAG PUNARMILAN SEVA SANGHA</div>
-                    <div class="loc-cell">DEULIA</div>
-                </div>
-
-                <!-- 2. DAKSHIN MECHOGRAM -->
-                <div class="loc-row">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> DAKSHIN MECHOGRAM YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">MECHOGRAM</div>
-                </div>
-
-                <!-- 3. CHAKKASHI -->
-                <div class="loc-row">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> CHAKKASHI YOG TRAINING CENTRE</div>
-                    <div class="loc-cell"> (ASHARI) PASCHIM MEDINIPUR</div>
-                </div>
-
-                <!-- 4. BARHBAHALA -->
-                <div class="loc-row">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> BARHBAHALA PASCHIMPARA YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">MECHEDA</div>
-                </div>
-
-                <!-- 5. MADHYAHINGLI -->
-                <div class="loc-row">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> MADHYAHINGLI TARUN SANGHA BYAMAGAR</div>
-                    <div class="loc-cell">MAHISADAL</div>
-                </div>
-
-                <!-- === HIDDEN ROWS START (6 to 19) === -->
-
-                <!-- 6. MESHARAH -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> MESHARAH YOG PRASIKSHAN KENDRA (K.T.P.P.)</div>
-                    <div class="loc-cell">(K.T.P.P.)MESHARAH</div>
-                </div>
-
-                <!-- 7. JAMALCHAK -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> JAMALCHAK YOG TRAINING CENTRE</div>
-                    <div class="loc-cell"> (ASHARI) PASCHIM MEDINIPUR</div>
-                </div>
-
-                <!-- 8. HAZRA -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> HAZRA YOG TRAINING CENTRE</div>
-                    <div class="loc-cell"> (GOURA) PASCHIM MEDINIPUR</div>
-                </div>
-
-                <!-- 9. JORAPUKUR -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> JORAPUKUR YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">JORAPUKUR</div>
-                </div>
-
-                <!-- 10. KHANCHI -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> KHANCHI AZAD HIND SANGHA</div>
-                    <div class="loc-cell">BANAKPOTA (KHANCHI)</div>
-                </div>
-
-                <!-- 11. GURHCHAKLI -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> GURHCHAKLI BISHNUBARH SHIBMANDIR YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">GURHCHAKLI</div>
-                </div>
-
-                <!-- 12. DHULIARA -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> DHULIARA YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">DHULIARA</div>
-                </div>
-
-                <!-- 13. PASHRAH -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> PASHRAH AMRA KAJAN SANGHA</div>
-                    <div class="loc-cell">PASHRAH (KHARUI)</div>
-                </div>
-
-                <!-- 14. JIAKHALI -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> JIAKHALI YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">JIAKHALI</div>
-                </div>
-
-                <!-- 15. MAHISADAL RATHTALA -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> MAHISADAL RATHTALA</div>
-                    <div class="loc-cell">MAHISADAL</div>
-                </div>
-
-                <!-- 16. PARBATIPUR -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> PARBATIPUR SASTHITALA ANGANWARI YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell"> (SONAMUI) PASCHIM MEDINIPUR</div>
-                </div>
-
-                <!-- 17. UTTAR MECHOGRAM -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> UTTAR MECHOGRAM YOGASANA PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">MECHOGRAM</div>
-                </div>
-
-                <!-- 18. CHAPDA -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> CHAPDA YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">CHAPDA</div>
-                </div>
-
-                <!-- 19. PANSKURA -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> PANSKURA YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">PANSKURA STATION</div>
-                </div>
-
-                <!-- 20. SONAPETYA TOLL PLAZA -->
-                <div class="loc-row hidden">
-                    <div class="loc-cell loc-name"><i class="fas fa-map-marker-alt"></i> SONAPETYA YOG PRASIKSHAN KENDRA</div>
-                    <div class="loc-cell">SONAPETYA TOLL PLAZA</div>
-                </div>
-
+                <span class="text-[9px] md:text-xs font-bold tracking-widest uppercase text-primary shrink-0">Book Now</span>
+                <div class="h-4 w-px bg-outline-variant/50 hidden md:block"></div>
+                <span class="text-[11px] md:text-sm font-semibold text-on-surface truncate"><span class="font-bold text-primary">MYST</span><span class="hidden md:inline"> - Management of Yoga Sports and Tournaments</span></span>
             </div>
             
-            <!-- Show More Button -->
-            <button id="toggleLocBtn" class="loc-toggle-btn" onclick="toggleLocations()">
-                Show All Locations <i class="fas fa-chevron-down"></i>
-            </button>
+            <div class="flex items-center gap-1 text-primary text-[9px] md:text-xs font-bold uppercase tracking-wider group-hover:translate-x-1 transition-transform shrink-0">
+                <span class="hidden sm:inline">Explore</span> Details <span class="material-symbols-outlined text-[14px] md:text-[16px]">arrow_forward</span>
+            </div>
+            
         </div>
     </div>
+
+    <!-- Hero Section -->
+    <section id="intro" class="relative flex items-center pt-10 md:pt-24 pb-16 md:pb-24 overflow-hidden bg-transparent hero-blob-container px-margin-mobile md:px-margin-desktop">
+        <div class="absolute inset-0 pointer-events-none opacity-40 mix-blend-multiply overflow-hidden z-0">
+            <div class="hero-blob absolute top-10 left-10 w-[600px] h-[600px] bg-primary-fixed rounded-full blur-[100px] opacity-40"></div>
+            <div class="hero-blob absolute bottom-0 right-10 w-[700px] h-[700px] bg-secondary-fixed rounded-[40%] blur-[120px] opacity-30"></div>
+        </div>
+        <div class="max-w-container-max mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full">
+            
+            <div class="lg:col-span-5 space-y-8 animate-fade-in-up">
+                <div class="inline-flex flex-col gap-2">
+                    <div class="inline-flex items-center gap-2 bg-surface/50 backdrop-blur-md px-4 py-2 rounded-full border border-outline-variant/50 shadow-sm w-fit">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-[pulse_2s_ease-in-out_infinite]"></span>
+                        <span class="text-label-sm text-on-surface-variant uppercase tracking-widest">LIVE Online Classes Available</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 bg-surface/50 backdrop-blur-md px-4 py-2 rounded-full border border-outline-variant/50 shadow-sm w-fit">
+                        <span class="text-label-sm text-on-surface-variant uppercase tracking-widest">Offline Classes Yearly</span>
+                    </div>
+                </div>
+                
+                <h1 class="text-display-lg font-display-lg text-on-background leading-none tracking-tighter flex flex-col items-start">
+                    <div class="text-[1.2em] font-serif italic text-primary font-light">Vivekananda Yoga</div>
+                    <div class="text-[0.7em] font-sans font-bold uppercase tracking-widest text-on-surface-variant mt-1">Training Center</div>
+                    <div class="text-[1em] font-serif italic text-primary font-light mt-3">Purba Medinipur</div>
+                </h1>
+                
+                <p class="text-body-lg text-on-surface-variant max-w-lg leading-relaxed border-l-2 border-primary/30 pl-4">
+                    Join the trusted Vivekananda Yoga Training Center in Purba Medinipur, West Bengal. Discover authentic Yoga, balance, and strength for all levels.
+                </p>
+                
+                <div class="flex flex-wrap items-center gap-4 pt-4">
+                    <button onclick="window.location.href='registration.html'" class="bg-primary-container text-on-primary-container px-8 py-4 rounded-full font-label-md hover:bg-primary hover:text-white transition-all shadow-md">
+                        Enroll Today
+                    </button>
+                    <a href="#trainers" class="text-on-surface font-label-md hover:text-primary transition-colors flex items-center gap-2">
+                        Meet the Experts <span class="material-symbols-outlined text-[18px]">south</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-7 relative mt-10 lg:mt-0 animate-fade-in-up" style="transition-delay: 200ms;">
+                <!-- Decorative background blobs -->
+                <div class="absolute -top-6 -right-4 w-32 h-32 bg-primary/20 rounded-full blur-2xl animate-pulse"></div>
+                <div class="absolute -bottom-6 -left-4 w-32 h-32 bg-secondary/20 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
+                
+                <!-- Main Frame -->
+                <div class="relative w-full aspect-video md:aspect-[4/3] lg:aspect-auto lg:h-[600px] rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl md:rounded-tl-[6rem] md:rounded-br-[6rem] md:rounded-tr-3xl md:rounded-bl-3xl shadow-[0_20px_50px_rgba(143,52,26,0.2)] bg-surface/90 backdrop-blur-xl group border-4 md:border-8 border-white p-1.5 md:p-2 ring-1 ring-outline-variant/30 transform hover:-translate-y-2 transition-transform duration-500">
+                    
+                    <!-- Floating Badge -->
+                    <div class="absolute -top-4 -left-2 md:-left-6 z-20 bg-error text-white font-label-sm font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg flex items-center gap-2 transform -rotate-3 hover:rotate-0 transition-transform">
+                        <span class="relative flex h-2 w-2 shrink-0">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        Watch Intro
+                    </div>
+
+                    <!-- Video Container -->
+                    <div class="w-full h-full rounded-tl-[2.5rem] rounded-br-[2.5rem] rounded-tr-xl rounded-bl-xl md:rounded-tl-[5.5rem] md:rounded-br-[5.5rem] overflow-hidden relative bg-black shadow-inner">
+                        <iframe class="absolute top-0 left-0 w-full h-full opacity-90 group-hover:opacity-100 transition-opacity duration-500" src="https://www.youtube.com/embed/CHZuHyPdeYU?si=Sftjp--6oQNde6rP&autoplay=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- Expert Trainers Section -->
+    <section id="trainers" class="py-20 md:py-32 bg-transparent relative overflow-hidden">
+        <div class="w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-20 md:mb-32 animate-fade-in-up">
+                <span class="text-label-sm text-primary uppercase tracking-[0.2em] mb-4 block font-semibold">Our Lineage</span>
+                <h2 class="text-display-lg font-display-lg text-on-background mb-6 tracking-tight">Our Expert Trainers</h2>
+            </div>
+            
+            <div class="space-y-24 md:space-y-40">
+                <!-- Trainer 1 -->
+                <div class="trainer-block flex flex-col lg:flex-row items-center gap-8 lg:gap-0 relative">
+                    <div class="w-full lg:w-7/12 relative z-10 lg:-ml-12 animate-fade-in-up">
+                        <div class="relative w-full aspect-[4/5] md:aspect-[16/9] lg:aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl bg-surface-container-highest">
+                            <div class="absolute inset-0 bg-contain bg-no-repeat bg-center trainer-card-image" style="background-image: url('resources/soumen.jpg');"></div>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-6/12 relative z-20 lg:-ml-24 animate-fade-in-up" style="transition-delay: 200ms;">
+                        <div class="bg-surface/95 backdrop-blur-xl border border-outline-variant/30 p-8 md:p-12 rounded-[2rem] shadow-[0_32px_64px_rgba(0,0,0,0.05)]">
+                            <div class="mb-6">
+                                <h3 class="text-[32px] font-headline-lg text-on-background mb-2 tracking-tight">Mr. Soumen Santra</h3>
+                                <p class="text-body-lg text-primary font-medium tracking-wide">Senior Yoga Trainer & Physiotherapist</p>
+                                <p class="text-body-sm text-on-surface-variant font-bold mt-1">Contact - 9734444092</p>
+                            </div>
+                            <div class="space-y-3 mb-8 text-on-surface-variant leading-relaxed">
+                                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">check_circle</span> Diploma in Yoga (T.P. & S.U)</div>
+                                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">check_circle</span> Yoga Expert</div>
+                                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-primary">check_circle</span> Sports Master, International Judge(UCMAYPSF)</div>
+                            </div>
+                            <a href="tel:+919734444092" class="px-8 py-3 bg-transparent border-2 border-primary text-primary font-label-md rounded-full hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2 w-max">
+                                Contact Trainer <span class="material-symbols-outlined text-[20px]">call</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trainer 2 -->
+                <div class="trainer-block flex flex-col lg:flex-row-reverse items-center gap-8 lg:gap-0 relative">
+                    <div class="w-full lg:w-7/12 relative z-10 lg:-mr-12 animate-fade-in-up">
+                        <div class="relative w-full aspect-[4/5] md:aspect-[16/9] lg:aspect-[4/3] rounded-[2rem] overflow-hidden shadow-2xl bg-surface-container-highest">
+                            <div class="absolute inset-0 bg-contain bg-no-repeat bg-center trainer-card-image" style="background-image: url('resources/ranajoy.jpg');"></div>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-6/12 relative z-20 lg:-mr-24 animate-fade-in-up" style="transition-delay: 200ms;">
+                        <div class="bg-surface/95 backdrop-blur-xl border border-outline-variant/30 p-8 md:p-12 rounded-[2rem] shadow-[0_32px_64px_rgba(0,0,0,0.05)]">
+                            <div class="mb-6">
+                                <h3 class="text-[32px] font-headline-lg text-on-background mb-2 tracking-tight">Mr. Ranajoy Das</h3>
+                                <p class="text-body-lg text-primary font-medium tracking-wide">Yoga Guru</p>
+                            </div>
+                            <div class="space-y-3 mb-8 text-on-surface-variant leading-relaxed">
+                                <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary mt-1">check_circle</span> <span>M.Sc. in Yoga & N.Pathy(1st Class)</span></div>
+                                <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary mt-1">check_circle</span> <span>D.P.T/B.P.T.Gold Medalist</span></div>
+                                <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary mt-1">check_circle</span> <span>Dip. in Sports Medicine & D.Y.T (1st Class)</span></div>
+                                <div class="flex items-start gap-3"><span class="material-symbols-outlined text-primary mt-1">check_circle</span> <span>National Yoga Judge & Coach(N.Y.K- Tamluk)</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+    <!-- Announcements Section -->
+    <section id="announcements" class="py-20 md:py-32 flex flex-col gap-8 w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto relative overflow-hidden bg-transparent">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 animate-fade-in-up">
+            <div class="flex flex-col gap-2">
+                <span class="inline-flex items-center gap-2 text-label-sm text-error uppercase tracking-widest px-3 py-1 rounded-full w-max bg-error/10 mb-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span> Latest Updates
+                </span>
+                <h2 class="font-display-lg text-[32px] md:text-[40px] text-on-surface">Events & Announcements</h2>
+                <p class="text-body-md text-on-surface-variant max-w-xl">Stay up to date with the latest workshops, tournaments, and special classes.</p>
+            </div>
+            <div class="flex items-center gap-1 text-error animate-pulse">
+                <span class="font-label-sm uppercase tracking-wider">Slide to explore</span>
+                <span class="material-symbols-outlined text-[16px]">east</span>
+            </div>
+        </div>
+
+        <div class="relative w-full group" id="events-wrapper" onmouseenter="pauseEventsScroll()" onmouseleave="resumeEventsScroll()" ontouchstart="pauseEventsScroll()" ontouchend="resumeEventsScroll()">
+            <button onclick="scrollEvents('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-4 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-surface/90 backdrop-blur-md shadow-lg border border-outline-variant/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button onclick="scrollEvents('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-4 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-surface/90 backdrop-blur-md shadow-lg border border-outline-variant/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+            <div id="events-scroll" class="horizontal-scroll-container flex gap-6 overflow-x-auto premium-scrollbar pb-8 pt-4 w-full animate-fade-in-up" style="transition-delay: 100ms; scroll-behavior: smooth;">
+                <!-- Events will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+<!-- About & Pamphlet Section -->
+    <section id="about" class="relative py-20 lg:py-32 overflow-hidden bg-surface-container-low">
+        <div class="relative z-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+                
+                <div class="flex flex-col space-y-6 lg:col-span-7 lg:pr-8 animate-fade-in-up">
+                    <span class="inline-flex items-center gap-2 text-label-sm text-secondary uppercase tracking-widest border border-secondary/30 px-4 py-2 rounded-full w-max bg-surface/50">
+                        <span class="material-symbols-outlined text-sm">auto_stories</span> Our Yoga Training Course
+                    </span>
+                    <h2 class="text-headline-lg font-headline-lg text-on-surface leading-tight">What You Will Learn</h2>
+                    
+                    <p class="text-body-md text-on-surface-variant"><strong>Yoga Philosophy:</strong> Introduction, aim, meaning, and yogic practices.</p>
+                    <ul class="space-y-2 text-body-md text-on-surface-variant list-disc pl-5">
+                        <li>Origin, history, and development of yoga.</li>
+                        <li>Yogic etymology, definition, objectives, and miscommunications.</li>
+                        <li>Introduction to Sankhya yoga darshan.</li>
+                        <li>Streams of yoga (Jnana, Raja, Bhakti, and Karma yoga).</li>
+                        <li>Life and messages by spiritual masters.</li>
+                        <li>Three gunas – sattva, rajas, tamas.</li>
+                        <li>Maya, prakriti, brahman, avidya.</li>
+                        <li>Atman, parmataman, jiva.</li>
+                        <li>Four internal components: mind, intellect, subconscious, and ego.</li>
+                        <li>Bahiranga and Antaranga yoga of Maharshi Patanjali.</li>
+                        <li>Practicing Abhyasa and cultivating Vairagya (detachment) essential for spiritual development.</li>
+                    </ul>
+
+                    <h3 class="text-xl font-bold text-on-surface mt-6 flex items-center gap-2"><span class="material-symbols-outlined text-secondary">self_improvement</span> Yoga Asanas</h3>
+                    <ul class="space-y-2 text-body-md text-on-surface-variant list-disc pl-5">
+                        <li>The basic structure of the introductory course.</li>
+                        <li>Surya namaskar</li>
+                        <li>Deep relaxation / Yoga Nidra</li>
+                        <li>Bandhas and mudras</li>
+                        <li>Meditation techniques and prayers</li>
+                        <li>Concept of Yoga asana, pranayama and kriyas</li>
+                        <li>Concept and principle of Sukshma vyayama, sthulavyayama and Surya namaskar.</li>
+                    </ul>
+                </div>
+                
+                <div id="pamphlet" class="lg:col-span-5 relative flex flex-col gap-4 items-center lg:items-end animate-fade-in-up" style="transition-delay: 200ms;">
+                    <div class="relative w-full max-w-sm hover-lift rounded-2xl overflow-hidden shadow-2xl border border-white/40 cursor-pointer" onclick="openLightbox('resources/pamphlets.jpg')">
+                        <img class="w-full h-auto" src="resources/pamphlets.jpg" alt="Class Schedule Pamphlet">
+                        <div class="absolute inset-0 bg-black/10 hover:bg-black/0 transition-colors flex items-center justify-center opacity-0 hover:opacity-100">
+                            <span class="bg-white/90 text-black px-4 py-2 rounded-full font-bold flex items-center gap-2 shadow-lg">
+                                <span class="material-symbols-outlined">zoom_in</span> Zoom
+                            </span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-on-surface-variant font-medium"><span class="material-symbols-outlined text-xs align-middle">touch_app</span> Tap image to zoom</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Centers Section -->
+    <section id="locations" class="py-20 md:py-32 flex flex-col gap-8 w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto relative overflow-hidden">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 animate-fade-in-up">
+            <div class="flex flex-col gap-2">
+                <span class="font-label-sm text-on-surface-variant uppercase tracking-widest">Sanctuaries</span>
+                <h2 class="font-display-lg text-[32px] md:text-[40px] text-on-surface">Our Training Centers</h2>
+                <p class="text-body-md text-on-surface-variant max-w-xl">We are present in multiple locations across Purba & Paschim Medinipur. Scroll horizontally to explore all centers.</p>
+            </div>
+            <div class="flex items-center gap-1 text-primary animate-pulse">
+                <span class="font-label-sm uppercase tracking-wider">Slide to explore</span>
+                <span class="material-symbols-outlined text-[16px]">east</span>
+            </div>
+        </div>
+        
+        <div class="relative w-full group" id="centers-wrapper" onmouseenter="pauseCentersScroll()" onmouseleave="resumeCentersScroll()" ontouchstart="pauseCentersScroll()" ontouchend="resumeCentersScroll()">
+            <button onclick="scrollCenters('left')" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-4 z-10 w-12 h-12 rounded-full bg-surface/90 backdrop-blur-md shadow-lg border border-outline-variant/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button onclick="scrollCenters('right')" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-4 z-10 w-12 h-12 rounded-full bg-surface/90 backdrop-blur-md shadow-lg border border-outline-variant/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all opacity-0 group-hover:opacity-100 hidden md:flex hover:scale-110">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+            <div id="centers-scroll" class="horizontal-scroll-container flex gap-6 overflow-x-auto premium-scrollbar pb-8 pt-4 w-full animate-fade-in-up" style="transition-delay: 100ms; scroll-behavior: smooth;">
+                <!-- Centers will be injected here by JS -->
+            </div>
+
+        </div>
+    </section>
 
     <!-- Gallery Section -->
-    <div class="gallery-section" id="gallery">
-        <div class="gallery-header">
-            <h2>Gallery</h2>
-            <p>Glimpses from our daily sessions and events. Tap to view full screen.</p>
-        </div>
-        
-        <div class="slider-container">
-            <button class="slider-btn slider-left" onclick="scrollGallery(-300)"><i class="fas fa-chevron-left"></i></button>
+    <section id="gallery" class="py-20 md:py-32 bg-surface-container-low px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-container-max mx-auto">
+            <div class="text-center mb-12 max-w-2xl mx-auto space-y-4 animate-fade-in-up">
+                <h2 class="text-display-lg text-[32px] md:text-[40px] text-on-surface tracking-tight">Gallery</h2>
+                <p class="text-body-md text-on-surface-variant flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">pinch</span> Glimpses from our daily sessions and events. Tap to view full screen.
+                </p>
+            </div>
             
-            <div class="slider-track" id="galleryTrack">                
-                <!-- Gallery Item 1 -->
-                <div class="gallery-item" data-index="0">
-                    <img src="resources/gallery1.jpg" alt="Yoga 1">
+            <div class="masonry-grid animate-fade-in-up" style="transition-delay: 200ms;" id="galleryContainer">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery1.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery1.jpg" alt="Yoga Gallery Image 1" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 2 -->
-                <div class="gallery-item" data-index="1">
-                    <img src="resources/gallery2.jpeg" alt="Yoga 2">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery10.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery10.jpg" alt="Yoga Gallery Image 2" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 3 -->
-                <div class="gallery-item" data-index="2">
-                    <img src="resources/gallery3.jpeg" alt="Yoga 3">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery11.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery11.jpg" alt="Yoga Gallery Image 3" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 4 -->
-                <div class="gallery-item" data-index="3">
-                    <img src="resources/gallery4.jpeg" alt="Yoga 4">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery12.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery12.jpg" alt="Yoga Gallery Image 4" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 5 -->
-                <div class="gallery-item" data-index="4">
-                    <img src="resources/gallery5.jpg" alt="Yoga 5">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery13.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery13.jpg" alt="Yoga Gallery Image 5" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 6 -->
-                <div class="gallery-item" data-index="5">
-                    <img src="resources/gallery6.jpeg" alt="Yoga 6">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery14.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery14.jpg" alt="Yoga Gallery Image 6" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 7 -->
-                <div class="gallery-item" data-index="6">
-                    <img src="resources/gallery7.jpeg" alt="Yoga 7">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery15.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery15.jpg" alt="Yoga Gallery Image 7" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 8 -->
-                <div class="gallery-item" data-index="7">
-                    <img src="resources/gallery8.jpg" alt="Yoga 8">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery16.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery16.jpg" alt="Yoga Gallery Image 8" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 9 -->
-                <div class="gallery-item" data-index="8">
-                    <img src="resources/gallery9.jpg" alt="Yoga 9">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container" onclick="openLightbox('resources/gallery17.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery17.jpg" alt="Yoga Gallery Image 9" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 10 -->
-                <div class="gallery-item" data-index="9">
-                    <img src="resources/gallery10.jpg" alt="Yoga 10">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery18.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery18.jpg" alt="Yoga Gallery Image 10" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 11 -->
-                <div class="gallery-item" data-index="10">
-                    <img src="resources/gallery11.jpg" alt="Yoga 11">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery19.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery19.jpg" alt="Yoga Gallery Image 11" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 12 -->
-                <div class="gallery-item" data-index="11">
-                    <img src="resources/gallery12.jpg" alt="Yoga 12">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery2.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery2.jpeg" alt="Yoga Gallery Image 12" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 13 -->
-                <div class="gallery-item" data-index="12">
-                    <img src="resources/gallery13.jpg" alt="Yoga 13">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery20.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery20.jpg" alt="Yoga Gallery Image 13" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 14 -->
-                <div class="gallery-item" data-index="13">
-                    <img src="resources/gallery14.jpg" alt="Yoga 14">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery21.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery21.jpg" alt="Yoga Gallery Image 14" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 15 -->
-                <div class="gallery-item" data-index="14">
-                    <img src="resources/gallery15.jpg" alt="Yoga 15">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery22.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery22.jpeg" alt="Yoga Gallery Image 15" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 16 -->
-                <div class="gallery-item" data-index="15">
-                    <img src="resources/gallery16.jpg" alt="Yoga 16">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery23.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery23.jpg" alt="Yoga Gallery Image 16" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 17 -->
-                <div class="gallery-item" data-index="16">
-                    <img src="resources/gallery17.jpg" alt="Yoga 17">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery24.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery24.jpg" alt="Yoga Gallery Image 17" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 18 -->
-                <div class="gallery-item" data-index="17">
-                    <img src="resources/gallery18.jpg" alt="Yoga 18">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery25.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery25.jpg" alt="Yoga Gallery Image 18" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 19 -->
-                <div class="gallery-item" data-index="18">
-                    <img src="resources/gallery19.jpg" alt="Yoga 19">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery26.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery26.jpg" alt="Yoga Gallery Image 19" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 20 -->
-                <div class="gallery-item" data-index="19">
-                    <img src="resources/gallery20.jpg" alt="Yoga 20">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery27.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery27.jpeg" alt="Yoga Gallery Image 20" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 21 -->
-                <div class="gallery-item" data-index="20">
-                    <img src="resources/gallery21.jpg" alt="Yoga 21">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery28.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery28.jpg" alt="Yoga Gallery Image 21" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 22 -->
-                <div class="gallery-item" data-index="21">
-                    <img src="resources/gallery22.jpeg" alt="Yoga 22">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery3.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery3.jpeg" alt="Yoga Gallery Image 22" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 23 -->
-                <div class="gallery-item" data-index="22">
-                    <img src="resources/gallery23.jpg" alt="Yoga 23">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery4.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery4.jpeg" alt="Yoga Gallery Image 23" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 24 -->
-                <div class="gallery-item" data-index="23">
-                    <img src="resources/gallery24.jpg" alt="Yoga 24">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery5.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery5.jpg" alt="Yoga Gallery Image 24" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 25 -->
-                <div class="gallery-item" data-index="24">
-                    <img src="resources/gallery25.jpg" alt="Yoga 26">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery6.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery6.jpeg" alt="Yoga Gallery Image 25" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 26 -->
-                <div class="gallery-item" data-index="25">
-                    <img src="resources/gallery26.jpg" alt="Yoga 27">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery7.jpeg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery7.jpeg" alt="Yoga Gallery Image 26" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
                 </div>
-                <!-- Gallery Item 27 -->
-                <div class="gallery-item" data-index="26">
-                    <img src="resources/gallery27.jpeg" alt="Yoga 28">
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery8.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery8.jpg" alt="Yoga Gallery Image 27" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
+                </div>
+
+                <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 hidden gallery-hidden" onclick="openLightbox('resources/gallery9.jpg')">
+                    <div class="parallax-wrapper">
+<img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="resources/gallery9.jpg" alt="Yoga Gallery Image 28" loading="lazy"/>
+                    </div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                        <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-16 flex justify-center w-full animate-fade-in-up relative z-20" id="galleryShowMoreContainer">
+                <button onclick="showMoreGallery()" class="group relative inline-flex items-center gap-3 bg-surface/90 backdrop-blur-md text-primary font-label-md px-8 py-4 rounded-full hover:bg-primary hover:text-white transition-all duration-500 shadow-[0_8px_32px_rgba(143,52,26,0.15)] hover:shadow-[0_16px_48px_rgba(143,52,26,0.3)] hover:-translate-y-1 overflow-hidden border border-primary/20">
+                    <span class="absolute inset-0 w-full h-full opacity-30 bg-gradient-to-b from-transparent via-transparent to-primary/20 group-hover:opacity-0 transition-opacity"></span>
+                    <span class="relative flex items-center gap-2">
+                        <span class="font-bold tracking-wider uppercase text-[11px] md:text-xs">Explore More Moments</span> 
+                        <span class="material-symbols-outlined text-lg animate-bounce group-hover:animate-none">expand_more</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-highest w-full py-16 px-margin-mobile md:px-margin-desktop mt-auto border-t border-outline-variant/30 mb-[72px] md:mb-0">
+        <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+            
+            <div class="space-y-4 md:col-span-1">
+                <a href="https://www.soumenyoga.in/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <img src="resources/logo.jpg" class="w-10 h-10 rounded-full border border-primary/20" alt="logo">
+                    <div class="text-headline-sm font-bold text-primary leading-tight text-xl">Vivekananda Yoga<br>Training Center</div>
+                </a>
+                <p class="text-body-sm text-on-surface-variant max-w-xs mt-4">Empowering minds and bodies through traditional practices. Accredited by the Yoga Certification Board of India.</p>
+                <div class="flex gap-4 mt-6">
+                    <a href="tel:+919734444092" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fas fa-phone"></i></a>
+                    <a href="https://www.facebook.com/share/17sKYr7Qiy/" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.youtube.com/@vivekanandayogatrainingcen2562" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+                    <a href="https://wa.me/+919734444092" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
-            <button class="slider-btn slider-right" onclick="scrollGallery(300)"><i class="fas fa-chevron-right"></i></button>
+            
+            <div class="flex flex-col space-y-3">
+                <span class="text-label-md font-bold text-on-surface uppercase tracking-wider mb-2">Institution</span>
+                <a href="#about" class="text-on-surface-variant hover:text-primary transition-colors text-body-md">Curriculum</a>
+                <a href="#locations" class="text-on-surface-variant hover:text-primary transition-colors text-body-md">Branch Locator</a>
+            </div>
+            
+            <div class="flex flex-col space-y-3">
+                <span class="text-label-md font-bold text-on-surface uppercase tracking-wider mb-2">Contact Us</span>
+                <div class="flex items-start gap-2 text-on-surface-variant text-body-md">
+                    <span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+                    <span>Purba Medinipur, <br/>West Bengal, India</span>
+                </div>
+                <div class="flex items-start gap-2 text-on-surface-variant text-body-md mt-2">
+                    <span class="material-symbols-outlined text-primary text-[20px]">call</span>
+                    <span>+91 9734444092</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <span class="text-label-md font-bold text-on-surface uppercase tracking-wider mb-2">Developed By</span>
+                <a href="https://sohan-web-systems.pages.dev/" target="_blank" class="group flex items-center gap-3 p-3 bg-surface rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-colors w-max">
+                    <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold">SA</div>
+                    <div class="flex flex-col">
+                        <span class="text-xs text-on-surface-variant">Developed & Deployed by</span>
+                        <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Sohan Adhikari</span>
+                    </div>
+                </a>
+            </div>
+            
         </div>
-    </div>
-
-    <!-- 5. BAHA Interactive Credit -->
-    <div class="ba-credits">
-    <a href="https://code04sohan.github.io/cv/" target="_blank">Developed and Deployed by<div class="ba-credits-logo">Sohan Adhikari</div></a>
-    <p class="copyright-text">
-        &copy; <span id="current-year"></span> Vivekananda Yoga Training Center. All Rights Reserved. | Domain registered via GoDaddy (2025-2027)<br>______________<br>
-    </p>
-    </div>
-
-    <!-- 6. Floating Social Dock -->
-    <div class="social-dock">
-        <a href="tel:+919734444092" class="s-btn call" title="Call Now"><i class="fas fa-phone"></i></a>
-        <a href="https://www.facebook.com/share/17sKYr7Qiy/" target="_blank" class="s-btn fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.youtube.com/@vivekanandayogatrainingcen2562" target="_blank" class="s-btn yt" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://wa.me/+919734444092" target="_blank" class="s-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-    </div>
-
-    <!-- 7. Sticky Footer Action Bar -->
-    <div class="sticky-footer">
-        <button class="action-btn btn-renew" onclick="window.location.href='renewalPage.html'">
-            <i class="fas fa-sync-alt"></i> Renew
-        </button>
-        <button class="action-btn btn-enroll" onclick="window.location.href='registration.html'">
-            Enroll Now <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
-
-    <!-- 8. LIGHTBOX OVERLAY (Added for Full Screen View) -->
-    <div id="lightbox" class="lightbox">
-        <div class="lightbox-close" onclick="closeLightbox()">&times;</div>
         
-        <button class="lightbox-nav prev-btn" onclick="changeImage(-1)">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        
-        <img id="lightbox-img" class="lightbox-img" src="" alt="Full Screen View">
-        
-        <button class="lightbox-nav next-btn" onclick="changeImage(1)">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-
-        <div class="swipe-hint"><i class="fas fa-arrows-alt-h"></i> Swipe to navigate</div>
-    </div>
-
-    <!-- FULL SCREEN AD POPUP -->
-    <div id="adModal" class="ad-modal">
-        <div class="ad-content">
-            <span class="close-ad" onclick="closeAdModal()">&times;</span>
-            <!-- Placeholder Image -->
-            <img src="resources\MYST_dp.jpeg"
-                alt="Competition Poster" class="ad-img">
+        <div class="max-w-container-max mx-auto mt-12 pt-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-label-sm text-on-surface-variant text-center md:text-left">
+                &copy; <span id="current-year"></span> Vivekananda Yoga Training Center. All Rights Reserved. | Domain registered via GoDaddy (2025-2027)
+            </p>
+        </div>
+    </footer>
     
-            <h2 class="ad-title">MYST - Management of Yoga Sports and Tournaments</h2>
-            <p class="ad-desc">Contact us (9734444092) for booking</p>
-    
-            <!-- Reusing your existing button style -->
-            <div class="live-badge-container">
-                <a href="https://wa.me/+919734444092" target="_blank" class="s-btn wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="tel:+919734444092" class="s-btn call" title="Call Now"><i class="fas fa-phone"></i></a>
+    <!-- Floating Social Dock -->
+    <div class="fixed right-2 md:right-4 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-50">
+        <a href="tel:+919734444092" title="Call Now" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all hover:scale-110">
+            <i class="fas fa-phone md:text-lg"></i>
+        </a>
+        <a href="https://www.facebook.com/share/17sKYr7Qiy/" target="_blank" title="Facebook" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-all hover:scale-110">
+            <i class="fab fa-facebook-f md:text-lg"></i>
+        </a>
+        <a href="https://www.youtube.com/@vivekanandayogatrainingcen2562" target="_blank" title="YouTube" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-[#FF0000] hover:bg-[#FF0000] hover:text-white transition-all hover:scale-110">
+            <i class="fab fa-youtube md:text-lg"></i>
+        </a>
+        <a href="https://wa.me/+919734444092" target="_blank" title="WhatsApp" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all hover:scale-110">
+            <i class="fab fa-whatsapp md:text-lg"></i>
+        </a>
+    </div>
+
+    <!-- Floating Bottom Mobile Nav -->
+    <div class="md:hidden fixed bottom-4 left-2 right-2 z-50 pointer-events-none">
+        <nav class="bg-surface/85 backdrop-blur-2xl border border-white/50 shadow-[0_12px_40px_rgba(143,52,26,0.2)] rounded-[2rem] mx-auto max-w-sm pointer-events-auto overflow-hidden">
+            <div class="flex justify-between items-center h-[64px] px-1 relative">
+                <a href="#intro" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">home</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Home</span>
+                </a>
+                <a href="#trainers" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">groups</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Trainers</span>
+                </a>
+                <a href="#announcements" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">event</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Events</span>
+                </a>
+                <a href="#locations" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">location_on</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Centers</span>
+                </a>
+                <a href="#gallery" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">photo_library</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Gallery</span>
+                </a>
+                
+                <!-- Separator -->
+                <div class="w-px h-8 bg-outline-variant/30 mx-0.5"></div>
+                
+                <a href="renewalPage.html" onclick="triggerHaptic()" class="flex flex-col items-center justify-center text-secondary flex-1 group z-10">
+                    <span class="material-symbols-outlined text-[18px] bg-secondary/10 p-1.5 rounded-full transition-colors" style="font-variation-settings: 'FILL' 1;">autorenew</span>
+                    <span class="text-[9px] font-bold mt-1 text-secondary">Renew</span>
+                </a>
+                <a href="registration.html" onclick="triggerHaptic()" class="flex flex-col items-center justify-center text-primary flex-1 group z-10">
+                    <span class="material-symbols-outlined text-[18px] bg-primary/10 p-1.5 rounded-full transition-colors" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
+                    <span class="text-[9px] font-bold mt-1 text-primary">Enroll</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- LIGHTBOX OVERLAY -->
+    <div id="lightbox" class="fixed inset-0 bg-black/95 z-[100] hidden flex-col items-center justify-center backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <button class="absolute top-6 right-6 text-white hover:text-primary transition-colors p-2 z-[101]" onclick="closeLightbox()">
+            <span class="material-symbols-outlined text-4xl">close</span>
+        </button>
+        <img id="lightbox-img" class="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl transition-transform duration-300 scale-95" src="" alt="Full Screen View">
+    </div>
+
+    <!-- AD MODAL -->
+    <div id="adModal" class="fixed inset-0 bg-black/60 z-[100] hidden items-center justify-center backdrop-blur-md p-4 transition-opacity duration-500 opacity-0" onclick="closeAdModal()">
+        <div class="bg-surface/90 backdrop-blur-2xl rounded-[3rem] max-w-md w-full shadow-[0_32px_64px_rgba(143,52,26,0.3)] relative transform transition-all duration-700 ease-out translate-y-12 scale-95 opacity-0 border-4 border-white/60" id="adModalContent" onclick="event.stopPropagation()">
+            
+            <!-- Decorative Blobs -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-2xl animate-pulse pointer-events-none"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/20 rounded-full blur-2xl animate-pulse pointer-events-none" style="animation-delay: 1s;"></div>
+            
+            <button class="absolute top-6 right-6 bg-surface/50 backdrop-blur-md text-on-surface rounded-full p-2 hover:bg-error hover:text-white transition-colors z-20 hover:rotate-90 shadow-sm" onclick="closeAdModal()">
+                <span class="material-symbols-outlined text-[24px]">close</span>
+            </button>
+            
+            <div class="relative w-full h-auto p-4 pb-0 z-10">
+                <img src="resources/MYST_dp.jpeg" alt="Competition Poster" class="w-full h-auto max-h-[45vh] object-cover rounded-[2.5rem] shadow-md border border-outline-variant/30">
+            </div>
+            
+            <div class="p-8 text-center relative z-10 flex flex-col items-center">
+                <span class="inline-flex items-center gap-2 text-[10px] font-label-sm uppercase tracking-[0.2em] text-error font-bold mb-4 bg-error/10 px-4 py-1.5 rounded-full">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>
+                    </span>
+                    Book Now
+                </span>
+                
+                <h2 class="text-3xl font-headline-lg text-on-surface mb-2 tracking-tight">MYST</h2>
+                <p class="text-body-sm text-on-surface-variant font-medium mb-8 max-w-[250px] mx-auto leading-relaxed">Management of Yoga Sports & Tournaments</p>
+                
+                <div class="flex flex-col sm:flex-row justify-center gap-3 w-full">
+                    <a href="https://wa.me/+919734444092" target="_blank" class="flex items-center justify-center gap-2 bg-[#25D366]/10 text-[#25D366] px-6 py-3.5 rounded-full font-bold hover:bg-[#25D366] hover:text-white transition-all w-full">
+                        <i class="fab fa-whatsapp text-xl"></i> WhatsApp
+                    </a>
+                    <a href="tel:+919734444092" class="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3.5 rounded-full font-bold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/30 hover:-translate-y-1 w-full">
+                        <i class="fas fa-phone text-xl"></i> Call Now
+                    </a>
+                </div>
             </div>
         </div> 
     </div>
-    <!-- Script Part-->
-    <script src="scripts/script.js"></script>
 
+    <!-- Script Part-->
+    <script>
+        // Zen Splash Screen Logic
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('zen-splash');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.remove(), 1000);
+                }
+            }, 1500); // Ensures it breathes for at least 1.5s
+        });
+
+        // Haptic Feedback for Mobile
+        function triggerHaptic() {
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(50); // 50ms light tap
+            }
+        }
+
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Intersection Observer for scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            document.querySelectorAll('.animate-fade-in-up').forEach((element) => {
+                observer.observe(element);
+            });
+            
+            // Show ad modal on load after a slight delay
+            setTimeout(() => {
+                openAdModal();
+            }, 3000);
+        });
+        
+        // Centers scroll logic
+        const centersScroll = document.getElementById('centers-scroll');
+        let autoScrollInterval;
+        let isCentersPaused = false;
+
+        function scrollCenters(direction) {
+            const scrollAmount = 380; // approximate width of a card + gap
+            if(centersScroll) {
+                if (direction === 'left') {
+                    centersScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                } else {
+                    centersScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }
+        }
+
+        function startCentersScroll() {
+            autoScrollInterval = setInterval(() => {
+                if (!isCentersPaused && centersScroll) {
+                    if (centersScroll.scrollLeft + centersScroll.clientWidth >= centersScroll.scrollWidth - 10) {
+                        centersScroll.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        centersScroll.scrollBy({ left: 380, behavior: 'smooth' });
+                    }
+                }
+            }, 3000);
+        }
+
+        function pauseCentersScroll() { isCentersPaused = true; }
+        function resumeCentersScroll() { isCentersPaused = false; }
+
+        if(centersScroll) {
+            startCentersScroll();
+        }
+
+
+        // Events scroll logic
+        const eventsScroll = document.getElementById('events-scroll');
+        let eventsScrollInterval;
+        let isEventsPaused = false;
+
+        function scrollEvents(direction) {
+            const scrollAmount = 340; 
+            if(eventsScroll) {
+                if (direction === 'left') {
+                    eventsScroll.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                } else {
+                    eventsScroll.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }
+        }
+
+        function startEventsScroll() {
+            eventsScrollInterval = setInterval(() => {
+                if (!isEventsPaused && eventsScroll) {
+                    if (eventsScroll.scrollLeft + eventsScroll.clientWidth >= eventsScroll.scrollWidth - 10) {
+                        eventsScroll.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        eventsScroll.scrollBy({ left: 340, behavior: 'smooth' });
+                    }
+                }
+            }, 3000);
+        }
+
+        function pauseEventsScroll() { isEventsPaused = true; }
+        function resumeEventsScroll() { isEventsPaused = false; }
+
+        if(eventsScroll) {
+            // startEventsScroll(); // uncomment if auto-scroll desired, but user might find two auto-scrolling carousels distracting. Let's keep it on just in case.
+            startEventsScroll();
+        }
+
+
+        
+        // ==========================================
+        // DYNAMIC CONTENT RENDERER
+        // ==========================================
+        function renderContent() {
+            // Render Events
+            const eventsContainer = document.getElementById('events-scroll');
+            if(eventsContainer && siteData.events) {
+                siteData.events.forEach(ev => {
+                    const visualContent = ev.image 
+                        ? `<img src="${ev.image}" alt="${ev.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">`
+                        : `<span class="material-symbols-outlined text-5xl text-on-surface-variant/30 group-hover:scale-110 transition-transform duration-700">${ev.icon || 'event'}</span>`;
+                    
+                    const WrapperTag = ev.link ? 'a' : 'div';
+                    const linkAttr = ev.link ? `href="${ev.link}" target="_blank"` : '';
+
+                    eventsContainer.innerHTML += `
+                        <${WrapperTag} ${linkAttr} class="scroll-item block w-[280px] md:w-[350px] shrink-0 bg-surface rounded-[1.5rem] border border-outline-variant/30 p-2 shadow-sm hover:shadow-lg transition-all group flex flex-col h-full hover:-translate-y-1 ${ev.link ? 'cursor-pointer' : ''}">
+                            <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-surface-container-highest mb-3 flex items-center justify-center">
+                                ${visualContent}
+                                <div class="absolute top-2 left-2 bg-surface/90 backdrop-blur-md px-2 py-1 rounded-xl flex flex-col items-center shadow-sm">
+                                    <span class="text-[10px] font-bold text-${ev.color} leading-tight">${ev.month}</span>
+                                    <span class="text-sm font-display-lg text-on-surface leading-none">${ev.date}</span>
+                                </div>
+                            </div>
+                            <div class="px-3 pb-4 flex flex-col flex-grow">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-[9px] font-bold uppercase tracking-widest text-${ev.color} bg-${ev.color}/10 px-2 py-0.5 rounded-full">${ev.type}</span>
+                                </div>
+                                <h3 class="text-lg font-headline-md text-on-surface mb-2 line-clamp-2 group-hover:text-${ev.color} transition-colors leading-tight">${ev.title}</h3>
+                                <p class="text-[13px] text-on-surface-variant line-clamp-2 mb-4 leading-relaxed">${ev.description}</p>
+                                
+                                <div class="mt-auto flex items-center justify-between border-t border-outline-variant/20 pt-3">
+                                    <span class="text-[11px] font-medium text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> ${ev.location}</span>
+                                    ${ev.link ? `<span class="text-${ev.color} group-hover:translate-x-1 transition-transform material-symbols-outlined text-[18px]">arrow_forward</span>` : ''}
+                                </div>
+                            </div>
+                        </${WrapperTag}>
+                    `;
+                });
+            }
+
+            // Render Centers
+            const centersContainer = document.getElementById('centers-scroll');
+            if(centersContainer && siteData.centers) {
+                siteData.centers.forEach(c => {
+                    centersContainer.innerHTML += `
+                        <div class="scroll-item min-w-[280px] md:min-w-[360px] flex flex-col gap-4 relative group bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="h-1.5 w-12 bg-${c.color} rounded-full transition-all duration-300 group-hover:w-full"></div>
+                            <div class="flex flex-col h-full justify-between">
+                                <div>
+                                    <h3 class="font-headline-md text-xl text-on-surface tracking-tight mb-2">${c.title}</h3>
+                                    <p class="text-body-sm text-on-surface-variant">${c.location}</p>
+                                </div>
+                                <div class="flex items-center gap-2 mt-6 bg-surface-container-low w-max px-3 py-1.5 rounded-full border border-outline-variant/50">
+                                    <span class="material-symbols-outlined text-[14px] text-on-surface-variant">location_on</span>
+                                    <span class="font-label-sm text-[11px] text-on-surface-variant uppercase tracking-wider">${c.district}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Render Gallery
+            const galleryContainer = document.getElementById('galleryContainer');
+            if(galleryContainer && siteData.gallery) {
+                siteData.gallery.forEach((g, index) => {
+                    const hiddenClass = index >= 7 ? 'hidden gallery-hidden' : '';
+                    galleryContainer.innerHTML += `
+                        <div class="masonry-item group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-container shadow-sm hover:shadow-xl transition-all duration-500 parallax-container ${hiddenClass}" onclick="openLightbox('${g.src}')">
+                            <div class="parallax-wrapper">
+                                <img class="w-full h-auto object-cover transform group-hover:scale-105 group-hover:brightness-110 transition-all duration-700 ease-out" src="${g.src}" alt="${g.alt}" loading="lazy"/>
+                            </div>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 bg-black/60 backdrop-blur-md text-white px-4 py-2 rounded-full font-label-sm">
+                                <span class="material-symbols-outlined text-sm">fullscreen</span> Tap to expand
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // Call renderer
+        renderContent();
+
+        // Scroll Spy for Navigation Highlighting
+        const sections = document.querySelectorAll("section[id]");
+        const navLinks = document.querySelectorAll(".desktop-nav-link");
+        const mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+
+        const spyOptions = {
+            root: null,
+            rootMargin: "-20% 0px -50% 0px", // Trigger when section is in the middle of viewport
+            threshold: 0
+        };
+
+        const spyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute("id");
+                    
+                    // Desktop Links
+                    navLinks.forEach(link => {
+                        link.classList.remove("text-primary", "font-bold");
+                        link.classList.add("text-on-surface", "font-medium");
+                        const indicator = link.querySelector('.nav-indicator');
+                        if(indicator) indicator.classList.replace('scale-x-100', 'scale-x-0');
+                        
+                        if (link.getAttribute("href") === `#${id}`) {
+                            link.classList.remove("text-on-surface", "font-medium");
+                            link.classList.add("text-primary", "font-bold");
+                            const activeIndicator = link.querySelector('.nav-indicator');
+                            if(activeIndicator) activeIndicator.classList.replace('scale-x-0', 'scale-x-100');
+                        }
+                    });
+
+                    // Mobile Links
+                    mobileNavLinks.forEach(link => {
+                        link.classList.remove("text-primary");
+                        link.classList.add("text-on-surface-variant");
+                        const icon = link.querySelector('.material-symbols-outlined');
+                        const text = link.querySelector('span:not(.material-symbols-outlined)');
+                        
+                        if(icon) {
+                            icon.style.fontVariationSettings = "'FILL' 0";
+                            icon.style.transform = "translateY(0)";
+                        }
+                        if(text) text.classList.remove("font-bold");
+                        
+                        if (link.getAttribute("href") === `#${id}`) {
+                            link.classList.remove("text-on-surface-variant");
+                            link.classList.add("text-primary");
+                            if(icon) {
+                                icon.style.fontVariationSettings = "'FILL' 1";
+                                icon.style.transform = "translateY(-4px)";
+                            }
+                            if(text) text.classList.add("font-bold");
+                        }
+                    });
+                }
+            });
+        }, spyOptions);
+
+        sections.forEach(sec => spyObserver.observe(sec));
+
+        // Parallax Gallery Effect
+        const gallerySection = document.getElementById('gallery');
+        const parallaxContainers = document.querySelectorAll('.parallax-container');
+        let rafId;
+        let isGalleryIntersecting = false;
+
+        const updateParallax = () => {
+            if (!isGalleryIntersecting) return;
+            const viewHeight = window.innerHeight;
+            const viewCenter = viewHeight / 2;
+            
+            parallaxContainers.forEach(container => {
+                const rect = container.getBoundingClientRect();
+                if (rect.top <= viewHeight && rect.bottom >= 0) {
+                    const elementCenter = rect.top + rect.height / 2;
+                    const offset = (elementCenter - viewCenter) * 0.12; 
+                    
+                    const wrapper = container.querySelector('.parallax-wrapper');
+                    if (wrapper) {
+                        wrapper.style.setProperty('--parallax-y', `${offset}px`);
+                    }
+                }
+            });
+            rafId = requestAnimationFrame(updateParallax);
+        };
+
+        const galleryObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    isGalleryIntersecting = true;
+                    if (!rafId) rafId = requestAnimationFrame(updateParallax);
+                } else {
+                    isGalleryIntersecting = false;
+                    if (rafId) {
+                        cancelAnimationFrame(rafId);
+                        rafId = null;
+                    }
+                }
+            });
+        }, { threshold: 0, rootMargin: '10% 0px' });
+
+        if (gallerySection) galleryObserver.observe(gallerySection);
+
+        function showMoreGallery() {
+            const hiddenItems = document.querySelectorAll('.gallery-hidden');
+            hiddenItems.forEach(item => {
+                item.classList.remove('hidden', 'gallery-hidden');
+            });
+            document.getElementById('galleryShowMoreContainer').style.display = 'none';
+        }
+
+        // Lightbox
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+            // small timeout to allow display:block to apply before animating opacity
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                lightboxImg.classList.remove('scale-95');
+                lightboxImg.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // prevent background scrolling
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            lightboxImg.classList.remove('scale-100');
+            lightboxImg.classList.add('scale-95');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
+                lightboxImg.src = '';
+            }, 300); // match duration
+            document.body.style.overflow = 'auto';
+        }
+
+        // Ad Modal
+        const adModal = document.getElementById('adModal');
+        const adModalContent = document.getElementById('adModalContent');
+
+        function openAdModal() {
+            adModal.classList.remove('hidden');
+            adModal.classList.add('flex');
+            
+            // Force reflow
+            void adModal.offsetWidth;
+            
+            adModal.classList.remove('opacity-0');
+            adModal.classList.add('opacity-100');
+            
+            adModalContent.classList.remove('translate-y-12', 'scale-95', 'opacity-0');
+            adModalContent.classList.add('translate-y-0', 'scale-100', 'opacity-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAdModal() {
+            adModalContent.classList.remove('translate-y-0', 'scale-100', 'opacity-100');
+            adModalContent.classList.add('translate-y-12', 'scale-95', 'opacity-0');
+            
+            adModal.classList.remove('opacity-100');
+            adModal.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                adModal.classList.add('hidden');
+                adModal.classList.remove('flex');
+            }, 500); // Matches backdrop duration
+            document.body.style.overflow = 'auto';
+        }
+    </script>
 </body>
 </html>
