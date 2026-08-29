@@ -3,12 +3,10 @@
 // Single Database Architecture with Lifecycle Integration
 // ============================================================================
 
-import { collection, onSnapshot, doc, updateDoc, writeBatch, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { collection, doc, updateDoc, writeBatch, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { db } from './firebase-config.js';
 
 let allCandidates = [];
-
-let unsubscribeCandidates = null;
 
 export function initCandidateManager() {
     const tbody = document.getElementById('candidate-manager-tbody');
@@ -16,27 +14,16 @@ export function initCandidateManager() {
     const filterCat = document.getElementById('filter-candidate-category');
     const filterGen = document.getElementById('filter-candidate-gender');
     const filterDist = document.getElementById('filter-candidate-district');
+    const btnRefresh = document.getElementById('btn-refresh-candidates');
     
     if (!tbody) return;
 
-    // If a listener is already running, kill it before making a new one!
-    if (unsubscribeCandidates) {
-        unsubscribeCandidates(); 
-    }
+    // Load candidates once when the view initializes
+    loadCandidates();
 
-    // 1. Real-time listener for ALL candidates
-    unsubscribeCandidates = onSnapshot(collection(db, 'candidates'), (snapshot) => {
-        allCandidates = [];
-        snapshot.forEach(docSnap => {
-            allCandidates.push({ id: docSnap.id, ...docSnap.data() });
-        });
-        
-        // Auto-populate dropdowns based on actual data
-        populateFilters(allCandidates, filterCat, filterGen, filterDist);
-        
-        // Render with current filters applied
-        applyFilters();
-    });
+    if (btnRefresh) {
+        btnRefresh.addEventListener('click', loadCandidates);
+    }
 
     // 2. Attach Listeners to Inputs & Dropdowns
     const triggerFilter = () => applyFilters();
@@ -66,6 +53,41 @@ export function initCandidateManager() {
 
     // 4. Factory Reset Modal Logic
     setupFactoryReset();
+}
+
+async function loadCandidates() {
+    const tbody = document.getElementById('candidate-manager-tbody');
+    const btnRefresh = document.getElementById('btn-refresh-candidates');
+    const filterCat = document.getElementById('filter-candidate-category');
+    const filterGen = document.getElementById('filter-candidate-gender');
+    const filterDist = document.getElementById('filter-candidate-district');
+
+    if (btnRefresh) {
+        btnRefresh.innerHTML = `<span class="mr-2 w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></span> REFRESHING...`;
+        btnRefresh.disabled = true;
+    }
+
+    try {
+        const snapshot = await getDocs(collection(db, 'candidates'));
+        allCandidates = [];
+        snapshot.forEach(docSnap => {
+            allCandidates.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        
+        // Auto-populate dropdowns based on actual data
+        populateFilters(allCandidates, filterCat, filterGen, filterDist);
+        
+        // Render with current filters applied
+        applyFilters();
+    } catch (error) {
+        console.error("Failed to load candidates:", error);
+        alert("Error loading candidates from database.");
+    } finally {
+        if (btnRefresh) {
+            btnRefresh.innerHTML = `<span class="mr-2">🔄</span> REFRESH LIST`;
+            btnRefresh.disabled = false;
+        }
+    }
 }
 
 // --- FILTERING LOGIC ---
@@ -259,22 +281,30 @@ function setupFactoryReset() {
     btnTrigger.addEventListener('click', () => {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
+        
+        // Fix for Tailwind CSS transition classes
+        setTimeout(() => {
+            modal.children[0].dataset.show = 'true';
+        }, 10);
+        
         inputConfirm.value = '';
         btnExecute.disabled = true;
     });
 
     // Close Modal
-    btnCancel.addEventListener('click', () => {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    });
+    const closeModal = () => {
+        modal.children[0].dataset.show = 'false';
+        setTimeout(() => {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }, 200); // Wait for transition
+    };
+
+    btnCancel.addEventListener('click', closeModal);
 
     if (btnGotoBackup) {
         btnGotoBackup.addEventListener('click', () => {
-            // Close the modal
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            
+            closeModal();
             // Virtually click the sidebar navigation button
             const navDashboard = document.getElementById('nav-live-dashboard');
             if (navDashboard) {
@@ -322,8 +352,7 @@ function setupFactoryReset() {
             await writeBatch(db).set(counterRef, { lastTrackNo: 100 }).commit();
 
             alert("☢️ STAGE CLEARED. Candidates, Scores, and Queues have been completely purged.");
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            closeModal();
             
         } catch (error) {
             console.error("Factory Reset Error:", error);

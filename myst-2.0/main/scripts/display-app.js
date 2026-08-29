@@ -80,6 +80,7 @@ function bindSettingsUI() {
             document.getElementById('display-header-title').innerText = matName;
             document.getElementById('display-header-subtitle').innerText = "Live Scoreboard";
 
+            stopPagination();
             listenToQueue();
         }
         else if (currentMode === 'podium' && currentCategoryId) {
@@ -333,9 +334,28 @@ function generateLiveRow(qItem) {
 }
 
 // ==========================================
-// 5. PODIUM RESULTS RENDERER
+// 5. PODIUM RESULTS RENDERER (With Pagination)
 // ==========================================
+let podiumPaginationTimer = null;
+let currentPodiumPage = 0;
+const ITEMS_PER_PAGE = 10;
+const PAGE_DURATION_MS = 10000; // 10 seconds per page
+
+function stopPagination() {
+    if (podiumPaginationTimer) {
+        clearTimeout(podiumPaginationTimer);
+        podiumPaginationTimer = null;
+    }
+    const bar = document.getElementById('podium-progress-bar');
+    if (bar) {
+        bar.classList.add('hidden');
+        bar.style.transition = 'none';
+        bar.style.width = '0%';
+    }
+}
+
 function renderPodiumView() {
+    stopPagination();
     if (!currentCategoryId || !publishedResultsMap[currentCategoryId]) return;
 
     const data = publishedResultsMap[currentCategoryId];
@@ -357,19 +377,32 @@ function renderPodiumView() {
     fillPodium(2, standings.find(s => s.rank === 2));
     fillPodium(3, standings.find(s => s.rank === 3));
 
+    const remaining = standings.filter(s => s.rank > 3);
+    currentPodiumPage = 0;
+    
+    renderPodiumPage(remaining);
+}
+
+function renderPodiumPage(remainingList) {
     const listBody = document.getElementById('podium-list-tbody');
     listBody.innerHTML = '';
 
-    const remaining = standings.filter(s => s.rank > 3);
-
-    if (remaining.length === 0) {
+    if (remainingList.length === 0) {
         listBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-600 italic">No remaining standings.</td></tr>`;
         return;
     }
 
-    remaining.forEach(s => {
+    const totalPages = Math.ceil(remainingList.length / ITEMS_PER_PAGE);
+    
+    // Safety check just in case
+    if (currentPodiumPage >= totalPages) currentPodiumPage = 0;
+
+    const startIndex = currentPodiumPage * ITEMS_PER_PAGE;
+    const pageItems = remainingList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+    pageItems.forEach(s => {
         listBody.innerHTML += `
-            <tr class="hover:bg-gray-800 transition-colors">
+            <tr class="hover:bg-gray-800 transition-colors animate-fade-in">
                 <td class="p-2 md:p-4 md:pl-8 font-black text-gray-500 w-[15%]">#${s.rank}</td>
                 <td class="p-2 md:p-4 font-bold text-gray-300 w-[40%] truncate">${s.name}</td>
                 <td class="p-2 md:p-4 text-center text-blue-400/80 text-[10px] md:text-sm font-bold uppercase w-[15%] truncate">${s.division || ''}</td>
@@ -378,4 +411,28 @@ function renderPodiumView() {
             </tr>
         `;
     });
+
+    if (totalPages > 1) {
+        // Start Progress Bar Animation
+        const bar = document.getElementById('podium-progress-bar');
+        if (bar) {
+            bar.classList.remove('hidden');
+            bar.style.transition = 'none';
+            bar.style.width = '0%';
+            
+            // Force reflow
+            void bar.offsetWidth; 
+            
+            bar.style.transition = `width ${PAGE_DURATION_MS}ms linear`;
+            bar.style.width = '100%';
+        }
+
+        podiumPaginationTimer = setTimeout(() => {
+            currentPodiumPage++;
+            renderPodiumPage(remainingList);
+        }, PAGE_DURATION_MS);
+    } else {
+        const bar = document.getElementById('podium-progress-bar');
+        if (bar) bar.classList.add('hidden');
+    }
 }
