@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYST Admin Panel</title>
+    <!-- Add Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: { 850: '#1e293b', 950: '#020617' },
+                        brand: { 500: '#3b82f6', 600: '#2563eb' }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans h-screen flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white">
+    
+    <div id="auth-overlay" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl z-[100] flex items-center justify-center p-4">
+    <div class="bg-slate-900/90 p-10 rounded-3xl border border-slate-700 shadow-2xl shadow-black/50 w-full max-w-md text-center transform transition-all">
+        <h1 class="text-4xl font-black text-white mb-2 tracking-tighter italic drop-shadow-md">MYST <span class="text-brand-500 not-italic font-bold text-sm border border-brand-500/50 bg-brand-900/20 px-3 py-1 rounded-md ml-1 align-middle">ADMIN</span></h1>
+        <p class="text-slate-400 text-sm mb-10 italic font-medium">Authorized Access Only | MYST Admins</p>
+        
+        <form id="login-form" class="space-y-5">
+            <div class="text-left">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Admin ID (Email)</label>
+                <input type="email" id="admin-email" required class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-5 py-3.5 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 mt-2 transition-all placeholder:text-slate-600">
+            </div>
+            <div class="text-left pb-4">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Security Key (Password)</label>
+                <input type="password" id="admin-password" required class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-5 py-3.5 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 mt-2 transition-all placeholder:text-slate-600">
+            </div>
+            <button type="submit" id="btn-admin-login" class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] transition-all active:scale-[0.98] uppercase tracking-widest text-sm flex items-center justify-center">
+                <span class="mr-2">🔓</span> Authenticate
+            </button>
+        </form>
+        <p id="login-error" class="text-red-400 text-xs mt-6 font-bold hidden italic bg-red-950/30 border border-red-900/50 py-2 rounded-lg"></p>
+    </div>
+</div>
+
+    <header id="global-top-bar" class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 px-4 md:px-6 py-4 flex justify-between items-center z-50 shrink-0 shadow-lg sticky top-0">
+        
+        <div class="flex items-center space-x-3 md:space-x-5">
+            <button id="btn-mobile-menu" class="md:hidden text-slate-400 hover:text-white focus:outline-none transition-colors">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            
+            <img src="https://www.soumenyoga.in/resources/MYST_dp.jpeg" alt="MYST Logo" class="h-9 w-9 md:h-11 md:w-11 object-contain rounded-full shadow-md" onerror="this.style.display='none'">
+            
+            <h1 class="text-xl md:text-2xl font-black tracking-wider text-white">MYST <span class="text-brand-400 not-italic font-bold text-xs md:text-sm border border-brand-500/50 bg-brand-900/20 px-2 py-1 rounded ml-1">ADMIN</span></h1>
+            
+            <div id="system-status" class="hidden sm:flex items-center bg-slate-800/80 px-4 py-1.5 rounded-full border border-slate-700 shadow-inner">
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500 mr-2 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+                <span class="text-[10px] uppercase tracking-widest font-bold text-slate-300">DB Connected</span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4 md:space-x-6">
+            
+            <div class="hidden md:flex flex-col text-right border-r border-slate-700 pr-5">
+                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Admin</span>
+                <span class="text-sm font-black text-brand-400 leading-tight">Sohan Adhikari</span>
+            </div>
+
+            <div id="master-controls" class="hidden md:flex items-center space-x-3 bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-700 shadow-inner">
+                <label for="scoring-portal-toggle" class="text-xs font-bold text-slate-400 uppercase tracking-widest">Portal:</label>
+                <select id="scoring-portal-toggle" class="bg-slate-900 text-white text-xs font-bold border border-slate-600 rounded-md px-3 py-1.5 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors cursor-pointer">
+                    <option value="OPEN" class="text-green-400">🟢 OPEN (Active)</option>
+                    <option value="CLOSED" class="text-red-400">🔴 CLOSED (Paused)</option>
+                </select>
+            </div>
+            
+            <button id="btn-logout" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-widest transition-all shadow-md active:scale-95 flex items-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <div id="app-wrapper" class="flex flex-1 overflow-hidden relative">
+
+        <nav id="sidebar-nav" class="absolute md:relative z-40 h-full w-72 bg-slate-950/95 backdrop-blur-xl border-r border-slate-800 flex flex-col p-5 shrink-0 overflow-y-auto space-y-1 transform -translate-x-full md:translate-x-0 transition-all duration-300 ease-in-out shadow-2xl md:shadow-none">
+            <button id="nav-home" class="sidebar-btn w-full text-left px-5 py-3.5 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-semibold mb-5 flex items-center group">
+                <svg class="w-5 h-5 mr-3 text-brand-500 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                System Home
+            </button>
+            
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 px-3">Management</p>
+            <button id="nav-candidate-manager" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">👥</span> Master Candidate List
+            </button>
+            <button id="nav-staff-provisioning" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">🛡️</span> Staff Provisioning
+            </button>
+            <button id="nav-data-importer" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">📁</span> Data Importer
+            </button>
+            <button id="nav-mat-control" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">🎛️</span> Stage Master Control
+            </button>
+            <button id="nav-stage-manager" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">🚀</span> Stage Manager
+            </button>
+            
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mt-8 mb-3 px-3">Operations</p>
+            <button id="nav-live-dashboard" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">🔥</span> Live Leaderboard
+            </button>
+            <button id="nav-results-engine" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">🏆</span> Results Calculator
+            </button>
+            <button id="nav-results-explorer" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-all duration-200 hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">📂</span> Published Results
+            </button>
+        </nav>
+
+        <main id="workspace" class="flex-1 bg-slate-950 p-4 md:p-8 overflow-y-auto w-full relative">
+            
+            <!-- subtle background gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-brand-900/10 via-slate-950 to-indigo-900/10 pointer-events-none"></div>
+
+            <section id="view-home" class="h-full flex flex-col items-center justify-center text-center animate-fade-in relative z-10" style="display: none;">
+                <div class="bg-slate-900/40 p-16 rounded-[3rem] border border-slate-800 shadow-[0_0_80px_rgba(0,0,0,0.6)] backdrop-blur-2xl max-w-4xl w-full mx-4 transform transition-all hover:scale-[1.01] hover:bg-slate-900/50">
+                    
+                    <img src="./logo.png" alt="MYST Logo" class="h-28 w-28 md:h-36 md:w-36 mx-auto mb-8 object-contain drop-shadow-[0_0_25px_rgba(255,255,255,0.1)] rounded-full" onerror="this.style.display='none'">
+                    
+                    <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter italic mb-4 drop-shadow-lg">
+                        MYST <span class="text-brand-500 not-italic font-bold text-3xl md:text-5xl border-4 border-brand-500/50 px-6 py-2 rounded-3xl ml-3 align-middle shadow-[0_0_40px_rgba(59,130,246,0.4)] bg-brand-950/40">ADMIN</span>
+                    </h1>
+                    
+                    <h2 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-yellow-400 to-amber-600 tracking-[0.25em] uppercase mb-10 drop-shadow-sm">
+                        Management of Yoga Sports & Tournaments
+                    </h2>
+                    
+                    <div class="w-40 h-1.5 bg-gradient-to-r from-transparent via-brand-500 to-transparent mx-auto rounded-full mb-10 opacity-80 shadow-[0_0_15px_rgba(59,130,246,0.6)]"></div>
+                    
+                    <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+                        Welcome to the central command terminal. <br> Please select a module from the sidebar to begin operations.
+                    </p>
+                </div>
+            </section>
+
+            <section id="view-staff-provisioning" class="max-w-6xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <h2 class="text-3xl font-black mb-8 text-white border-b border-slate-800 pb-4 tracking-tighter">Staff Provisioning</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    
+                    <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md lg:col-span-1 h-fit">
+                        <h3 class="text-lg font-bold text-brand-400 mb-2 flex items-center tracking-tight">➕ Add Staff to DB</h3>
+                        <p class="text-xs text-slate-400 mb-6 font-medium">Create account in Firebase Auth, then paste details here.</p>
+                        <div class="space-y-4">
+                            <input type="text" id="new-staff-uid" placeholder="Auth UID (e.g. jX9...)" class="w-full text-sm bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                            <input type="text" id="new-staff-name" placeholder="Full Name" class="w-full text-sm bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                            <input type="email" id="new-staff-email" placeholder="Email Address" class="w-full text-sm bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                            <select id="new-staff-role" class="w-full text-sm bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors">
+                                <option value="JUDGE">Judge</option>
+                                <option value="STAGE_MGR">STAGE_MGR</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                            <button onclick="addNewStaff()" class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-sm font-bold py-3.5 rounded-xl shadow-lg mt-4 transition-transform active:scale-[0.98] tracking-wider uppercase">Link Account</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md lg:col-span-3">
+                        <h3 class="text-lg font-bold text-emerald-400 mb-6 flex items-center tracking-tight">🛡️ Active Staff Roster</h3>
+                        <div class="overflow-x-auto rounded-xl border border-slate-700 bg-slate-950/50 shadow-inner">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-900/80 text-slate-400 text-xs uppercase tracking-widest font-bold border-b border-slate-700">
+                                        <th class="p-4">Staff Member (Name & Email)</th>
+                                        <th class="p-4">Auth UID</th>
+                                        <th class="p-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="active-staff-tbody" class="divide-y divide-slate-800"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="view-candidate-manager" class="max-w-7xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-slate-800 pb-4">
+                    <h2 class="text-3xl font-black text-white tracking-tighter mb-4 md:mb-0">Master Candidate List</h2>
+                    <button id="btn-trigger-factory-reset" class="bg-red-900/30 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-xs font-bold py-2.5 px-5 rounded-lg shadow-lg transition-all flex items-center active:scale-95">
+                        <span class="mr-2">⚠️</span> DELETE ALL CANDIDATE DATA
+                    </button>
+                </div> 
+                
+                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-700 flex flex-wrap gap-4 mb-8 shadow-lg backdrop-blur-md">
+                    <div class="flex-1 min-w-[200px] relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">🔍</span>
+                        <input type="text" id="search-candidate" placeholder="Search by Track No or Name..." class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-500">
+                    </div>
+                    <select id="filter-candidate-category" class="bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"><option value="All">All Categories</option></select>
+                    <select id="filter-candidate-gender" class="bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"><option value="All">All Genders</option></select>
+                    <select id="filter-candidate-district" class="bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors"><option value="All">All Districts</option></select>
+                </div>
+
+                <div class="bg-slate-900/60 rounded-3xl border border-slate-700 shadow-xl overflow-hidden backdrop-blur-md">
+                    <div class="max-h-[600px] overflow-y-auto w-full custom-scrollbar">
+                        <table class="min-w-full w-full text-left border-collapse whitespace-nowrap">
+                            <thead class="bg-slate-950/80 backdrop-blur-md border-b border-slate-700 text-xs uppercase tracking-widest text-slate-400 sticky top-0 shadow-md z-10">
+                                <tr>
+                                    <th class="p-5 w-1/12 font-bold">Track No</th>
+                                    <th class="p-5 w-3/12 font-bold">Name</th>
+                                    <th class="p-5 w-1/12 font-bold">Gender</th> 
+                                    <th class="p-5 w-2/12 font-bold">District</th> 
+                                    <th class="p-5 w-3/12 font-bold">Age Group</th>
+                                    <th class="p-5 w-1/12 font-bold">Status</th>
+                                    <th class="p-5 w-1/12 text-right font-bold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="candidate-manager-tbody" class="divide-y divide-slate-800 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-data-importer" class="max-w-3xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <h2 class="text-3xl font-black mb-8 text-white border-b border-slate-800 pb-4 tracking-tighter">Data Importer</h2>
+                <div class="bg-slate-900/60 p-10 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md text-center">
+                    <form id="csv-upload-form" class="space-y-6">
+                        <div class="relative group cursor-pointer">
+                            <div class="absolute inset-0 bg-gradient-to-r from-brand-500/20 to-indigo-500/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300"></div>
+                            <input type="file" id="csv-file-input" accept=".csv" required class="relative block w-full text-sm text-slate-400 file:mr-6 file:py-3 file:px-6 file:rounded-xl file:border-0 file:bg-brand-600 file:text-white hover:file:bg-brand-500 file:font-bold file:cursor-pointer bg-slate-950/80 border border-slate-700 p-3 cursor-pointer rounded-2xl backdrop-blur-sm transition-all focus:outline-none focus:border-brand-500">
+                        </div>
+                        <button type="submit" id="btn-upload-csv" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all active:scale-[0.98] uppercase tracking-widest flex items-center justify-center">
+                            <span class="mr-2">⚡</span> Upload & Generate Track Numbers
+                        </button>
+                    </form>
+                    <div id="upload-status-console" class="mt-8 text-left bg-slate-950/80 p-5 rounded-2xl border border-slate-700 h-40 overflow-y-auto font-mono text-xs text-brand-400 whitespace-pre shadow-inner"></div>
+                </div>
+            </section>
+
+            <section id="view-stage-manager" class="max-w-6xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <h2 class="text-3xl font-black mb-8 text-white border-b border-slate-800 pb-4 tracking-tighter">Stage Manager (Queue Pusher)</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md lg:col-span-1">
+                        <label class="block text-sm font-bold text-slate-400 mb-3 uppercase tracking-widest">Target Mat</label>
+                        <select id="queue-mat-select" class="w-full bg-slate-950/80 border border-slate-600 rounded-xl px-5 py-3.5 text-white mb-8 focus:ring-2 focus:ring-brand-500 font-bold text-lg transition-colors appearance-none cursor-pointer">
+                            <option value="">-- Select Mat --</option>
+                        </select>
+
+                        <h3 class="text-xs font-bold text-brand-400 uppercase tracking-[0.2em] mb-4">Batch Entry (Track Nos)</h3>
+                        <div class="space-y-3 mb-8" id="queue-inputs-container">
+                            <input type="text" placeholder="Candidate 1 Track" class="queue-input w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 placeholder:text-sm shadow-inner">
+                            <input type="text" placeholder="Candidate 2 Track" class="queue-input w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 placeholder:text-sm shadow-inner">
+                            <input type="text" placeholder="Candidate 3 Track" class="queue-input w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 placeholder:text-sm shadow-inner">
+                            <input type="text" placeholder="Candidate 4 Track" class="queue-input w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 placeholder:text-sm shadow-inner">
+                            <input type="text" placeholder="Candidate 5 Track" class="queue-input w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 placeholder:text-sm shadow-inner">
+                        </div>
+
+                        <button id="btn-push-queue" class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-black py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all active:scale-95 text-lg uppercase tracking-widest flex items-center justify-center">
+                            <span class="mr-3">🚀</span> Push to Mat
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md lg:col-span-2 flex flex-col">
+                        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                            <h3 class="text-xl font-black text-slate-200 uppercase tracking-tighter">Live Mat Queue</h3>
+                            <button id="btn-clear-completed-queue" class="bg-red-900/30 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-xs font-bold py-2.5 px-4 rounded-lg shadow transition-colors flex items-center active:scale-95">
+                                <span class="mr-2">🧹</span> Clear Completed
+                            </button>
+                        </div>
+                        
+                        <div class="flex-1 overflow-hidden border border-slate-700 rounded-2xl bg-slate-950/50 shadow-inner flex flex-col">
+                            <div class="overflow-y-auto max-h-[450px] custom-scrollbar">
+                                <table class="w-full text-center border-collapse min-w-[500px] md:min-w-full">
+                                    <thead class="bg-slate-900/90 backdrop-blur-md sticky top-0 shadow-md border-b border-slate-700 z-10">
+                                        <tr>
+                                            <th class="p-4 text-xs uppercase text-slate-500 font-bold tracking-widest">Batch</th>
+                                            <th class="p-4 text-xs uppercase text-brand-400 font-black tracking-widest">Track No</th>
+                                            <th class="p-4 text-xs uppercase text-slate-500 font-bold">J1</th>
+                                            <th class="p-4 text-xs uppercase text-slate-500 font-bold">J2</th>
+                                            <th class="p-4 text-xs uppercase text-slate-500 font-bold">J3</th>
+                                            <th class="p-4 text-xs uppercase text-slate-500 font-bold">J4</th>
+                                            <th class="p-4 text-xs uppercase text-slate-500 font-bold">J5</th>
+                                            <th class="p-4 text-xs uppercase text-red-500 font-bold">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="live-queue-tbody" class="divide-y divide-slate-800 text-sm">
+                                        <tr><td colspan="8" class="p-10 text-slate-500 italic font-medium text-lg">Select a Mat to view its live queue.</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-mat-control" class="max-w-6xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-slate-800 pb-4">
+                    <h2 class="text-3xl font-black text-white tracking-tighter mb-4 md:mb-0">Live Mat Control (Staff Assignments)</h2>
+                    <button id="btn-add-mat" class="bg-brand-600 hover:bg-brand-500 text-white font-bold py-2.5 px-6 rounded-xl shadow-lg transition-colors flex items-center active:scale-95">
+                        <span class="mr-2 text-xl">+</span> Add Mat
+                    </button>
+                </div>
+                
+                <div id="active-mats-container" class="grid grid-cols-1 xl:grid-cols-2 gap-8"></div>
+
+                <div class="mat-card bg-slate-900/60 rounded-3xl border border-slate-700 shadow-xl overflow-hidden backdrop-blur-md" id="mat-template" style="display: none;">
+                    <div class="bg-slate-950/80 px-8 py-4 border-b border-slate-700 flex justify-between items-center backdrop-blur-md">
+                        <h3 class="text-xl font-black text-brand-400 uppercase tracking-widest flex items-center">
+                            <span class="w-3 h-3 bg-brand-500 rounded-full animate-pulse mr-3 shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+                            MAT <span class="mat-number ml-2">X</span>
+                        </h3>
+                    </div>
+                    <div class="p-8 space-y-8">
+                        <div class="judge-assignment bg-slate-950/40 p-6 rounded-2xl border border-slate-700/50 shadow-inner">
+                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-[0.2em] mb-5 border-b border-slate-800 pb-3">Staff Assignment Panel</h4>
+                            
+                            <div class="space-y-4" id="judge-select-grid">
+                                <label class="flex items-center pb-3 border-b border-slate-800/50">
+                                    <span class="w-32 text-brand-400 font-bold text-xs uppercase tracking-wider">Panel Size</span> 
+                                    <select class="select-panel-size flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:border-brand-500 transition-colors">
+                                        <option value="5">5 Judges (Standard)</option>
+                                        <option value="3">3 Judges (No Discards)</option>
+                                    </select>
+                                </label>
+                                
+                                <label class="flex items-center pb-3 border-b border-slate-800/50">
+                                    <span class="w-32 text-purple-400 font-bold text-xs uppercase tracking-wider">Coordinator</span> 
+                                    <select class="select-coordinator flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 focus:border-purple-500 transition-colors"></select>
+                                </label>
+                                
+                                <label class="flex items-center mt-4"><span class="w-32 text-amber-500 font-bold text-xs uppercase tracking-wider flex items-center"><span class="mr-1">👑</span> J1 (Head)</span> <select class="select-judge-head flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 transition-colors"></select></label>
+                                <label class="flex items-center"><span class="w-32 text-slate-400 text-xs uppercase tracking-wider pl-6">J2</span> <select class="select-judge-panel flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 transition-colors"></select></label>
+                                <label class="flex items-center"><span class="w-32 text-slate-400 text-xs uppercase tracking-wider pl-6">J3</span> <select class="select-judge-panel flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 transition-colors"></select></label>
+                                <label class="flex items-center"><span class="w-32 text-slate-400 text-xs uppercase tracking-wider pl-6">J4</span> <select class="select-judge-panel flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 transition-colors"></select></label>
+                                <label class="flex items-center"><span class="w-32 text-slate-400 text-xs uppercase tracking-wider pl-6">J5</span> <select class="select-judge-panel flex-1 bg-slate-900 border border-slate-600 rounded-xl px-4 py-2.5 text-sm text-slate-300 transition-colors"></select></label>
+                            </div>
+                            
+                            <button class="btn-lock-judges w-full mt-8 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold py-3.5 rounded-xl shadow-lg uppercase tracking-widest transition-transform active:scale-[0.98] flex items-center justify-center">
+                                <span class="mr-2">🔒</span> Lock Staff Panel
+                            </button>
+                        </div>
+                        
+                        <button class="btn-close-mat w-full text-red-400 hover:text-white text-xs font-bold py-3.5 border border-red-900/50 rounded-xl uppercase tracking-widest bg-red-950/20 hover:bg-red-900/40 transition-colors flex items-center justify-center">
+                            <span class="mr-2">🛑</span> Terminate Mat Session
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-live-dashboard" class="max-w-7xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-slate-800 pb-4">
+                    <h2 class="text-3xl font-black text-white flex items-center tracking-tighter mb-4 md:mb-0">
+                        <span class="w-3.5 h-3.5 bg-red-500 rounded-full animate-pulse mr-4 shadow-[0_0_10px_rgba(239,68,68,0.8)]"></span> Live Global Leaderboard
+                    </h2>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button id="btn-backup-scores" class="bg-brand-900/30 hover:bg-brand-800 text-brand-300 hover:text-white border border-brand-800 text-sm font-bold py-2.5 px-4 rounded-lg shadow-lg transition-all flex items-center active:scale-95">
+                            <span class="mr-2">💾</span> Backup Scores
+                        </button>
+                        
+                        <label class="bg-purple-900/30 hover:bg-purple-800 text-purple-300 hover:text-white border border-purple-800 text-sm font-bold py-2.5 px-4 rounded-lg shadow-lg transition-all flex items-center cursor-pointer active:scale-95">
+                            <input type="file" id="file-restore-scores" accept=".json" class="hidden">
+                            <span class="mr-2">♻️</span> Restore
+                        </label>
+
+                        <button id="btn-wipe-scores" class="bg-red-900/30 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-sm font-bold py-2.5 px-4 rounded-lg shadow-lg transition-all flex items-center active:scale-95">
+                            <span class="mr-2">⚠️</span> DELETE SCORECARDS
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-900/60 p-5 rounded-2xl border border-slate-700 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 shadow-lg backdrop-blur-md">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500">🔍</span>
+                        <input type="text" id="dash-search-track" placeholder="Search Track No..." 
+                            class="w-full bg-slate-950/50 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors font-mono placeholder:text-slate-500">
+                    </div>
+                    
+                    <select id="dash-group-select" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors appearance-none">
+                        <option value="">-- All Groups --</option>
+                    </select>
+                    
+                    <select id="dash-gender-select" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors appearance-none">
+                        <option value="">-- All Genders --</option>
+                    </select>
+                    
+                    <select id="dash-district-select" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors appearance-none">
+                        <option value="">-- All Districts --</option>
+                    </select>
+                </div>
+                
+                <div class="bg-slate-900/60 rounded-3xl border border-slate-700 shadow-xl overflow-hidden backdrop-blur-md">
+                    <div class="overflow-x-auto w-full custom-scrollbar">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead class="bg-slate-950/80 backdrop-blur-md border-b border-slate-700 text-xs uppercase tracking-widest text-slate-400">
+                                <tr>
+                                    <th class="p-5 font-bold">Track</th>
+                                    <th class="p-5 font-bold">Candidate</th>
+                                    <th class="p-5 font-bold text-center">Scorecard Audit</th>
+                                    <th class="p-5 font-bold text-right">Prelim Sum</th>
+                                    <th class="p-5 font-bold text-center">Overwrites</th>
+                                </tr>
+                            </thead>
+                            <tbody id="live-dashboard-tbody" class="divide-y divide-slate-800 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </section>
+
+            <section id="view-results-engine" class="max-w-7xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <h2 class="text-3xl font-black mb-8 text-white border-b border-slate-800 pb-4 italic tracking-tighter">🏆 Final Standings & Analytics</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                    <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md">
+                        <h3 class="text-sm font-bold text-slate-400 mb-6 border-b border-slate-800 pb-3 uppercase tracking-widest">Olympic Tie-Breakers</h3>
+                        <label class="flex items-center space-x-4 mb-4 cursor-pointer group">
+                            <input type="checkbox" id="setting-tie-optional" checked class="w-5 h-5 text-brand-500 bg-slate-950 border-slate-600 rounded focus:ring-brand-500 focus:ring-2"> 
+                            <span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">Priority 1: Optional Asana Marks</span>
+                        </label>
+                        <label class="flex items-center space-x-4 cursor-pointer group">
+                            <input type="checkbox" id="setting-tie-headjudge" checked class="w-5 h-5 text-brand-500 bg-slate-950 border-slate-600 rounded focus:ring-brand-500 focus:ring-2"> 
+                            <span class="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">Priority 2: Head Judge (J1) Override</span>
+                        </label>
+                    </div>
+                    
+                    <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md flex flex-col justify-center space-y-4">
+                        <select id="res-category-select" class="w-full bg-slate-950/50 border border-slate-700 rounded-xl px-5 py-3.5 text-sm text-white focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-colors">
+                            <option value="">-- Select Age Group --</option>
+                        </select>
+                    
+                        <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                            <select id="res-gender-select" class="flex-1 bg-slate-950/50 border border-slate-700 rounded-xl px-5 py-3.5 text-sm text-white focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-colors">
+                                <option value="">-- Select Gender --</option>
+                            </select>
+                            <select id="res-district-select" class="flex-1 bg-slate-950/50 border border-slate-700 rounded-xl px-5 py-3.5 text-sm text-white focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-colors">
+                                <option value="">-- All Districts (Optional) --</option>
+                            </select>
+                        </div>
+                    
+                        <button id="btn-calculate-results" class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] mt-4 transition-transform active:scale-[0.98] uppercase tracking-widest text-sm flex items-center justify-center">
+                            <span class="mr-2">📊</span> Calculate Group Standings
+                        </button>
+                    </div>
+                </div>
+
+                <div id="official-results-preview" class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md mb-12 min-h-[200px]">
+                    <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6 border-b border-slate-800 pb-3">Division Podium Preview</h3>
+                    <div id="results-table-container" class="overflow-x-auto text-center text-slate-500 italic py-10 font-medium">Select category, gender, and division to calculate podium.</div>
+                </div>
+                
+                <button id="btn-publish-results" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black py-5 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-transform active:scale-[0.98] border-b-4 border-emerald-800 flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed text-lg tracking-widest" disabled>
+                    <span class="mr-3 text-2xl">🏅</span> PUBLISH DIVISION PODIUM TO DATABASE
+                </button>
+
+                <div class="mt-20 pt-10 border-t border-slate-800">
+                    <h2 class="text-2xl font-black mb-8 text-amber-500 flex items-center uppercase tracking-tighter drop-shadow-md">
+                        <span class="mr-3 text-3xl">🏅</span> District Medal Analytics
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+                        <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md lg:col-span-1 flex flex-col justify-center space-y-4">
+                            <button id="btn-calculate-district-medals" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-xl shadow-lg border border-slate-600 transition-colors uppercase tracking-wider text-sm flex items-center justify-center">
+                                <span class="mr-2">🔄</span> Aggregate Medals
+                            </button>
+                            <button id="btn-broadcast-district" class="w-full bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-black py-4 rounded-xl shadow-[0_0_20px_rgba(147,51,234,0.3)] transition-transform active:scale-95 uppercase tracking-widest text-sm flex items-center justify-center">
+                                <span class="mr-2 text-lg">📡</span> Global Tally Broadcast
+                            </button>
+                            
+                            <button id="btn-download-district-csv" class="w-full bg-emerald-900/40 hover:bg-emerald-800 text-emerald-300 hover:text-white font-bold py-3.5 rounded-xl shadow-lg border border-emerald-700/50 transition-colors mt-2 text-sm uppercase tracking-wider flex items-center justify-center">
+                                <span class="mr-2">⬇️</span> Download Tally CSV
+                            </button>
+                        </div>
+                        
+                        <div class="bg-slate-900/60 p-8 rounded-3xl border border-slate-700 shadow-xl backdrop-blur-md lg:col-span-2 overflow-hidden flex flex-col">
+                            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 border-b border-slate-800 pb-3">Medal Standings Local Preview</h3>
+                            <div id="district-tally-preview" class="flex-1 overflow-y-auto rounded-xl bg-slate-950/50 border border-slate-800 p-2 custom-scrollbar min-h-[250px]"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-900/80 border border-purple-500/30 p-8 rounded-3xl shadow-[0_0_30px_rgba(147,51,234,0.1)] backdrop-blur-md relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-900/20 to-transparent pointer-events-none"></div>
+                        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4 relative z-10">
+                            <h3 class="text-xl font-black text-white uppercase tracking-tighter flex items-center">
+                                <span class="text-purple-400 mr-3 animate-pulse">📺</span> Currently on Big Screens
+                            </h3>
+                            <div class="flex space-x-3">
+                                <button id="btn-delete-tally" class="bg-red-900/30 hover:bg-red-800 border border-red-800 text-red-400 hover:text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-colors shadow-lg active:scale-95">
+                                    🗑️ Delete Live Tally
+                                </button>
+                                <button id="btn-view-live-broadcast" class="bg-purple-900/40 hover:bg-purple-800 border border-purple-700 text-purple-300 hover:text-white px-5 py-2.5 rounded-lg text-xs font-bold transition-colors shadow-lg active:scale-95">
+                                    Fetch Live Tally Data
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="live-broadcast-container" class="hidden relative z-10">
+                            <p id="live-broadcast-time" class="text-xs text-slate-400 italic mb-4 font-medium"></p>
+                            <div id="live-broadcast-table" class="overflow-x-auto bg-slate-950/80 rounded-xl border border-slate-700 custom-scrollbar"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-results-explorer" class="max-w-7xl mx-auto animate-fade-in relative z-10" style="display: none;">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-slate-800 pb-4">
+                    <h2 class="text-3xl font-black text-white uppercase tracking-tighter mb-4 md:mb-0">📂 Published Results Explorer</h2>
+                    <div class="flex space-x-3">
+                        <button id="btn-wipe-results" class="bg-red-900/30 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 px-5 py-2.5 rounded-lg text-sm font-bold transition-colors shadow-lg flex items-center active:scale-95">
+                            <span class="mr-2">⚠️</span> Delete All Results
+                        </button>
+                        <button id="btn-refresh-explorer" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-colors shadow-lg flex items-center active:scale-95">
+                            <span class="mr-2">🔄</span> Refresh List
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="explorer-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-10">
+                        <p class="text-slate-500 italic font-medium flex items-center">
+                            <span class="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mr-3"></span>
+                            Loading published results...
+                        </p>
+                    </div>
+                </div>
+
+                <div id="explorer-details" class="bg-slate-900/80 border border-slate-700 rounded-3xl p-8 hidden shadow-2xl mb-8 backdrop-blur-md relative overflow-hidden">
+                    <!-- Dynamic content injected here by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-edit-score" class="fixed inset-0 bg-slate-950/80 backdrop-blur-xl z-50 hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 p-8 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.8)] w-full max-w-5xl transform transition-all scale-95 opacity-0 data-[show=true]:scale-100 data-[show=true]:opacity-100 duration-200">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
+                <h3 class="text-2xl font-black text-white flex items-center tracking-tighter">
+                    <span class="text-red-400 mr-3 font-bold uppercase text-xs px-3 py-1 bg-red-950 border border-red-800/50 rounded-lg flex items-center"><span class="mr-1">🚨</span> Admin Override</span> 
+                    Track: <span id="edit-score-track" class="text-brand-400 ml-3"></span>
+                </h3>
+                <button id="btn-void-score" class="bg-red-950/50 hover:bg-red-900 text-red-400 hover:text-white px-5 py-2.5 rounded-xl font-bold text-xs border border-red-900 transition-colors flex items-center active:scale-95 uppercase tracking-widest">
+                    <span class="mr-2">🗑️</span> Void Scorecard
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto mb-8 rounded-2xl border border-slate-700 bg-slate-950/50 shadow-inner custom-scrollbar">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead class="bg-slate-900/80 border-b border-slate-700 text-slate-400 uppercase text-xs font-bold tracking-widest">
+                        <tr>
+                            <th class="p-4">Judge</th>
+                            <th class="p-4 text-center">Asan 1</th>
+                            <th class="p-4 text-center">Asan 2</th>
+                            <th class="p-4 text-center">Asan 3</th>
+                            <th class="p-4 text-center text-brand-400">Optional</th>
+                        </tr>
+                    </thead>
+                    <tbody id="typo-matrix-table" class="divide-y divide-slate-800">
+                        <!-- Filled by JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-end items-center space-x-4 border-t border-slate-800 pt-6">
+                <button id="btn-close-modal" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-8 py-3.5 rounded-xl font-bold text-sm transition-colors shadow">Cancel</button>
+                <button id="btn-save-admin-override" class="bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white px-8 py-3.5 rounded-xl font-bold text-sm shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-transform active:scale-[0.98] uppercase tracking-widest flex items-center">
+                    <span class="mr-2">💾</span> Save Override to Vault
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-factory-reset" class="fixed inset-0 bg-slate-950/90 z-[100] hidden items-center justify-center p-4 backdrop-blur-xl">
+        <div class="bg-slate-900 border border-red-900/50 p-10 rounded-3xl shadow-[0_0_80px_rgba(220,38,38,0.3)] w-full max-w-lg text-center relative overflow-hidden transform transition-all scale-95 opacity-0 data-[show=true]:scale-100 data-[show=true]:opacity-100 duration-200">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-600 via-red-500 to-red-600 animate-pulse"></div>
+            
+            <div class="w-24 h-24 bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-red-500/30 shadow-[0_0_30px_rgba(220,38,38,0.4)]">
+                <span class="text-5xl">☢️</span>
+            </div>
+            
+            <h2 class="text-4xl font-black text-white uppercase tracking-tighter mb-2">Factory Reset</h2>
+            <p class="text-red-400 font-bold text-sm uppercase tracking-widest mb-6">Warning: Destructive Action</p>
+            
+            <p class="text-slate-400 text-sm mb-8 leading-relaxed font-medium">
+                This will permanently delete ALL imported candidates, ALL active queue tickets, and ALL submitted scores. 
+                <br><br><strong class="text-white bg-red-950/30 px-3 py-1 rounded">This action cannot be undone.</strong>
+            </p>
+
+            <div class="bg-brand-950/20 border border-brand-900/50 rounded-2xl p-5 mb-8 shadow-inner">
+                <p class="text-xs text-brand-300 font-bold uppercase tracking-widest mb-3 flex items-center justify-center"><span class="mr-2">💡</span> Recommendation</p>
+                <button id="btn-goto-backup" class="w-full bg-brand-900/40 hover:bg-brand-800 text-brand-200 border border-brand-700 font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-wider shadow">
+                    💾 Go to Leaderboard for Backup
+                </button>
+            </div>
+
+            <div class="bg-slate-950/80 rounded-2xl p-5 mb-8 border border-slate-800 shadow-inner">
+                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 text-left">Type 'confirm' to unlock</label>
+                <input type="text" id="input-confirm-reset" placeholder="..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-5 py-4 text-white text-center font-mono font-bold tracking-[0.3em] uppercase focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-colors placeholder:tracking-normal placeholder:lowercase">
+            </div>
+
+            <div class="flex space-x-4">
+                <button id="btn-cancel-reset" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-xl transition-colors shadow">Cancel</button>
+                <button id="btn-execute-reset" disabled class="flex-1 bg-gradient-to-r from-red-700 to-rose-700 hover:from-red-600 hover:to-rose-600 text-white font-black py-4 rounded-xl uppercase tracking-widest transition-all shadow-[0_0_20px_rgba(220,38,38,0.3)] disabled:opacity-30 disabled:cursor-not-allowed">Wipe DB</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-wipe-scores" class="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-[100] hidden items-center justify-center p-4">
+        <div class="bg-slate-900 p-10 rounded-3xl border border-red-900/50 shadow-[0_0_80px_rgba(220,38,38,0.2)] w-full max-w-lg text-center transform transition-all scale-95 opacity-0 data-[show=true]:scale-100 data-[show=true]:opacity-100 duration-200">
+            <div class="w-20 h-20 bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/30">
+                <span class="text-4xl">⚠️</span>
+            </div>
+            <h3 class="text-3xl font-black text-white mb-2 tracking-tighter uppercase">Wipe Live Scorecards</h3>
+            <p class="text-sm text-slate-400 mb-8 font-medium leading-relaxed">This will permanently delete ALL active scorecards from the live dashboard. Once deleted, they can only be restored via a JSON backup.</p>
+            
+            <button id="btn-modal-backup-scores" class="w-full bg-gradient-to-r from-brand-700 to-indigo-700 hover:from-brand-600 hover:to-indigo-600 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-transform active:scale-95 mb-8 flex justify-center items-center uppercase tracking-widest text-xs">
+                <span class="mr-2 text-lg">💾</span> Download Backup Before Wiping
+            </button>
+
+            <div class="text-left mb-8 border-t border-slate-800 pt-8">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Type "confirm" to proceed</label>
+                <input type="text" id="input-confirm-wipe-scores" placeholder="confirm" class="w-full bg-slate-950/80 border border-red-900/50 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 mt-3 text-center font-mono font-bold uppercase tracking-[0.2em] transition-colors">
+            </div>
+            
+            <div class="flex space-x-4">
+                <button id="btn-cancel-wipe-scores" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-xl transition-colors shadow">Cancel</button>
+                <button id="btn-execute-wipe-scores" class="flex-1 bg-gradient-to-r from-red-700 to-rose-700 hover:from-red-600 hover:to-rose-600 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed uppercase tracking-widest text-sm" disabled>Wipe Scores</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const views = ['home', 'staff-provisioning', 'data-importer', 'stage-manager', 'mat-control', 'live-dashboard', 'results-engine', 'candidate-manager', 'results-explorer'];
+        
+        views.forEach(view => {
+            const navBtn = document.getElementById(`nav-${view}`);
+            if (navBtn) { 
+                navBtn.addEventListener('click', (e) => {
+                    views.forEach(v => {
+                        const btn = document.getElementById(`nav-${v}`);
+                        const section = document.getElementById(`view-${v}`);
+                        
+                        if (btn) btn.className = "sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors hover:bg-gray-800 text-gray-400 hover:text-gray-100 font-medium";
+                        if (section) section.style.display = 'none';
+                    });
+                    
+                    e.target.className = "sidebar-btn w-full text-left px-4 py-3 rounded-lg transition-colors bg-blue-600/10 text-blue-400 font-semibold border border-blue-500/20";
+                    
+                    // SMART DISPLAY TOGGLE: Only 'home' needs flex-centering!
+                    const activeSection = document.getElementById(`view-${view}`);
+                    if (view === 'home') {
+                        activeSection.style.display = 'flex';
+                    } else {
+                        activeSection.style.display = 'block';
+                    }
+                });
+            }
+        });
+
+        // Automatically load Home on login
+        document.getElementById('nav-home')?.click();
+
+        // --- MOBILE MENU TOGGLE LOGIC ---
+        const btnMenu = document.getElementById('btn-mobile-menu');
+        const sidebar = document.getElementById('sidebar-nav');
+        
+        if (btnMenu && sidebar) {
+            // Open/Close sidebar on hamburger click
+            btnMenu.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+
+            // Auto-close sidebar on mobile when a tab is clicked
+            const navButtons = sidebar.querySelectorAll('.sidebar-btn');
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (window.innerWidth < 768) { 
+                        sidebar.classList.add('-translate-x-full');
+                    }
+                });
+            });
+        }
+    </script>
+    <script type="module" src="./scripts/admin.js"></script>
+</body>
+</html>

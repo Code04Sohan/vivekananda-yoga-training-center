@@ -1,0 +1,236 @@
+// ============================================================================
+// MODULE 8: RESULTS & MEDALS ENGINE
+// Strictly Calculation and Publishing Logic
+// ============================================================================
+
+import { collection, getDocs, getDoc, doc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { db } from './firebase-config.js';
+
+let currentCalculatedStandings = [];
+let currentTarget = {};
+
+export function initResultsEngine() {
+    const btnCalc = document.getElementById('btn-calculate-results');
+    const btnPublish = document.getElementById('btn-publish-results');
+
+    // Auto-populate the dropdowns when the tab is clicked
+    document.getElementById('nav-results-engine')?.addEventListener('click', () => {
+        populateResultFilters();
+    });
+
+    if (btnCalc) btnCalc.addEventListener('click', calculateGroupResults);
+    if (btnPublish) btnPublish.addEventListener('click', publishGroupResults);
+}
+
+// 1. Populate filters (Group, Gender, District)
+async function populateResultFilters() {
+    try {
+        const snap = await getDocs(collection(db, 'candidates'));
+        const cats = new Set(), gens = new Set(), dists = new Set();
+        
+        snap.forEach(doc => {
+            const data = doc.data();
+            if (data.groupName || data.group) cats.add(data.groupName || data.group);
+            if (data.gender) gens.add(data.gender);
+            if (data.state || data.district) dists.add(data.state || data.district);
+        });
+
+        const fillSelect = (id, set, defaultText) => {
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.innerHTML = `<option value="">-- ${defaultText} --</option>`;
+            [...set].sort().forEach(item => el.innerHTML += `<option value="${item}">${item}</option>`);
+        };
+
+        fillSelect('res-category-select', cats, 'Select Group');
+        fillSelect('res-gender-select', gens, 'Select Gender');
+        fillSelect('res-district-select', dists, 'All Districts (Optional)');
+    } catch (error) {
+        console.error("Error loading result filters:", error);
+    }
+}
+
+// 2. The Multi-Division Olympic Math Engine
+async function calculateGroupResults() {
+    const cat = document.getElementById('res-category-select').value;
+    const gen = document.getElementById('res-gender-select').value;
+    const dist = document.getElementById('res-district-select')?.value;
+
+    if (!cat || !gen) return alert("Please select Group and Gender to calculate.");
+
+    currentTarget = { group: cat, gender: gen, district: dist };
+    const btnCalc = document.getElementById('btn-calculate-results');
+    btnCalc.innerText = "⏳ Processing Olympic Math...";
+
+    try {
+        const qCands = query(collection(db, 'candidates'), where('gender', '==', gen));
+        const candSnap = await getDocs(qCands);
+        
+        const targetCandidates = {};
+        candSnap.forEach(d => {
+            const data = d.data();
+            const groupMatch = (data.groupName === cat || data.group === cat);
+            const distMatch = !dist || (data.state === dist || data.district === dist);
+            if (groupMatch && distMatch) targetCandidates[d.id] = data;
+        });
+
+        if (Object.keys(targetCandidates).length === 0) {
+            alert("No athletes found for this specific filter.");
+            btnCalc.innerText = "📊 Calculate Standings";
+            return;
+        }
+
+        const scoresQ = query(collection(db, 'scores'), where('status', '==', 'active'));
+        const scoresSnap = await getDocs(scoresQ);
+        
+        let rawResults = [];
+
+        scoresSnap.forEach(d => {
+            const scoreData = d.data();
+            const trackNo = scoreData.trackNo || d.id; 
+            
+            if (targetCandidates[trackNo]) {
+                const c = targetCandidates[trackNo];
+                const panelSize = scoreData.panelSize || 5;
+                const getJudgeSum = (prefix) => {
+                    if (scoreData[`${prefix}_a1`] === undefined) return null;
+                    return (parseFloat(scoreData[`${prefix}_a1`])||0) + (parseFloat(scoreData[`${prefix}_a2`])||0) + (parseFloat(scoreData[`${prefix}_a3`])||0) + (parseFloat(scoreData[`${prefix}_opt`])||0);
+                };
+                const getOptSum = (prefix) => parseFloat(scoreData[`${prefix}_opt`]) || 0;
+
+                const j1Score = getJudgeSum('j1');
+                const panel = [j1Score, getJudgeSum('j2'), getJudgeSum('j3'), getJudgeSum('j4'), getJudgeSum('j5')].filter(v => v !== null);
+                
+                let totalScore = 0;
+                if (panelSize === 3) {
+                    totalScore = panel.reduce((a, b) => a + b, 0);
+                } else {
+                    totalScore = panel.reduce((a, b) => a + b, 0) - (panel.length > 0 ? Math.max(...panel) : 0) - (panel.length > 0 ? Math.min(...panel) : 0);
+                }
+                const totalOpt = getOptSum('j1') + getOptSum('j2') + getOptSum('j3') + getOptSum('j4') + getOptSum('j5');
+
+                rawResults.push({
+                    trackNo: trackNo,
+                    name: c.name || scoreData.candidateName,
+                    coachName: c.coachName || 'Independent',
+                    division: c.division || scoreData.division || 'Unassigned',
+                    district: c.state || c.district || scoreData.state || 'Unknown',
+                    totalOpt: totalOpt,
+                    j1Score: j1Score || 0,
+                    finalScore: totalScore.toFixed(2)
+                });
+            }
+        });
+
+        if (rawResults.length === 0) {
+            document.getElementById('results-table-container').innerHTML = `<p class="text-red-400">Athletes found, but no active scores exist yet.</p>`;
+            return;
+        }
+
+        const useOptTie = document.getElementById('setting-tie-optional')?.checked;
+        const useJ1Tie = document.getElementById('setting-tie-headjudge')?.checked;
+        const divisionsMap = {};
+        rawResults.forEach(r => {
+            if (!divisionsMap[r.division]) divisionsMap[r.division] = [];
+            divisionsMap[r.division].push(r);
+        });
+
+        currentCalculatedStandings = [];
+
+        Object.keys(divisionsMap).sort().forEach(div => {
+            let divResults = divisionsMap[div];
+            divResults.sort((a, b) => {
+                if (parseFloat(b.finalScore) !== parseFloat(a.finalScore)) return parseFloat(b.finalScore) - parseFloat(a.finalScore);
+                if (useOptTie && b.totalOpt !== a.totalOpt) return b.totalOpt - a.totalOpt;
+                if (useJ1Tie && b.j1Score !== a.j1Score) return b.j1Score - a.j1Score;
+                return 0; 
+            });
+
+            divResults.forEach((r, index) => {
+                currentCalculatedStandings.push({
+                    rank: index + 1,
+                    medal: index === 0 ? '🥇 Gold' : index === 1 ? '🥈 Silver' : index === 2 ? '🥉 Bronze' : '-',
+                    ...r
+                });
+            });
+        });
+
+        renderResultsTable(currentCalculatedStandings);
+        document.getElementById('btn-publish-results').disabled = false;
+
+    } catch (error) {
+        console.error("Results Error:", error);
+    } finally {
+        btnCalc.innerText = "📊 Calculate Group Standings";
+    }
+}
+
+// 3. Render Preview UI
+function renderResultsTable(standings) {
+    const container = document.getElementById('results-table-container');
+    let html = `<table class="w-full text-left border-collapse min-w-[800px]"><thead class="bg-slate-950/80 border-b border-slate-700 text-xs uppercase tracking-widest text-slate-400"><tr><th class="p-5">Division</th><th class="p-5">Rank</th><th class="p-5">Track</th><th class="p-5">Athlete</th><th class="p-5">Coach</th><th class="p-5">District</th><th class="p-5 text-right">Final Score</th></tr></thead><tbody class="divide-y divide-slate-800">`;
+    standings.forEach(s => {
+        const isPodium = s.rank <= 3;
+        html += `<tr class="${isPodium ? "bg-slate-800/80 font-bold" : "text-slate-400"} hover:bg-slate-800/50 transition-colors">
+            <td class="p-5 text-amber-500 font-black text-xs uppercase tracking-widest">${s.division}</td>
+            <td class="p-5 text-xl tracking-tighter drop-shadow-sm">${isPodium ? s.medal : s.rank}</td>
+            <td class="p-5 font-mono text-xs tracking-widest">${s.trackNo}</td>
+            <td class="p-5 text-white text-base">${s.name}</td>
+            <td class="p-5 text-purple-400 text-[10px] uppercase tracking-widest font-bold"><span class="bg-purple-950/40 border border-purple-900/50 px-2 py-0.5 rounded">${s.coachName}</span></td>
+            <td class="p-5 text-sm">${s.district}</td>
+            <td class="p-5 text-right text-emerald-400 font-black text-2xl tracking-tighter drop-shadow-md">${s.finalScore}</td></tr>`;
+    });
+    container.innerHTML = html + `</tbody></table>`;
+}
+
+// 4. Publish to Database (WITH OVERWRITE WARNING)
+async function publishGroupResults() {
+    if (currentCalculatedStandings.length === 0) return;
+    
+    const btn = document.getElementById('btn-publish-results');
+    btn.innerText = "⏳ Checking Vault...";
+    btn.disabled = true;
+
+    try {
+        const cleanCat = currentTarget.group.replace(/[^a-zA-Z0-9]/g, '');
+        const cleanGen = currentTarget.gender.replace(/[^a-zA-Z0-9]/g, '');
+        const cleanDist = currentTarget.district ? currentTarget.district.replace(/[^a-zA-Z0-9]/g, '') : 'All';
+        const resultDocId = `RES_${cleanCat}_${cleanGen}_${cleanDist}`;
+        const resultRef = doc(db, 'published_results', resultDocId);
+
+        // FEATURE: Check if already published
+        const existingDoc = await getDoc(resultRef);
+        if (existingDoc.exists()) {
+            const proceed = confirm(`⚠️ WARNING: Results for [${currentTarget.group} - ${currentTarget.gender}] are already published in the database!\n\nDo you want to OVERWRITE the existing official results?`);
+            if (!proceed) {
+                btn.innerHTML = `<span class="mr-3">🏅</span> PUBLISH PODIUM TO DATABASE`;
+                btn.disabled = false;
+                return;
+            }
+        }
+
+        btn.innerText = "⏳ Publishing...";
+
+        await setDoc(resultRef, {
+            docId: resultDocId,
+            group: currentTarget.group,
+            gender: currentTarget.gender,
+            district: currentTarget.district || 'All',
+            standings: currentCalculatedStandings,
+            publishedAt: new Date().toISOString(),
+            status: 'OFFICIAL'
+        });
+
+        alert(`✅ Official Results successfully published!`);
+        
+        // Let the user know to check the Explorer tab
+        document.getElementById('results-table-container').innerHTML = `<p class="text-green-400 text-center italic py-8">Results successfully published to the vault. Click the <b>"Published Results"</b> tab on the left to view them.</p>`;
+        
+    } catch (error) {
+        console.error("Publish Error:", error);
+        alert("Failed to save results to database.");
+    } finally {
+        btn.innerHTML = `<span class="mr-3">🏅</span> PUBLISH PODIUM TO DATABASE`;
+        btn.disabled = false;
+    }
+}
