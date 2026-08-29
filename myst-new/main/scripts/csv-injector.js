@@ -53,8 +53,14 @@ async function processAndInject(candidates, consoleEl) {
             const batch = writeBatch(db); 
             
             chunk.forEach(row => {
+                // Convert row keys to uppercase and trim to avoid case sensitivity issues
+                const cleanRow = {};
+                for (const key in row) {
+                    cleanRow[key.trim().toUpperCase()] = row[key] ? String(row[key]).trim() : '';
+                }
+
                 // 1. Fetch Track No directly from CSV
-                const rawTrack = row['Track No'] || row['TRACK NO'] || row['Reg. No'] || row['REG NO'];
+                const rawTrack = cleanRow['TRACK NO'] || cleanRow['REG. NO'] || cleanRow['REG NO'] || cleanRow['ID'];
                 
                 // 2. Safety check: If row is completely empty, skip it
                 if (!rawTrack) {
@@ -65,9 +71,9 @@ async function processAndInject(candidates, consoleEl) {
                 const trackNoStr = String(rawTrack).trim(); 
                 const docRef = doc(candidatesRef, trackNoStr);
                 
-                const groupVal = row['AGE GROUP'] || row['GROUP'] || 'Unassigned';
-                const distVal = row['DISTRICT'] || row['NAME OF DISTRICT'] || '';
-                const genVal = row['M/F'] || row['GENDER'] || '';
+                const groupVal = cleanRow['AGE GROUP NAME'] || cleanRow['AGE GROUP'] || cleanRow['GROUP NAME'] || cleanRow['GROUP'] || 'Unassigned';
+                const distVal = cleanRow['DISTRICT'] || cleanRow['NAME OF DISTRICT'] || cleanRow['STATE'] || '';
+                const genVal = cleanRow['GENDER'] || cleanRow['M/F'] || cleanRow['SEX'] || '';
                 
                 if (groupVal) metaGroups.add(groupVal);
                 if (distVal) metaDistricts.add(distVal);
@@ -76,13 +82,13 @@ async function processAndInject(candidates, consoleEl) {
                 // 3. Cleaned Candidate Profile
                 const candidateProfile = {
                     trackNo: trackNoStr,
-                    regNo: row['Reg. No'] || row['REG NO'] || trackNoStr,
-                    name: row['Name'] || row['NAME'] || 'Unknown',
+                    regNo: cleanRow['REG. NO'] || cleanRow['REG NO'] || trackNoStr,
+                    name: cleanRow['NAME'] || cleanRow['CANDIDATE NAME'] || 'Unknown',
                     gender: genVal,
                     groupName: groupVal,
-                    coachName: row['COACH NAME'] || row['COACH'] || 'Independent',
+                    coachName: cleanRow['COACH NAME'] || cleanRow['COACH'] || 'Independent',
                     district: distVal,
-                    division: row['DIVISION'] || 'Unassigned', 
+                    division: cleanRow['DIVISION'] || 'Unassigned', 
                     status: 'pending', 
                     j1_status: false,
                     j2_status: false,

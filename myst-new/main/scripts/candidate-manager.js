@@ -80,7 +80,8 @@ function populateFilters(candidates, catSelect, genSelect, distSelect) {
     const districts = new Set();
 
     candidates.forEach(c => {
-        if (c.groupName) categories.add(c.groupName);
+        const groupValue = c.groupName || c.group;
+        if (groupValue) categories.add(groupValue);
         if (c.gender) genders.add(c.gender);
         if (c.district) districts.add(c.district);
     });
@@ -105,8 +106,9 @@ function applyFilters() {
     const dist = document.getElementById('filter-candidate-district').value;
 
     const filtered = allCandidates.filter(c => {
+        const groupValue = c.groupName || c.group;
         const matchesSearch = c.trackNo.toLowerCase().includes(term) || c.name.toLowerCase().includes(term);
-        const matchesCat = cat === "All" || c.groupName === cat;
+        const matchesCat = cat === "All" || groupValue === cat;
         const matchesGen = gen === "All" || c.gender === gen;
         const matchesDist = dist === "All" || c.district === dist;
         
@@ -146,6 +148,7 @@ function renderCandidateTable(candidates) {
 
     candidates.forEach((c, index) => {
         const isFullyScored = c.j1_status && c.j2_status && c.j3_status && c.j4_status && c.j5_status;
+        const groupValue = c.groupName || c.group || 'Unassigned';
         
         let displayStatus = 'pending';
         if (c.status === 'DNS') displayStatus = 'DNS';
@@ -177,7 +180,7 @@ function renderCandidateTable(candidates) {
                 ${coachDisplay} </td>
             <td class="p-4 text-gray-400 font-semibold">${c.gender || 'N/A'}</td>
             <td class="p-4 text-gray-400">${c.district || 'N/A'}</td>
-            <td class="p-4 text-gray-400 text-sm">${c.groupName}</td>
+            <td class="p-4 text-gray-400 text-sm">${groupValue}</td>
             <td class="p-4">${statusBadge}</td>
             <td class="p-4 text-right flex justify-end">${actionButtons}</td>
         `;

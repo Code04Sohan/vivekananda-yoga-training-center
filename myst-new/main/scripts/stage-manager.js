@@ -213,7 +213,7 @@ export function initStageManager(uid, role) {
                     batchNo: nextBatchNo,
                     timestamp: Date.now(),
                     name: cData.name || '',
-                    group: cData.group || '',
+                    group: cData.groupName || cData.group || '',
                     division: cData.division || '',
                     district: cData.district || '',
                     gender: cData.gender || '',
