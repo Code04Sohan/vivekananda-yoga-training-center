@@ -79,7 +79,7 @@ async function processAndInject(candidates, consoleEl) {
                     regNo: row['Reg. No'] || row['REG NO'] || trackNoStr,
                     name: row['Name'] || row['NAME'] || 'Unknown',
                     gender: genVal,
-                    group: groupVal,
+                    groupName: groupVal,
                     coachName: row['COACH NAME'] || row['COACH'] || 'Independent',
                     district: distVal,
                     division: row['DIVISION'] || 'Unassigned', 
