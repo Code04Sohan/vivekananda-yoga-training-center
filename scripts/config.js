@@ -47,7 +47,7 @@ const siteData = {
             color: "secondary",
             image: "resources/Event2.jpeg",
             icon: "self_improvement",
-            link: "https://www.soumenyoga.in/competition-results.html/"
+            link: "https://www.soumenyoga.in/competition-results"
         }
     ],
 
