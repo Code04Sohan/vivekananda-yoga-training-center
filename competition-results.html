@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Competition Results Coming Soon | Vivekananda Yoga Training Center</title>
+    <meta name="description" content="Official Competition Results Announcement for Vivekananda Yoga Training Center National Level Art & Colouring Competition. Stay tuned for results, merit lists, and digital certificates.">
+    <meta name="keywords" content="Vivekananda Yoga, Art Competition Results, Colouring Competition, Purba Medinipur, Rangotsav Celebration">
+    <meta name="author" content="Vivekananda Yoga Training Center">
+    <meta name="designer" content="BAHA Interactive">
+    <meta property="og:title" content="Competition Results | Vivekananda Yoga Training Center">
+    <meta property="og:description" content="National Level Art & Colouring Competition Results Coming Soon. Vivekananda Yoga Training Centre, Purba Medinipur.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.soumenyoga.in/competition-results.html">
+    <meta property="og:image" content="resources/Event2.jpeg"> 
+    <link rel="icon" type="image/png" href="resources/logo.jpg">
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/competition-results.css">
+
+    <script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "secondary": "#516447", "secondary-fixed-dim": "#b8cda9", "surface-bright": "#f5faff", "tertiary-fixed-dim": "#f8bb73",
+                    "background": "#f5faff", "surface-container": "#e8eff5", "secondary-fixed": "#d4e9c4", "on-primary-fixed-variant": "#802910",
+                    "on-tertiary-container": "#ffe7cf", "surface-tint": "#a04025", "error": "#ba1a1a", "outline": "#8a726c", "surface-container-low": "#eef4fb",
+                    "on-primary-fixed": "#3b0900", "surface-dim": "#d4dbe1", "secondary-container": "#d1e6c2", "on-background": "#161c21",
+                    "inverse-on-surface": "#ebf2f8", "inverse-surface": "#2a3136", "tertiary-fixed": "#ffddb9", "on-primary": "#ffffff",
+                    "surface": "#f5faff", "primary-container": "#af4b2f", "primary": "#8f341a", "error-container": "#ffdad6", "on-tertiary-fixed": "#2b1700",
+                    "on-error": "#ffffff", "tertiary": "#734808", "outline-variant": "#ddc0b9", "primary-fixed": "#ffdbd1", "on-tertiary": "#ffffff",
+                    "surface-container-lowest": "#ffffff", "surface-container-highest": "#dce3ea", "on-secondary-fixed-variant": "#3a4c31",
+                    "on-primary-container": "#ffe6df", "surface-container-high": "#e2e9ef", "tertiary-container": "#8f6021", "on-surface": "#161c21",
+                    "inverse-primary": "#ffb5a1", "surface-variant": "#dce3ea", "on-secondary-fixed": "#0f1f09", "primary-fixed-dim": "#ffb5a1",
+                    "on-tertiary-fixed-variant": "#663e00", "on-surface-variant": "#56423d", "on-error-container": "#93000a", "on-secondary": "#ffffff",
+                    "on-secondary-container": "#55684b"
+                },
+                borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                spacing: { "unit": "8px", "margin-desktop": "40px", "container-max": "1280px", "gutter": "24px", "margin-mobile": "16px", "safe": "env(safe-area-inset-bottom)" },
+                fontFamily: { "body-lg": ["Inter"], "display-lg": ["Noto Serif"], "label-sm": ["Inter"], "label-md": ["Inter"], "headline-lg": ["Noto Serif"], "headline-md": ["Noto Serif"], "body-md": ["Inter"] },
+            }
+        }
+    }
+    </script>
+    <script src="scripts/competition-results.js" defer></script>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+
+    <!-- Zen Splash Screen -->
+    <div id="zen-splash" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-surface transition-opacity duration-1000 ease-in-out">
+        <div class="relative flex flex-col items-center justify-center">
+            <!-- Glowing background aura -->
+            <div class="absolute w-40 h-40 bg-primary/20 rounded-full blur-2xl animate-ping" style="animation-duration: 3s;"></div>
+            <!-- The Lotus / Spa icon -->
+            <span class="material-symbols-outlined text-primary text-[80px] relative z-10 animate-breathe" style="font-variation-settings: 'FILL' 1;">spa</span>
+            <span class="mt-8 font-display-md text-primary tracking-[0.3em] uppercase text-xs animate-pulse">www.soumenyoga.in</span>
+        </div>
+    </div>
+
+    <!-- Navbar Desktop & Tablet -->
+    <nav class="hidden md:flex fixed top-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-container-max bg-surface/80 backdrop-blur-xl border border-outline-variant/30 z-50 rounded-full transition-all duration-500 shadow-sm">
+        <div class="flex justify-between items-center w-full px-8 py-3">
+            <a class="flex items-center gap-3 group" href="https://www.soumenyoga.in/">
+                <div class="w-12 h-12 rounded-full overflow-hidden border border-primary/20 shadow-sm transition-transform group-hover:scale-105">
+                    <img alt="Logo" class="w-full h-full object-cover" src="resources/logo.jpg"/>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-[18px] font-display-lg font-bold text-on-background leading-none tracking-tight">Vivekananda Yoga</span>
+                    <span class="text-[10px] font-label-sm uppercase tracking-[0.2em] text-primary font-semibold">Training Center</span>
+                </div>
+            </a>
+            <div class="flex items-center gap-8">
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="index.html#intro">
+                    Intro<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="index.html#trainers">
+                    Trainers<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="index.html#announcements">
+                    Events<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="index.html#about">
+                    About<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="index.html#locations">
+                    Centers<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+                <a class="desktop-nav-link relative text-on-surface font-label-md font-medium hover:text-primary transition-colors py-1" href="index.html#gallery">
+                    Gallery<span class="nav-indicator absolute -bottom-1 left-0 w-full h-[3px] bg-primary rounded-full transform scale-x-0 transition-transform duration-300 origin-left"></span>
+                </a>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='renewalPage.html'" class="text-on-surface font-label-md font-semibold hover:text-primary transition-all">Renew</button>
+                <button onclick="window.location.href='registration.html'" class="bg-primary text-on-primary px-8 py-3 rounded-full text-label-md font-bold hover:bg-primary/90 transition-all shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5">Enroll Now</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Navbar Mobile -->
+    <header class="md:hidden fixed top-4 left-1/2 -translate-x-1/2 w-[92%] rounded-full z-50 bg-surface/90 backdrop-blur-md shadow-sm border border-outline-variant/30">
+        <div class="flex justify-between items-center px-6 py-3">
+            <a href="https://www.soumenyoga.in/" class="flex items-center gap-3">
+                <img src="resources/logo.jpg" class="w-8 h-8 rounded-full" alt="logo">
+                <h1 class="font-headline-md text-base text-primary tracking-tight truncate">Vivekananda Yoga</h1>
+            </a>
+            <div class="flex items-center gap-2">
+                <span class="flex items-center gap-1 bg-error/10 text-error px-2 py-1 rounded-full font-label-sm text-[10px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>Live
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Floating Social Dock -->
+    <div class="fixed right-2 md:right-4 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-50">
+        <a href="tel:+919734444092" title="Call Now" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all hover:scale-110">
+            <i class="fas fa-phone md:text-lg"></i>
+        </a>
+        <a href="https://www.facebook.com/share/17sKYr7Qiy/" target="_blank" title="Facebook" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-[#1877F2] hover:bg-[#1877F2] hover:text-white transition-all hover:scale-110">
+            <i class="fab fa-facebook-f md:text-lg"></i>
+        </a>
+        <a href="https://www.youtube.com/@vivekanandayogatrainingcen2562" target="_blank" title="YouTube" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-[#FF0000] hover:bg-[#FF0000] hover:text-white transition-all hover:scale-110">
+            <i class="fab fa-youtube md:text-lg"></i>
+        </a>
+        <a href="https://wa.me/+919734444092" target="_blank" title="WhatsApp" class="w-10 h-10 md:w-12 md:h-12 bg-surface/90 backdrop-blur-sm shadow-[0_8px_16px_rgba(0,0,0,0.1)] border border-outline-variant/30 rounded-full flex items-center justify-center text-[#25D366] hover:bg-[#25D366] hover:text-white transition-all hover:scale-110">
+            <i class="fab fa-whatsapp md:text-lg"></i>
+        </a>
+    </div>
+
+    <!-- Floating Bottom Mobile Nav -->
+    <div class="md:hidden fixed bottom-4 left-2 right-2 z-50 pointer-events-none">
+        <nav class="bg-surface/85 backdrop-blur-2xl border border-white/50 shadow-[0_12px_40px_rgba(143,52,26,0.2)] rounded-[2rem] mx-auto max-w-sm pointer-events-auto overflow-hidden">
+            <div class="flex justify-between items-center h-[64px] px-1 relative">
+                <a href="index.html#intro" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">home</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Home</span>
+                </a>
+                <a href="index.html#trainers" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">groups</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Trainers</span>
+                </a>
+                <a href="index.html#announcements" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">event</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Events</span>
+                </a>
+                <a href="index.html#locations" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">location_on</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Centers</span>
+                </a>
+                <a href="index.html#gallery" onclick="triggerHaptic()" class="mobile-nav-link flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors flex-1 z-10">
+                    <span class="material-symbols-outlined text-[20px] transition-all duration-300">photo_library</span>
+                    <span class="text-[9px] font-medium mt-1 transition-all duration-300">Gallery</span>
+                </a>
+                
+                <!-- Separator -->
+                <div class="w-px h-8 bg-outline-variant/30 mx-0.5"></div>
+                
+                <a href="renewalPage.html" onclick="triggerHaptic()" class="flex flex-col items-center justify-center text-secondary flex-1 group z-10">
+                    <span class="material-symbols-outlined text-[18px] bg-secondary/10 p-1.5 rounded-full transition-colors" style="font-variation-settings: 'FILL' 1;">autorenew</span>
+                    <span class="text-[9px] font-bold mt-1 text-secondary">Renew</span>
+                </a>
+                <a href="registration.html" onclick="triggerHaptic()" class="flex flex-col items-center justify-center text-primary flex-1 group z-10">
+                    <span class="material-symbols-outlined text-[18px] bg-primary/10 p-1.5 rounded-full transition-colors" style="font-variation-settings: 'FILL' 1;">how_to_reg</span>
+                    <span class="text-[9px] font-bold mt-1 text-primary">Enroll</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow pt-24 md:pt-32 pb-16">
+        <div class="relative w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-6 sm:gap-10 md:gap-14">
+            
+            <!-- Hero Section: Balanced Editorial 2-Column Split -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+                
+                <!-- Left Column: Typography, Bengali Announcement, Actions -->
+                <div class="lg:col-span-7 flex flex-col items-start gap-4 sm:gap-6 md:gap-8 animate-fade-in-up">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <div class="flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-primary-container text-on-primary text-xs sm:text-sm font-label-md font-medium shadow-sm">
+                            <span class="material-symbols-outlined text-[16px] sm:text-[18px]">palette</span>
+                            <span>National Level Art &amp; Colouring Competition</span>
+                        </div>
+                        <div class="px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] sm:text-label-sm tracking-wide font-medium">
+                            Purba Medinipur Chapter
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 sm:gap-3">
+                        <div class="inline-flex items-center gap-2 text-tertiary text-xs sm:text-sm font-label-md uppercase tracking-[0.2em] font-bold">
+                            <span class="w-6 sm:w-8 h-[2px] bg-tertiary"></span>
+                            <span>অপেক্ষার অবসান খুব শীঘ্রই!</span>
+                        </div>
+                        <h1 class="font-display-lg text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-on-background tracking-tight leading-tight">
+                            কম্পিটিশনের রেজাল্ট
+                        </h1>
+                        <p class="font-headline-md text-base sm:text-xl md:text-2xl text-primary font-medium">
+                            কিছুদিনের মধ্যেই এই পেজ থেকেই প্রকাশিত হবে ফলাফল।
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col gap-2.5 sm:gap-3 p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm w-full">
+                        <div class="flex items-start gap-2.5 sm:gap-3">
+                            <span class="material-symbols-outlined text-primary text-[20px] sm:text-[24px] mt-0.5" style="font-variation-settings: 'FILL' 1;">hotel_class</span>
+                            <p class="text-sm sm:text-base md:text-body-lg text-on-surface font-semibold leading-relaxed">
+                                কে হবে বিজয়ী? জানতে চোখ রাখুন আমাদের পেজে।
+                            </p>
+                        </div>
+                        <p class="text-xs sm:text-sm md:text-body-md text-on-surface-variant leading-relaxed sm:pl-9">
+                            Our panel of respected art evaluators is thoroughly reviewing every entry across all groups. Results, official merit lists, and digital certificates will be published exclusively on this webpage. সঙ্গে থাকুন, আপডেট পেতে পেজটি ফলো করুন।
+                        </p>
+                    </div>
+
+                    <div class="w-full flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-surface-container border border-outline-variant/20 shadow-sm">
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                                <span class="material-symbols-outlined text-[20px] sm:text-[26px]">pending_actions</span>
+                            </div>
+                            <div>
+                                <span class="block text-[11px] sm:text-xs font-label-sm uppercase tracking-wider text-on-surface-variant font-medium">Status</span>
+                                <span class="text-lg sm:text-xl md:text-headline-md text-on-background font-bold">Coming Soon</span>
+                            </div>
+                        </div>
+                        <div class="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-surface-container-lowest shadow-sm flex items-center gap-2 text-primary text-xs sm:text-sm font-label-md font-semibold border border-outline-variant/30 shrink-0">
+                            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-primary animate-pulse"></span>
+                            <span>Evaluation Underway</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full pt-1 sm:pt-2">
+                        <button class="flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-3 sm:px-8 sm:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-label-md font-bold hover:bg-primary-container hover:shadow-lg hover:shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0" onclick="window.location.reload()">
+                            <span class="material-symbols-outlined text-[18px] sm:text-[20px]">refresh</span>
+                            <span>Check For Live Updates</span>
+                        </button>
+                        <button class="flex items-center justify-center gap-2 bg-secondary-fixed text-on-secondary-fixed px-5 py-3 sm:px-7 sm:py-3.5 rounded-full text-xs sm:text-sm md:text-base font-label-md font-semibold hover:bg-secondary-fixed-dim hover:shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0" onclick="document.getElementById('poster-card').scrollIntoView({behavior: 'smooth'})">
+                            <span class="material-symbols-outlined text-[18px] sm:text-[20px]">image</span>
+                            <span>View Official Banner</span>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col gap-2 pt-2 text-on-surface-variant text-xs sm:text-sm md:text-body-md border-t border-outline-variant/20 w-full pt-3 sm:pt-4">
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[16px] sm:text-[18px]">verified_user</span>
+                            <span class="font-medium text-on-surface">Organised by:</span>
+                            <span>Vivekananda Yoga Training Centre • Affiliated by: Rangotsav Celebration</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="material-symbols-outlined text-tertiary text-[16px] sm:text-[18px]">location_on</span>
+                            <span class="font-medium text-on-surface">Venue:</span>
+                            <span>Tilandapur Vidyasagar Nursery School, Panskura, Purba Medinipur</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Prominently Framed Poster & Accents -->
+                <div class="lg:col-span-5 flex flex-col items-center animate-fade-in-up" id="poster-card" style="transition-delay: 200ms;">
+                    <div class="relative w-full group">
+                        <!-- Glow effect -->
+                        <div class="absolute -inset-2 bg-gradient-to-tr from-primary/20 via-secondary/15 to-tertiary/20 rounded-2xl sm:rounded-3xl blur-xl group-hover:blur-2xl transition-all opacity-80 pointer-events-none"></div>
+                        
+                        <div class="relative bg-surface-container-lowest p-3 sm:p-4 md:p-5 rounded-2xl sm:rounded-3xl shadow-xl border border-outline-variant/30 flex flex-col gap-3 sm:gap-4">
+                            <div class="flex items-center justify-between px-1.5 sm:px-2 pt-1">
+                                <div class="flex items-center gap-2">
+                                    <img alt="Vivekananda Yoga Training Center Emblem" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover border border-primary/20" src="resources/logo.jpg">
+                                    <span class="text-xs sm:text-label-sm font-semibold text-on-surface">Official Competition Banner</span>
+                                </div>
+                                <span class="px-2 py-0.5 sm:px-2.5 sm:py-0.5 rounded-full bg-primary/10 text-primary text-[10px] sm:text-label-sm font-bold uppercase tracking-wider">
+                                    National Level
+                                </span>
+                            </div>
+
+                            <!-- Clickable Banner Image -->
+                            <div class="relative overflow-hidden rounded-xl sm:rounded-2xl cursor-pointer group/poster shadow-md" onclick="togglePosterModal(true)">
+                                <img alt="National Level Art Competition Banner - Vivekananda Yoga Training Centre &amp; Rangotsav Celebration" class="w-full h-auto object-cover transform transition-transform duration-700 ease-out group-hover/poster:scale-[1.03]" src="resources/Event2.jpeg" loading="eager">
+                                <div class="absolute inset-0 bg-inverse-surface/35 opacity-0 group-hover/poster:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                                    <div class="flex items-center gap-2 bg-surface/90 text-on-surface px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-label-md font-semibold shadow-xl border border-outline-variant/30 transform scale-95 group-hover/poster:scale-100 transition-transform">
+                                        <span class="material-symbols-outlined text-[18px] sm:text-[20px] text-primary">zoom_in</span>
+                                        <span>Click to Enlarge Banner</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3 p-3 sm:p-3.5 rounded-xl bg-surface-container-low text-on-surface border border-outline-variant/20">
+                                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed shrink-0">
+                                    <span class="material-symbols-outlined text-[18px] sm:text-[22px]" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs sm:text-label-md font-bold text-on-surface">Exclusive Official Portal Release</span>
+                                    <span class="text-[11px] sm:text-label-sm text-on-surface-variant leading-snug">All ranking lists, awards announcements, and certificates will be posted directly on this site.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Official Coordinator & Helpdesk Section -->
+            <div class="w-full max-w-3xl mx-auto animate-fade-in-up">
+                <div class="p-5 sm:p-7 md:p-8 rounded-2xl sm:rounded-3xl bg-surface-container border border-outline-variant/30 shadow-sm flex flex-col gap-4 sm:gap-6">
+                    
+                    <!-- Header with Coordinator Info -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5 sm:gap-4">
+                            <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shrink-0 shadow-sm">
+                                <span class="material-symbols-outlined text-[26px] sm:text-[30px]" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] sm:text-xs font-label-sm uppercase tracking-wider text-primary font-bold">Official Coordinator &amp; Helpdesk</span>
+                                <h4 class="text-xl sm:text-2xl font-headline-md font-bold text-on-background leading-tight">Soumen Santra</h4>
+                                <p class="text-xs sm:text-sm text-on-surface-variant leading-snug">
+                                    Competition Coordinator &amp; Lead Organizer,<br class="hidden sm:inline"> Vivekananda Yoga Training Centre, Purba Medinipur
+                                </p>
+                            </div>
+                        </div>
+                        <div class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-surface-variant text-xs font-medium border border-outline-variant/20 shrink-0">
+                            <span class="w-2 h-2 rounded-full bg-[#25D366] animate-pulse"></span>
+                            <span>Direct Helpline</span>
+                        </div>
+                    </div>
+
+                    <!-- Direct Query & Contact Action Card -->
+                    <div class="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                        <div class="flex flex-col">
+                            <span class="text-xs text-on-surface-variant font-medium">For direct competition queries:</span>
+                            <a href="tel:+919734444092" class="flex items-center gap-2 text-primary text-xl sm:text-2xl font-bold hover:underline">
+                                <span class="material-symbols-outlined text-[22px] sm:text-[24px]">call</span>
+                                <span>+91 9734444092</span>
+                            </a>
+                            <span class="text-[11px] sm:text-xs text-on-surface-variant mt-0.5">Available 10:00 AM – 7:00 PM</span>
+                        </div>
+
+                        <div class="flex items-center gap-2.5 pt-1 sm:pt-0 w-full sm:w-auto">
+                            <a href="tel:+919734444092" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-primary-container transition-all shadow-sm">
+                                <span class="material-symbols-outlined text-[18px]">phone</span>
+                                <span>Call Now</span>
+                            </a>
+                            <a href="https://wa.me/+919734444092" target="_blank" class="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold hover:bg-[#20ba59] transition-all shadow-sm" title="Chat on WhatsApp">
+                                <i class="fab fa-whatsapp text-[16px]"></i>
+                                <span>WhatsApp</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Affiliation Footer -->
+                    <div class="flex items-center gap-3 sm:gap-4 pt-1 sm:pt-2 border-t border-outline-variant/20">
+                        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 shadow-sm bg-surface-container-lowest p-1 flex items-center justify-center border border-outline-variant/30">
+                            <img alt="Vivekananda Yoga Center Official Seal" class="w-full h-full object-cover rounded-full" src="resources/logo.jpg">
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs sm:text-sm font-semibold text-on-surface">Affiliated by Rangotsav Celebration</span>
+                            <span class="text-[11px] sm:text-xs text-on-surface-variant">Organisation-For-Her Talents Level Art Competition • Purba Medinipur</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Inspirational Bengali Footer Note -->
+            <div class="w-full py-5 px-4 sm:py-8 sm:px-6 rounded-xl sm:rounded-2xl bg-primary-fixed/30 border border-primary/20 text-center flex flex-col items-center gap-1.5 sm:gap-2 animate-fade-in-up">
+                <p class="text-base sm:text-xl md:text-headline-md font-headline-md text-primary font-bold italic">
+                    "Show your creativity, colour your imagination, and shine!"
+                </p>
+                <p class="text-xs sm:text-sm md:text-body-md text-on-surface-variant font-medium">
+                    প্রতিটি শিশুই অনন্য প্রতিভার অধিকারী। ফলাফলের প্রতিটি মুহূর্ত আনন্দঘন হোক!
+                </p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Interactive Modal for Full Poster Viewing -->
+    <div class="fixed inset-0 z-[100] bg-inverse-surface/80 backdrop-blur-md hidden items-center justify-center p-4 md:p-8" id="poster-modal" onclick="togglePosterModal(false)">
+        <div class="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar bg-surface rounded-3xl shadow-2xl p-4 md:p-6 flex flex-col gap-4 border border-outline-variant/30" onclick="event.stopPropagation()">
+            <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[24px]">palette</span>
+                    <span class="font-headline-md text-xl md:text-2xl text-on-surface font-bold">National Level Art Competition Banner</span>
+                </div>
+                <button class="w-10 h-10 rounded-full bg-surface-container hover:bg-error hover:text-white flex items-center justify-center text-on-surface transition-colors" onclick="togglePosterModal(false)" aria-label="Close Modal">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <div class="w-full flex items-center justify-center rounded-2xl overflow-hidden bg-surface-container-low border border-outline-variant/20 p-2">
+                <img alt="Full official banner for Vivekananda Yoga Training Centre National Art Competition" class="w-full h-auto object-contain max-h-[72vh] rounded-xl" src="resources/Event2.jpeg">
+            </div>
+            
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-1 text-on-surface-variant font-label-md text-label-md">
+                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-[18px]">location_on</span> Venue: Tilandapur Vidyasagar Nursery School, Panskura, Purba Medinipur</span>
+                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-tertiary text-[18px]">person</span> Coordinator: Soumen Santra (9734444092)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-surface-container-highest w-full py-16 px-margin-mobile md:px-margin-desktop mt-auto border-t border-outline-variant/30 mb-[72px] md:mb-0">
+        <div class="max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+            
+            <div class="space-y-4 md:col-span-1">
+                <a href="https://www.soumenyoga.in/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <img src="resources/logo.jpg" class="w-10 h-10 rounded-full border border-primary/20" alt="logo">
+                    <div class="text-headline-sm font-bold text-primary leading-tight text-xl">Vivekananda Yoga<br>Training Center</div>
+                </a>
+                <p class="text-body-sm text-on-surface-variant max-w-xs mt-4">Empowering minds and bodies through traditional practices. Accredited by the Yoga Certification Board of India.</p>
+                <div class="flex gap-4 mt-6">
+                    <a href="tel:+919734444092" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fas fa-phone"></i></a>
+                    <a href="https://www.facebook.com/share/17sKYr7Qiy/" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.youtube.com/@vivekanandayogatrainingcen2562" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fab fa-youtube"></i></a>
+                    <a href="https://wa.me/+919734444092" target="_blank" class="w-10 h-10 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-colors"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="flex flex-col space-y-3">
+                <span class="text-label-md font-bold text-on-surface uppercase tracking-wider mb-2">Institution</span>
+                <a href="#about" class="text-on-surface-variant hover:text-primary transition-colors text-body-md">Curriculum</a>
+                <a href="#locations" class="text-on-surface-variant hover:text-primary transition-colors text-body-md">Branch Locator</a>
+            </div>
+            
+            <div class="flex flex-col space-y-3">
+                <span class="text-label-md font-bold text-on-surface uppercase tracking-wider mb-2">Contact Us</span>
+                <div class="flex items-start gap-2 text-on-surface-variant text-body-md">
+                    <span class="material-symbols-outlined text-primary text-[20px]">location_on</span>
+                    <span>Purba Medinipur, <br/>West Bengal, India</span>
+                </div>
+                <div class="flex items-start gap-2 text-on-surface-variant text-body-md mt-2">
+                    <span class="material-symbols-outlined text-primary text-[20px]">call</span>
+                    <span>+91 9734444092</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col space-y-4">
+                <span class="text-label-md font-bold text-on-surface uppercase tracking-wider mb-2">Developed By</span>
+                <a href="https://sohan-web-systems.pages.dev/" target="_blank" class="group flex items-center gap-3 p-3 bg-surface rounded-xl border border-outline-variant/30 hover:border-primary/50 transition-colors w-max">
+                    <div class="w-8 h-8 rounded-full bg-primary-container text-primary flex items-center justify-center font-bold">SA</div>
+                    <div class="flex flex-col">
+                        <span class="text-xs text-on-surface-variant">Developed & Deployed by</span>
+                        <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Sohan Adhikari</span>
+                    </div>
+                </a>
+            </div>
+            
+        </div>
+        
+        <div class="max-w-container-max mx-auto mt-12 pt-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-label-sm text-on-surface-variant text-center md:text-left">
+                &copy; <span id="current-year"></span> Vivekananda Yoga Training Center. All Rights Reserved. | Domain registered via GoDaddy (2025-2027)
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>

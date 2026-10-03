@@ -36,6 +36,18 @@ const siteData = {
             image: "resources/Event1.jpeg",
             icon: "self_improvement",
             link: "https://www.soumenyoga.in/register/"
+        },
+        {
+            month: "Sept",
+            date: "19",
+            type: "Event",
+            title: "National Level Art & Colouring Competition",
+            description: "Affiliated by: Rangotsav Celebration",
+            location: "www.soumenyoga.in",
+            color: "secondary",
+            image: "resources/Event2.jpeg",
+            icon: "self_improvement",
+            link: "https://www.soumenyoga.in/competition-results.html/"
         }
     ],
 
