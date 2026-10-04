@@ -212,16 +212,16 @@
 
                 <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
                     <div class="max-h-[600px] overflow-y-auto overflow-x-auto w-full custom-scrollbar">
-                        <table class="min-w-full w-full text-left border-collapse whitespace-nowrap">
+                        <table class="w-full text-left border-collapse min-w-[850px]">
                             <thead class="bg-slate-950 border-b border-slate-800 text-xs uppercase tracking-widest text-slate-400 sticky top-0 shadow-sm z-10">
                                 <tr>
-                                    <th class="p-5 w-1/12 font-bold">Track No</th>
-                                    <th class="p-5 w-3/12 font-bold">Name</th>
-                                    <th class="p-5 w-1/12 font-bold">Gender</th> 
-                                    <th class="p-5 w-2/12 font-bold">District</th> 
-                                    <th class="p-5 w-3/12 font-bold">Age Group</th>
-                                    <th class="p-5 w-1/12 font-bold">Status</th>
-                                    <th class="p-5 w-1/12 text-right font-bold">Actions</th>
+                                    <th class="px-4 py-3.5 w-[90px] font-bold">Track No</th>
+                                    <th class="px-4 py-3.5 w-[26%] font-bold">Name & Coach</th>
+                                    <th class="px-4 py-3.5 w-[80px] font-bold">Gender</th> 
+                                    <th class="px-4 py-3.5 w-[18%] font-bold">District</th> 
+                                    <th class="px-4 py-3.5 w-[22%] font-bold">Age Group</th>
+                                    <th class="px-4 py-3.5 w-[110px] font-bold">Status</th>
+                                    <th class="px-4 py-3.5 w-[140px] text-right font-bold">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="candidate-manager-tbody" class="divide-y divide-slate-800 text-sm"></tbody>
@@ -399,14 +399,14 @@
                 
                 <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
                     <div class="overflow-x-auto w-full custom-scrollbar">
-                        <table class="w-full text-left border-collapse min-w-[800px]">
-                            <thead class="bg-slate-950 border-b border-slate-800 text-xs uppercase tracking-widest text-slate-400">
+                        <table class="w-full text-left border-collapse min-w-[760px]">
+                            <thead class="bg-slate-950 border-b border-slate-800 text-xs uppercase tracking-widest text-slate-400 sticky top-0 shadow-sm z-10">
                                 <tr>
-                                    <th class="p-5 font-bold">Track</th>
-                                    <th class="p-5 font-bold">Candidate</th>
-                                    <th class="p-5 font-bold text-center">Scorecard Audit</th>
-                                    <th class="p-5 font-bold text-right">Prelim Sum</th>
-                                    <th class="p-5 font-bold text-center">Overwrites</th>
+                                    <th class="px-4 py-3.5 w-[90px] font-bold">Track</th>
+                                    <th class="px-4 py-3.5 w-[26%] font-bold">Candidate</th>
+                                    <th class="px-4 py-3.5 w-[42%] font-bold text-center">Scorecard Audit</th>
+                                    <th class="px-4 py-3.5 w-[16%] font-bold text-right">Prelim Sum</th>
+                                    <th class="px-4 py-3.5 w-[16%] font-bold text-center">Overwrites</th>
                                 </tr>
                             </thead>
                             <tbody id="live-dashboard-tbody" class="divide-y divide-slate-800 text-sm"></tbody>
@@ -539,7 +539,7 @@
     </div>
 
     <div id="modal-edit-score" class="fixed inset-0 bg-slate-950/90 z-50 hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-5xl transform transition-opacity opacity-0 data-[show=true]:opacity-100 duration-150">
+        <div class="bg-slate-900 border border-slate-700 p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-5xl">
             <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
                 <h3 class="text-2xl font-black text-white flex items-center tracking-tighter">
                     <span class="text-red-400 mr-3 font-bold uppercase text-xs px-3 py-1 bg-red-950 border border-red-800/50 rounded-lg flex items-center"><span class="mr-1">🚨</span> Admin Override</span> 
@@ -577,7 +577,7 @@
     </div>
 
     <div id="modal-factory-reset" class="fixed inset-0 bg-slate-950/95 z-[100] hidden items-center justify-center p-4">
-        <div class="bg-slate-900 border border-red-900/50 p-6 md:p-10 rounded-2xl shadow-2xl w-full max-w-lg text-center relative overflow-hidden transform transition-opacity opacity-0 data-[show=true]:opacity-100 duration-150">
+        <div class="bg-slate-900 border border-red-900/50 p-6 md:p-10 rounded-2xl shadow-2xl w-full max-w-lg text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-red-600"></div>
             
             <div class="w-20 h-20 bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/30">
@@ -612,7 +612,7 @@
     </div>
 
     <div id="modal-wipe-scores" class="fixed inset-0 bg-slate-950/95 z-[100] hidden items-center justify-center p-4">
-        <div class="bg-slate-900 p-6 md:p-10 rounded-2xl border border-red-900/50 shadow-2xl w-full max-w-lg text-center transform transition-opacity opacity-0 data-[show=true]:opacity-100 duration-150">
+        <div class="bg-slate-900 p-6 md:p-10 rounded-2xl border border-red-900/50 shadow-2xl w-full max-w-lg text-center">
             <div class="w-20 h-20 bg-red-950/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/30">
                 <span class="text-4xl">⚠️</span>
             </div>
@@ -686,7 +686,61 @@
                 });
             });
         }
+
+        // --- GLOBAL HOVER TOOLTIP OVERLAY ---
+        (function() {
+            const tooltip = document.getElementById('global-ui-tooltip');
+            if (!tooltip) return;
+            let currentEl = null;
+
+            function showTooltip(el, e) {
+                const text = el.getAttribute('data-tooltip');
+                if (!text) return;
+                currentEl = el;
+                tooltip.textContent = text;
+                tooltip.classList.remove('hidden');
+                updatePos(e);
+            }
+
+            function hideTooltip() {
+                currentEl = null;
+                tooltip.classList.add('hidden');
+            }
+
+            function updatePos(e) {
+                const pad = 12;
+                let x = e.clientX + pad;
+                let y = e.clientY + pad;
+                const rect = tooltip.getBoundingClientRect();
+                if (x + rect.width > window.innerWidth - 12) {
+                    x = e.clientX - rect.width - pad;
+                }
+                if (y + rect.height > window.innerHeight - 12) {
+                    y = e.clientY - rect.height - pad;
+                }
+                tooltip.style.left = Math.max(8, x) + 'px';
+                tooltip.style.top = Math.max(8, y) + 'px';
+            }
+
+            document.addEventListener('mouseover', (e) => {
+                const target = e.target.closest('[data-tooltip]');
+                if (target) showTooltip(target, e);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (currentEl) updatePos(e);
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                const target = e.target.closest('[data-tooltip]');
+                if (target && target === currentEl) hideTooltip();
+            });
+        })();
     </script>
+
+    <!-- Global Hover Tooltip Container -->
+    <div id="global-ui-tooltip" class="fixed hidden pointer-events-none z-[9999] bg-slate-950 text-slate-100 text-xs font-semibold px-3 py-1.5 rounded-lg border border-slate-700 shadow-2xl max-w-sm break-words"></div>
+
     <script type="module" src="./scripts/admin.js"></script>
 </body>
 </html>

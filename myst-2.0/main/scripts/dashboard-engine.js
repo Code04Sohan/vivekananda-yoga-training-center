@@ -157,7 +157,7 @@ function renderDashboard() {
         // Audit String (Shows individual judge totals)
         const auditText = Object.entries(score.marks)
             .filter(([judge, mark]) => mark !== null) // Hide ghost judges
-            .map(([judge, mark]) => `<span class="font-bold text-slate-500 text-xs uppercase mr-1 tracking-wider">${judge}:</span> <span class="${mark === 0 ? 'text-red-400 font-bold' : 'text-brand-300 font-medium'} mr-3 inline-block bg-slate-950/50 px-2 py-0.5 rounded border border-slate-800">${mark.toFixed(1)}</span>`)
+            .map(([judge, mark]) => `<span class="font-bold text-slate-500 text-xs uppercase mr-1 tracking-wider">${judge}:</span> <span class="${mark === 0 ? 'text-red-400 font-bold' : 'text-brand-300 font-medium'} mr-2.5 inline-block bg-slate-950/50 px-2 py-0.5 rounded border border-slate-800">${mark.toFixed(1)}</span>`)
             .join('');
 
         // PUBLISHED LOCK
@@ -169,17 +169,29 @@ function renderDashboard() {
         // If not fully scored, show "..."" instead of "0.00"
         const finalScoreText = score.isFullyScored ? score.olympicSum.toFixed(2) : '<span class="text-slate-600">...</span>';
 
+        const esc = (text) => {
+            if (!text) return '';
+            return String(text).replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
+
+        const candName = score.candidateName || 'Unknown';
+        const divName = score.division || 'Unassigned';
+
+        let tooltipCandidate = `Candidate: ${esc(candName)}`;
+        if (score.sDist) tooltipCandidate += ` • District: ${esc(score.sDist)}`;
+        if (score.sGroup) tooltipCandidate += ` • Group: ${esc(score.sGroup)}`;
+
         tr.innerHTML = `
-            <td class="p-5 font-mono text-brand-400 font-bold text-lg tracking-widest">${score.id}</td>
-            <td class="p-5 font-bold text-white text-base">
-                ${score.candidateName || 'Unknown'} 
-                <span class="block text-[10px] text-amber-500 font-bold tracking-widest uppercase mt-1 bg-amber-950/30 border border-amber-900/50 px-2 py-0.5 rounded w-fit">${score.division || 'Unassigned'}</span>
+            <td class="px-4 py-3.5 font-mono text-brand-400 font-bold text-base md:text-lg tracking-widest">${score.id}</td>
+            <td class="px-4 py-3.5 font-bold text-white max-w-[220px]">
+                <div class="text-sm md:text-base truncate max-w-[200px] cursor-default" data-tooltip="${tooltipCandidate}" title="${tooltipCandidate}">${candName}</div>
+                <span class="block text-[10px] text-amber-500 font-bold tracking-widest uppercase mt-1 bg-amber-950/30 border border-amber-900/50 px-2 py-0.5 rounded w-fit max-w-[180px] truncate cursor-default" data-tooltip="Division: ${esc(divName)}" title="Division: ${esc(divName)}">${divName}</span>
             </td>
-            <td class="p-5">
-                <div class="flex flex-wrap gap-y-2 justify-center">${auditText}</div>
+            <td class="px-4 py-3.5">
+                <div class="flex flex-wrap gap-y-1.5 justify-center">${auditText}</div>
             </td>
-            <td class="p-5 text-right font-black text-emerald-400 text-xl tracking-tighter">${finalScoreText}</td>
-            <td class="p-5">${actionHtml}</td>
+            <td class="px-4 py-3.5 text-right font-black text-emerald-400 text-lg md:text-xl tracking-tighter whitespace-nowrap">${finalScoreText}</td>
+            <td class="px-4 py-3.5 text-center whitespace-nowrap">${actionHtml}</td>
         `;
         tbody.appendChild(tr);
     });

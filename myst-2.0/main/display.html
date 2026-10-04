@@ -27,10 +27,10 @@
             100% { transform: translateX(-100%); }
         }
 
-        /* Podium Visual Heights */
-        .podium-1 { height: 180px; }
-        .podium-2 { height: 130px; }
-        .podium-3 { height: 100px; }
+        /* Responsive Podium Visual Heights (Scales proportionally on Laptops, TVs & Giant Displays) */
+        .podium-1 { height: clamp(80px, 16vh, 180px); }
+        .podium-2 { height: clamp(60px, 12vh, 130px); }
+        .podium-3 { height: clamp(45px, 9vh, 100px); }
 
         /* Hide scrollbars for TV Broadcast Look */
         ::-webkit-scrollbar { display: none; }
@@ -129,21 +129,21 @@
 
         <!-- HEADER SECTION -->
         <header class="flex items-center justify-between px-4 md:px-8 py-2 md:py-3 bg-gray-900 border-b border-gray-800 flex-shrink-0">
-            <div class="flex items-center gap-3 md:gap-4">
-                <div class="w-10 h-10 md:w-14 md:h-14 bg-blue-600 rounded-full flex items-center justify-center shadow border-2 border-blue-400">
-                    <span class="font-black text-xl md:text-2xl tracking-tighter">M</span>
+            <div class="flex items-center gap-3 md:gap-4 shrink-0">
+                <div class="w-10 h-10 md:w-14 md:h-14 rounded-full overflow-hidden flex items-center justify-center shadow border-2 border-blue-400 bg-gray-900 shrink-0">
+                    <img src="../../resources/MYST_dp.jpeg" alt="MYST Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://www.soumenyoga.in/resources/MYST_dp.jpeg';">
                 </div>
                 <div>
                     <h1 class="text-xl md:text-3xl font-black uppercase tracking-widest text-white leading-none">MYST</h1>
                     <h2 class="text-[8px] md:text-xs text-blue-400 font-bold uppercase tracking-widest mt-1">Management of Yoga Sports & Tournaments</h2>
                 </div>
             </div>
-            <div class="text-right flex flex-col justify-center">
+            <div class="text-right flex flex-col justify-center min-w-0 max-w-[55%]">
                 <div id="display-header-title"
-                    class="text-2xl md:text-4xl font-black text-yellow-500 uppercase tracking-tight">
+                    class="text-xl sm:text-2xl md:text-4xl font-black text-yellow-500 uppercase tracking-tight truncate cursor-default">
                     --</div>
                 <div id="display-header-subtitle"
-                    class="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-1">Standby Mode</div>
+                    class="text-[10px] md:text-xs text-gray-400 font-bold uppercase tracking-widest mt-0.5 sm:mt-1 truncate cursor-default">Standby Mode</div>
             </div>
         </header>
 
@@ -223,47 +223,47 @@
             <!-- MODE 2: PODIUM RESULTS VIEW             -->
             <!-- --------------------------------------- -->
             <div id="view-podium" class="w-full h-full hidden flex-col">
-                <div class="flex justify-center items-end gap-6 h-48 md:h-64 mb-4 md:mb-8 mt-2 shrink-0">
-                    <div class="w-32 md:w-56 flex flex-col items-center">
-                        <div id="podium-2-name" class="font-black text-lg md:text-2xl text-center mb-1 text-gray-300">--</div>
-                        <div id="podium-2-score" class="font-bold text-xs md:text-md text-gray-500 mb-3 tracking-widest uppercase">-- pts</div>
-                        <div class="w-full bg-gradient-to-b from-gray-300 to-gray-500 rounded-t-lg podium-2 flex items-start justify-center pt-2 md:pt-4 border-t-4 border-gray-200">
-                            <span class="text-3xl md:text-5xl font-black text-gray-800">2</span>
+                <div class="flex justify-center items-end gap-3 sm:gap-6 md:gap-8 mb-2 sm:mb-3 mt-1 shrink-0">
+                    <div class="w-28 sm:w-36 md:w-52 flex flex-col items-center min-w-0">
+                        <div id="podium-2-name" class="font-black text-xs sm:text-base md:text-xl text-center mb-0.5 text-gray-300 w-full truncate cursor-default">--</div>
+                        <div id="podium-2-score" class="font-bold text-[10px] sm:text-xs md:text-sm text-gray-500 mb-1 sm:mb-2 tracking-widest uppercase">-- pts</div>
+                        <div class="w-full bg-gradient-to-b from-gray-300 to-gray-500 rounded-t-lg podium-2 flex items-start justify-center pt-1.5 sm:pt-2 md:pt-3 border-t-4 border-gray-200">
+                            <span class="text-2xl sm:text-3xl md:text-5xl font-black text-gray-800">2</span>
                         </div>
                     </div>
-                    <div class="w-40 md:w-64 flex flex-col items-center">
-                        <div class="text-3xl md:text-5xl mb-2 md:mb-3">👑</div>
-                        <div id="podium-1-name" class="font-black text-xl md:text-3xl text-center mb-1 text-yellow-400">--</div>
-                        <div id="podium-1-score" class="font-bold text-sm md:text-lg text-yellow-600 mb-3 tracking-widest uppercase">-- pts</div>
-                        <div class="w-full bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-t-lg podium-1 flex items-start justify-center pt-4 md:pt-6 border-t-4 border-yellow-200 relative z-10">
-                            <span class="text-5xl md:text-7xl font-black text-yellow-900">1</span>
+                    <div class="w-36 sm:w-44 md:w-60 flex flex-col items-center min-w-0">
+                        <div class="text-2xl sm:text-3xl md:text-4xl mb-0.5 sm:mb-1">👑</div>
+                        <div id="podium-1-name" class="font-black text-sm sm:text-lg md:text-2xl text-center mb-0.5 text-yellow-400 w-full truncate cursor-default">--</div>
+                        <div id="podium-1-score" class="font-bold text-xs sm:text-sm md:text-base text-yellow-600 mb-1 sm:mb-2 tracking-widest uppercase">-- pts</div>
+                        <div class="w-full bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-t-lg podium-1 flex items-start justify-center pt-2 sm:pt-3 md:pt-4 border-t-4 border-yellow-200 relative z-10">
+                            <span class="text-4xl sm:text-5xl md:text-7xl font-black text-yellow-900">1</span>
                         </div>
                     </div>
-                    <div class="w-32 md:w-56 flex flex-col items-center">
-                        <div id="podium-3-name" class="font-black text-lg md:text-2xl text-center mb-1 text-orange-400">--</div>
-                        <div id="podium-3-score" class="font-bold text-xs md:text-md text-gray-500 mb-3 tracking-widest uppercase">-- pts</div>
-                        <div class="w-full bg-gradient-to-b from-orange-400 to-orange-600 rounded-t-lg podium-3 flex items-start justify-center pt-2 md:pt-4 border-t-4 border-orange-300">
-                            <span class="text-3xl md:text-5xl font-black text-orange-900">3</span>
+                    <div class="w-28 sm:w-36 md:w-52 flex flex-col items-center min-w-0">
+                        <div id="podium-3-name" class="font-black text-xs sm:text-base md:text-xl text-center mb-0.5 text-orange-400 w-full truncate cursor-default">--</div>
+                        <div id="podium-3-score" class="font-bold text-[10px] sm:text-xs md:text-sm text-gray-500 mb-1 sm:mb-2 tracking-widest uppercase">-- pts</div>
+                        <div class="w-full bg-gradient-to-b from-orange-400 to-orange-600 rounded-t-lg podium-3 flex items-start justify-center pt-1.5 sm:pt-2 md:pt-3 border-t-4 border-orange-300">
+                            <span class="text-2xl sm:text-3xl md:text-5xl font-black text-orange-900">3</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-gray-900 rounded-2xl border border-gray-800 shadow-md overflow-hidden flex-grow flex flex-col min-h-0">
-                    <div class="bg-black/80 py-2 md:py-3 text-center border-b border-gray-800 shrink-0">
+                    <div class="bg-black/80 py-1 sm:py-1.5 text-center border-b border-gray-800 shrink-0">
                         <h3 class="text-gray-400 font-bold tracking-widest uppercase text-xs md:text-sm">Official Leaderboard</h3>
                     </div>
                     <div class="flex-grow overflow-y-auto relative">
                         <table class="w-full text-left border-collapse table-fixed">
-                            <thead class="bg-gray-950 text-gray-500 sticky top-0 uppercase text-[10px] md:text-xs tracking-widest z-10 shadow-sm">
+                            <thead class="bg-gray-950 text-gray-500 sticky top-0 uppercase text-[9px] sm:text-[10px] md:text-xs tracking-widest z-10 shadow-sm">
                                 <tr>
-                                    <th class="p-2 md:p-4 md:pl-8 w-[15%]">Rank</th>
-                                    <th class="p-2 md:p-4 w-[40%]">Athlete Name</th>
-                                    <th class="p-2 md:p-4 w-[15%] text-center">Division</th>
-                                    <th class="p-2 md:p-4 w-[15%] text-center">District</th>
-                                    <th class="p-2 md:p-4 w-[15%] text-right md:pr-8">Final Score</th>
+                                    <th class="py-1.5 md:py-2 px-2 md:px-4 md:pl-6 w-[12%]">Rank</th>
+                                    <th class="py-1.5 md:py-2 px-2 md:px-4 w-[40%]">Athlete Name</th>
+                                    <th class="py-1.5 md:py-2 px-2 md:px-4 w-[18%] text-center">Division</th>
+                                    <th class="py-1.5 md:py-2 px-2 md:px-4 w-[15%] text-center">District</th>
+                                    <th class="py-1.5 md:py-2 px-2 md:px-4 md:pr-6 w-[15%] text-right">Final Score</th>
                                 </tr>
                             </thead>
-                            <tbody id="podium-list-tbody" class="text-sm md:text-xl font-bold divide-y divide-gray-800">
+                            <tbody id="podium-list-tbody" class="text-xs sm:text-sm md:text-base font-bold divide-y divide-gray-800">
                             </tbody>
                         </table>
                     </div>
@@ -274,7 +274,7 @@
 
         <div class="bg-gray-900 text-yellow-500 text-[10px] md:text-sm font-bold py-1 md:py-2 marquee-container border-t border-gray-800 flex-shrink-0">
             <div class="marquee-content uppercase tracking-widest flex gap-6 md:gap-12">
-                <span>📢 Babla Yoga Training Center (7076280550)</span>
+                <span>📢 Vivekananda Yoga Training Center</span>
                 <span>•</span>
                 <span>📧 soumensantra1994@gmail.com</span>
                 <span>•</span>
@@ -284,6 +284,61 @@
             </div>
         </div>
     </div>
+
+    <!-- Global Hover Tooltip Container -->
+    <div id="global-ui-tooltip" class="fixed hidden pointer-events-none z-[9999] bg-gray-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-700 shadow-2xl max-w-sm break-words"></div>
+
+    <script>
+        // --- GLOBAL HOVER TOOLTIP OVERLAY ---
+        (function() {
+            const tooltip = document.getElementById('global-ui-tooltip');
+            if (!tooltip) return;
+            let currentEl = null;
+
+            function showTooltip(el, e) {
+                const text = el.getAttribute('data-tooltip') || el.getAttribute('title');
+                if (!text || text.trim() === '' || text.trim() === '-' || text.trim() === '--') return;
+                currentEl = el;
+                tooltip.textContent = text;
+                tooltip.classList.remove('hidden');
+                updatePos(e);
+            }
+
+            function hideTooltip() {
+                currentEl = null;
+                tooltip.classList.add('hidden');
+            }
+
+            function updatePos(e) {
+                const pad = 12;
+                let x = e.clientX + pad;
+                let y = e.clientY + pad;
+                const rect = tooltip.getBoundingClientRect();
+                if (x + rect.width > window.innerWidth - 12) {
+                    x = e.clientX - rect.width - pad;
+                }
+                if (y + rect.height > window.innerHeight - 12) {
+                    y = e.clientY - rect.height - pad;
+                }
+                tooltip.style.left = Math.max(8, x) + 'px';
+                tooltip.style.top = Math.max(8, y) + 'px';
+            }
+
+            document.addEventListener('mouseover', (e) => {
+                const target = e.target.closest('[data-tooltip]');
+                if (target) showTooltip(target, e);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (currentEl) updatePos(e);
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                const target = e.target.closest('[data-tooltip]');
+                if (target && target === currentEl) hideTooltip();
+            });
+        })();
+    </script>
 
     <script type="module">
         import { initAuth } from './scripts/auth-service.js';

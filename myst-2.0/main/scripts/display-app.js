@@ -18,6 +18,17 @@ let publishedResultsMap = {};
 
 let unsubQueue = null;
 
+// Escaping helper for safe HTML attribute rendering
+function esc(str) {
+    if (!str && str !== 0) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // ==========================================
 // 1. SWITCHBOARD INITIALIZATION
 // ==========================================
@@ -77,8 +88,14 @@ function bindSettingsUI() {
             document.getElementById('view-live-scoring').classList.add('flex');
 
             const matName = document.getElementById('select-mat').options[document.getElementById('select-mat').selectedIndex].text;
-            document.getElementById('display-header-title').innerText = matName;
-            document.getElementById('display-header-subtitle').innerText = "Live Scoreboard";
+            const titleEl = document.getElementById('display-header-title');
+            const subEl = document.getElementById('display-header-subtitle');
+            titleEl.innerText = matName;
+            titleEl.setAttribute('data-tooltip', matName);
+            titleEl.setAttribute('title', matName);
+            subEl.innerText = "Live Scoreboard";
+            subEl.removeAttribute('data-tooltip');
+            subEl.removeAttribute('title');
 
             stopPagination();
             listenToQueue();
@@ -88,8 +105,14 @@ function bindSettingsUI() {
             document.getElementById('view-podium').classList.remove('hidden');
             document.getElementById('view-podium').classList.add('flex');
 
-            document.getElementById('display-header-title').innerText = "OFFICIAL PODIUM";
-            document.getElementById('display-header-subtitle').innerText = currentCategoryId;
+            const titleEl = document.getElementById('display-header-title');
+            const subEl = document.getElementById('display-header-subtitle');
+            titleEl.innerText = "OFFICIAL PODIUM";
+            titleEl.removeAttribute('data-tooltip');
+            titleEl.removeAttribute('title');
+            subEl.innerText = currentCategoryId;
+            subEl.setAttribute('data-tooltip', currentCategoryId);
+            subEl.setAttribute('title', currentCategoryId);
 
             if (unsubQueue) { unsubQueue(); unsubQueue = null; }
             renderPodiumView();
@@ -218,11 +241,17 @@ function renderLiveView() {
     const upcomingQueue = padToFive(upcomingBatchNo ? currentBatches[upcomingBatchNo] : []);
     tbodyUpcoming.innerHTML = upcomingQueue.map(q => {
         if (!q) return `<tr class="border-b border-gray-800/10 h-[20%]"><td class="py-0.5 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[55%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[30%] text-gray-900">-</td></tr>`;
+        const nameText = q.name || 'Unknown';
+        const groupText = q.group || q.division || '';
         return `
             <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30 h-[20%]">
-                <td class="py-0.5 px-2 md:px-4 font-mono text-blue-500 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
-                <td class="py-0.5 px-2 md:px-4 font-bold text-gray-400 text-[10px] md:text-xs w-[55%] truncate">${q.name || 'Unknown'}</td>
-                <td class="py-0.5 px-2 md:px-4 text-right text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[30%] truncate">${q.group || q.division || ''}</td>
+                <td class="py-0.5 px-2 md:px-4 font-mono text-blue-500 w-[15%] text-[10px] md:text-xs">${esc(q.trackNo)}</td>
+                <td class="py-0.5 px-2 md:px-4 font-bold text-gray-400 text-[10px] md:text-xs w-[55%]">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(nameText)}" title="${esc(nameText)}">${esc(nameText)}</span>
+                </td>
+                <td class="py-0.5 px-2 md:px-4 text-right text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[30%]">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(groupText)}" title="${esc(groupText)}">${esc(groupText)}</span>
+                </td>
             </tr>
         `;
     }).join('');
@@ -231,11 +260,17 @@ function renderLiveView() {
     tbodyRecent.innerHTML = recentQueue.map(q => {
         if (!q) return `<tr class="border-b border-gray-800/10 h-[20%]"><td class="py-0.5 px-2 md:px-4 w-[15%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[40%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[25%] text-gray-900">-</td><td class="py-0.5 px-2 md:px-4 w-[20%] text-gray-900">-</td></tr>`;
         const finalScore = calculateFinalScore(q.trackNo, q);
+        const nameText = q.name || 'Unknown';
+        const groupText = q.group || q.division || '';
         return `
             <tr class="hover:bg-gray-800 transition-colors border-b border-gray-800/30 h-[20%]">
-                <td class="py-0.5 px-2 md:px-4 font-mono text-green-500/70 w-[15%] text-[10px] md:text-xs">${q.trackNo}</td>
-                <td class="py-0.5 px-2 md:px-4 font-bold text-gray-300 text-[10px] md:text-xs w-[40%] truncate">${q.name || 'Unknown'}</td>
-                <td class="py-0.5 px-2 md:px-4 text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[25%] text-center truncate">${q.group || q.division || ''}</td>
+                <td class="py-0.5 px-2 md:px-4 font-mono text-green-500/70 w-[15%] text-[10px] md:text-xs">${esc(q.trackNo)}</td>
+                <td class="py-0.5 px-2 md:px-4 font-bold text-gray-300 text-[10px] md:text-xs w-[40%]">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(nameText)}" title="${esc(nameText)}">${esc(nameText)}</span>
+                </td>
+                <td class="py-0.5 px-2 md:px-4 text-gray-500 font-bold text-[8px] md:text-[10px] uppercase w-[25%] text-center">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(groupText)}" title="${esc(groupText)}">${esc(groupText)}</span>
+                </td>
                 <td class="py-0.5 px-2 md:px-4 text-right font-black text-green-400 text-xs md:text-sm w-[20%]">${finalScore}</td>
             </tr>
         `;
@@ -290,6 +325,8 @@ function generateLiveRow(qItem) {
     const trackNo = qItem.trackNo;
     const s = scoresMap[trackNo] || {};
     const panelSize = s.panelSize || qItem.panelSize || 5;
+    const nameText = qItem.name || 'Unknown';
+    const groupText = qItem.group || qItem.division || '';
 
     const getJ = (prefix) => {
         if (s[`${prefix}_a1`] === undefined) return { total: null };
@@ -318,10 +355,14 @@ function generateLiveRow(qItem) {
 
     return `
         <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 h-[20%]">
-            <td class="py-0.5 md:py-1 px-2 md:px-4 font-mono text-blue-400 font-bold">${trackNo}</td>
-            <td class="py-0.5 md:py-1 px-2 md:px-4 font-black tracking-wide leading-tight truncate">
-                ${qItem.name || 'Unknown'}
-                <div class="text-[8px] md:text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-0.5 opacity-80 truncate">${qItem.group || qItem.division || ''}</div>
+            <td class="py-0.5 md:py-1 px-2 md:px-4 font-mono text-blue-400 font-bold">${esc(trackNo)}</td>
+            <td class="py-0.5 md:py-1 px-2 md:px-4 font-black tracking-wide leading-tight min-w-0">
+                <div class="truncate cursor-default text-xs md:text-base text-white" data-tooltip="${esc(nameText)}" title="${esc(nameText)}">
+                    ${esc(nameText)}
+                </div>
+                <div class="text-[8px] md:text-[10px] text-blue-400 font-bold uppercase tracking-widest mt-0.5 opacity-80 truncate cursor-default" data-tooltip="${esc(groupText)}" title="${esc(groupText)}">
+                    ${esc(groupText)}
+                </div>
             </td>
             <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j1, qItem.j1_status, false)}</td>
             <td class="py-0.5 md:py-1 px-1 md:px-2 text-center">${formatCell(j2, qItem.j2_status, false)}</td>
@@ -365,10 +406,15 @@ function renderPodiumView() {
         const nameEl = document.getElementById(`podium-${num}-name`);
         const scoreEl = document.getElementById(`podium-${num}-score`);
         if (athlete) {
-            nameEl.innerText = athlete.name;
+            const athleteName = athlete.name || 'Unknown';
+            nameEl.innerText = athleteName;
+            nameEl.setAttribute('data-tooltip', athleteName);
+            nameEl.setAttribute('title', athleteName);
             scoreEl.innerText = `${athlete.finalScore} PTS`;
         } else {
             nameEl.innerText = "--";
+            nameEl.removeAttribute('data-tooltip');
+            nameEl.removeAttribute('title');
             scoreEl.innerText = "--";
         }
     };
@@ -401,13 +447,23 @@ function renderPodiumPage(remainingList) {
     const pageItems = remainingList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
     pageItems.forEach(s => {
+        const nameText = s.name || 'Unknown';
+        const divText = s.division || '';
+        const distText = s.district || '';
+        const scoreText = s.finalScore !== undefined ? s.finalScore : '-';
         listBody.innerHTML += `
             <tr class="hover:bg-gray-800 transition-colors">
-                <td class="p-2 md:p-4 md:pl-8 font-black text-gray-500 w-[15%]">#${s.rank}</td>
-                <td class="p-2 md:p-4 font-bold text-gray-300 w-[40%] truncate">${s.name}</td>
-                <td class="p-2 md:p-4 text-center text-blue-400/80 text-[10px] md:text-sm font-bold uppercase w-[15%] truncate">${s.division || ''}</td>
-                <td class="p-2 md:p-4 text-center text-gray-400 text-[10px] md:text-sm w-[15%] truncate">${s.district}</td>
-                <td class="p-2 md:p-4 text-right md:pr-8 text-gray-300 font-mono w-[15%]">${s.finalScore}</td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 md:pl-6 font-black text-gray-500 w-[12%] text-xs md:text-sm">#${s.rank}</td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 font-bold text-gray-200 w-[40%] text-xs md:text-base">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(nameText)}" title="${esc(nameText)}">${esc(nameText)}</span>
+                </td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 text-center text-blue-400 text-[10px] md:text-xs font-bold uppercase w-[18%]">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(divText)}" title="${esc(divText)}">${esc(divText || '-')}</span>
+                </td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 text-center text-gray-400 text-[10px] md:text-xs w-[15%]">
+                    <span class="block truncate cursor-default" data-tooltip="${esc(distText)}" title="${esc(distText)}">${esc(distText || '-')}</span>
+                </td>
+                <td class="py-1.5 md:py-2 px-2 md:px-4 md:pr-6 text-right text-gray-100 font-mono font-bold text-xs md:text-base w-[15%]">${scoreText}</td>
             </tr>
         `;
     });

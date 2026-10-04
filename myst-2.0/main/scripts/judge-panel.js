@@ -215,10 +215,10 @@ function listenToLiveQueue() {
             currentQueue = [];
             btnGo.disabled = true;
             btnGo.innerText = "Awaiting Batch...";
-            btnGo.className = "w-full bg-slate-300 text-slate-500 font-black py-5 rounded-xl text-xl uppercase tracking-widest cursor-not-allowed";
+            btnGo.className = "w-full bg-slate-300 text-slate-500 font-black py-3 sm:py-3.5 rounded-xl text-sm sm:text-base uppercase tracking-wider cursor-not-allowed";
             statusIcon.innerText = "⏳";
             statusText.innerText = "Waiting for Stage Coordinator";
-            banner.className = "bg-slate-100 border border-slate-300 rounded-lg p-4 text-center mb-8 flex flex-col items-center justify-center transition-colors";
+            banner.className = "bg-slate-100 border border-slate-300 rounded-xl p-3 sm:p-4 text-center mb-4 sm:mb-5 flex flex-col items-center justify-center transition-colors";
             return;
         }
 
@@ -254,11 +254,11 @@ function listenToLiveQueue() {
         // Activate the GO Button
         statusIcon.innerText = "🔥";
         statusText.innerText = "Batch Ready for Scoring";
-        banner.className = "bg-brand-50 border border-brand-200 rounded-lg p-4 text-center mb-8 flex flex-col items-center justify-center transition-colors";
+        banner.className = "bg-brand-50 border border-brand-200 rounded-xl p-3 sm:p-4 text-center mb-4 sm:mb-5 flex flex-col items-center justify-center transition-colors";
         
         btnGo.disabled = false;
         btnGo.innerText = "GO -> Start Scoring";
-        btnGo.className = "w-full bg-brand-600 hover:bg-brand-500 text-white font-black py-5 rounded-xl text-xl uppercase tracking-widest cursor-pointer";
+        btnGo.className = "w-full bg-brand-600 hover:bg-brand-500 text-white font-black py-3 sm:py-3.5 rounded-xl text-sm sm:text-base uppercase tracking-wider cursor-pointer shadow-md transition-colors";
     });
 }
 
@@ -301,15 +301,28 @@ function renderScoringStage() {
 
     currentQueue.forEach(c => {
         const clone = template.content.cloneNode(true);
-        clone.querySelector('.athlete-name').innerText = c.name;
-        clone.querySelector('.athlete-track').innerText = c.trackNo;
-        clone.querySelector('.athlete-division').innerText = c.division;
-        clone.querySelector('.athlete-group').innerText = c.group;
+        const nameEl = clone.querySelector('.athlete-name');
+        const trackEl = clone.querySelector('.athlete-track');
+        const divEl = clone.querySelector('.athlete-division');
+        const groupEl = clone.querySelector('.athlete-group');
+
+        nameEl.innerText = c.name;
+        nameEl.title = c.name;
+        trackEl.innerText = c.trackNo;
+        divEl.innerText = c.division;
+        divEl.title = c.division;
+        groupEl.innerText = c.group;
+        groupEl.title = c.group;
         
         const input = clone.querySelector('.score-input');
         input.max = stage.max;
         input.min = 0;
         input.value = localScores[c.trackNo][stage.id]; // Restore typed value if navigating back
+
+        // Auto-select on focus for ergonomic touch scoring
+        input.addEventListener('focus', () => {
+            input.select();
+        });
 
         // Input Validation Listener
         input.addEventListener('input', (e) => {
@@ -393,11 +406,11 @@ function validateAllScores() {
     if (isValid) {
         btnSubmit.disabled = false;
         btnSubmit.innerText = "✅ SUBMIT FINAL SCORES";
-        btnSubmit.className = "w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-xl text-lg uppercase tracking-widest cursor-pointer";
+        btnSubmit.className = "w-full bg-green-600 hover:bg-green-500 text-white font-black py-3 sm:py-3.5 rounded-xl text-sm sm:text-base uppercase tracking-wider cursor-pointer shadow-md transition-colors";
     } else {
         btnSubmit.disabled = true;
         btnSubmit.innerText = `Awaiting Valid Scores (${filledFields}/${totalFields})`;
-        btnSubmit.className = "w-full bg-slate-200 text-slate-500 font-black py-4 rounded-xl text-lg uppercase tracking-widest cursor-not-allowed border border-slate-300";
+        btnSubmit.className = "w-full bg-slate-200 text-slate-400 font-black py-3 sm:py-3.5 rounded-xl text-sm sm:text-base uppercase tracking-wider cursor-not-allowed border border-slate-300 transition-colors";
     }
 }
 

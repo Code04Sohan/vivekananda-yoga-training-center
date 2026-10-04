@@ -188,26 +188,37 @@ function renderCandidateTable(candidates) {
             actionButtons = `<button class="btn-dns bg-red-950/50 hover:bg-red-900 border border-red-900/80 text-red-400 hover:text-white px-4 py-2 rounded-lg text-xs transition-colors uppercase tracking-wider font-bold" data-id="${c.id}">Force DNS</button>`;
         }
 
-        const divisionDisplay = c.division && c.division !== 'Unassigned' 
-            ? `<span class="text-amber-500 font-bold text-xs block mt-1 tracking-wider uppercase">${c.division}</span>` 
-            : `<span class="text-slate-500 text-xs italic block mt-1">Unassigned</span>`;
+        const esc = (text) => {
+            if (!text) return '';
+            return String(text).replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
 
-        const coachDisplay = `<span class="text-purple-400 text-[10px] uppercase tracking-widest font-bold block mt-1 border border-purple-900/50 bg-purple-950/30 px-2 py-0.5 rounded w-fit">Coach: ${c.coachName || 'Independent'}</span>`;
+        const divisionVal = c.division && c.division !== 'Unassigned' ? c.division : '';
+        const divisionDisplay = divisionVal 
+            ? `<span class="text-amber-500 font-bold text-xs truncate max-w-[110px] block tracking-wider uppercase cursor-default" data-tooltip="Division: ${esc(divisionVal)}" title="Division: ${esc(divisionVal)}">${divisionVal}</span>` 
+            : `<span class="text-slate-500 text-xs italic block">Unassigned</span>`;
+
+        const coachVal = c.coachName || 'Independent';
+        const coachDisplay = `<span class="text-purple-400 text-[10px] uppercase tracking-widest font-bold block border border-purple-900/50 bg-purple-950/30 px-2 py-0.5 rounded truncate max-w-[140px] w-fit cursor-default" data-tooltip="Coach: ${esc(coachVal)}" title="Coach: ${esc(coachVal)}">Coach: ${coachVal}</span>`;
 
         const html = `
-            <td class="p-5 font-mono text-brand-400 font-bold tracking-widest bg-slate-950/20">${c.trackNo}</td>
-            <td class="p-5 font-bold text-white bg-slate-900/20">
-                <div class="text-base mb-1">${c.name}</div>
+            <td class="px-4 py-3.5 font-mono text-brand-400 font-bold tracking-widest bg-slate-950/20">${c.trackNo}</td>
+            <td class="px-4 py-3.5 font-bold text-white bg-slate-900/20 max-w-[240px]">
+                <div class="text-sm md:text-base mb-1 truncate max-w-[220px] cursor-default" data-tooltip="${esc(c.name)}" title="${esc(c.name)}">${c.name}</div>
                 <div class="flex items-center space-x-2">
                     ${divisionDisplay}
                     ${coachDisplay}
                 </div>
             </td>
-            <td class="p-5 text-slate-400 font-semibold bg-slate-950/20">${c.gender || 'N/A'}</td>
-            <td class="p-5 text-slate-400 font-medium bg-slate-900/20">${c.district || 'N/A'}</td>
-            <td class="p-5 text-slate-300 text-sm font-bold tracking-tight bg-slate-950/20">${groupValue}</td>
-            <td class="p-5 bg-slate-900/20">${statusBadge}</td>
-            <td class="p-5 text-right flex justify-end bg-slate-950/20">${actionButtons}</td>
+            <td class="px-4 py-3.5 text-slate-400 font-semibold bg-slate-950/20">${c.gender || 'N/A'}</td>
+            <td class="px-4 py-3.5 text-slate-400 font-medium bg-slate-900/20 max-w-[160px]">
+                <div class="truncate max-w-[150px] cursor-default" data-tooltip="District: ${esc(c.district || 'N/A')}" title="District: ${esc(c.district || 'N/A')}">${c.district || 'N/A'}</div>
+            </td>
+            <td class="px-4 py-3.5 text-slate-300 text-sm font-bold tracking-tight bg-slate-950/20 max-w-[200px]">
+                <div class="truncate max-w-[190px] cursor-default" data-tooltip="Age Group: ${esc(groupValue)}" title="Age Group: ${esc(groupValue)}">${groupValue}</div>
+            </td>
+            <td class="px-4 py-3.5 bg-slate-900/20 whitespace-nowrap">${statusBadge}</td>
+            <td class="px-4 py-3.5 text-right flex justify-end bg-slate-950/20 whitespace-nowrap">${actionButtons}</td>
         `;
 
         let tr = existingRows[c.trackNo];
@@ -281,23 +292,14 @@ function setupFactoryReset() {
     btnTrigger.addEventListener('click', () => {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        
-        // Fix for Tailwind CSS transition classes
-        setTimeout(() => {
-            modal.children[0].dataset.show = 'true';
-        }, 10);
-        
         inputConfirm.value = '';
         btnExecute.disabled = true;
     });
 
     // Close Modal
     const closeModal = () => {
-        modal.children[0].dataset.show = 'false';
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }, 200); // Wait for transition
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     };
 
     btnCancel.addEventListener('click', closeModal);
