@@ -321,11 +321,11 @@ function listenToLiveQueue(matId) {
             tr.className = "border-b border-slate-800 hover:bg-slate-800/50 transition-colors group";
             
             const renderStatus = (status) => status 
-                ? `<div class="flex justify-center"><span class="w-6 h-6 bg-emerald-900/50 text-emerald-400 border border-emerald-700 rounded-full flex items-center justify-center font-black shadow-[0_0_10px_rgba(16,185,129,0.3)]">✓</span></div>` 
+                ? `<div class="flex justify-center"><span class="w-6 h-6 bg-emerald-900/50 text-emerald-400 border border-emerald-700 rounded-full flex items-center justify-center font-black">✓</span></div>` 
                 : `<div class="flex justify-center"><span class="w-6 h-6 bg-slate-900 text-slate-600 border border-slate-700 rounded-full flex items-center justify-center font-bold">−</span></div>`;
 
             // NEW: The Cancel Button
-            const cancelBtn = `<button class="btn-cancel-queue text-[10px] uppercase font-bold tracking-wider bg-red-950/40 hover:bg-red-900 border border-red-900/80 text-red-400 hover:text-white px-3 py-1.5 rounded-lg transition-colors shadow flex items-center justify-center mx-auto" data-track="${data.trackNo}"><span class="mr-1">✖</span> Cancel</button>`;
+            const cancelBtn = `<button class="btn-cancel-queue text-[10px] uppercase font-bold tracking-wider bg-red-950/40 hover:bg-red-900 border border-red-900/80 text-red-400 hover:text-white px-3 py-1.5 rounded-lg transition-colors flex items-center justify-center mx-auto" data-track="${data.trackNo}"><span class="mr-1">✖</span> Cancel</button>`;
 
             tr.innerHTML = `
                 <td class="p-4 font-mono text-slate-500 text-xs font-bold tracking-widest bg-slate-950/20 text-center">B-${data.batchNo}</td>

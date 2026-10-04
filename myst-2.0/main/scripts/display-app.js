@@ -313,11 +313,11 @@ function generateLiveRow(qItem) {
     const isFullyScored = qItem.j1_status && qItem.j2_status && qItem.j3_status && qItem.j4_status && qItem.j5_status;
 
     if (isFullyScored) {
-        finalScoreHtml = `<span class="text-green-400 font-black text-lg md:text-2xl drop-shadow-[0_0_12px_rgba(74,222,128,0.5)] animate-fade-in">${calculateFinalScore(trackNo, qItem)}</span>`;
+        finalScoreHtml = `<span class="text-green-400 font-black text-lg md:text-2xl">${calculateFinalScore(trackNo, qItem)}</span>`;
     }
 
     return `
-        <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 animate-fade-in h-[20%]">
+        <tr class="hover:bg-gray-800/50 transition-colors border-b border-gray-800/50 h-[20%]">
             <td class="py-0.5 md:py-1 px-2 md:px-4 font-mono text-blue-400 font-bold">${trackNo}</td>
             <td class="py-0.5 md:py-1 px-2 md:px-4 font-black tracking-wide leading-tight truncate">
                 ${qItem.name || 'Unknown'}
@@ -402,7 +402,7 @@ function renderPodiumPage(remainingList) {
 
     pageItems.forEach(s => {
         listBody.innerHTML += `
-            <tr class="hover:bg-gray-800 transition-colors animate-fade-in">
+            <tr class="hover:bg-gray-800 transition-colors">
                 <td class="p-2 md:p-4 md:pl-8 font-black text-gray-500 w-[15%]">#${s.rank}</td>
                 <td class="p-2 md:p-4 font-bold text-gray-300 w-[40%] truncate">${s.name}</td>
                 <td class="p-2 md:p-4 text-center text-blue-400/80 text-[10px] md:text-sm font-bold uppercase w-[15%] truncate">${s.division || ''}</td>

@@ -164,7 +164,7 @@ function renderDashboard() {
         const isPublished = score.status === 'published' || score.status === 'OFFICIAL';
         const actionHtml = isPublished 
             ? `<span class="text-[10px] text-emerald-400 font-bold border border-emerald-800/50 bg-emerald-950/40 px-3 py-1.5 rounded-md uppercase tracking-widest flex items-center justify-center shadow-inner"><span class="mr-1.5">🔒</span> LOCKED</span>`
-            : `<button class="btn-admin-edit bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-xs border border-slate-600 transition-colors uppercase font-bold tracking-wider shadow-lg flex items-center justify-center active:scale-95" data-id="${score.id}" data-track="${score.id}"><span class="mr-2">✏️</span> Edit</button>`;
+            : `<button class="btn-admin-edit bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-xs border border-slate-600 transition-colors uppercase font-bold tracking-wider flex items-center justify-center" data-id="${score.id}" data-track="${score.id}"><span class="mr-2">✏️</span> Edit</button>`;
 
         // If not fully scored, show "..."" instead of "0.00"
         const finalScoreText = score.isFullyScored ? score.olympicSum.toFixed(2) : '<span class="text-slate-600">...</span>';
@@ -178,7 +178,7 @@ function renderDashboard() {
             <td class="p-5">
                 <div class="flex flex-wrap gap-y-2 justify-center">${auditText}</div>
             </td>
-            <td class="p-5 text-right font-black text-emerald-400 text-xl tracking-tighter drop-shadow-md">${finalScoreText}</td>
+            <td class="p-5 text-right font-black text-emerald-400 text-xl tracking-tighter">${finalScoreText}</td>
             <td class="p-5">${actionHtml}</td>
         `;
         tbody.appendChild(tr);
@@ -285,7 +285,6 @@ function setupWipeScoresModal() {
         modal.classList.add('flex');
         inputConfirm.value = '';
         btnExecute.disabled = true;
-        btnExecute.classList.remove('animate-pulse');
     });
 
     // 2. Close Modal
@@ -301,10 +300,8 @@ function setupWipeScoresModal() {
     inputConfirm.addEventListener('input', (e) => {
         if (e.target.value === 'confirm') {
             btnExecute.disabled = false;
-            btnExecute.classList.add('animate-pulse');
         } else {
             btnExecute.disabled = true;
-            btnExecute.classList.remove('animate-pulse');
         }
     });
 
@@ -335,7 +332,6 @@ function setupWipeScoresModal() {
         } finally {
             btnExecute.innerText = "Wipe Scorecards";
             btnExecute.disabled = false;
-            btnExecute.classList.remove('animate-pulse');
         }
     });
 }

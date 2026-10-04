@@ -173,12 +173,12 @@ function renderResultsTable(standings) {
         const isPodium = s.rank <= 3;
         html += `<tr class="${isPodium ? "bg-slate-800/80 font-bold" : "text-slate-400"} hover:bg-slate-800/50 transition-colors">
             <td class="p-5 text-amber-500 font-black text-xs uppercase tracking-widest">${s.division}</td>
-            <td class="p-5 text-xl tracking-tighter drop-shadow-sm">${isPodium ? s.medal : s.rank}</td>
+            <td class="p-5 text-xl tracking-tighter">${isPodium ? s.medal : s.rank}</td>
             <td class="p-5 font-mono text-xs tracking-widest">${s.trackNo}</td>
             <td class="p-5 text-white text-base">${s.name}</td>
             <td class="p-5 text-purple-400 text-[10px] uppercase tracking-widest font-bold"><span class="bg-purple-950/40 border border-purple-900/50 px-2 py-0.5 rounded">${s.coachName}</span></td>
             <td class="p-5 text-sm">${s.district}</td>
-            <td class="p-5 text-right text-emerald-400 font-black text-2xl tracking-tighter drop-shadow-md">${s.finalScore}</td></tr>`;
+            <td class="p-5 text-right text-emerald-400 font-black text-2xl tracking-tighter">${s.finalScore}</td></tr>`;
     });
     container.innerHTML = html + `</tbody></table>`;
 }

@@ -39,11 +39,11 @@ async function loadPublishedExplorer() {
             const dateStr = new Date(data.publishedAt).toLocaleString();
             
             const card = document.createElement('div');
-            card.className = "bg-slate-900/60 border border-slate-700/50 p-6 rounded-3xl cursor-pointer hover:bg-slate-800 hover:border-brand-500/50 transition-all shadow-xl hover:shadow-[0_0_20px_rgba(37,99,235,0.15)] active:scale-95 flex flex-col justify-between backdrop-blur-md group";
+            card.className = "bg-slate-900 border border-slate-700 p-6 rounded-2xl cursor-pointer hover:bg-slate-800 hover:border-brand-500/50 transition-colors flex flex-col justify-between group";
             card.innerHTML = `
                 <div>
                     <div class="flex justify-between items-start mb-4">
-                        <span class="text-[10px] font-black text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-lg uppercase tracking-widest border border-emerald-900/50 shadow-inner flex items-center"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>OFFICIAL</span>
+                        <span class="text-[10px] font-black text-emerald-400 bg-emerald-950/40 px-3 py-1.5 rounded-lg uppercase tracking-widest border border-emerald-900/50 shadow-inner flex items-center"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span>OFFICIAL</span>
                         <span class="text-xs text-slate-500 font-bold">${dateStr}</span>
                     </div>
                     <div class="font-black text-white text-xl tracking-tighter leading-tight mb-2 group-hover:text-brand-400 transition-colors">${data.group}</div>
@@ -52,7 +52,7 @@ async function loadPublishedExplorer() {
                         <span class="text-slate-500 text-xs font-bold uppercase tracking-widest bg-slate-950/40 border border-slate-800 px-2 py-1 rounded-md">${data.district}</span>
                     </div>
                 </div>
-                <div class="mt-6 text-xs font-bold tracking-widest text-brand-500 uppercase flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0 duration-300">
+                <div class="mt-6 text-xs font-bold tracking-widest text-brand-500 uppercase flex items-center justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                     View ${data.standings.length} athletes <span class="ml-2">→</span>
                 </div>
             `;
@@ -80,13 +80,13 @@ function showExplorerDetails(data) {
                 </div>
             </div>
             <div class="flex flex-wrap gap-3">
-                <button id="btn-download-csv" class="bg-emerald-900/30 hover:bg-emerald-800 text-emerald-400 hover:text-white border border-emerald-800 text-xs font-bold py-3 px-5 rounded-xl shadow-lg transition-colors flex items-center uppercase tracking-widest active:scale-95">
+                <button id="btn-download-csv" class="bg-emerald-900/30 hover:bg-emerald-800 text-emerald-400 hover:text-white border border-emerald-800 text-xs font-bold py-3 px-5 rounded-xl transition-colors flex items-center uppercase tracking-widest">
                     <span class="mr-2">⬇️</span> Download CSV
                 </button>
-                <button id="btn-delete-single-result" class="bg-red-900/30 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-xs font-bold py-3 px-5 rounded-xl shadow-lg transition-colors flex items-center uppercase tracking-widest active:scale-95">
+                <button id="btn-delete-single-result" class="bg-red-900/30 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-xs font-bold py-3 px-5 rounded-xl transition-colors flex items-center uppercase tracking-widest">
                     <span class="mr-2">🗑️</span> Delete Result
                 </button>
-                <button id="btn-close-details" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-600 text-xs font-bold py-3 px-5 rounded-xl shadow-lg transition-colors flex items-center uppercase tracking-widest active:scale-95">
+                <button id="btn-close-details" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-600 text-xs font-bold py-3 px-5 rounded-xl transition-colors flex items-center uppercase tracking-widest">
                     <span class="mr-2">✖</span> Close View
                 </button>
             </div>
@@ -104,12 +104,12 @@ function showExplorerDetails(data) {
         
         html += `<tr class="hover:bg-slate-800/50 transition-colors ${isPodium ? 'bg-slate-900/40 text-slate-200' : 'text-slate-500'}">
             <td class="p-5 font-bold text-amber-500 text-xs uppercase tracking-widest">${s.division || ''}</td>
-            <td class="p-5 text-xl tracking-tighter font-black drop-shadow-sm">${isPodium ? s.medal : s.rank}</td>
+            <td class="p-5 text-xl tracking-tighter font-black">${isPodium ? s.medal : s.rank}</td>
             <td class="p-5 font-mono text-xs tracking-widest font-bold">${s.trackNo}</td>
             <td class="p-5 font-bold text-base ${isPodium ? 'text-white' : ''}">${s.name}</td>
             <td class="p-5 text-purple-400 text-[10px] uppercase tracking-widest font-bold"><span class="bg-purple-950/40 border border-purple-900/50 px-2 py-0.5 rounded">${s.coachName || 'Independent'}</span></td>
             <td class="p-5 text-sm">${s.district}</td>
-            <td class="p-5 text-right font-black text-2xl tracking-tighter drop-shadow-md ${isPodium ? 'text-brand-400' : 'text-slate-500'}">${s.finalScore}</td>
+            <td class="p-5 text-right font-black text-2xl tracking-tighter ${isPodium ? 'text-brand-400' : 'text-slate-500'}">${s.finalScore}</td>
         </tr>`;
     });
     

@@ -208,14 +208,14 @@ function listenToLiveQueue() {
         const banner = document.getElementById('queue-status-banner');
 
         // Reset UI
-        slots.forEach(slot => { slot.value = ''; slot.classList.remove('bg-white', 'border-brand-500', 'text-brand-600', 'shadow-md'); slot.classList.add('bg-slate-50', 'text-slate-800'); });
+        slots.forEach(slot => { slot.value = ''; slot.classList.remove('bg-white', 'border-brand-500', 'text-brand-600'); slot.classList.add('bg-slate-50', 'text-slate-800'); });
         
         if (snapshot.empty) {
             // No work to do.
             currentQueue = [];
             btnGo.disabled = true;
             btnGo.innerText = "Awaiting Batch...";
-            btnGo.className = "w-full bg-slate-300 text-slate-500 font-black py-5 rounded-xl text-xl uppercase tracking-widest transition-all duration-300 shadow-none cursor-not-allowed";
+            btnGo.className = "w-full bg-slate-300 text-slate-500 font-black py-5 rounded-xl text-xl uppercase tracking-widest cursor-not-allowed";
             statusIcon.innerText = "⏳";
             statusText.innerText = "Waiting for Stage Coordinator";
             banner.className = "bg-slate-100 border border-slate-300 rounded-lg p-4 text-center mb-8 flex flex-col items-center justify-center transition-colors";
@@ -248,7 +248,7 @@ function listenToLiveQueue() {
             // Populate Slot
             slots[i].value = `${currentQueue[i].trackNo} - ${currentQueue[i].name}`;
             slots[i].classList.remove('bg-slate-50', 'text-slate-800');
-            slots[i].classList.add('bg-white', 'border-brand-500', 'text-brand-600', 'shadow-md');
+            slots[i].classList.add('bg-white', 'border-brand-500', 'text-brand-600');
         }
 
         // Activate the GO Button
@@ -258,7 +258,7 @@ function listenToLiveQueue() {
         
         btnGo.disabled = false;
         btnGo.innerText = "GO -> Start Scoring";
-        btnGo.className = "w-full bg-brand-600 hover:bg-brand-500 text-white font-black py-5 rounded-xl text-xl uppercase tracking-widest transition-transform active:scale-95 shadow-[0_10px_20px_rgba(79,70,229,0.3)] cursor-pointer";
+        btnGo.className = "w-full bg-brand-600 hover:bg-brand-500 text-white font-black py-5 rounded-xl text-xl uppercase tracking-widest cursor-pointer";
     });
 }
 
@@ -393,11 +393,11 @@ function validateAllScores() {
     if (isValid) {
         btnSubmit.disabled = false;
         btnSubmit.innerText = "✅ SUBMIT FINAL SCORES";
-        btnSubmit.className = "w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-xl text-lg uppercase tracking-widest transition-transform active:scale-95 shadow-[0_10px_20px_rgba(22,163,74,0.3)] cursor-pointer";
+        btnSubmit.className = "w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-xl text-lg uppercase tracking-widest cursor-pointer";
     } else {
         btnSubmit.disabled = true;
         btnSubmit.innerText = `Awaiting Valid Scores (${filledFields}/${totalFields})`;
-        btnSubmit.className = "w-full bg-slate-200 text-slate-500 font-black py-4 rounded-xl text-lg uppercase tracking-widest transition-all duration-300 shadow-none cursor-not-allowed border border-slate-300";
+        btnSubmit.className = "w-full bg-slate-200 text-slate-500 font-black py-4 rounded-xl text-lg uppercase tracking-widest cursor-not-allowed border border-slate-300";
     }
 }
 

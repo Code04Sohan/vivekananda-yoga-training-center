@@ -178,14 +178,14 @@ function renderCandidateTable(candidates) {
 
         let statusBadge = `<span class="bg-slate-800 text-slate-400 border border-slate-700 px-3 py-1.5 rounded-md text-[10px] uppercase tracking-widest font-bold">Unknown</span>`;
         if (displayStatus === 'pending') statusBadge = `<span class="bg-amber-900/40 text-amber-400 border border-amber-700/50 px-3 py-1.5 rounded-md text-[10px] uppercase tracking-widest font-bold flex items-center w-fit"><span class="w-1.5 h-1.5 bg-amber-500 rounded-full mr-2"></span> Pending</span>`;
-        if (displayStatus === 'scored') statusBadge = `<span class="bg-emerald-900/40 text-emerald-400 border border-emerald-700/50 px-3 py-1.5 rounded-md text-[10px] uppercase tracking-widest font-bold shadow-[0_0_10px_rgba(16,185,129,0.2)] flex items-center w-fit"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span> Scored</span>`;
+        if (displayStatus === 'scored') statusBadge = `<span class="bg-emerald-900/40 text-emerald-400 border border-emerald-700/50 px-3 py-1.5 rounded-md text-[10px] uppercase tracking-widest font-bold flex items-center w-fit"><span class="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-2"></span> Scored</span>`;
         if (displayStatus === 'DNS') statusBadge = `<span class="bg-red-900/40 text-red-400 border border-red-700/50 px-3 py-1.5 rounded-md text-[10px] uppercase tracking-widest font-bold flex items-center w-fit"><span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-2"></span> DNS</span>`;
 
         let actionButtons = '';
         if (displayStatus === 'scored' || displayStatus === 'DNS') {
-            actionButtons = `<button class="btn-restore bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-xs transition-colors shadow-lg flex items-center active:scale-95 uppercase tracking-wider font-bold" data-id="${c.id}"><span class="mr-2">♻️</span> Hard Reset</button>`;
+            actionButtons = `<button class="btn-restore bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 hover:text-white px-4 py-2 rounded-lg text-xs transition-colors flex items-center uppercase tracking-wider font-bold" data-id="${c.id}"><span class="mr-2">♻️</span> Hard Reset</button>`;
         } else if (displayStatus === 'pending') {
-            actionButtons = `<button class="btn-dns bg-red-950/50 hover:bg-red-900 border border-red-900/80 text-red-400 hover:text-white px-4 py-2 rounded-lg text-xs transition-colors uppercase tracking-wider font-bold shadow" data-id="${c.id}">Force DNS</button>`;
+            actionButtons = `<button class="btn-dns bg-red-950/50 hover:bg-red-900 border border-red-900/80 text-red-400 hover:text-white px-4 py-2 rounded-lg text-xs transition-colors uppercase tracking-wider font-bold" data-id="${c.id}">Force DNS</button>`;
         }
 
         const divisionDisplay = c.division && c.division !== 'Unassigned' 
@@ -197,7 +197,7 @@ function renderCandidateTable(candidates) {
         const html = `
             <td class="p-5 font-mono text-brand-400 font-bold tracking-widest bg-slate-950/20">${c.trackNo}</td>
             <td class="p-5 font-bold text-white bg-slate-900/20">
-                <div class="text-base mb-1 drop-shadow-sm">${c.name}</div>
+                <div class="text-base mb-1">${c.name}</div>
                 <div class="flex items-center space-x-2">
                     ${divisionDisplay}
                     ${coachDisplay}
@@ -317,10 +317,8 @@ function setupFactoryReset() {
     inputConfirm.addEventListener('input', (e) => {
         if (e.target.value === 'confirm') {
             btnExecute.disabled = false;
-            btnExecute.classList.add('animate-pulse');
         } else {
             btnExecute.disabled = true;
-            btnExecute.classList.remove('animate-pulse');
         }
     });
 

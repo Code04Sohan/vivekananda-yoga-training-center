@@ -192,9 +192,9 @@ function syncMatCard(clone, docId, data, busyStaff) {
     const allSelects = clone.querySelectorAll('select');
 
     if (data.status === 'ready') {
-        // 1. Add glowing 'LOCKED' badge to the Mat Header
+        // 1. Add 'LOCKED' badge to the Mat Header
         if (!header.querySelector('.locked-badge')) {
-            header.innerHTML += `<div class="locked-badge bg-emerald-900/40 text-emerald-400 border border-emerald-500/50 px-3 py-1 rounded-lg text-xs font-black tracking-widest flex items-center shadow-[0_0_15px_rgba(16,185,129,0.3)]"><span class="mr-2 text-sm">🔒</span> LIVE & LOCKED</div>`;
+            header.innerHTML += `<div class="locked-badge bg-emerald-900/40 text-emerald-400 border border-emerald-500/50 px-3 py-1 rounded-lg text-xs font-black tracking-widest flex items-center"><span class="mr-2 text-sm">🔒</span> LIVE & LOCKED</div>`;
         }
 
         // 2. Disable & Blur all Dropdowns

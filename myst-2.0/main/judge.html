@@ -30,8 +30,7 @@
         }
     
         .glass-panel {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
         }
     
         .input-error {
@@ -65,7 +64,7 @@
                     <label class="text-xs font-bold text-slate-500 uppercase ml-1">Security Key</label>
                     <input type="password" id="judge-password" required class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-500 mt-1">
                 </div>
-                <button type="submit" id="btn-judge-login" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95">
+                <button type="submit" id="btn-judge-login" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-4 rounded-xl shadow transition-colors">
                     🔓 LOGIN
                 </button>
             </form>
@@ -73,7 +72,7 @@
         </div>
     </div>
 
-    <div id="overlay-portal-closed" class="fixed inset-0 bg-slate-900/95 z-[90] hidden items-center justify-center p-4 backdrop-blur-sm">
+    <div id="overlay-portal-closed" class="fixed inset-0 bg-slate-900/95 z-[90] hidden items-center justify-center p-4">
         <div class="text-center">
             <div class="w-20 h-20 bg-red-900/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500"><span class="text-4xl">🛑</span></div>
             <h2 class="text-3xl font-black text-white uppercase tracking-widest mb-2">Scoring Paused</h2>
@@ -90,9 +89,9 @@
         </div>
     </div>
 
-    <div id="app-wrapper" class="flex-1 flex flex-col hidden h-full w-full max-w-2xl mx-auto bg-slate-50 border-x border-slate-200 relative shadow-2xl">
+    <div id="app-wrapper" class="flex-1 flex flex-col hidden h-full w-full max-w-2xl mx-auto bg-slate-50 border-x border-slate-200 relative shadow-md">
         
-        <header class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center shadow-md shrink-0 z-30">
+        <header class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center shadow shrink-0 z-30">
             <div>
                 <h1 class="text-xl font-black tracking-wider italic leading-tight">MYST <span
                         class="text-brand-400 not-italic text-sm ml-1 px-1 border border-brand-400 rounded">JUDGE</span></h1>
@@ -121,7 +120,7 @@
         </header>
 
         <main id="view-lobby" class="flex-1 flex items-center justify-center bg-slate-100 p-4">
-            <div class="bg-white p-10 rounded-2xl shadow-xl text-center max-w-md w-full border border-slate-200">
+            <div class="bg-white p-10 rounded-2xl shadow text-center max-w-md w-full border border-slate-200">
                 <div class="w-16 h-16 border-4 border-slate-200 border-t-brand-600 rounded-full animate-spin mx-auto mb-6"></div>
                 <h2 class="text-xl font-black text-slate-800 uppercase tracking-tight mb-2">Awaiting Assignment</h2>
                 <p class="text-slate-500 text-sm">Please wait for the Admin to assign you to a Stage and Judge Seat.</p>
@@ -129,7 +128,7 @@
         </main>
 
         <main id="view-queue-receiver" class="flex-1 overflow-y-auto bg-slate-100 p-4 lg:p-8 hidden">
-            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow border border-slate-200 overflow-hidden">
                 
                 <div class="bg-slate-800 p-6 text-center relative">
                     <h2 class="text-sm font-bold text-brand-400 uppercase tracking-widest mb-1">MAT <span id="queue-mat-number" class="text-white text-lg">X</span></h2>
@@ -138,19 +137,19 @@
 
                 <div class="p-8">
                     <div id="queue-status-banner" class="bg-slate-100 border border-slate-300 rounded-lg p-4 text-center mb-8 flex flex-col items-center justify-center transition-colors">
-                        <span class="animate-pulse text-2xl mb-2" id="queue-status-icon">⏳</span>
+                        <span class="text-2xl mb-2" id="queue-status-icon">⏳</span>
                         <h3 id="queue-status-text" class="text-sm font-bold text-slate-600 uppercase tracking-widest">Waiting for Coordinator</h3>
                     </div>
 
                     <div class="space-y-4 mb-8">
-                        <input type="text" readonly placeholder="SLOT 1" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
-                        <input type="text" readonly placeholder="SLOT 2" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
-                        <input type="text" readonly placeholder="SLOT 3" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
-                        <input type="text" readonly placeholder="SLOT 4" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
-                        <input type="text" readonly placeholder="SLOT 5" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none transition-all">
+                        <input type="text" readonly placeholder="SLOT 1" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none">
+                        <input type="text" readonly placeholder="SLOT 2" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none">
+                        <input type="text" readonly placeholder="SLOT 3" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none">
+                        <input type="text" readonly placeholder="SLOT 4" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none">
+                        <input type="text" readonly placeholder="SLOT 5" class="queue-display-slot w-full bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl px-4 py-4 text-center font-mono text-2xl text-slate-800 font-bold outline-none">
                     </div>
 
-                    <button id="btn-go-scoring" disabled class="w-full bg-slate-300 text-slate-500 font-black py-5 rounded-xl text-xl uppercase tracking-widest transition-all duration-300 shadow-none cursor-not-allowed">
+                    <button id="btn-go-scoring" disabled class="w-full bg-slate-300 text-slate-500 font-black py-5 rounded-xl text-xl uppercase tracking-widest transition-colors shadow-none cursor-not-allowed">
                         Awaiting Batch...
                     </button>
                 </div>
@@ -173,7 +172,7 @@
 
             <div class="flex-1 overflow-y-auto px-4 py-2 w-full max-w-2xl mx-auto" id="scoring-cards-container"></div>
 
-            <div class="shrink-0 w-full glass-panel border-t border-slate-200 p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-20">
+            <div class="shrink-0 w-full glass-panel border-t border-slate-200 p-4 z-20">
                 <div class="max-w-3xl mx-auto space-y-4">
                     
                     <div class="flex justify-between items-center">
@@ -188,12 +187,12 @@
                             <div class="w-2.5 h-2.5 rounded-full bg-slate-300 transition-colors" id="dot-3"></div> 
                         </div>
 
-                        <button id="btn-next-stage" class="px-6 py-3 bg-slate-800 text-white rounded-lg font-bold hover:bg-slate-700 transition-colors shadow-md w-32">
+                        <button id="btn-next-stage" class="px-6 py-3 bg-slate-800 text-white rounded-lg font-bold hover:bg-slate-700 transition-colors shadow w-32">
                             Next &gt;
                         </button>
                     </div>
 
-                    <button id="btn-submit-scores" disabled class="w-full bg-slate-200 text-slate-500 font-black py-4 rounded-xl text-lg uppercase tracking-widest transition-all duration-300 shadow-none cursor-not-allowed border border-slate-300">
+                    <button id="btn-submit-scores" disabled class="w-full bg-slate-200 text-slate-500 font-black py-4 rounded-xl text-lg uppercase tracking-widest transition-colors shadow-none cursor-not-allowed border border-slate-300">
                         Awaiting Valid Scores...
                     </button>
                 </div>
@@ -203,7 +202,7 @@
     </div>
 
     <template id="athlete-card-template">
-    <div class="athlete-card bg-white border border-slate-200 rounded-xl p-5 mb-4 shadow-sm flex justify-between items-center transition-all focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500">
+    <div class="athlete-card bg-white border border-slate-200 rounded-xl p-5 mb-4 shadow-sm flex justify-between items-center focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500">
         <div class="flex-1">
             <div class="flex items-center space-x-2 mb-1">
                 <span class="athlete-division text-[10px] font-black text-brand-600 uppercase tracking-widest block">DIVISION</span>
