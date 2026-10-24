@@ -8,6 +8,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        /* QR Reader Video Styling */
+        #slot-qr-reader video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 0.5rem !important;
+        }
+    </style>
     <script>
         tailwind.config = {
             theme: {
@@ -254,13 +264,78 @@
                             <option value="">-- Select Mat --</option>
                         </select>
 
-                        <h3 class="text-xs font-bold text-brand-400 uppercase tracking-[0.2em] mb-4">Batch Entry (Track Nos)</h3>
-                        <div class="space-y-3 mb-8" id="queue-inputs-container">
-                            <input type="text" placeholder="Candidate 1 Track" class="queue-input w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
-                            <input type="text" placeholder="Candidate 2 Track" class="queue-input w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
-                            <input type="text" placeholder="Candidate 3 Track" class="queue-input w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
-                            <input type="text" placeholder="Candidate 4 Track" class="queue-input w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
-                            <input type="text" placeholder="Candidate 5 Track" class="queue-input w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3.5 text-white text-center font-mono text-xl focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-xs font-bold text-brand-400 uppercase tracking-[0.2em]">Batch Entry (Track Nos)</h3>
+                            <button type="button" id="btn-toggle-slot-qr" class="bg-brand-600/20 hover:bg-brand-600 text-brand-300 hover:text-white border border-brand-500/40 text-xs font-bold py-1.5 px-3 rounded-lg transition-all flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                                <span id="slot-qr-btn-icon">📷</span>
+                                <span id="slot-qr-btn-text">Open Scanner</span>
+                            </button>
+                        </div>
+
+                        <!-- Integrated Candidate QR Scanner Drawer -->
+                        <div id="slot-qr-drawer" class="hidden mb-4 bg-slate-950 border border-brand-500/40 rounded-xl p-3 shadow-inner">
+                            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800 text-xs">
+                                <div class="flex items-center gap-2">
+                                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                    <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider">Target:</span>
+                                    <span id="slot-qr-target-badge" class="bg-brand-600 text-white font-black px-2 py-0.5 rounded text-[11px] uppercase tracking-wider">Slot 1</span>
+                                </div>
+                                <button type="button" id="btn-close-slot-qr" class="text-slate-400 hover:text-white font-bold text-xs px-2 py-0.5 rounded hover:bg-slate-800 transition-colors cursor-pointer">✕ Close</button>
+                            </div>
+                            <div id="slot-qr-reader" class="w-full bg-slate-900 rounded-lg overflow-hidden border border-slate-800 min-h-[220px]"></div>
+                            <div id="slot-qr-status" class="mt-2 text-[11px] text-slate-400 text-center font-mono truncate px-1">Ready to scan Candidate QR...</div>
+                        </div>
+
+                        <div class="space-y-2.5 mb-8" id="queue-inputs-container">
+                            <!-- Slot 1 -->
+                            <div class="slot-box rounded-xl border border-brand-500 bg-slate-950/80 p-2.5 transition-all focus-within:border-brand-400 cursor-pointer" data-slot-index="0">
+                                <div class="flex items-center justify-between mb-1 px-1">
+                                    <span class="slot-label text-[10px] font-black uppercase tracking-wider text-brand-400">Candidate 1 (Active)</span>
+                                    <button type="button" class="btn-clear-slot text-slate-500 hover:text-red-400 text-xs px-1 font-bold transition-colors cursor-pointer" title="Clear Slot 1">✕</button>
+                                </div>
+                                <input type="text" placeholder="Candidate 1 Track" class="queue-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-center font-mono text-lg font-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
+                                <div class="slot-name-preview text-xs font-semibold text-emerald-400 mt-1 px-1 truncate min-h-[16px]"></div>
+                            </div>
+
+                            <!-- Slot 2 -->
+                            <div class="slot-box rounded-xl border border-slate-800 bg-slate-950 p-2.5 transition-all focus-within:border-brand-400 cursor-pointer" data-slot-index="1">
+                                <div class="flex items-center justify-between mb-1 px-1">
+                                    <span class="slot-label text-[10px] font-black uppercase tracking-wider text-slate-400">Candidate 2</span>
+                                    <button type="button" class="btn-clear-slot text-slate-500 hover:text-red-400 text-xs px-1 font-bold transition-colors cursor-pointer" title="Clear Slot 2">✕</button>
+                                </div>
+                                <input type="text" placeholder="Candidate 2 Track" class="queue-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-center font-mono text-lg font-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
+                                <div class="slot-name-preview text-xs font-semibold text-emerald-400 mt-1 px-1 truncate min-h-[16px]"></div>
+                            </div>
+
+                            <!-- Slot 3 -->
+                            <div class="slot-box rounded-xl border border-slate-800 bg-slate-950 p-2.5 transition-all focus-within:border-brand-400 cursor-pointer" data-slot-index="2">
+                                <div class="flex items-center justify-between mb-1 px-1">
+                                    <span class="slot-label text-[10px] font-black uppercase tracking-wider text-slate-400">Candidate 3</span>
+                                    <button type="button" class="btn-clear-slot text-slate-500 hover:text-red-400 text-xs px-1 font-bold transition-colors cursor-pointer" title="Clear Slot 3">✕</button>
+                                </div>
+                                <input type="text" placeholder="Candidate 3 Track" class="queue-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-center font-mono text-lg font-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
+                                <div class="slot-name-preview text-xs font-semibold text-emerald-400 mt-1 px-1 truncate min-h-[16px]"></div>
+                            </div>
+
+                            <!-- Slot 4 -->
+                            <div class="slot-box rounded-xl border border-slate-800 bg-slate-950 p-2.5 transition-all focus-within:border-brand-400 cursor-pointer" data-slot-index="3">
+                                <div class="flex items-center justify-between mb-1 px-1">
+                                    <span class="slot-label text-[10px] font-black uppercase tracking-wider text-slate-400">Candidate 4</span>
+                                    <button type="button" class="btn-clear-slot text-slate-500 hover:text-red-400 text-xs px-1 font-bold transition-colors cursor-pointer" title="Clear Slot 4">✕</button>
+                                </div>
+                                <input type="text" placeholder="Candidate 4 Track" class="queue-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-center font-mono text-lg font-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
+                                <div class="slot-name-preview text-xs font-semibold text-emerald-400 mt-1 px-1 truncate min-h-[16px]"></div>
+                            </div>
+
+                            <!-- Slot 5 -->
+                            <div class="slot-box rounded-xl border border-slate-800 bg-slate-950 p-2.5 transition-all focus-within:border-brand-400 cursor-pointer" data-slot-index="4">
+                                <div class="flex items-center justify-between mb-1 px-1">
+                                    <span class="slot-label text-[10px] font-black uppercase tracking-wider text-slate-400">Candidate 5</span>
+                                    <button type="button" class="btn-clear-slot text-slate-500 hover:text-red-400 text-xs px-1 font-bold transition-colors cursor-pointer" title="Clear Slot 5">✕</button>
+                                </div>
+                                <input type="text" placeholder="Candidate 5 Track" class="queue-input w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-center font-mono text-lg font-black focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors placeholder:text-slate-600 placeholder:text-sm">
+                                <div class="slot-name-preview text-xs font-semibold text-emerald-400 mt-1 px-1 truncate min-h-[16px]"></div>
+                            </div>
                         </div>
 
                         <button id="btn-push-queue" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-black py-4 rounded-xl shadow transition-colors text-lg uppercase tracking-widest flex items-center justify-center">
@@ -642,6 +717,9 @@
             const navBtn = document.getElementById(`nav-${view}`);
             if (navBtn) { 
                 navBtn.addEventListener('click', (e) => {
+                    if (view !== 'stage-manager') {
+                        document.getElementById('btn-close-slot-qr')?.click();
+                    }
                     views.forEach(v => {
                         const btn = document.getElementById(`nav-${v}`);
                         const section = document.getElementById(`view-${v}`);

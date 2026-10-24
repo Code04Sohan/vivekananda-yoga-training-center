@@ -32,7 +32,198 @@ const SCORING_STAGES = [
 // 1. Boot the Authentication System
 document.addEventListener('DOMContentLoaded', () => {
     initAuth();
+    initJudgeQRScanner();
 });
+
+// --- AUDIO TONE FEEDBACK ---
+function playScannerBeep(freq = 880, duration = 0.12) {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') {
+            ctx.resume();
+        }
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+    } catch (e) {
+        // Audio might be constrained until user interaction
+    }
+}
+
+// --- PARSE JUDGE CREDENTIALS ---
+function parseJudgeCredentials(rawText) {
+    const text = (rawText || '').trim();
+    if (!text) return null;
+
+    let email = '';
+    let password = '';
+
+    try {
+        const data = JSON.parse(text);
+        if (typeof data === 'object' && data !== null) {
+            email = String(data.email ?? data.user ?? data.id ?? data.judge_email ?? data.judgeEmail ?? '').trim();
+            password = String(data.password ?? data.pass ?? data.pin ?? data.key ?? '').trim();
+        }
+    } catch (e) {
+        // Try delimited strings (email:password, email|password, or email,password)
+        if (text.includes(':')) {
+            const idx = text.indexOf(':');
+            email = text.substring(0, idx).trim();
+            password = text.substring(idx + 1).trim();
+        } else if (text.includes('|')) {
+            const idx = text.indexOf('|');
+            email = text.substring(0, idx).trim();
+            password = text.substring(idx + 1).trim();
+        } else if (text.includes(',')) {
+            const idx = text.indexOf(',');
+            email = text.substring(0, idx).trim();
+            password = text.substring(idx + 1).trim();
+        }
+    }
+
+    if (email && password) {
+        return { email, password };
+    }
+    return null;
+}
+
+// --- JUDGE QR SCANNER ENGINE ---
+let judgeQrScannerInstance = null;
+let isJudgeScanning = false;
+
+function initJudgeQRScanner() {
+    const btnOpen = document.getElementById('btn-open-judge-qr');
+    const modal = document.getElementById('modal-judge-qr');
+    const btnClose = document.getElementById('btn-close-judge-qr');
+    const btnCancel = document.getElementById('btn-cancel-judge-qr');
+    const statusEl = document.getElementById('judge-qr-status');
+    const emailInput = document.getElementById('judge-email');
+    const passInput = document.getElementById('judge-password');
+    const loginForm = document.getElementById('login-form');
+
+    if (!btnOpen || !modal) return;
+
+    async function stopJudgeScanner() {
+        if (judgeQrScannerInstance && isJudgeScanning) {
+            try {
+                await judgeQrScannerInstance.stop();
+                judgeQrScannerInstance.clear();
+            } catch (err) {
+                console.warn("Judge QR scanner stop:", err);
+            }
+            isJudgeScanning = false;
+        }
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+
+    async function startJudgeScanner() {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        if (statusEl) {
+            statusEl.textContent = "Requesting camera access...";
+            statusEl.className = "mt-3 text-xs text-slate-300 font-mono bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg";
+        }
+
+        if (typeof Html5Qrcode === 'undefined') {
+            if (statusEl) {
+                statusEl.textContent = "QR library failed to load. Please check internet connection.";
+                statusEl.className = "mt-3 text-xs text-red-400 font-mono bg-red-950/40 border border-red-800 px-3 py-2 rounded-lg";
+            }
+            return;
+        }
+
+        if (!judgeQrScannerInstance) {
+            judgeQrScannerInstance = new Html5Qrcode("judge-qr-reader");
+        }
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 220, height: 220 },
+            aspectRatio: 1.0
+        };
+
+        const onScanSuccess = async (decodedText) => {
+            if (!isJudgeScanning) return;
+            const creds = parseJudgeCredentials(decodedText);
+
+            if (creds) {
+                isJudgeScanning = false;
+                playScannerBeep(880, 0.15);
+
+                if (statusEl) {
+                    statusEl.textContent = `✓ Judge Pass Verified: ${creds.email}. Logging in...`;
+                    statusEl.className = "mt-3 text-xs text-emerald-400 font-mono bg-emerald-950/40 border border-emerald-800 px-3 py-2 rounded-lg";
+                }
+
+                if (emailInput) emailInput.value = creds.email;
+                if (passInput) passInput.value = creds.password;
+
+                setTimeout(async () => {
+                    await stopJudgeScanner();
+                    if (loginForm) {
+                        if (typeof loginForm.requestSubmit === 'function') {
+                            loginForm.requestSubmit();
+                        } else {
+                            loginForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                        }
+                    }
+                }, 400);
+            } else {
+                if (statusEl) {
+                    statusEl.textContent = "⚠️ Unrecognized QR format. Please scan a valid Judge Pass.";
+                    statusEl.className = "mt-3 text-xs text-amber-400 font-mono bg-amber-950/40 border border-amber-800 px-3 py-2 rounded-lg";
+                }
+            }
+        };
+
+        try {
+            isJudgeScanning = true;
+            await judgeQrScannerInstance.start(
+                { facingMode: "environment" },
+                config,
+                onScanSuccess,
+                () => {}
+            );
+            if (statusEl) {
+                statusEl.textContent = "Point camera at Judge QR Pass";
+            }
+        } catch (err) {
+            // Environment camera not available, try fallback (e.g. laptop webcam)
+            try {
+                await judgeQrScannerInstance.start(
+                    { facingMode: "user" },
+                    config,
+                    onScanSuccess,
+                    () => {}
+                );
+                if (statusEl) {
+                    statusEl.textContent = "Point camera at Judge QR Pass";
+                }
+            } catch (fallbackErr) {
+                isJudgeScanning = false;
+                console.error("Camera access error:", fallbackErr);
+                if (statusEl) {
+                    statusEl.textContent = "Camera error: " + (fallbackErr?.message || "Could not open camera");
+                    statusEl.className = "mt-3 text-xs text-red-400 font-mono bg-red-950/40 border border-red-800 px-3 py-2 rounded-lg";
+                }
+            }
+        }
+    }
+
+    btnOpen.addEventListener('click', startJudgeScanner);
+    if (btnClose) btnClose.addEventListener('click', stopJudgeScanner);
+    if (btnCancel) btnCancel.addEventListener('click', stopJudgeScanner);
+}
 
 // 2. Main Initialization (Called by auth-service.js)
 export async function initJudgePanel(uid) {

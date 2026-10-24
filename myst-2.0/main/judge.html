@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MYST Judge Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -37,6 +38,14 @@
             border-color: #ef4444 !important;
             background-color: #fef2f2 !important;
             color: #b91c1c !important;
+        }
+
+        /* QR Reader Video Styling */
+        #judge-qr-reader video {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 0.75rem !important;
         }
 
         /* Hides the default arrow on the dropdown */
@@ -73,6 +82,18 @@
             <h1 class="text-2xl sm:text-3xl font-black text-white mb-1 tracking-tight">MYST <span class="text-brand-400 font-bold text-xs border border-brand-500/60 px-2 py-0.5 rounded ml-1">JUDGE</span></h1>
             <p class="text-slate-400 text-xs sm:text-sm mb-6">Authorized Terminal Access Only</p>
             
+            <!-- Quick QR Scanner Action -->
+            <button type="button" id="btn-open-judge-qr" class="w-full mb-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider border border-indigo-400/30 active:scale-[0.98] cursor-pointer">
+                <span class="text-base sm:text-lg">📷</span>
+                <span>Scan Judge QR Pass</span>
+            </button>
+
+            <div class="flex items-center my-4">
+                <div class="flex-grow border-t border-slate-700"></div>
+                <span class="px-3 text-[10px] uppercase font-bold tracking-widest text-slate-500">Or Manual Entry</span>
+                <div class="flex-grow border-t border-slate-700"></div>
+            </div>
+
             <form id="login-form" class="space-y-4">
                 <div class="text-left">
                     <label class="text-xs font-bold text-slate-400 uppercase ml-1">Judge ID (Email)</label>
@@ -87,6 +108,29 @@
                 </button>
             </form>
             <p id="login-error" class="text-red-500 text-xs mt-4 font-bold hidden italic"></p>
+        </div>
+    </div>
+
+    <!-- Judge QR Scanner Modal -->
+    <div id="modal-judge-qr" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-[110] hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 max-w-sm w-full text-center relative shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-lg">📷</span>
+                    <h3 class="text-sm font-black text-white uppercase tracking-wider">Scan Judge Pass</h3>
+                </div>
+                <button type="button" id="btn-close-judge-qr" class="text-slate-400 hover:text-white text-base font-bold p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">✕</button>
+            </div>
+            
+            <div id="judge-qr-reader" class="w-full bg-slate-950 rounded-xl overflow-hidden border border-slate-800 min-h-[250px] flex items-center justify-center relative"></div>
+            
+            <div id="judge-qr-status" class="mt-3 text-xs text-slate-300 font-mono bg-slate-950 border border-slate-800 px-3 py-2 rounded-lg">
+                Point camera at Judge QR Pass
+            </div>
+            
+            <button type="button" id="btn-cancel-judge-qr" class="mt-3 w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-lg text-xs uppercase tracking-wider transition-colors cursor-pointer">
+                Cancel
+            </button>
         </div>
     </div>
 

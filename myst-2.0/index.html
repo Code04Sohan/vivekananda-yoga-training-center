@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full scroll-smooth">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MYST 2.0 • Tournament Control Matrix</title>
-    <meta name="description" content="Official Gateway for MYST 2.0 - Management of Yoga Sports & Tournaments. Select between Admin Console, Live Display Node, and Judge Scoring Portal.">
+    <title>MYST 2.0</title>
+    <meta name="description" content="MYST 2.0 - Management of Yoga Sports & Tournaments">
     <meta name="theme-color" content="#030712">
 
     <!-- Favicon -->
@@ -14,7 +14,7 @@
     <!-- Inter Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,23 +24,6 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            900: '#1e3a8a',
-                            950: '#172554',
-                        }
-                    },
-                    boxShadow: {
-                        'glow-blue': '0 0 35px -5px rgba(59, 130, 246, 0.25)',
-                        'glow-amber': '0 0 35px -5px rgba(245, 158, 11, 0.25)',
-                        'glow-emerald': '0 0 35px -5px rgba(16, 185, 129, 0.25)',
                     }
                 }
             }
@@ -48,435 +31,127 @@
     </script>
 
     <style>
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #030712;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1f2937;
-            border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #374151;
+        /* Subtle background dot pattern */
+        .bg-dots {
+            background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+            background-size: 28px 28px;
         }
 
-        /* Subtle grid background pattern */
-        .bg-grid-pattern {
-            background-size: 40px 40px;
-            background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        /* Ambient spotlight */
+        .ambient-glow {
+            background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(59, 130, 246, 0.14), transparent);
         }
 
-        /* Ambient spotlight gradient */
-        .bg-spotlight {
-            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.12) 0%, rgba(15, 23, 42, 0) 65%);
+        /* Card transition */
+        .option-card {
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-
-        /* Card transition smoothing */
-        .portal-card {
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), 
-                        border-color 0.25s ease, 
-                        box-shadow 0.25s ease, 
-                        background-color 0.25s ease;
-        }
-        .portal-card:hover {
+        .option-card:hover {
             transform: translateY(-4px);
         }
         @media (max-width: 640px) {
-            .portal-card:hover {
+            .option-card:hover {
                 transform: none;
             }
         }
     </style>
 </head>
 
-<body class="bg-gray-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-blue-600 selection:text-white bg-grid-pattern relative overflow-x-hidden">
+<body class="bg-gray-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-blue-600 selection:text-white bg-dots relative overflow-x-hidden">
 
-    <!-- Top Ambient Glow -->
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-spotlight pointer-events-none z-0"></div>
+    <!-- Ambient Glow -->
+    <div class="absolute top-0 left-0 right-0 h-96 ambient-glow pointer-events-none z-0"></div>
 
-    <!-- MAIN NAVBAR -->
-    <header class="relative z-20 border-b border-gray-800/80 bg-gray-950/80 backdrop-blur-md sticky top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
-            
-            <!-- Brand Logo & Title -->
-            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl overflow-hidden border-2 border-blue-500/40 bg-gray-900 shadow-md flex items-center justify-center shrink-0 p-0.5">
-                    <img src="../resources/MYST_dp.jpeg" 
-                         alt="MYST Logo" 
-                         class="w-full h-full object-cover rounded-xl"
-                         onerror="this.onerror=null; this.src='https://www.soumenyoga.in/resources/MYST_dp.jpeg';">
-                </div>
-                <div class="min-w-0">
-                    <div class="flex items-center gap-2">
-                        <span class="text-lg sm:text-2xl font-black tracking-tight text-white uppercase leading-none">MYST <span class="text-blue-500">2.0</span></span>
-                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-400 border border-blue-500/30">
-                            Tournament Suite
-                        </span>
-                    </div>
-                    <p class="text-[10px] sm:text-xs text-gray-400 font-medium truncate mt-0.5">
-                        Management of Yoga Sports & Tournaments
-                    </p>
-                </div>
+    <!-- MINIMALIST HEADER -->
+    <header class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl overflow-hidden border border-white/10 bg-gray-900 flex items-center justify-center shrink-0 shadow-sm">
+                <img src="../resources/MYST_dp.jpeg" 
+                     alt="MYST Logo" 
+                     class="w-full h-full object-cover"
+                     onerror="this.onerror=null; this.src='https://www.soumenyoga.in/resources/MYST_dp.jpeg';">
             </div>
-
-            <!-- Right Controls: Status & Home Link -->
-            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                <!-- System Status Pill -->
-                <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider shadow-inner">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>System Active</span>
-                </div>
-
-                <!-- Back to Main Site -->
-                <a href="../index.html" 
-                   class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-gray-300 hover:text-white bg-gray-900/90 hover:bg-gray-800 border border-gray-700/80 transition-colors shadow-sm">
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    <span class="hidden xs:inline">Main</span> Site
-                </a>
-            </div>
-
+            <span class="text-base sm:text-lg font-black tracking-tight text-white uppercase leading-none">
+                MYST <span class="text-blue-500 font-black">2.0</span>
+            </span>
         </div>
+
+        <a href="../index.html" 
+           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.05] border border-white/[0.08] transition-colors">
+            <span>Main Site</span>
+            <svg class="w-3.5 h-3.5 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+        </a>
     </header>
 
-    <!-- HERO HEADER SECTION -->
-    <main class="relative z-10 flex-1 flex flex-col justify-center max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+    <!-- CENTERED 3 OPTIONS LAUNCHER -->
+    <main class="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         
-        <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-14">
-            <!-- Organization Badge -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/50 border border-blue-500/30 text-blue-300 text-xs sm:text-sm font-semibold mb-4 sm:mb-6 shadow-sm">
-                <span class="text-blue-400">⚡</span>
-                <span>Vivekananda Yoga Training Center</span>
-                <span class="text-blue-500/60">•</span>
-                <span class="text-blue-200/90">Official Matrix</span>
-            </div>
-
-            <!-- Main Heading -->
-            <h1 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight uppercase leading-tight sm:leading-none mb-3 sm:mb-4">
-                Choose Operational <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-indigo-300">Terminal</span>
+        <!-- Subtle Title -->
+        <div class="text-center mb-8 sm:mb-12">
+            <h1 class="text-2xl sm:text-4xl font-black text-white tracking-tight uppercase mb-2">
+                Select Screen
             </h1>
-
-            <!-- Description -->
-            <p class="text-sm sm:text-base lg:text-lg text-gray-400 font-normal leading-relaxed max-w-2xl mx-auto">
-                Select your required portal below to access live tournament controls, big-screen spectator matrices, or judge scoring pads.
+            <p class="text-xs sm:text-sm text-slate-400 font-medium">
+                Choose an option to continue
             </p>
-
-            <!-- Keyboard shortcut helper (Desktop only) -->
-            <div class="hidden lg:flex items-center justify-center gap-4 text-xs text-gray-500 mt-4 font-mono">
-                <span>Quick Jump:</span>
-                <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300">[1] Admin</span>
-                <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300">[2] Display</span>
-                <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-gray-300">[3] Judge</span>
-            </div>
         </div>
 
-        <!-- 3 MAIN OPERATIONAL TERMINALS (PORTAL CARDS) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 max-w-6xl mx-auto w-full items-stretch">
+        <!-- 3 OPTIONS: ONLY ICON & NAME -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 w-full max-w-3xl">
 
-            <!-- ============================================== -->
-            <!-- CARD 1: ADMIN CONSOLE                          -->
-            <!-- ============================================== -->
+            <!-- OPTION 1: ADMIN -->
             <a href="main/admin.html" 
-               class="portal-card group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-gray-900/70 hover:bg-gray-900 border border-gray-800 hover:border-blue-500/60 p-6 sm:p-8 shadow-lg hover:shadow-glow-blue overflow-hidden focus:outline-none focus:ring-2 focus:ring-blue-500">
-                
-                <!-- Ambient Accent Gradient -->
-                <div class="absolute top-0 right-0 w-44 h-44 bg-blue-600/10 rounded-full blur-3xl pointer-events-none group-hover:bg-blue-600/20 transition-all"></div>
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-600 to-cyan-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-
-                <div>
-                    <!-- Top Badge & Role Tag -->
-                    <div class="flex items-center justify-between gap-2 mb-5">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-blue-950/70 text-blue-300 border border-blue-800/80">
-                            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                            Restricted • Secretariat
-                        </span>
-                        <span class="hidden sm:inline-block font-mono text-xs font-bold text-gray-600 group-hover:text-blue-400 transition-colors">
-                            KEY [1]
-                        </span>
-                    </div>
-
-                    <!-- Icon & Title -->
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-inner">
-                            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight group-hover:text-blue-300 transition-colors">
-                                Admin Console
-                            </h2>
-                            <p class="text-xs text-blue-400 font-semibold tracking-wide uppercase mt-0.5">
-                                Central Command Hub
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Role Tagline -->
-                    <p class="text-sm text-gray-300 leading-relaxed mb-6">
-                        Complete tournament coordination desk. Manage athlete registries, real-time mat queues, score overrides, and published result categories.
-                    </p>
-
-                    <!-- Feature Bullet Points -->
-                    <div class="space-y-2.5 mb-8 border-t border-gray-800/80 pt-5">
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Athlete vault & bulk CSV database import</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Stage coordinator & live mat queue control</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Live leaderboard, score edits & vault backup</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Global portal pause & system security state</span>
-                        </div>
-                    </div>
+               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-blue-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-blue-950/40 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-inner">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
                 </div>
-
-                <!-- Launch Button -->
-                <div class="w-full">
-                    <span class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-black text-sm uppercase tracking-wider text-white bg-blue-600 group-hover:bg-blue-500 shadow-md transition-all">
-                        <span>Launch Admin Desk</span>
-                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </span>
-                    <span class="block text-[11px] text-center text-gray-500 font-medium mt-2">Requires authorized staff login</span>
-                </div>
+                <span class="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-blue-400 transition-colors">
+                    Admin
+                </span>
             </a>
 
-
-            <!-- ============================================== -->
-            <!-- CARD 2: LIVE DISPLAY NODE                      -->
-            <!-- ============================================== -->
+            <!-- OPTION 2: DISPLAY -->
             <a href="main/display.html" 
-               class="portal-card group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-gray-900/70 hover:bg-gray-900 border border-gray-800 hover:border-yellow-500/60 p-6 sm:p-8 shadow-lg hover:shadow-glow-amber overflow-hidden focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                
-                <!-- Ambient Accent Gradient -->
-                <div class="absolute top-0 right-0 w-44 h-44 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-yellow-500/20 transition-all"></div>
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-amber-600 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-
-                <div>
-                    <!-- Top Badge & Role Tag -->
-                    <div class="flex items-center justify-between gap-2 mb-5">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-yellow-950/70 text-yellow-300 border border-yellow-800/80">
-                            <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
-                            Arena Stream • Public
-                        </span>
-                        <span class="hidden sm:inline-block font-mono text-xs font-bold text-gray-600 group-hover:text-yellow-400 transition-colors">
-                            KEY [2]
-                        </span>
-                    </div>
-
-                    <!-- Icon & Title -->
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 flex items-center justify-center shrink-0 group-hover:bg-yellow-500 group-hover:text-gray-950 transition-all shadow-inner">
-                            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight group-hover:text-yellow-300 transition-colors">
-                                Display Node
-                            </h2>
-                            <p class="text-xs text-yellow-400 font-semibold tracking-wide uppercase mt-0.5">
-                                Arena TV & Projector Node
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Role Tagline -->
-                    <p class="text-sm text-gray-300 leading-relaxed mb-6">
-                        Designed for big LED walls, laptop monitors, and stage projectors. Broadcasts 5-track live scoring, upcoming batch tickers, and official top 3 podium standings.
-                    </p>
-
-                    <!-- Feature Bullet Points -->
-                    <div class="space-y-2.5 mb-8 border-t border-gray-800/80 pt-5">
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-yellow-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Live on-stage 5-lane judge matrix preview</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-yellow-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Instant Olympic trimmed-mean math calculation</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-yellow-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Official 3-tier podium & auto-paginated standings</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-yellow-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Optimized for 1080p, laptops & 4K stadium displays</span>
-                        </div>
-                    </div>
+               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-amber-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-amber-950/40 text-center focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-gray-950 transition-all shadow-inner">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
                 </div>
-
-                <!-- Launch Button -->
-                <div class="w-full">
-                    <span class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-black text-sm uppercase tracking-wider text-gray-950 bg-yellow-400 group-hover:bg-yellow-300 shadow-md transition-all">
-                        <span>Open Display Node</span>
-                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </span>
-                    <span class="block text-[11px] text-center text-gray-500 font-medium mt-2">Broadcast mode with full-screen support</span>
-                </div>
+                <span class="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-amber-400 transition-colors">
+                    Display
+                </span>
             </a>
 
-
-            <!-- ============================================== -->
-            <!-- CARD 3: JUDGE PORTAL                           -->
-            <!-- ============================================== -->
+            <!-- OPTION 3: JUDGE -->
             <a href="main/judge.html" 
-               class="portal-card group relative flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-gray-900/70 hover:bg-gray-900 border border-gray-800 hover:border-emerald-500/60 p-6 sm:p-8 shadow-lg hover:shadow-glow-emerald overflow-hidden focus:outline-none focus:ring-2 focus:ring-emerald-500 md:col-span-2 lg:col-span-1">
-                
-                <!-- Ambient Accent Gradient -->
-                <div class="absolute top-0 right-0 w-44 h-44 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-600/20 transition-all"></div>
-                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500 opacity-80 group-hover:opacity-100 transition-opacity"></div>
-
-                <div>
-                    <!-- Top Badge & Role Tag -->
-                    <div class="flex items-center justify-between gap-2 mb-5">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-emerald-950/70 text-emerald-300 border border-emerald-800/80">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                            Scoring Official • Judges
-                        </span>
-                        <span class="hidden sm:inline-block font-mono text-xs font-bold text-gray-600 group-hover:text-emerald-400 transition-colors">
-                            KEY [3]
-                        </span>
-                    </div>
-
-                    <!-- Icon & Title -->
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-all shadow-inner">
-                            <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                            </svg>
-                        </div>
-                        <div>
-                            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight group-hover:text-emerald-300 transition-colors">
-                                Judge Portal
-                            </h2>
-                            <p class="text-xs text-emerald-400 font-semibold tracking-wide uppercase mt-0.5">
-                                Floor Scoring Terminal
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Role Tagline -->
-                    <p class="text-sm text-gray-300 leading-relaxed mb-6">
-                        Ergonomic touch-friendly scoring pad for floor judges. Instant stage receiver, posture-by-posture validation, and encrypted double-lock submission.
-                    </p>
-
-                    <!-- Feature Bullet Points -->
-                    <div class="space-y-2.5 mb-8 border-t border-gray-800/80 pt-5">
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Optimized for smartphones, iPads & tablets</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Prominent track badges & athlete verification</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Tap-to-select large touch score inputs</span>
-                        </div>
-                        <div class="flex items-center gap-2.5 text-xs text-gray-300">
-                            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            <span>Automated seat auto-assignment & queue sync</span>
-                        </div>
-                    </div>
+               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-emerald-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-emerald-950/40 text-center focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all shadow-inner">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
                 </div>
-
-                <!-- Launch Button -->
-                <div class="w-full">
-                    <span class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-black text-sm uppercase tracking-wider text-white bg-emerald-600 group-hover:bg-emerald-500 shadow-md transition-all">
-                        <span>Enter Judge Pad</span>
-                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                        </svg>
-                    </span>
-                    <span class="block text-[11px] text-center text-gray-500 font-medium mt-2">Requires judge login & mat seat</span>
-                </div>
+                <span class="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-emerald-400 transition-colors">
+                    Judge
+                </span>
             </a>
 
-        </div>
-
-        <!-- QUICK LINKS & SYSTEM UTILITIES BAR -->
-        <div class="mt-10 sm:mt-14 max-w-4xl mx-auto w-full">
-            <div class="bg-gray-900/40 border border-gray-800/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                
-                <div class="flex items-center gap-3 text-center sm:text-left">
-                    <div class="w-8 h-8 rounded-lg bg-gray-800 border border-gray-700 flex items-center justify-center shrink-0 text-gray-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-gray-300">Need public scorecards or developer utilities?</p>
-                        <p class="text-[11px] text-gray-500">Access competition results or simulation tools directly.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
-                    <a href="../competition-results.html" 
-                       class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-gray-300 hover:text-white bg-gray-800 hover:bg-gray-700 border border-gray-700 transition-colors">
-                        🏆 Official Results
-                    </a>
-                    <a href="main/scoreINJECT.html" 
-                       class="px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium text-gray-400 hover:text-gray-200 bg-gray-950 hover:bg-gray-900 border border-gray-800 transition-colors"
-                       title="Developer tool to inject simulated judge scores for staging testing">
-                        🛠️ Test Injector
-                    </a>
-                </div>
-
-            </div>
         </div>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="relative z-20 border-t border-gray-900 bg-gray-950/90 py-6 sm:py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-            
-            <div class="flex items-center gap-3">
-                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                <span class="text-xs text-gray-400 font-medium">
-                    &copy; 2026 <strong class="text-gray-200">Vivekananda Yoga Training Center</strong>. All rights reserved.
-                </span>
-            </div>
-
-            <div class="flex items-center gap-4 text-xs text-gray-500 font-medium">
-                <span>Purba Medinipur, West Bengal</span>
-                <span>•</span>
-                <a href="mailto:soumensantra1994@gmail.com" class="hover:text-blue-400 transition-colors">
-                    Support Desk
-                </a>
-                <span>•</span>
-                <a href="https://www.soumenyoga.in" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors">
-                    www.soumenyoga.in
-                </a>
-            </div>
-
-        </div>
+    <!-- MINIMALIST FOOTER -->
+    <footer class="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 py-6 text-center text-xs text-slate-500 font-medium">
+        &copy; 2026 Vivekananda Yoga Training Center
     </footer>
 
-    <!-- KEYBOARD NAVIGATION LISTENER -->
+    <!-- KEYBOARD SHORTCUTS (1: Admin, 2: Display, 3: Judge) -->
     <script>
         document.addEventListener('keydown', function (e) {
-            // Ignore if user is inside an input or textarea
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
 
             const key = e.key.toLowerCase();
@@ -492,4 +167,3 @@
 
 </body>
 </html>
-
