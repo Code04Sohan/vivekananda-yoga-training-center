@@ -264,16 +264,33 @@
                             <option value="">-- Select Mat --</option>
                         </select>
 
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-xs font-bold text-brand-400 uppercase tracking-[0.2em]">Batch Entry (5 Slots)</h3>
+                        <!-- Entry Mode Switcher Section -->
+                        <div class="mb-5">
+                            <div class="flex items-center justify-between mb-2 px-0.5">
+                                <h3 class="text-xs font-black text-brand-400 uppercase tracking-[0.2em] flex items-center gap-1.5">
+                                    <span>⚡</span> <span>Batch Entry</span>
+                                </h3>
+                                <span id="current-mode-label" class="text-[10px] sm:text-[11px] font-mono font-bold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/60">
+                                    📷 Scan Active (Touch-Protected)
+                                </span>
+                            </div>
                             
-                            <!-- Mode Switcher: Scan vs Manual -->
-                            <div class="inline-flex rounded-lg bg-slate-950 p-1 border border-slate-800 text-xs font-bold">
-                                <button type="button" id="btn-mode-scan" class="px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 bg-brand-600 text-white shadow-sm cursor-pointer" title="Scan QR mode with touch protection">
-                                    <span>📷</span> <span>Scan</span>
+                            <!-- Large Modern Handy Segmented Switcher -->
+                            <div class="grid grid-cols-2 gap-1.5 p-1.5 bg-slate-950 rounded-2xl border border-slate-800 shadow-inner">
+                                <button type="button" id="btn-mode-scan" class="relative flex items-center justify-center gap-2.5 py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm tracking-wide transition-all duration-200 cursor-pointer select-none bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-lg shadow-brand-500/20 border border-brand-400/40 active:scale-[0.98]">
+                                    <span class="text-base sm:text-lg">📷</span>
+                                    <div class="text-left leading-tight">
+                                        <div class="font-black text-xs uppercase tracking-wider">Scan Mode</div>
+                                        <div class="text-[10px] opacity-80 font-normal hidden sm:block">QR Auto-advance</div>
+                                    </div>
                                 </button>
-                                <button type="button" id="btn-mode-manual" class="px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer" title="Manual typing mode">
-                                    <span>✍️</span> <span>Manual</span>
+                                
+                                <button type="button" id="btn-mode-manual" class="relative flex items-center justify-center gap-2.5 py-3 px-3 sm:px-4 rounded-xl font-bold text-xs sm:text-sm tracking-wide transition-all duration-200 cursor-pointer select-none text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent active:scale-[0.98]">
+                                    <span class="text-base sm:text-lg">✍️</span>
+                                    <div class="text-left leading-tight">
+                                        <div class="font-bold text-xs uppercase tracking-wider">Manual Mode</div>
+                                        <div class="text-[10px] opacity-70 font-normal hidden sm:block">Type Numbers</div>
+                                    </div>
                                 </button>
                             </div>
                         </div>

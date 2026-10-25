@@ -129,7 +129,8 @@ export function initStageManager(uid, role) {
         const trackNos = [];
         
         inputs.forEach(input => {
-            const val = input.value.trim();
+            const rawVal = input.value.trim();
+            const val = rawVal.replace(/^0+/, '') || (rawVal === '0' ? '0' : '');
             if (val) trackNos.push(val);
         });
 
@@ -443,6 +444,10 @@ function parseCandidateQR(rawText) {
     }
 
     if (!trackNo) return null;
+
+    // Normalize track number: strip leading zeros (e.g. '014' -> '14', '001' -> '1', '0100' -> '100')
+    trackNo = trackNo.replace(/^0+/, '') || '0';
+
     return { trackNo, name, dob };
 }
 
@@ -487,6 +492,7 @@ function setActiveSlot(index) {
 function initCandidateSlotScanner() {
     const btnModeScan = document.getElementById('btn-mode-scan');
     const btnModeManual = document.getElementById('btn-mode-manual');
+    const modeLabel = document.getElementById('current-mode-label');
     const drawer = document.getElementById('slot-qr-drawer');
     const btnClose = document.getElementById('btn-close-slot-qr');
     const statusEl = document.getElementById('slot-qr-status');
@@ -497,15 +503,25 @@ function initCandidateSlotScanner() {
 
     if (!drawer) return;
 
+    const activeScanClasses = "relative flex items-center justify-center gap-2.5 py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm tracking-wide transition-all duration-200 cursor-pointer select-none bg-gradient-to-r from-brand-600 to-indigo-600 text-white shadow-lg shadow-brand-500/20 border border-brand-400/40 active:scale-[0.98]";
+    const inactiveScanClasses = "relative flex items-center justify-center gap-2.5 py-3 px-3 sm:px-4 rounded-xl font-bold text-xs sm:text-sm tracking-wide transition-all duration-200 cursor-pointer select-none text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent active:scale-[0.98]";
+
+    const activeManualClasses = "relative flex items-center justify-center gap-2.5 py-3 px-3 sm:px-4 rounded-xl font-black text-xs sm:text-sm tracking-wide transition-all duration-200 cursor-pointer select-none bg-slate-800 text-white shadow-md border border-slate-600 active:scale-[0.98]";
+    const inactiveManualClasses = "relative flex items-center justify-center gap-2.5 py-3 px-3 sm:px-4 rounded-xl font-bold text-xs sm:text-sm tracking-wide transition-all duration-200 cursor-pointer select-none text-slate-400 hover:text-slate-200 hover:bg-slate-900/60 border border-transparent active:scale-[0.98]";
+
     // --- MODE SWITCHER LOGIC ---
     function setEntryMode(mode) {
         currentEntryMode = mode;
         if (mode === 'scan') {
             if (btnModeScan) {
-                btnModeScan.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 bg-brand-600 text-white shadow-sm cursor-pointer";
+                btnModeScan.className = activeScanClasses;
             }
             if (btnModeManual) {
-                btnModeManual.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer";
+                btnModeManual.className = inactiveManualClasses;
+            }
+            if (modeLabel) {
+                modeLabel.textContent = "📷 Scan Active (Touch-Protected)";
+                modeLabel.className = "text-[10px] sm:text-[11px] font-mono font-bold text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-800/60";
             }
             inputs.forEach(input => {
                 input.readOnly = true;
@@ -519,10 +535,14 @@ function initCandidateSlotScanner() {
         } else {
             // Manual Mode
             if (btnModeManual) {
-                btnModeManual.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 bg-slate-700 text-white shadow-sm cursor-pointer";
+                btnModeManual.className = activeManualClasses;
             }
             if (btnModeScan) {
-                btnModeScan.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer";
+                btnModeScan.className = inactiveScanClasses;
+            }
+            if (modeLabel) {
+                modeLabel.textContent = "✍️ Manual Typing Active";
+                modeLabel.className = "text-[10px] sm:text-[11px] font-mono font-bold text-brand-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800";
             }
             inputs.forEach(input => {
                 input.readOnly = false;
@@ -577,6 +597,11 @@ function initCandidateSlotScanner() {
             setActiveSlot(index);
             if (!input.value.trim() && previews[index]) {
                 previews[index].textContent = '';
+            }
+        });
+        input.addEventListener('blur', () => {
+            if (input.value.trim()) {
+                input.value = input.value.trim().replace(/^0+/, '') || '0';
             }
         });
     });
@@ -643,7 +668,8 @@ function initCandidateSlotScanner() {
             // 2. BATCH-WIDE DUPLICATE CHECK: Is this track number already present in ANY slot?
             let existingIndex = -1;
             inputs.forEach((inp, idx) => {
-                if (inp.value.trim() === scannedTrack) {
+                const existingVal = inp.value.trim().replace(/^0+/, '') || (inp.value.trim() === '0' ? '0' : '');
+                if (existingVal && existingVal === scannedTrack) {
                     existingIndex = idx;
                 }
             });
