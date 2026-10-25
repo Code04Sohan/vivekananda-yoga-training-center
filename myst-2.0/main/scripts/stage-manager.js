@@ -354,25 +354,66 @@ function listenToLiveQueue(matId) {
 let slotScannerInstance = null;
 let isSlotScanning = false;
 let activeSlotIndex = 0;
-let lastScannedTrack = null;
-let lastScannedTime = 0;
+let currentEntryMode = 'scan'; // 'scan' | 'manual'
+let currentlyHeldTrack = null;
+let isScannerInCooldown = false;
+let cooldownTimer = null;
+let lastQrSeenTimestamp = 0;
 
-function playCandidateTone() {
+// --- AUDIO FEEDBACK GENERATION ---
+function playSuccessChime() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         if (!AudioContext) return;
         const ctx = new AudioContext();
         if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        
+        // Note 1: 880Hz (A5)
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(880, now);
+        gain1.gain.setValueAtTime(0.12, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.12);
+
+        // Note 2: 1175Hz (D6)
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1175, now + 0.1);
+        gain2.gain.setValueAtTime(0.15, now + 0.1);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(now + 0.1);
+        osc2.stop(now + 0.28);
+    } catch (e) {}
+}
+
+function playWarningBuzz() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        if (ctx.state === 'suspended') ctx.resume();
+        const now = ctx.currentTime;
+        
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(987, ctx.currentTime);
-        gain.gain.setValueAtTime(0.12, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.setValueAtTime(180, now + 0.12);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.25);
     } catch (e) {}
 }
 
@@ -406,6 +447,7 @@ function parseCandidateQR(rawText) {
 }
 
 function resetSlotScannerActiveIndex() {
+    currentlyHeldTrack = null;
     setActiveSlot(0);
 }
 
@@ -443,20 +485,67 @@ function setActiveSlot(index) {
 }
 
 function initCandidateSlotScanner() {
-    const btnToggle = document.getElementById('btn-toggle-slot-qr');
+    const btnModeScan = document.getElementById('btn-mode-scan');
+    const btnModeManual = document.getElementById('btn-mode-manual');
     const drawer = document.getElementById('slot-qr-drawer');
     const btnClose = document.getElementById('btn-close-slot-qr');
     const statusEl = document.getElementById('slot-qr-status');
-    const btnIcon = document.getElementById('slot-qr-btn-icon');
-    const btnText = document.getElementById('slot-qr-btn-text');
     const slotBoxes = document.querySelectorAll('.slot-box');
     const inputs = document.querySelectorAll('.queue-input');
     const previews = document.querySelectorAll('.slot-name-preview');
+    const lockIndicators = document.querySelectorAll('.slot-lock-indicator');
 
-    if (!btnToggle || !drawer) return;
+    if (!drawer) return;
 
-    // Set initial active slot (Slot 1)
+    // --- MODE SWITCHER LOGIC ---
+    function setEntryMode(mode) {
+        currentEntryMode = mode;
+        if (mode === 'scan') {
+            if (btnModeScan) {
+                btnModeScan.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 bg-brand-600 text-white shadow-sm cursor-pointer";
+            }
+            if (btnModeManual) {
+                btnModeManual.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer";
+            }
+            inputs.forEach(input => {
+                input.readOnly = true;
+                input.classList.add('cursor-pointer', 'select-none');
+            });
+            lockIndicators.forEach(ind => {
+                ind.textContent = "🔒";
+                ind.title = "Scan Protected (Read-Only)";
+            });
+            startSlotScanner();
+        } else {
+            // Manual Mode
+            if (btnModeManual) {
+                btnModeManual.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 bg-slate-700 text-white shadow-sm cursor-pointer";
+            }
+            if (btnModeScan) {
+                btnModeScan.className = "px-2.5 py-1 rounded-md text-xs transition-all flex items-center gap-1.5 text-slate-400 hover:text-slate-200 cursor-pointer";
+            }
+            inputs.forEach(input => {
+                input.readOnly = false;
+                input.classList.remove('cursor-pointer', 'select-none');
+            });
+            lockIndicators.forEach(ind => {
+                ind.textContent = "✍️";
+                ind.title = "Manual Edit Allowed";
+            });
+            stopSlotScanner();
+        }
+    }
+
+    if (btnModeScan) {
+        btnModeScan.addEventListener('click', () => setEntryMode('scan'));
+    }
+    if (btnModeManual) {
+        btnModeManual.addEventListener('click', () => setEntryMode('manual'));
+    }
+
+    // Set initial active slot (Slot 1) & initial mode (Scan Mode)
     setActiveSlot(0);
+    setEntryMode('scan');
 
     // Slot click selection & individual clear buttons
     slotBoxes.forEach((box, index) => {
@@ -465,12 +554,15 @@ function initCandidateSlotScanner() {
                 // Clear button clicked
                 if (inputs[index]) inputs[index].value = '';
                 if (previews[index]) previews[index].textContent = '';
+                currentlyHeldTrack = null;
                 setActiveSlot(index);
-                if (inputs[index]) inputs[index].focus();
+                if (currentEntryMode === 'manual' && inputs[index]) {
+                    inputs[index].focus();
+                }
                 return;
             }
             setActiveSlot(index);
-            if (inputs[index] && e.target !== inputs[index]) {
+            if (currentEntryMode === 'manual' && inputs[index]) {
                 inputs[index].focus();
             }
         });
@@ -500,18 +592,10 @@ function initCandidateSlotScanner() {
             isSlotScanning = false;
         }
         drawer.classList.add('hidden');
-        if (btnText) btnText.textContent = "Open Scanner";
-        if (btnIcon) btnIcon.textContent = "📷";
-        btnToggle.classList.remove('bg-red-950/60', 'text-red-300', 'border-red-700');
-        btnToggle.classList.add('bg-brand-600/20', 'text-brand-300', 'border-brand-500/40');
     }
 
     async function startSlotScanner() {
         drawer.classList.remove('hidden');
-        if (btnText) btnText.textContent = "Close Scanner";
-        if (btnIcon) btnIcon.textContent = "✕";
-        btnToggle.classList.remove('bg-brand-600/20', 'text-brand-300', 'border-brand-500/40');
-        btnToggle.classList.add('bg-red-950/60', 'text-red-300', 'border-red-700');
 
         if (statusEl) {
             statusEl.textContent = "Requesting camera access...";
@@ -537,9 +621,11 @@ function initCandidateSlotScanner() {
         };
 
         const onScanSuccess = (decodedText) => {
-            if (!isSlotScanning) return;
+            if (!isSlotScanning || isScannerInCooldown) return;
+            lastQrSeenTimestamp = Date.now();
+
             const parsed = parseCandidateQR(decodedText);
-            if (!parsed) {
+            if (!parsed || !parsed.trackNo) {
                 if (statusEl) {
                     statusEl.textContent = "⚠️ Unrecognized QR. Point at Candidate QR.";
                     statusEl.className = "mt-2 text-[11px] text-amber-400 text-center font-mono truncate px-1";
@@ -547,41 +633,70 @@ function initCandidateSlotScanner() {
                 return;
             }
 
-            // De-bounce rapid consecutive frames of same QR
-            const now = Date.now();
-            if (parsed.trackNo === lastScannedTrack && (now - lastScannedTime) < 1500) {
+            const scannedTrack = parsed.trackNo;
+
+            // 1. CONTINUOUS HOLD CHECK: If user is STILL holding the exact same card in front of camera
+            if (currentlyHeldTrack === scannedTrack) {
+                return; // Silently ignore frame until card is removed
+            }
+
+            // 2. BATCH-WIDE DUPLICATE CHECK: Is this track number already present in ANY slot?
+            let existingIndex = -1;
+            inputs.forEach((inp, idx) => {
+                if (inp.value.trim() === scannedTrack) {
+                    existingIndex = idx;
+                }
+            });
+
+            if (existingIndex !== -1) {
+                // Mark as held so it does not repeatedly trigger alerts every frame
+                currentlyHeldTrack = scannedTrack;
+                playWarningBuzz();
+                if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+                const conflictBox = slotBoxes[existingIndex];
+                if (conflictBox) {
+                    conflictBox.classList.add('border-red-500', 'bg-red-950/40', 'ring-2', 'ring-red-500/50');
+                    setTimeout(() => {
+                        conflictBox.classList.remove('border-red-500', 'bg-red-950/40', 'ring-2', 'ring-red-500/50');
+                    }, 1000);
+                }
+
+                if (statusEl) {
+                    statusEl.textContent = `⚠️ Track #${scannedTrack} already in Slot ${existingIndex + 1}! Scan next candidate.`;
+                    statusEl.className = "mt-2 text-[11px] text-amber-400 text-center font-mono truncate px-1";
+                }
                 return;
             }
-            lastScannedTrack = parsed.trackNo;
-            lastScannedTime = now;
 
-            // 1. Populate track_no in active slot input
+            // 3. SUCCESSFUL NEW SCAN:
+            currentlyHeldTrack = scannedTrack;
+
+            // Populate active slot
             if (inputs[activeSlotIndex]) {
-                inputs[activeSlotIndex].value = parsed.trackNo;
+                inputs[activeSlotIndex].value = scannedTrack;
             }
 
-            // 2. Display candidate name (+ optional dob) preview for stage manager verification
+            // Populate visual preview
+            const displayName = parsed.name ? (parsed.dob ? `👤 ${parsed.name} (${parsed.dob})` : `👤 ${parsed.name}`) : `Candidate #${scannedTrack}`;
             if (previews[activeSlotIndex]) {
-                const displayName = parsed.name ? (parsed.dob ? `👤 ${parsed.name} (${parsed.dob})` : `👤 ${parsed.name}`) : `Candidate #${parsed.trackNo}`;
                 previews[activeSlotIndex].textContent = displayName;
             }
 
-            // 3. Audio & visual feedback
-            playCandidateTone();
-            const currentBox = slotBoxes[activeSlotIndex];
-            if (currentBox) {
-                currentBox.classList.add('border-emerald-500', 'bg-emerald-950/30');
+            // Audio & Haptic feedback
+            playSuccessChime();
+            if (navigator.vibrate) navigator.vibrate([60, 40, 60]);
+
+            // Flash slot box green
+            const filledBox = slotBoxes[activeSlotIndex];
+            if (filledBox) {
+                filledBox.classList.add('border-emerald-500', 'bg-emerald-950/40', 'ring-2', 'ring-emerald-500/50');
                 setTimeout(() => {
-                    currentBox.classList.remove('border-emerald-500', 'bg-emerald-950/30');
-                }, 400);
+                    filledBox.classList.remove('border-emerald-500', 'bg-emerald-950/40', 'ring-2', 'ring-emerald-500/50');
+                }, 800);
             }
 
-            if (statusEl) {
-                statusEl.textContent = `✓ Slot ${activeSlotIndex + 1} filled: #${parsed.trackNo} (${parsed.name || 'Candidate'})`;
-                statusEl.className = "mt-2 text-[11px] text-emerald-400 text-center font-mono truncate px-1";
-            }
-
-            // 4. Auto-advance to next empty slot (or loop to next slot)
+            // Calculate next empty slot index
             let nextSlot = -1;
             for (let i = activeSlotIndex + 1; i < 5; i++) {
                 if (!inputs[i] || !inputs[i].value.trim()) {
@@ -601,7 +716,50 @@ function initCandidateSlotScanner() {
                 nextSlot = (activeSlotIndex + 1) % 5;
             }
 
-            setActiveSlot(nextSlot);
+            // 4. TRIGGER COOLDOWN & CONFIRMATION OVERLAY
+            isScannerInCooldown = true;
+            const capturedSlot = activeSlotIndex;
+
+            const overlay = document.getElementById('slot-qr-feedback-overlay');
+            const overlayTitle = document.getElementById('slot-qr-feedback-title');
+            const overlayDetail = document.getElementById('slot-qr-feedback-detail');
+            const overlayCooldown = document.getElementById('slot-qr-feedback-cooldown');
+
+            if (overlay) {
+                if (overlayTitle) overlayTitle.textContent = `SLOT ${capturedSlot + 1} CAPTURED!`;
+                if (overlayDetail) overlayDetail.textContent = `Track #${scannedTrack} · ${parsed.name || 'Candidate'}`;
+                if (overlayCooldown) overlayCooldown.textContent = `Targeting Slot ${nextSlot + 1} · Ready in 1.5s`;
+                overlay.classList.remove('hidden');
+                overlay.classList.add('flex');
+            }
+
+            if (statusEl) {
+                statusEl.textContent = `✓ Slot ${capturedSlot + 1} filled: #${scannedTrack} (${parsed.name || 'Candidate'})`;
+                statusEl.className = "mt-2 text-[11px] text-emerald-400 text-center font-mono truncate px-1";
+            }
+
+            if (cooldownTimer) clearTimeout(cooldownTimer);
+            cooldownTimer = setTimeout(() => {
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                    overlay.classList.remove('flex');
+                }
+                isScannerInCooldown = false;
+                setActiveSlot(nextSlot);
+                if (statusEl) {
+                    statusEl.textContent = `Ready: Point camera at Candidate ${nextSlot + 1} QR...`;
+                    statusEl.className = "mt-2 text-[11px] text-slate-400 text-center font-mono truncate px-1";
+                }
+            }, 1500);
+        };
+
+        const onScanFailure = () => {
+            // Fires on frames with no QR code detected.
+            // When no QR is in view for >600ms, release currentlyHeldTrack.
+            const now = Date.now();
+            if (now - lastQrSeenTimestamp > 600) {
+                currentlyHeldTrack = null;
+            }
         };
 
         try {
@@ -610,19 +768,19 @@ function initCandidateSlotScanner() {
                 { facingMode: "environment" },
                 config,
                 onScanSuccess,
-                () => {}
+                onScanFailure
             );
             if (statusEl) {
                 statusEl.textContent = "Ready: Point camera at Candidate QR...";
             }
         } catch (err) {
-            // Environment camera unavailable (e.g. PC webcam), fallback to user facingMode
+            // Fallback for laptops / desktop webcams
             try {
                 await slotScannerInstance.start(
                     { facingMode: "user" },
                     config,
                     onScanSuccess,
-                    () => {}
+                    onScanFailure
                 );
                 if (statusEl) {
                     statusEl.textContent = "Ready: Point camera at Candidate QR...";
@@ -637,14 +795,6 @@ function initCandidateSlotScanner() {
             }
         }
     }
-
-    btnToggle.addEventListener('click', () => {
-        if (isSlotScanning) {
-            stopSlotScanner();
-        } else {
-            startSlotScanner();
-        }
-    });
 
     if (btnClose) {
         btnClose.addEventListener('click', stopSlotScanner);
