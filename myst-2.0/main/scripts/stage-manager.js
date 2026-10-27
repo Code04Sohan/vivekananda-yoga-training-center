@@ -540,8 +540,11 @@ function setActiveSlot(index) {
 
 function initCandidateSlotScanner() {
     const toggleEntryMode = document.getElementById('toggle-entry-mode');
-    const modeTextIndicator = document.getElementById('mode-text-indicator');
+    const toggleEntryWrapper = document.getElementById('toggle-entry-wrapper');
+    const toggleModeIcon = document.getElementById('toggle-mode-icon');
     const toggleLabelText = document.getElementById('toggle-label-text');
+    const toggleSwitchTrack = document.getElementById('toggle-switch-track');
+    const toggleSwitchKnob = document.getElementById('toggle-switch-knob');
     const btnOpenScanner = document.getElementById('btn-open-scanner');
     const modalQr = document.getElementById('modal-slot-qr');
     const btnCloseModal = document.getElementById('btn-close-modal-qr');
@@ -557,14 +560,25 @@ function initCandidateSlotScanner() {
     function applyEntryMode(isScanMode) {
         currentEntryMode = isScanMode ? 'scan' : 'manual';
 
+        if (toggleEntryMode && toggleEntryMode.checked !== isScanMode) {
+            toggleEntryMode.checked = isScanMode;
+        }
+
         if (isScanMode) {
-            if (modeTextIndicator) {
-                modeTextIndicator.textContent = "Scan (Locked)";
-                modeTextIndicator.className = "text-emerald-400 font-bold";
+            if (toggleEntryWrapper) {
+                toggleEntryWrapper.className = "w-full flex items-center justify-between p-3 mb-4 rounded-xl border border-emerald-500/60 bg-gradient-to-r from-emerald-950/80 via-slate-900 to-teal-950/80 shadow-md shadow-emerald-950/50 cursor-pointer select-none transition-all duration-200";
             }
+            if (toggleModeIcon) toggleModeIcon.textContent = "📷";
             if (toggleLabelText) {
-                toggleLabelText.textContent = "Scan";
-                toggleLabelText.className = "ml-2 text-xs font-black uppercase text-brand-400 tracking-wider";
+                toggleLabelText.textContent = "Scan Mode (Locked)";
+                toggleLabelText.className = "text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300";
+            }
+            if (toggleSwitchTrack) {
+                toggleSwitchTrack.className = "w-14 h-7 rounded-full p-0.5 transition-all duration-200 bg-gradient-to-r from-emerald-500 to-teal-400 shadow-inner flex items-center";
+            }
+            if (toggleSwitchKnob) {
+                toggleSwitchKnob.className = "w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-200 transform translate-x-7 flex items-center justify-center text-[10px] font-black text-emerald-700";
+                toggleSwitchKnob.textContent = "✓";
             }
             if (btnOpenScanner) {
                 btnOpenScanner.classList.remove('hidden');
@@ -576,13 +590,20 @@ function initCandidateSlotScanner() {
             });
         } else {
             // Manual Mode
-            if (modeTextIndicator) {
-                modeTextIndicator.textContent = "Manual (Unlocked)";
-                modeTextIndicator.className = "text-amber-400 font-bold";
+            if (toggleEntryWrapper) {
+                toggleEntryWrapper.className = "w-full flex items-center justify-between p-3 mb-4 rounded-xl border border-amber-500/60 bg-gradient-to-r from-amber-950/80 via-slate-900 to-orange-950/80 shadow-md shadow-amber-950/50 cursor-pointer select-none transition-all duration-200";
             }
+            if (toggleModeIcon) toggleModeIcon.textContent = "✍️";
             if (toggleLabelText) {
-                toggleLabelText.textContent = "Manual";
-                toggleLabelText.className = "ml-2 text-xs font-black uppercase text-slate-400 tracking-wider";
+                toggleLabelText.textContent = "Manual Mode (Unlocked)";
+                toggleLabelText.className = "text-xs sm:text-sm font-black uppercase tracking-wider text-amber-300";
+            }
+            if (toggleSwitchTrack) {
+                toggleSwitchTrack.className = "w-14 h-7 rounded-full p-0.5 transition-all duration-200 bg-gradient-to-r from-amber-500 to-orange-500 shadow-inner flex items-center";
+            }
+            if (toggleSwitchKnob) {
+                toggleSwitchKnob.className = "w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-200 transform translate-x-0 flex items-center justify-center text-[10px] font-black text-amber-700";
+                toggleSwitchKnob.textContent = "✎";
             }
             if (btnOpenScanner) {
                 btnOpenScanner.classList.add('hidden');

@@ -264,20 +264,28 @@
                             <option value="">-- Select Mat --</option>
                         </select>
 
-                        <!-- Header with Toggle Switch (Manual vs Scan Mode) -->
-                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800">
-                            <div>
-                                <h3 class="text-xs font-bold text-brand-400 uppercase tracking-[0.2em]">Batch Entry (Track Nos)</h3>
-                                <p id="entry-mode-status" class="text-[11px] text-slate-400 font-medium">Mode: <span class="text-emerald-400 font-bold" id="mode-text-indicator">Scan (Locked)</span></p>
+                        <!-- Batch Entry Title -->
+                        <div class="mb-3">
+                            <h3 class="text-xs font-bold text-brand-400 uppercase tracking-[0.2em]">Batch Entry (Track Nos)</h3>
+                        </div>
+
+                        <!-- Colorful Toggle Switch Button (The button itself is the indicator) -->
+                        <label id="toggle-entry-wrapper" class="w-full flex items-center justify-between p-3 mb-4 rounded-xl border border-emerald-500/60 bg-gradient-to-r from-emerald-950/80 via-slate-900 to-teal-950/80 shadow-md shadow-emerald-950/50 cursor-pointer select-none transition-all duration-200">
+                            <div class="flex items-center gap-2.5">
+                                <span id="toggle-mode-icon" class="text-lg">📷</span>
+                                <span id="toggle-label-text" class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-300">Scan Mode (Locked)</span>
                             </div>
                             
-                            <!-- Sleek Toggle Switch -->
-                            <label class="relative inline-flex items-center cursor-pointer select-none">
-                                <input type="checkbox" id="toggle-entry-mode" class="sr-only peer" checked>
-                                <div class="w-12 h-6.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[4px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600 border border-slate-700"></div>
-                                <span id="toggle-label-text" class="ml-2 text-xs font-black uppercase text-brand-400 tracking-wider">Scan</span>
-                            </label>
-                        </div>
+                            <!-- Colorful Switch Track & Knob -->
+                            <div class="relative flex items-center">
+                                <input type="checkbox" id="toggle-entry-mode" class="sr-only" checked>
+                                <div id="toggle-switch-track" class="w-14 h-7 rounded-full p-0.5 transition-all duration-200 bg-gradient-to-r from-emerald-500 to-teal-400 shadow-inner flex items-center">
+                                    <div id="toggle-switch-knob" class="w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-200 transform translate-x-7 flex items-center justify-center text-[10px] font-black text-emerald-700">
+                                        ✓
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
 
                         <!-- Scan Action Button (Active and prominent when Scan Mode is enabled) -->
                         <button type="button" id="btn-open-scanner" class="w-full mb-5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-black py-3.5 px-4 rounded-xl shadow-lg hover:shadow-brand-500/25 transition-all flex items-center justify-center gap-2.5 text-sm uppercase tracking-wider border border-brand-400/30 active:scale-[0.98] cursor-pointer">
@@ -339,8 +347,6 @@
                         </div>
 
                         <button id="btn-push-queue" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-black py-4 rounded-xl shadow transition-colors text-lg uppercase tracking-widest flex items-center justify-center">
-                            <span class="mr-3">🚀</span> Push to Mat
-                        </button>
                             <span class="mr-3">🚀</span> Push to Mat
                         </button>
                     </div>
