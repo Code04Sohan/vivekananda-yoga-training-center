@@ -22,6 +22,7 @@ import { initResultsExplorer } from './results-explorer.js';
 import { initJudgePanel } from './judge-panel.js';
 // --- NEW: IMPORT DISPLAY ENGINE ---
 import { initDisplay } from './display-app.js';
+import { initCulturalEngine } from './cultural-engine.js';
 
 export function initAuth() {
     const loginForm = document.getElementById('login-form');
@@ -117,6 +118,7 @@ async function verifyUserRole(uid, errorElement) {
                 initCSVImporter(); initStageManager(uid, role); initMatController();
                 initLiveDashboard(); initResultsEngine(); initResultsExplorer();
                 initDistrictResults();
+                initCulturalEngine();
                 isSystemBooted = true;
             }
             unlockDashboard();

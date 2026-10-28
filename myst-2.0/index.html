@@ -98,12 +98,12 @@
             </p>
         </div>
 
-        <!-- 3 OPTIONS: ONLY ICON & NAME -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 w-full max-w-3xl">
+        <!-- 5 OPTIONS: ONLY ICON & NAME -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5 w-full max-w-5xl">
 
             <!-- OPTION 1: ADMIN -->
             <a href="main/admin.html" 
-               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-blue-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-blue-950/40 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-blue-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-blue-950/40 text-center focus:outline-none focus:ring-2 focus:ring-blue-500 sm:col-span-2 lg:col-span-1">
                 <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-inner">
                     <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
@@ -140,6 +140,32 @@
                 </span>
             </a>
 
+            <!-- OPTION 4: CULT DISPLAY -->
+            <a href="main/cult-display.html" 
+               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-indigo-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-indigo-950/40 text-center focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all shadow-inner">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-indigo-400 transition-colors">
+                    Cult Display
+                </span>
+            </a>
+
+            <!-- OPTION 5: CULT JUDGE -->
+            <a href="main/cult-judge.html" 
+               class="option-card group flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl bg-slate-900/40 hover:bg-slate-900/90 border border-white/[0.08] hover:border-purple-500/50 backdrop-blur-sm shadow-sm hover:shadow-xl hover:shadow-purple-950/40 text-center focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-purple-500 group-hover:text-white transition-all shadow-inner">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </div>
+                <span class="text-base sm:text-lg font-bold text-white tracking-tight group-hover:text-purple-400 transition-colors">
+                    Cult Judge
+                </span>
+            </a>
+
         </div>
 
     </main>
@@ -149,7 +175,7 @@
         &copy; 2026 Vivekananda Yoga Training Center
     </footer>
 
-    <!-- KEYBOARD SHORTCUTS (1: Admin, 2: Display, 3: Judge) -->
+    <!-- KEYBOARD SHORTCUTS (1: Admin, 2: Display, 3: Judge, 4: Cult Display, 5: Cult Judge) -->
     <script>
         document.addEventListener('keydown', function (e) {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
@@ -161,6 +187,10 @@
                 window.location.href = 'main/display.html';
             } else if (key === '3' || key === 'j') {
                 window.location.href = 'main/judge.html';
+            } else if (key === '4') {
+                window.location.href = 'main/cult-display.html';
+            } else if (key === '5') {
+                window.location.href = 'main/cult-judge.html';
             }
         });
     </script>
