@@ -185,10 +185,11 @@ async function loadJudgeProfileAndStage(uid) {
             let foundStage = null;
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
+                const pSize = data.panelSize !== undefined ? parseInt(data.panelSize) : (docSnap.id === 'song' ? 1 : 2);
                 if (data.j1_uid === uid) {
-                    foundStage = { comp: docSnap.id, seat: 'j1', ...data };
-                } else if (data.j2_uid === uid) {
-                    foundStage = { comp: docSnap.id, seat: 'j2', ...data };
+                    foundStage = { comp: docSnap.id, seat: 'j1', panelSize: pSize, ...data };
+                } else if (pSize === 2 && data.j2_uid === uid) {
+                    foundStage = { comp: docSnap.id, seat: 'j2', panelSize: pSize, ...data };
                 }
             });
 
@@ -225,18 +226,30 @@ function updateTerminalStageUI() {
     if (terminalContent) terminalContent.classList.remove('hidden');
 
     const compName = assignedStage.comp.toUpperCase();
+    const panelSize = assignedStage.panelSize !== undefined ? parseInt(assignedStage.panelSize) : (assignedStage.comp === 'song' ? 1 : 2);
     const isHead = assignedStage.seat === 'j1';
-    const seatLabel = isHead ? "Judge 1 (Head Judge)" : "Judge 2 (Panel Judge)";
+
+    let seatLabel = "";
+    if (panelSize === 1) {
+        seatLabel = "Solo Judge (Max 50)";
+    } else {
+        seatLabel = isHead ? "Judge 1 (Head Judge)" : "Judge 2 (Panel Judge)";
+    }
 
     const compIcons = { drawing: '🎨', song: '🎵', dance: '💃', recital: '📜' };
     if (compTitle) compTitle.textContent = `${compName} COMPETITION`;
     if (compIcon) compIcon.textContent = compIcons[assignedStage.comp] || '🎭';
     if (judgeInfo) judgeInfo.textContent = `${currentJudgeProfile?.name || 'Judge'} · ${seatLabel}`;
     if (seatBadge) {
-        seatBadge.textContent = isHead ? "JUDGE 1" : "JUDGE 2";
-        seatBadge.className = isHead 
-            ? "text-[10px] sm:text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/40 truncate"
-            : "text-[10px] sm:text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 truncate";
+        if (panelSize === 1) {
+            seatBadge.textContent = "SOLO JUDGE";
+            seatBadge.className = "text-[10px] sm:text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/40 truncate";
+        } else {
+            seatBadge.textContent = isHead ? "JUDGE 1" : "JUDGE 2";
+            seatBadge.className = isHead 
+                ? "text-[10px] sm:text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/40 truncate"
+                : "text-[10px] sm:text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 truncate";
+        }
     }
 
     // Panel Lock Control
@@ -603,6 +616,7 @@ async function submitCandidateScore() {
         const comp = assignedStage.comp;
         const trackNo = activeTargetCandidate.trackNo;
         const seat = assignedStage.seat; // 'j1' or 'j2'
+        const panelSize = assignedStage.panelSize !== undefined ? parseInt(assignedStage.panelSize) : (comp === 'song' ? 1 : 2);
         const docId = `${comp}_${trackNo}`;
 
         const scoreRef = doc(db, 'cult_scores', docId);
@@ -614,6 +628,7 @@ async function submitCandidateScore() {
         const updatePayload = {
             competition: comp,
             trackNo: trackNo,
+            panelSize: panelSize,
             candidateName: activeTargetCandidate.name,
             groupName: activeTargetCandidate.groupName || '',
             gender: activeTargetCandidate.gender || '',
@@ -634,13 +649,20 @@ async function submitCandidateScore() {
             updatePayload.j2_submittedAt = new Date().toISOString();
         }
 
-        // Calculate combined total if other judge has submitted
-        const otherScore = seat === 'j1' ? existingData.j2_score : existingData.j1_score;
-        if (otherScore !== undefined) {
-            updatePayload.total_score = marks + parseFloat(otherScore);
+        // Calculate combined total or solo total based on panelSize
+        if (panelSize === 1) {
+            updatePayload.total_score = marks;
+            updatePayload.max_score = 50;
             updatePayload.status = 'completed';
         } else {
-            updatePayload.status = `${seat}_done`;
+            updatePayload.max_score = 100;
+            const otherScore = seat === 'j1' ? existingData.j2_score : existingData.j1_score;
+            if (otherScore !== undefined) {
+                updatePayload.total_score = marks + parseFloat(otherScore);
+                updatePayload.status = 'completed';
+            } else {
+                updatePayload.status = `${seat}_done`;
+            }
         }
 
         // 1. Write Scorecard
@@ -650,6 +672,9 @@ async function submitCandidateScore() {
         const candRef = doc(db, 'cult_candidates', docId);
         const candUpdate = {};
         candUpdate[`${seat}_status`] = true;
+        if (panelSize === 1 || updatePayload.status === 'completed') {
+            candUpdate['status'] = 'completed';
+        }
         await updateDoc(candRef, candUpdate);
 
         // Success Haptic & Chime

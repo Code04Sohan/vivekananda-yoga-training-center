@@ -656,6 +656,9 @@
                         <button type="button" id="btn-cult-tab-results" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
                             🏆 Results & Podiums
                         </button>
+                        <button type="button" id="btn-cult-tab-podiums" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
+                            🏛️ Published Podiums
+                        </button>
                     </div>
                 </div>
 
@@ -865,8 +868,8 @@
                                         <th class="p-4">Gender</th>
                                         <th class="p-4">District</th>
                                         <th class="p-4 text-center">J1 (/50)</th>
-                                        <th class="p-4 text-center">J2 (/50)</th>
-                                        <th class="p-4 text-center">Total (/100)</th>
+                                        <th class="p-4 text-center" id="cult-live-th-j2">J2 (/50)</th>
+                                        <th class="p-4 text-center" id="cult-live-th-total">Total (/100)</th>
                                         <th class="p-4 text-center">Status</th>
                                     </tr>
                                 </thead>
@@ -941,6 +944,54 @@
                     <!-- Standings Table Container -->
                     <div id="cult-results-table-container" class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
                         <p class="text-slate-500 text-center py-12 font-mono text-sm">Select filters above and click "Calculate Standings" to preview ranks and medals.</p>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 6: PUBLISHED PODIUMS EXPLORER -->
+                <div id="cult-panel-podiums" class="space-y-6 hidden">
+                    <!-- Top Toolbar -->
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xl">🏛️</span>
+                                <h3 class="text-xl font-black text-white uppercase tracking-tight">Official Published Podiums</h3>
+                                <span class="bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-widest flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Vault Live
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-400">Explore, download CSV, or retract/delete official podium results published to public displays.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                            <!-- Filter by Competition -->
+                            <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
+                                <span class="text-slate-500 font-bold uppercase text-[10px]">Filter:</span>
+                                <select id="cult-podiums-filter-comp" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer">
+                                    <option value="ALL">All Competitions</option>
+                                    <option value="drawing">🎨 Drawing</option>
+                                    <option value="song">🎵 Song (Music)</option>
+                                    <option value="dance">💃 Dance</option>
+                                    <option value="recital">📜 Recital</option>
+                                </select>
+                            </div>
+                            <!-- Refresh Button -->
+                            <button type="button" id="btn-cult-podiums-refresh" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-sm cursor-pointer">
+                                <span>🔄</span> Refresh
+                            </button>
+                            <!-- Wipe All Podiums Button -->
+                            <button type="button" id="btn-cult-podiums-wipe-all" class="bg-red-950/60 hover:bg-red-900 text-red-300 hover:text-white border border-red-800/80 px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-sm cursor-pointer">
+                                <span>⚠️</span> Delete All Podiums
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Podiums List Grid -->
+                    <div id="cult-podiums-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Selected Podium Details View -->
+                    <div id="cult-podium-details" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 hidden shadow-lg relative overflow-hidden">
+                        <!-- Injected by JS -->
                     </div>
                 </div>
             </section>

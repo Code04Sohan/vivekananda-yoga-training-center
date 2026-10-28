@@ -125,8 +125,9 @@ function bindDisplaySync() {
 
         if (docSnap.exists()) {
             const data = docSnap.data();
+            const panelSize = data.panelSize !== undefined ? parseInt(data.panelSize) : 2;
             if (statusText) statusText.textContent = `Official Published Podium (${cleanComp.toUpperCase()}) · Verified Official`;
-            renderPodiumAndTable(data.standings || []);
+            renderPodiumAndTable(data.standings || [], panelSize);
         } else {
             // If not published yet, fallback to live calculation
             if (statusText) statusText.textContent = `Live Stage Standings (${cleanComp.toUpperCase()}) · Live Scoring in Progress`;
@@ -142,6 +143,10 @@ async function fallbackLiveCalculation() {
     const { comp, group, gender, district } = currentFilter;
 
     try {
+        const stageDoc = await getDoc(doc(db, 'cult_stages', comp));
+        const stageData = stageDoc.exists() ? stageDoc.data() : {};
+        const panelSize = stageData.panelSize !== undefined ? parseInt(stageData.panelSize) : (comp === 'song' ? 1 : 2);
+
         const candSnap = await getDocs(query(collection(db, 'cult_candidates'), where('competition', '==', comp)));
         const candsMap = {};
 
@@ -165,8 +170,22 @@ async function fallbackLiveCalculation() {
                 const j1 = s.j1_score !== undefined ? parseFloat(s.j1_score) : null;
                 const j2 = s.j2_score !== undefined ? parseFloat(s.j2_score) : null;
 
-                if (j1 !== null && j2 !== null) {
-                    const total = j1 + j2;
+                let isComplete = false;
+                let total = 0;
+
+                if (panelSize === 1) {
+                    if (j1 !== null) {
+                        isComplete = true;
+                        total = j1;
+                    }
+                } else {
+                    if (j1 !== null && j2 !== null) {
+                        isComplete = true;
+                        total = j1 + j2;
+                    }
+                }
+
+                if (isComplete) {
                     list.push({
                         trackNo: s.trackNo,
                         name: c.name || s.candidateName,
@@ -177,7 +196,8 @@ async function fallbackLiveCalculation() {
                         j1Score: j1,
                         j2Score: j2,
                         totalScore: total,
-                        finalScore: total.toFixed(2)
+                        finalScore: total.toFixed(2),
+                        panelSize: panelSize
                     });
                 }
             }
@@ -199,16 +219,31 @@ async function fallbackLiveCalculation() {
             return { rank, medal, ...item };
         });
 
-        renderPodiumAndTable(ranked);
+        renderPodiumAndTable(ranked, panelSize);
 
     } catch (err) {
         console.error("Fallback live calculation error:", err);
     }
 }
 
-function renderPodiumAndTable(standings) {
+function renderPodiumAndTable(standings, explicitPanelSize) {
     const totalRankedEl = document.getElementById('disp-total-ranked');
     const tbody = document.getElementById('disp-leaderboard-tbody');
+
+    const panelSize = explicitPanelSize || (standings[0]?.panelSize !== undefined ? parseInt(standings[0].panelSize) : (currentFilter.comp === 'song' ? 1 : 2));
+    const maxScoreLabel = panelSize === 1 ? "/ 50" : "/ 100";
+
+    // Update podium card max labels
+    ['podium-1-max', 'podium-2-max', 'podium-3-max'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = maxScoreLabel;
+    });
+
+    // Update table header cells
+    const thJ2 = document.getElementById('disp-th-j2');
+    const thTotal = document.getElementById('disp-th-total');
+    if (thJ2) thJ2.innerHTML = panelSize === 1 ? 'J2 <span class="text-[10px] text-slate-500 font-normal">(N/A)</span>' : 'J2 (/50)';
+    if (thTotal) thTotal.innerHTML = panelSize === 1 ? 'Total (/50)' : 'Total (/100)';
 
     if (totalRankedEl) totalRankedEl.textContent = `${standings.length} Candidates Ranked`;
 
@@ -238,6 +273,10 @@ function renderPodiumAndTable(standings) {
     let rowsHtml = '';
     standings.forEach(s => {
         const isPodium = s.rank <= 3;
+        const j2Display = panelSize === 1
+            ? '<span class="text-xs text-slate-600 font-mono italic">−</span>'
+            : (s.j2Score !== null && s.j2Score !== undefined ? (typeof s.j2Score === 'number' ? s.j2Score.toFixed(1) : s.j2Score) : '−');
+
         rowsHtml += `
             <tr class="${isPodium ? 'bg-slate-900/90 font-bold border-purple-500/20' : 'text-slate-400'} border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
                 <td class="p-4 text-xl tracking-tight font-black">${s.medal !== '-' ? s.medal : s.rank}</td>
@@ -247,7 +286,7 @@ function renderPodiumAndTable(standings) {
                 <td class="p-4 text-xs text-slate-400">${s.district || '-'}</td>
                 <td class="p-4 text-xs text-slate-400">${s.institution || '-'}</td>
                 <td class="p-4 text-center font-mono font-bold text-slate-300">${typeof s.j1Score === 'number' ? s.j1Score.toFixed(1) : s.j1Score}</td>
-                <td class="p-4 text-center font-mono font-bold text-slate-300">${typeof s.j2Score === 'number' ? s.j2Score.toFixed(1) : s.j2Score}</td>
+                <td class="p-4 text-center font-mono font-bold text-slate-300">${j2Display}</td>
                 <td class="p-4 text-right font-mono font-black text-2xl text-emerald-400">${s.finalScore}</td>
             </tr>
         `;

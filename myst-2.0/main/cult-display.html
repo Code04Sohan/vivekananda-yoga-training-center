@@ -99,7 +99,7 @@
                 </div>
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3">
                     <span class="text-2xl font-black font-mono text-slate-200" id="podium-2-score">--</span>
-                    <span class="text-xs text-slate-500">/ 100</span>
+                    <span class="text-xs text-slate-500" id="podium-2-max">/ 100</span>
                 </div>
             </div>
 
@@ -114,7 +114,7 @@
                 </div>
                 <div class="bg-slate-950 border border-yellow-500/40 rounded-2xl p-4 shadow-inner">
                     <span class="text-3xl font-black font-mono text-yellow-400" id="podium-1-score">--</span>
-                    <span class="text-sm text-yellow-600 font-mono">/ 100</span>
+                    <span class="text-sm text-yellow-600 font-mono" id="podium-1-max">/ 100</span>
                 </div>
             </div>
 
@@ -129,7 +129,7 @@
                 </div>
                 <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3">
                     <span class="text-2xl font-black font-mono text-amber-400" id="podium-3-score">--</span>
-                    <span class="text-xs text-slate-500">/ 100</span>
+                    <span class="text-xs text-slate-500" id="podium-3-max">/ 100</span>
                 </div>
             </div>
         </div>
@@ -154,8 +154,8 @@
                             <th class="p-4">District</th>
                             <th class="p-4">Institution</th>
                             <th class="p-4 text-center">J1 (/50)</th>
-                            <th class="p-4 text-center">J2 (/50)</th>
-                            <th class="p-4 text-right">Total (/100)</th>
+                            <th class="p-4 text-center" id="disp-th-j2">J2 (/50)</th>
+                            <th class="p-4 text-right" id="disp-th-total">Total (/100)</th>
                         </tr>
                     </thead>
                     <tbody id="disp-leaderboard-tbody" class="divide-y divide-slate-800">

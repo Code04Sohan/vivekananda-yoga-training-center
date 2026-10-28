@@ -34,6 +34,7 @@ let unsubscribeLiveScores = null;
 let currentSelectedCompForScores = 'drawing';
 let currentCalculatedStandings = [];
 let currentResultsFilter = { comp: 'drawing', group: '', gender: '', district: '' };
+let allPublishedCulturalPodiums = [];
 
 export function initCulturalEngine() {
     initSubTabNavigation();
@@ -44,13 +45,14 @@ export function initCulturalEngine() {
     initLiveScoresMonitor();
     initResultsEngine();
     initCulturalWipeModals();
+    initPublishedPodiumsExplorer();
 }
 
 // ============================================================================
 // 1. SUB-TAB NAVIGATION
 // ============================================================================
 function initSubTabNavigation() {
-    const tabs = ['import', 'candidates', 'stages', 'live', 'results'];
+    const tabs = ['import', 'candidates', 'stages', 'live', 'results', 'podiums'];
     tabs.forEach(tab => {
         const btn = document.getElementById(`btn-cult-tab-${tab}`);
         const panel = document.getElementById(`cult-panel-${tab}`);
@@ -75,6 +77,8 @@ function initSubTabNavigation() {
                 bindLiveScoresSubscription(currentSelectedCompForScores);
             } else if (tab === 'results') {
                 populateResultsFilters();
+            } else if (tab === 'podiums') {
+                loadCulturalPublishedPodiums();
             }
         });
     });
@@ -317,6 +321,7 @@ function renderAllStageControls() {
     CULTURAL_COMPETITIONS.forEach(comp => {
         const state = stageStateMap[comp.id] || {
             competition: comp.id,
+            panelSize: comp.id === 'song' ? 1 : 2,
             isLocked: false,
             j1_uid: '',
             j1_name: '',
@@ -324,6 +329,8 @@ function renderAllStageControls() {
             j2_name: '',
             updatedAt: null
         };
+
+        const panelSize = state.panelSize !== undefined ? parseInt(state.panelSize) : (comp.id === 'song' ? 1 : 2);
 
         const card = document.createElement('div');
         card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-md flex flex-col justify-between";
@@ -359,11 +366,23 @@ function renderAllStageControls() {
             </div>
 
             <div class="space-y-4 my-2">
+                <!-- Panel Size Selector (1 or 2 Judges) -->
+                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <label class="text-xs font-bold text-slate-300 uppercase tracking-wider block">Panel Configuration</label>
+                        <span class="text-[10px] text-slate-500 font-mono">Solo or Dual Evaluator</span>
+                    </div>
+                    <select class="bg-slate-900 border border-slate-700 text-white text-xs font-bold rounded-lg px-3 py-2 focus:outline-none focus:border-brand-500 select-panel-size cursor-pointer" data-comp="${comp.id}">
+                        <option value="1" ${panelSize === 1 ? 'selected' : ''}>1 Judge (Max 50)</option>
+                        <option value="2" ${panelSize === 2 ? 'selected' : ''}>2 Judges (Max 100)</option>
+                    </select>
+                </div>
+
                 <!-- Judge 1 Selection -->
                 <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
                     <div class="flex items-center justify-between mb-1.5">
                         <label class="text-xs font-bold text-brand-400 uppercase tracking-wider flex items-center gap-1.5">
-                            <span>⚖️</span> Judge 1 (Head Judge)
+                            <span>⚖️</span> ${panelSize === 1 ? 'Judge 1 (Solo Judge)' : 'Judge 1 (Head Judge)'}
                         </label>
                         <span class="text-[10px] font-mono font-bold text-slate-500 uppercase">Weight: 50 Marks</span>
                     </div>
@@ -374,7 +393,7 @@ function renderAllStageControls() {
                 </div>
 
                 <!-- Judge 2 Selection -->
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
+                <div id="stage-j2-box-${comp.id}" class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 ${panelSize === 1 ? 'hidden' : ''}">
                     <div class="flex items-center justify-between mb-1.5">
                         <label class="text-xs font-bold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
                             <span>⚖️</span> Judge 2 (Panel Judge)
@@ -385,6 +404,11 @@ function renderAllStageControls() {
                         <option value="">-- Assign Judge 2 --</option>
                         ${judgeOptionsJ2}
                     </select>
+                </div>
+
+                <!-- 1-Judge Informational Notice -->
+                <div id="stage-j2-disabled-note-${comp.id}" class="bg-slate-950/60 p-3 rounded-xl border border-dashed border-slate-800 text-center ${panelSize === 1 ? '' : 'hidden'}">
+                    <span class="text-xs text-slate-400 font-mono">1-Judge Mode: Evaluated solely by Judge 1 (Max 50 Marks).</span>
                 </div>
             </div>
 
@@ -400,6 +424,23 @@ function renderAllStageControls() {
         `;
 
         container.appendChild(card);
+    });
+
+    // Panel size switcher dynamic visibility
+    container.querySelectorAll('.select-panel-size').forEach(sel => {
+        sel.addEventListener('change', (e) => {
+            const comp = e.target.dataset.comp;
+            const newSize = parseInt(e.target.value);
+            const j2Box = document.getElementById(`stage-j2-box-${comp}`);
+            const j2Note = document.getElementById(`stage-j2-disabled-note-${comp}`);
+            if (newSize === 1) {
+                if (j2Box) j2Box.classList.add('hidden');
+                if (j2Note) j2Note.classList.remove('hidden');
+            } else {
+                if (j2Box) j2Box.classList.remove('hidden');
+                if (j2Note) j2Note.classList.add('hidden');
+            }
+        });
     });
 
     // Attach listeners
@@ -420,15 +461,18 @@ function renderAllStageControls() {
 }
 
 async function saveStageConfig(comp) {
+    const panelSizeSelect = document.querySelector(`.select-panel-size[data-comp="${comp}"]`);
+    const panelSize = panelSizeSelect ? parseInt(panelSizeSelect.value) : (comp === 'song' ? 1 : 2);
+
     const j1Select = document.querySelector(`.select-judge[data-comp="${comp}"][data-seat="j1"]`);
     const j2Select = document.querySelector(`.select-judge[data-comp="${comp}"][data-seat="j2"]`);
 
     const j1Uid = j1Select ? j1Select.value : '';
     const j1Name = j1Select?.selectedOptions[0]?.dataset?.name || '';
-    const j2Uid = j2Select ? j2Select.value : '';
-    const j2Name = j2Select?.selectedOptions[0]?.dataset?.name || '';
+    const j2Uid = (panelSize === 2 && j2Select) ? j2Select.value : '';
+    const j2Name = (panelSize === 2 && j2Select) ? (j2Select?.selectedOptions[0]?.dataset?.name || '') : '';
 
-    if (j1Uid && j2Uid && j1Uid === j2Uid) {
+    if (panelSize === 2 && j1Uid && j2Uid && j1Uid === j2Uid) {
         alert("Judge 1 and Judge 2 cannot be the same staff member.");
         return;
     }
@@ -437,6 +481,7 @@ async function saveStageConfig(comp) {
         const stageRef = doc(db, 'cult_stages', comp);
         await setDoc(stageRef, {
             competition: comp,
+            panelSize: panelSize,
             j1_uid: j1Uid,
             j1_name: j1Name,
             j2_uid: j2Uid,
@@ -444,7 +489,7 @@ async function saveStageConfig(comp) {
             updatedAt: new Date().toISOString()
         }, { merge: true });
 
-        alert(`✅ Stage assignments for [${comp.toUpperCase()}] saved successfully!`);
+        alert(`✅ Stage assignments for [${comp.toUpperCase()}] (${panelSize} Judge${panelSize > 1 ? 's' : ''}) saved successfully!`);
     } catch (err) {
         console.error("Save stage error:", err);
         alert("Failed to save stage configuration.");
@@ -539,8 +584,17 @@ function renderLiveScoresTable() {
 
     if (!tbody) return;
 
+    const stage = stageStateMap[currentSelectedCompForScores] || {};
+    const panelSize = stage.panelSize !== undefined ? parseInt(stage.panelSize) : (currentSelectedCompForScores === 'song' ? 1 : 2);
+
+    // Update dynamic header indicators
+    const thJ2 = document.getElementById('cult-live-th-j2');
+    const thTotal = document.getElementById('cult-live-th-total');
+    if (thJ2) thJ2.innerHTML = panelSize === 1 ? 'J2 <span class="text-[10px] text-slate-500 font-normal">(N/A)</span>' : 'J2 (/50)';
+    if (thTotal) thTotal.innerHTML = panelSize === 1 ? 'Total (/50)' : 'Total (/100)';
+
     if (cachedLiveCandidates.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center p-8 text-slate-500 font-mono text-sm">No candidates imported yet for this competition. Go to CSV Importer to upload.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-slate-500 font-mono text-sm">No candidates imported yet for this competition. Go to CSV Importer to upload.</td></tr>`;
         if (countTotal) countTotal.textContent = '0';
         if (countCompleted) countCompleted.textContent = '0';
         if (countPending) countPending.textContent = '0';
@@ -562,14 +616,26 @@ function renderLiveScoresTable() {
         let totalVal = null;
         let badgeHtml = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-800 text-slate-400 border border-slate-700">Pending</span>';
 
-        if (j1Val !== null && j2Val !== null) {
-            totalVal = (parseFloat(j1Val) + parseFloat(j2Val)).toFixed(1);
-            badgeHtml = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-800">Completed (2/2)</span>';
-            completed++;
-        } else if (j1Val !== null || j2Val !== null) {
-            badgeHtml = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-950/60 text-amber-400 border border-amber-800">Partial (1/2)</span>';
-            partial++;
+        if (panelSize === 1) {
+            if (j1Val !== null) {
+                totalVal = parseFloat(j1Val).toFixed(1);
+                badgeHtml = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-800">Completed (1/1)</span>';
+                completed++;
+            }
+        } else {
+            if (j1Val !== null && j2Val !== null) {
+                totalVal = (parseFloat(j1Val) + parseFloat(j2Val)).toFixed(1);
+                badgeHtml = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/60 text-emerald-400 border border-emerald-800">Completed (2/2)</span>';
+                completed++;
+            } else if (j1Val !== null || j2Val !== null) {
+                badgeHtml = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-950/60 text-amber-400 border border-amber-800">Partial (1/2)</span>';
+                partial++;
+            }
         }
+
+        const j2DisplayHtml = panelSize === 1 
+            ? '<span class="text-xs text-slate-600 font-mono italic">−</span>'
+            : (j2Val !== null ? `${j2Val} <span class="text-[10px] text-slate-500">/50</span>` : '−');
 
         rowsHtml += `
             <tr class="border-b border-slate-800 hover:bg-slate-900/60 transition-colors font-medium">
@@ -581,11 +647,11 @@ function renderLiveScoresTable() {
                 <td class="p-4 text-center font-mono font-bold ${j1Val !== null ? 'text-emerald-400' : 'text-slate-600'}">
                     ${j1Val !== null ? `${j1Val} <span class="text-[10px] text-slate-500">/50</span>` : '−'}
                 </td>
-                <td class="p-4 text-center font-mono font-bold ${j2Val !== null ? 'text-emerald-400' : 'text-slate-600'}">
-                    ${j2Val !== null ? `${j2Val} <span class="text-[10px] text-slate-500">/50</span>` : '−'}
+                <td class="p-4 text-center font-mono font-bold ${panelSize === 1 ? 'text-slate-600' : (j2Val !== null ? 'text-emerald-400' : 'text-slate-600')}">
+                    ${j2DisplayHtml}
                 </td>
                 <td class="p-4 text-center font-mono font-black text-lg ${totalVal !== null ? 'text-yellow-400' : 'text-slate-600'}">
-                    ${totalVal !== null ? `${totalVal} <span class="text-[10px] text-slate-500">/100</span>` : '−'}
+                    ${totalVal !== null ? `${totalVal} <span class="text-[10px] text-slate-500">/${panelSize === 1 ? '50' : '100'}</span>` : '−'}
                 </td>
                 <td class="p-4 text-center">${badgeHtml}</td>
             </tr>
@@ -692,9 +758,12 @@ async function calculateCulturalStandings() {
     currentResultsFilter = { comp, group, gender, district };
 
     const btn = document.getElementById('btn-cult-calc-results');
-    if (btn) btn.innerText = "⏳ Processing 2-Judge Math...";
+    if (btn) btn.innerText = "⏳ Processing Standings...";
 
     try {
+        const stage = stageStateMap[comp] || {};
+        const panelSize = stage.panelSize !== undefined ? parseInt(stage.panelSize) : (comp === 'song' ? 1 : 2);
+
         // Query candidates
         const candSnap = await getDocs(query(collection(db, 'cult_candidates'), where('competition', '==', comp)));
         const candidatesMap = {};
@@ -728,8 +797,22 @@ async function calculateCulturalStandings() {
                 const j1 = s.j1_score !== undefined ? parseFloat(s.j1_score) : null;
                 const j2 = s.j2_score !== undefined ? parseFloat(s.j2_score) : null;
 
-                if (j1 !== null && j2 !== null) {
-                    const total = j1 + j2;
+                let isComplete = false;
+                let total = 0;
+
+                if (panelSize === 1) {
+                    if (j1 !== null) {
+                        isComplete = true;
+                        total = j1;
+                    }
+                } else {
+                    if (j1 !== null && j2 !== null) {
+                        isComplete = true;
+                        total = j1 + j2;
+                    }
+                }
+
+                if (isComplete) {
                     calculated.push({
                         trackNo: track,
                         name: c.name || s.candidateName,
@@ -740,14 +823,17 @@ async function calculateCulturalStandings() {
                         j1Score: j1,
                         j2Score: j2,
                         totalScore: total,
-                        finalScore: total.toFixed(2)
+                        finalScore: total.toFixed(2),
+                        panelSize: panelSize,
+                        maxScore: panelSize === 1 ? 50 : 100
                     });
                 }
             }
         });
 
         if (calculated.length === 0) {
-            alert("Candidates found, but none have completed scores (both J1 and J2 required).");
+            const reqMsg = panelSize === 1 ? "Judge 1 score required" : "both J1 and J2 required";
+            alert(`Candidates found, but none have completed scores (${reqMsg}).`);
             if (btn) btn.innerText = "📊 Calculate Standings";
             return;
         }
@@ -802,9 +888,15 @@ function renderCulturalResultsTable(standings) {
         return;
     }
 
+    const isSingleJudge = standings[0]?.panelSize === 1;
+
     let rowsHtml = '';
     standings.forEach(s => {
         const isPodium = s.rank <= 3;
+        const j2Display = isSingleJudge
+            ? '<span class="text-xs text-slate-600 font-mono italic">−</span>'
+            : (s.j2Score !== null ? s.j2Score.toFixed(1) : '−');
+
         rowsHtml += `
             <tr class="${isPodium ? 'bg-slate-900/90 font-bold border-brand-500/30' : 'text-slate-400'} border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
                 <td class="p-4 text-xl tracking-tight font-black">${s.medal !== '-' ? s.medal : s.rank}</td>
@@ -814,7 +906,7 @@ function renderCulturalResultsTable(standings) {
                 <td class="p-4 text-xs text-slate-400">${s.district || '-'}</td>
                 <td class="p-4 text-xs text-slate-400">${s.institution || '-'}</td>
                 <td class="p-4 text-center font-mono font-bold text-slate-300">${s.j1Score.toFixed(1)}</td>
-                <td class="p-4 text-center font-mono font-bold text-slate-300">${s.j2Score.toFixed(1)}</td>
+                <td class="p-4 text-center font-mono font-bold text-slate-300">${j2Display}</td>
                 <td class="p-4 text-right font-mono font-black text-2xl text-emerald-400">${s.finalScore}</td>
             </tr>
         `;
@@ -831,8 +923,8 @@ function renderCulturalResultsTable(standings) {
                     <th class="p-4">District</th>
                     <th class="p-4">Institute</th>
                     <th class="p-4 text-center">J1 (/50)</th>
-                    <th class="p-4 text-center">J2 (/50)</th>
-                    <th class="p-4 text-right">Total Score (/100)</th>
+                    <th class="p-4 text-center">${isSingleJudge ? 'J2 (N/A)' : 'J2 (/50)'}</th>
+                    <th class="p-4 text-right">Total Score (${isSingleJudge ? '/50' : '/100'})</th>
                 </tr>
             </thead>
             <tbody>
@@ -874,6 +966,8 @@ async function publishCulturalPodium() {
             }
         }
 
+        const activePanelSize = currentCalculatedStandings[0]?.panelSize || 2;
+
         await setDoc(resultRef, {
             docId: docId,
             competition: comp,
@@ -881,6 +975,8 @@ async function publishCulturalPodium() {
             gender: gender || 'All',
             district: district || 'All',
             standings: currentCalculatedStandings,
+            panelSize: activePanelSize,
+            maxScore: activePanelSize === 1 ? 50 : 100,
             publishedAt: new Date().toISOString(),
             status: 'OFFICIAL'
         });
@@ -900,9 +996,18 @@ async function publishCulturalPodium() {
 function exportResultsToCsv() {
     if (currentCalculatedStandings.length === 0) return;
 
-    let csv = "Rank,Medal,Track No,Candidate Name,Group,Gender,District,Institute,J1 Score (/50),J2 Score (/50),Total Score (/100)\n";
+    const isSingleJudge = currentCalculatedStandings[0]?.panelSize === 1;
+
+    let csv = isSingleJudge
+        ? "Rank,Medal,Track No,Candidate Name,Group,Gender,District,Institute,Judge 1 Score (/50),Total Score (/50)\n"
+        : "Rank,Medal,Track No,Candidate Name,Group,Gender,District,Institute,J1 Score (/50),J2 Score (/50),Total Score (/100)\n";
+
     currentCalculatedStandings.forEach(s => {
-        csv += `"${s.rank}","${s.medal}","${s.trackNo}","${s.name}","${s.groupName || ''}","${s.gender || ''}","${s.district || ''}","${s.institution || ''}","${s.j1Score}","${s.j2Score}","${s.finalScore}"\n`;
+        if (isSingleJudge) {
+            csv += `"${s.rank}","${s.medal}","${s.trackNo}","${s.name}","${s.groupName || ''}","${s.gender || ''}","${s.district || ''}","${s.institution || ''}","${s.j1Score}","${s.finalScore}"\n`;
+        } else {
+            csv += `"${s.rank}","${s.medal}","${s.trackNo}","${s.name}","${s.groupName || ''}","${s.gender || ''}","${s.district || ''}","${s.institution || ''}","${s.j1Score}","${s.j2Score !== null ? s.j2Score : ''}","${s.finalScore}"\n`;
+        }
     });
 
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1153,17 +1258,28 @@ function applyCulturalCandidateFilters() {
     let rowsHtml = '';
     filtered.forEach(c => {
         const score = allCulturalScoresMap[c.docId] || {};
+        const stage = stageStateMap[c.competition] || {};
+        const panelSize = stage.panelSize !== undefined ? parseInt(stage.panelSize) : (c.competition === 'song' ? 1 : 2);
+
         const j1Done = score.j1_score !== undefined || c.j1_status;
         const j2Done = score.j2_score !== undefined || c.j2_status;
 
         let statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-800 text-slate-400 border border-slate-700">Pending</span>';
-        if (j1Done && j2Done) {
-            const tot = score.total_score !== undefined ? parseFloat(score.total_score).toFixed(1) : ((parseFloat(score.j1_score)||0) + (parseFloat(score.j2_score)||0)).toFixed(1);
-            statusBadge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800">Scored (${tot}/100)</span>`;
-        } else if (j1Done) {
-            statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-950/70 text-amber-300 border border-amber-700">J1 Scored (1/2)</span>';
-        } else if (j2Done) {
-            statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-950/70 text-amber-300 border border-amber-700">J2 Scored (1/2)</span>';
+
+        if (panelSize === 1) {
+            if (j1Done) {
+                const tot = score.total_score !== undefined ? parseFloat(score.total_score).toFixed(1) : (parseFloat(score.j1_score) || 0).toFixed(1);
+                statusBadge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800">Scored (${tot}/50)</span>`;
+            }
+        } else {
+            if (j1Done && j2Done) {
+                const tot = score.total_score !== undefined ? parseFloat(score.total_score).toFixed(1) : ((parseFloat(score.j1_score)||0) + (parseFloat(score.j2_score)||0)).toFixed(1);
+                statusBadge = `<span class="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-950/80 text-emerald-400 border border-emerald-800">Scored (${tot}/100)</span>`;
+            } else if (j1Done) {
+                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-950/70 text-amber-300 border border-amber-700">J1 Scored (1/2)</span>';
+            } else if (j2Done) {
+                statusBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-950/70 text-amber-300 border border-amber-700">J2 Scored (1/2)</span>';
+            }
         }
 
         const compBadge = compBadgeMap[c.competition] || `<span class="px-2 py-0.5 rounded text-[10px] uppercase font-bold bg-slate-800 text-slate-300">${c.competition}</span>`;
@@ -1410,5 +1526,350 @@ async function executeWipeCulturalScores(scope, modalEl, btnEl) {
             btnEl.innerText = "Delete Scores";
             btnEl.disabled = false;
         }
+    }
+}
+
+// ============================================================================
+// 10. PUBLISHED PODIUMS EXPLORER (CULTURAL VAULT)
+// ============================================================================
+function initPublishedPodiumsExplorer() {
+    const btnRefresh = document.getElementById('btn-cult-podiums-refresh');
+    const btnWipe = document.getElementById('btn-cult-podiums-wipe-all');
+    const compFilter = document.getElementById('cult-podiums-filter-comp');
+
+    if (btnRefresh) btnRefresh.addEventListener('click', loadCulturalPublishedPodiums);
+    if (btnWipe) btnWipe.addEventListener('click', wipeAllCulturalPublishedPodiums);
+    if (compFilter) compFilter.addEventListener('change', renderCulturalPodiumsList);
+}
+
+async function loadCulturalPublishedPodiums() {
+    const grid = document.getElementById('cult-podiums-grid');
+    const details = document.getElementById('cult-podium-details');
+    if (!grid) return;
+
+    grid.innerHTML = `
+        <div class="col-span-1 md:col-span-2 lg:col-span-3 flex justify-center py-12">
+            <p class="text-slate-500 italic font-mono text-sm flex items-center">
+                <span class="w-4 h-4 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mr-3"></span>
+                Fetching official published podiums from vault...
+            </p>
+        </div>
+    `;
+    if (details) details.classList.add('hidden');
+
+    try {
+        const snap = await getDocs(collection(db, 'cult_published_results'));
+        allPublishedCulturalPodiums = [];
+        snap.forEach(d => {
+            allPublishedCulturalPodiums.push(d.data());
+        });
+
+        // Sort latest published first
+        allPublishedCulturalPodiums.sort((a, b) => {
+            const timeA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+            const timeB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+            return timeB - timeA;
+        });
+
+        renderCulturalPodiumsList();
+    } catch (err) {
+        console.error("Load cultural podiums error:", err);
+        grid.innerHTML = `
+            <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
+                <p class="text-red-400 font-bold mb-2">❌ Failed to load published podiums.</p>
+                <p class="text-xs text-slate-500 font-mono">${err.message}</p>
+            </div>
+        `;
+    }
+}
+
+function renderCulturalPodiumsList() {
+    const grid = document.getElementById('cult-podiums-grid');
+    const compFilterEl = document.getElementById('cult-podiums-filter-comp');
+    if (!grid) return;
+
+    const filterVal = compFilterEl ? compFilterEl.value : 'ALL';
+    const filtered = allPublishedCulturalPodiums.filter(p => {
+        if (filterVal !== 'ALL' && p.competition !== filterVal) return false;
+        return true;
+    });
+
+    if (filtered.length === 0) {
+        grid.innerHTML = `
+            <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+                <div class="w-14 h-14 bg-slate-800 text-slate-500 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">🏛️</div>
+                <h4 class="text-base font-bold text-white mb-1">No Published Podiums Found</h4>
+                <p class="text-xs text-slate-500 max-w-md mx-auto">
+                    ${filterVal !== 'ALL' ? `No official podiums found for ${filterVal.toUpperCase()}.` : 'No official cultural podiums have been published yet.'}
+                    You can compute standings and click "Publish Podium" in the Results & Podiums tab.
+                </p>
+            </div>
+        `;
+        return;
+    }
+
+    grid.innerHTML = '';
+    const compIcons = { drawing: '🎨', song: '🎵', dance: '💃', recital: '📜' };
+    const compColors = {
+        drawing: 'bg-purple-950/60 border-purple-800/80 text-purple-300',
+        song: 'bg-blue-950/60 border-blue-800/80 text-blue-300',
+        dance: 'bg-pink-950/60 border-pink-800/80 text-pink-300',
+        recital: 'bg-amber-950/60 border-amber-800/80 text-amber-300'
+    };
+
+    filtered.forEach(p => {
+        const comp = p.competition || 'drawing';
+        const compIcon = compIcons[comp] || '🎭';
+        const colorClasses = compColors[comp] || 'bg-slate-800 border-slate-700 text-slate-300';
+        const panelSize = p.panelSize !== undefined ? parseInt(p.panelSize) : (comp === 'song' ? 1 : 2);
+        const dateStr = p.publishedAt ? new Date(p.publishedAt).toLocaleString() : 'N/A';
+        const standingsCount = Array.isArray(p.standings) ? p.standings.length : 0;
+
+        // Top 3 preview
+        const top1 = p.standings?.[0]?.name ? `🥇 ${p.standings[0].name}` : null;
+        const top2 = p.standings?.[1]?.name ? `🥈 ${p.standings[1].name}` : null;
+        const top3 = p.standings?.[2]?.name ? `🥉 ${p.standings[2].name}` : null;
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 hover:border-brand-500/60 p-5 sm:p-6 rounded-2xl cursor-pointer hover:bg-slate-850 transition-all flex flex-col justify-between group shadow-sm";
+        card.innerHTML = `
+            <div>
+                <div class="flex justify-between items-start mb-3">
+                    <span class="text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border ${colorClasses} flex items-center gap-1.5 shadow-sm">
+                        <span>${compIcon}</span> ${comp.toUpperCase()}
+                    </span>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2 py-0.5 rounded flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span> OFFICIAL
+                    </span>
+                </div>
+
+                <div class="font-black text-white text-lg tracking-tight mb-2 group-hover:text-brand-400 transition-colors">
+                    ${p.group || 'All Groups'}
+                </div>
+
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                    <span class="text-[11px] font-bold text-slate-300 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">
+                        ${p.gender || 'All'}
+                    </span>
+                    <span class="text-[11px] font-bold text-slate-400 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">
+                        ${p.district || 'All Districts'}
+                    </span>
+                    <span class="text-[11px] font-bold text-indigo-300 bg-indigo-950/40 px-2.5 py-1 rounded-md border border-indigo-800/50">
+                        ${panelSize === 1 ? '1 Judge (/50)' : '2 Judges (/100)'}
+                    </span>
+                </div>
+
+                ${top1 ? `
+                <div class="bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 mb-3 space-y-1">
+                    <div class="text-xs text-yellow-300 font-bold truncate">${top1}</div>
+                    ${top2 ? `<div class="text-xs text-slate-300 font-medium truncate">${top2}</div>` : ''}
+                    ${top3 ? `<div class="text-xs text-amber-500 font-medium truncate">${top3}</div>` : ''}
+                </div>
+                ` : ''}
+            </div>
+
+            <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                <span class="text-slate-500 font-mono text-[11px]">${dateStr}</span>
+                <span class="font-bold text-brand-400 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    ${standingsCount} Ranked →
+                </span>
+            </div>
+        `;
+
+        card.addEventListener('click', () => showCulturalPodiumDetails(p));
+        grid.appendChild(card);
+    });
+}
+
+function showCulturalPodiumDetails(p) {
+    const details = document.getElementById('cult-podium-details');
+    if (!details) return;
+
+    details.classList.remove('hidden');
+
+    const comp = p.competition || 'drawing';
+    const compIcons = { drawing: '🎨', song: '🎵', dance: '💃', recital: '📜' };
+    const compIcon = compIcons[comp] || '🎭';
+    const panelSize = p.panelSize !== undefined ? parseInt(p.panelSize) : (comp === 'song' ? 1 : 2);
+    const dateStr = p.publishedAt ? new Date(p.publishedAt).toLocaleString() : 'N/A';
+    const standings = Array.isArray(p.standings) ? p.standings : [];
+
+    let rowsHtml = '';
+    standings.forEach(s => {
+        const isPodium = s.rank <= 3;
+        const j2Display = panelSize === 1
+            ? '<span class="text-xs text-slate-600 font-mono italic">−</span>'
+            : (s.j2Score !== null && s.j2Score !== undefined ? (typeof s.j2Score === 'number' ? s.j2Score.toFixed(1) : s.j2Score) : '−');
+
+        rowsHtml += `
+            <tr class="${isPodium ? 'bg-slate-950/60 font-bold' : 'text-slate-400'} border-b border-slate-800 hover:bg-slate-800/40 transition-colors">
+                <td class="p-4 text-center text-lg font-black">${s.medal && s.medal !== '-' ? s.medal : s.rank}</td>
+                <td class="p-4 font-mono font-bold text-xs text-slate-300">${s.trackNo}</td>
+                <td class="p-4 font-bold ${isPodium ? 'text-white' : 'text-slate-300'}">${s.name}</td>
+                <td class="p-4 text-xs text-slate-400">${s.groupName || p.group || '-'}</td>
+                <td class="p-4 text-xs text-slate-400">${s.gender || p.gender || '-'}</td>
+                <td class="p-4 text-xs text-slate-400">${s.district || p.district || '-'}</td>
+                <td class="p-4 text-xs text-slate-400">${s.institution || '-'}</td>
+                <td class="p-4 text-center font-mono font-bold text-slate-300">${s.j1Score !== null && s.j1Score !== undefined ? (typeof s.j1Score === 'number' ? s.j1Score.toFixed(1) : s.j1Score) : '−'}</td>
+                <td class="p-4 text-center font-mono font-bold text-slate-300">${j2Display}</td>
+                <td class="p-4 text-right font-mono font-black text-xl text-emerald-400">${s.finalScore || (typeof s.totalScore === 'number' ? s.totalScore.toFixed(2) : s.totalScore)}</td>
+            </tr>
+        `;
+    });
+
+    details.innerHTML = `
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-6 mb-6 border-b border-slate-800 gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-1.5">
+                    <span class="text-2xl">${compIcon}</span>
+                    <h4 class="text-2xl font-black text-white uppercase tracking-tight">${comp.toUpperCase()} PODIUM</h4>
+                    <span class="bg-emerald-950/80 border border-emerald-800 text-emerald-400 text-xs font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">OFFICIAL VAULT</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                    <span class="font-black text-brand-400">${p.group || 'All Groups'}</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-300">${p.gender || 'All'}</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-400">${p.district || 'All Districts'}</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-indigo-400 font-bold">${panelSize === 1 ? '1 Judge (/50)' : '2 Judges (/100)'}</span>
+                    <span class="text-slate-600">·</span>
+                    <span class="text-slate-500 font-mono">Published: ${dateStr}</span>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2.5 w-full md:w-auto">
+                <button type="button" id="btn-cult-podium-download-csv" class="bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 hover:text-white border border-emerald-800 text-xs font-bold py-2.5 px-4 rounded-xl transition-colors flex items-center gap-2 cursor-pointer shadow-sm">
+                    <span>⬇️</span> Download CSV
+                </button>
+                <button type="button" id="btn-cult-podium-delete-single" class="bg-red-950/60 hover:bg-red-900 text-red-300 hover:text-white border border-red-800 text-xs font-bold py-2.5 px-4 rounded-xl transition-colors flex items-center gap-2 cursor-pointer shadow-sm">
+                    <span>🗑️</span> Delete Result
+                </button>
+                <button type="button" id="btn-cult-podium-close-details" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-bold py-2.5 px-4 rounded-xl transition-colors flex items-center gap-2 cursor-pointer">
+                    <span>✖</span> Close View
+                </button>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto w-full custom-scrollbar rounded-xl border border-slate-800">
+            <table class="w-full text-left border-collapse text-sm">
+                <thead class="bg-slate-950 border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 font-bold">
+                    <tr>
+                        <th class="p-4 text-center">Rank</th>
+                        <th class="p-4">Track</th>
+                        <th class="p-4">Candidate</th>
+                        <th class="p-4">Group</th>
+                        <th class="p-4">Gender</th>
+                        <th class="p-4">District</th>
+                        <th class="p-4">Institution</th>
+                        <th class="p-4 text-center">J1 (/50)</th>
+                        <th class="p-4 text-center">${panelSize === 1 ? 'J2 (N/A)' : 'J2 (/50)'}</th>
+                        <th class="p-4 text-right">${panelSize === 1 ? 'Total (/50)' : 'Total (/100)'}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/80">
+                    ${rowsHtml}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    // Button event bindings:
+    document.getElementById('btn-cult-podium-close-details')?.addEventListener('click', () => {
+        details.classList.add('hidden');
+    });
+
+    document.getElementById('btn-cult-podium-download-csv')?.addEventListener('click', () => {
+        downloadSingleCultPodiumCSV(p);
+    });
+
+    document.getElementById('btn-cult-podium-delete-single')?.addEventListener('click', async () => {
+        const confirmDelete = confirm(`⚠️ Are you sure you want to permanently delete the official published podium for:\n\nCompetition: ${comp.toUpperCase()}\nGroup: ${p.group || 'All'}\nGender: ${p.gender || 'All'}\nDistrict: ${p.district || 'All'}\n\nDisplay screens synced to this filter will immediately revert to live mode.`);
+        if (!confirmDelete) return;
+
+        try {
+            await deleteDoc(doc(db, 'cult_published_results', p.docId));
+            alert("✅ Official published podium successfully deleted from the vault.");
+            details.classList.add('hidden');
+            await loadCulturalPublishedPodiums();
+        } catch (err) {
+            console.error("Delete published podium error:", err);
+            alert("Failed to delete podium: " + err.message);
+        }
+    });
+
+    details.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function downloadSingleCultPodiumCSV(p) {
+    const standings = Array.isArray(p.standings) ? p.standings : [];
+    if (standings.length === 0) return;
+
+    const panelSize = p.panelSize !== undefined ? parseInt(p.panelSize) : (p.competition === 'song' ? 1 : 2);
+    const isSingleJudge = panelSize === 1;
+
+    let csv = isSingleJudge
+        ? "Rank,Medal,Track No,Candidate Name,Group,Gender,District,Institute,Judge 1 Score (/50),Total Score (/50)\n"
+        : "Rank,Medal,Track No,Candidate Name,Group,Gender,District,Institute,J1 Score (/50),J2 Score (/50),Total Score (/100)\n";
+
+    standings.forEach(s => {
+        const j1 = s.j1Score !== null && s.j1Score !== undefined ? s.j1Score : '';
+        const j2 = s.j2Score !== null && s.j2Score !== undefined ? s.j2Score : '';
+        const finalScore = s.finalScore || s.totalScore || '';
+
+        if (isSingleJudge) {
+            csv += `"${s.rank}","${s.medal || ''}","${s.trackNo}","${s.name}","${s.groupName || p.group || ''}","${s.gender || p.gender || ''}","${s.district || p.district || ''}","${s.institution || ''}","${j1}","${finalScore}"\n`;
+        } else {
+            csv += `"${s.rank}","${s.medal || ''}","${s.trackNo}","${s.name}","${s.groupName || p.group || ''}","${s.gender || p.gender || ''}","${s.district || p.district || ''}","${s.institution || ''}","${j1}","${j2}","${finalScore}"\n`;
+        }
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `CULT_PODIUM_${p.competition}_${(p.group||'ALL').replace(/[^a-zA-Z0-9]/g,'')}_${(p.gender||'ALL').replace(/[^a-zA-Z0-9]/g,'')}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+async function wipeAllCulturalPublishedPodiums() {
+    const count = allPublishedCulturalPodiums.length;
+    if (count === 0) {
+        alert("There are no published podiums in the vault to delete.");
+        return;
+    }
+
+    const confirm1 = confirm(`⚠️ DANGER: You are about to permanently delete ALL ${count} published official cultural podiums from the vault!\n\nThis will remove official podiums for all cultural competitions (Drawing, Song, Dance, Recital).\n\nDo you want to proceed?`);
+    if (!confirm1) return;
+
+    const confirm2 = prompt(`To confirm complete deletion of all published cultural podiums, type 'DELETE ALL PODIUMS':`);
+    if (confirm2 !== 'DELETE ALL PODIUMS') {
+        alert("Operation cancelled. Confirmation text did not match.");
+        return;
+    }
+
+    try {
+        const snap = await getDocs(collection(db, 'cult_published_results'));
+        if (!snap.empty) {
+            const docs = snap.docs;
+            const CHUNK_SIZE = 400;
+            for (let i = 0; i < docs.length; i += CHUNK_SIZE) {
+                const chunk = docs.slice(i, i + CHUNK_SIZE);
+                const batch = writeBatch(db);
+                chunk.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+            }
+        }
+
+        alert(`✅ Successfully deleted all ${count} published podiums from the vault.`);
+        const details = document.getElementById('cult-podium-details');
+        if (details) details.classList.add('hidden');
+        await loadCulturalPublishedPodiums();
+    } catch (err) {
+        console.error("Wipe all published podiums error:", err);
+        alert("Failed to delete podiums: " + err.message);
     }
 }
