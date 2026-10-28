@@ -1,0 +1,169 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // ASSUMED DATA MODEL & ARCHITECTURE
+    // ===============================================================
+    //
+    // Core Yoga System Collections:
+    // - users/{userId}: Staff profiles (role: 'ADMIN' | 'SUPER_ADMIN' | 'JUDGE' | 'STAGE_MGR' | 'DISPLAY')
+    // - candidates/{docId}: Yoga competitor profiles and registration status
+    // - rosters/{rosterId}: Mat lineups and scheduled competitors
+    // - active_mats/{matId}: Active mat configuration and panel statuses
+    // - scores/{scoreId}: Yoga competitor score breakdowns
+    // - published_results/{resultId}: Official validated yoga competition standings
+    // - system_state/{docId}: Global system toggles and portal controls
+    // - system_metadata/{docId}: Sequence numbers and CSV metadata counters
+    // - public_leaderboard/{docId}: District tally and rankings
+    // - scoring_queue/{docId}: Active on-deck queue per mat
+    //
+    // Cultural Competitions Hub (Drawing, Song, Dance, Recital):
+    // - cult_candidates/{docId}: Cultural candidates (trackNo, name, group, j1_status, j2_status)
+    // - cult_stages/{comp}: Stage configuration (assigned j1_uid, j2_uid, panel lock state)
+    // - cult_scores/{docId}: 2-Judge scorecards (j1_score, j2_score, total_score)
+    // - cult_published_results/{resultId}: Official published podium for public/projector displays
+    // - cult_metadata/{docId}: Competition metadata filters (groups, districts, genders)
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // HELPER FUNCTIONS & ROLE-BASED ACCESS CONTROL (RBAC)
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (getUserData().role == 'ADMIN' || getUserData().role == 'SUPER_ADMIN');
+    }
+
+    function isJudge() {
+      return isAuthenticated() && 
+        getUserData().role == 'JUDGE';
+    }
+
+    function isStageMgr() {
+      return isAuthenticated() && 
+        getUserData().role == 'STAGE_MGR';
+    }
+
+    // ===============================================================
+    // YOGA COMPETITION RULES
+    // ===============================================================
+
+    // 1. Staff and User Profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 2. Candidates & Rosters
+    match /candidates/{docId} {
+      allow read: if isAuthenticated(); 
+      allow create, delete: if isAdmin();
+      // Judges and Stage Managers can flip status and locks during live rounds
+      allow update: if isAdmin() || isJudge() || isStageMgr();
+    }
+
+    // 3. Mat Rosters
+    match /rosters/{rosterId} {
+      allow read: if isAuthenticated(); 
+      allow write: if isAdmin() || isStageMgr(); 
+    }
+
+    // 4. Active Mats Configuration
+    match /active_mats/{matId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 5. Scores (Only authenticated staff can read and submit scorecards)
+    match /scores/{scoreId} {
+      allow read: if isAuthenticated(); 
+      allow write: if isAdmin() || isJudge() || isStageMgr(); 
+    }
+
+    // 6. Published Results (Yoga Official Standings)
+    match /published_results/{resultId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 7. System State (Global portal locks & round flags)
+    match /system_state/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // 8. System Metadata & Counters (Strictly Admin Only)
+    match /system_metadata/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 9. District Tally / Public Leaderboard (Admin Only)
+    match /public_leaderboard/{docId} {
+      allow read: if isAdmin(); 
+      allow write: if isAdmin();
+    }
+
+    // 10. Scoring Queue for Active Mats
+    match /scoring_queue/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isStageMgr() || isJudge();
+    }
+
+    // ===============================================================
+    // CULTURAL COMPETITION HUB RULES (Drawing, Song, Dance, Recital)
+    // ===============================================================
+
+    // 11. Cultural Candidates Roster
+    match /cult_candidates/{docId} {
+      // Authenticated staff and judges can query candidates by competition
+      allow read: if isAuthenticated();
+      // Only Admins can upload CSVs and batch create/delete candidates
+      allow create, delete: if isAdmin();
+      // Judges can update verification/scoring flags (j1_status, j2_status)
+      allow update: if isAdmin() || isJudge();
+    }
+
+    // 12. Cultural Stages (Stage assignments & Admin panel lock)
+    match /cult_stages/{comp} {
+      // Authenticated judges and staff monitor assignment and lock status
+      allow read: if isAuthenticated();
+      // Only Admins can assign Judge 1 & Judge 2 or toggle stage lock
+      allow write: if isAdmin();
+    }
+
+    // 13. Cultural Scores (2-Judge Scorecards & Live Monitor)
+    match /cult_scores/{docId} {
+      // Authenticated staff live monitor; judges review prior scores
+      allow read: if isAuthenticated();
+      // Judges submit marks (/50) and merge totals; Admins manage scores
+      allow write: if isAdmin() || isJudge();
+    }
+
+    // 14. Cultural Published Results (Official Verified Podiums)
+    match /cult_published_results/{resultId} {
+      // Public / projector displays and audience screens can view verified podiums
+      allow read: if true;
+      // Only Admins can compute standings and publish official results
+      allow write: if isAdmin();
+    }
+
+    // 15. Cultural Metadata (Dropdown filter options: Groups, Districts, Genders)
+    match /cult_metadata/{docId} {
+      // Publicly readable so projector displays and staff can populate filter options
+      allow read: if true;
+      // Only Admins can update competition metadata during CSV imports
+      allow write: if isAdmin();
+    }
+  }
+}
+

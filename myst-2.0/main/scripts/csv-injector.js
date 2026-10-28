@@ -56,11 +56,12 @@ async function processAndInject(candidates, consoleEl) {
                 // Convert row keys to uppercase and trim to avoid case sensitivity issues
                 const cleanRow = {};
                 for (const key in row) {
-                    cleanRow[key.trim().toUpperCase()] = row[key] ? String(row[key]).trim() : '';
+                    const normKey = key.trim().toUpperCase().replace(/\s+/g, ' ');
+                    cleanRow[normKey] = row[key] ? String(row[key]).trim() : '';
                 }
 
                 // 1. Fetch Track No directly from CSV
-                const rawTrack = cleanRow['TRACK NO'] || cleanRow['REG. NO'] || cleanRow['REG NO'] || cleanRow['ID'];
+                const rawTrack = cleanRow['TRACK NO'] || cleanRow['TRACKNO'] || cleanRow['TRACK NUMBER'] || cleanRow['TRACK_NO'] || cleanRow['TRACK'] || cleanRow['REG. NO'] || cleanRow['REG NO'] || cleanRow['REGNO'] || cleanRow['ID'] || cleanRow['SL NO'] || cleanRow['SL. NO'] || cleanRow['SLNO'] || cleanRow['CHEST NO'] || cleanRow['CHESTNO'] || cleanRow['ROLL NO'] || cleanRow['ROLL'];
                 
                 // 2. Safety check: If row is completely empty, skip it
                 if (!rawTrack) {
@@ -68,7 +69,7 @@ async function processAndInject(candidates, consoleEl) {
                     return; 
                 }
 
-                const trackNoStr = String(rawTrack).trim(); 
+                const trackNoStr = String(rawTrack).trim().replace(/^0+/, '') || '0'; 
                 const docRef = doc(candidatesRef, trackNoStr);
                 
                 const groupVal = cleanRow['AGE GROUP NAME'] || cleanRow['AGE GROUP'] || cleanRow['GROUP NAME'] || cleanRow['GROUP'] || 'Unassigned';
@@ -86,7 +87,9 @@ async function processAndInject(candidates, consoleEl) {
                     name: cleanRow['NAME'] || cleanRow['CANDIDATE NAME'] || 'Unknown',
                     gender: genVal,
                     groupName: groupVal,
-                    coachName: cleanRow['COACH NAME'] || cleanRow['COACH'] || 'Independent',
+                    coachName: cleanRow['COACH NAME'] || cleanRow['COACH'] || cleanRow['INSTITUTION'] || cleanRow['SCHOOL'] || cleanRow['CLUB'] || 'Independent',
+                    institution: cleanRow['INSTITUTION'] || cleanRow['SCHOOL'] || cleanRow['COACH NAME'] || cleanRow['COACH'] || 'Independent',
+                    dob: cleanRow['DOB'] || cleanRow['DATE OF BIRTH'] || '',
                     district: distVal,
                     division: cleanRow['DIVISION'] || 'Unassigned', 
                     status: 'pending', 

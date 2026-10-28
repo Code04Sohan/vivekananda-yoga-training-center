@@ -132,6 +132,11 @@
             <button id="nav-results-explorer" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-colors hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
                 <span class="text-lg mr-3 opacity-70">📂</span> Published Results
             </button>
+
+            <p class="text-[10px] font-black text-purple-400 uppercase tracking-[0.2em] mt-8 mb-3 px-3">🎨 Cultural Competitions</p>
+            <button id="nav-cultural-hub" class="sidebar-btn w-full text-left px-5 py-3 rounded-xl transition-colors hover:bg-slate-800 text-slate-400 hover:text-slate-100 font-medium flex items-center">
+                <span class="text-lg mr-3 opacity-70">🎭</span> Cultural & Arts Hub
+            </button>
         </nav>
 
         <main id="workspace" class="flex-1 bg-slate-950 p-4 md:p-8 overflow-y-auto w-full relative">
@@ -618,6 +623,378 @@
                     <!-- Dynamic content injected here by JS -->
                 </div>
             </section>
+
+            <!-- ============================================================================ -->
+            <!-- SECTION: CULTURAL & PERFORMING ARTS HUB (Drawing · Song · Dance · Recital)  -->
+            <!-- ============================================================================ -->
+            <section id="view-cultural-hub" class="max-w-6xl mx-auto relative z-10" style="display: none;">
+                <!-- Section Header -->
+                <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-8 border-b border-slate-800 gap-4">
+                    <div>
+                        <div class="flex items-center gap-2.5 mb-1">
+                            <span class="text-2xl">🎭</span>
+                            <h2 class="text-3xl font-black text-white tracking-tighter uppercase">Cultural & Arts Hub</h2>
+                            <span class="bg-purple-950/60 border border-purple-800 text-purple-300 text-xs font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">2-Judge Engine</span>
+                        </div>
+                        <p class="text-xs text-slate-400">Independent scoring & rankings for Drawing · Song (Music) · Dance · Recital</p>
+                    </div>
+
+                    <!-- Sub-Tab Navigation Bar -->
+                    <div class="flex flex-wrap items-center gap-1.5 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-inner">
+                        <button type="button" id="btn-cult-tab-import" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white border border-brand-500 cursor-pointer">
+                            📁 Import Candidates
+                        </button>
+                        <button type="button" id="btn-cult-tab-candidates" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
+                            👥 Master Candidate List
+                        </button>
+                        <button type="button" id="btn-cult-tab-stages" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
+                            🎛️ Stage & Judge Control
+                        </button>
+                        <button type="button" id="btn-cult-tab-live" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
+                            🔥 Live Scores
+                        </button>
+                        <button type="button" id="btn-cult-tab-results" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
+                            🏆 Results & Podiums
+                        </button>
+                        <button type="button" id="btn-cult-tab-podiums" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white border border-transparent cursor-pointer">
+                            🏛️ Published Podiums
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 1: CSV IMPORTER -->
+                <div id="cult-panel-import" class="space-y-6">
+                    <div class="bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-sm max-w-2xl mx-auto text-center">
+                        <div class="w-14 h-14 bg-purple-950/60 text-purple-400 border border-purple-800/80 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-4">
+                            📁
+                        </div>
+                        <h3 class="text-xl font-black text-white uppercase tracking-tight mb-1">Import Candidates CSV</h3>
+                        <p class="text-xs text-slate-400 mb-6">Upload candidate rosters for Drawing, Song, Dance, or Recital.</p>
+
+                        <form id="cult-csv-form" class="space-y-4 text-left">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Target Competition</label>
+                                <select id="cult-csv-comp-select" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white font-bold text-sm focus:border-brand-500 focus:outline-none">
+                                    <option value="">-- Select Target Competition --</option>
+                                    <option value="drawing">🎨 Drawing Competition</option>
+                                    <option value="song">🎵 Song (Music) Competition</option>
+                                    <option value="dance">💃 Dance Competition</option>
+                                    <option value="recital">📜 Recital Competition</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">CSV File</label>
+                                <input type="file" id="cult-csv-file-input" accept=".csv" required class="w-full text-sm text-slate-400 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-white hover:file:bg-slate-700 file:cursor-pointer border border-slate-800 rounded-xl p-2 bg-slate-950">
+                                <span class="block text-[11px] text-slate-500 mt-1">Expected columns: Track No, Name, Gender, Age Group, District, Institution</span>
+                            </div>
+
+                            <button type="submit" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-3.5 rounded-xl shadow transition-colors uppercase tracking-widest text-xs flex items-center justify-center gap-2 cursor-pointer mt-4">
+                                <span>⚡</span> <span>Inject Candidates</span>
+                            </button>
+                        </form>
+
+                        <div id="cult-csv-console" class="mt-6 text-left bg-slate-950 p-4 rounded-xl border border-slate-800 h-36 overflow-y-auto font-mono text-xs text-purple-400 whitespace-pre">System ready. Select competition and CSV file to import.</div>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL: MASTER CANDIDATE LIST -->
+                <div id="cult-panel-candidates" class="hidden space-y-6">
+                    <!-- Top Bar with Actions -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-sm">
+                        <div>
+                            <h3 class="text-xl font-black text-white uppercase tracking-tight flex items-center gap-2">
+                                <span>👥</span> Master Candidate Roster
+                            </h3>
+                            <p class="text-xs text-slate-400">All registered (uploaded) candidates across Drawing, Song, Dance, and Recital.</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="btn-cult-refresh-cands" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow transition-colors flex items-center gap-2 cursor-pointer">
+                                <span>🔄</span> <span>Refresh Roster</span>
+                            </button>
+                            <button type="button" id="btn-cult-trigger-wipe-cands" class="bg-red-950/60 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-xs font-bold py-2.5 px-4 rounded-xl shadow transition-colors flex items-center gap-2 cursor-pointer">
+                                <span>🗑️</span> <span>Delete All Candidates</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Controls Bar -->
+                    <div class="bg-slate-900 p-4 rounded-2xl border border-slate-800 flex flex-wrap gap-3 shadow-sm">
+                        <!-- Search Input -->
+                        <div class="flex-1 min-w-[220px] relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">🔍</span>
+                            <input type="text" id="cult-cand-search" placeholder="Search by Track No, Name, District, Institute..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-purple-500">
+                        </div>
+
+                        <!-- Competition Filter -->
+                        <select id="cult-cand-filter-comp" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="All">All Competitions (4)</option>
+                            <option value="drawing">🎨 Drawing</option>
+                            <option value="song">🎵 Song (Music)</option>
+                            <option value="dance">💃 Dance</option>
+                            <option value="recital">📜 Recital</option>
+                        </select>
+
+                        <!-- Age Group Filter -->
+                        <select id="cult-cand-filter-group" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="All">All Age Groups</option>
+                        </select>
+
+                        <!-- Gender Filter -->
+                        <select id="cult-cand-filter-gender" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="All">All Genders</option>
+                        </select>
+
+                        <!-- District Filter -->
+                        <select id="cult-cand-filter-district" class="bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="All">All Districts</option>
+                        </select>
+                    </div>
+
+                    <!-- Mini Stat Counters -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center">
+                            <span class="text-[10px] font-mono uppercase text-slate-400 block">Total</span>
+                            <span id="cult-cands-count-total" class="text-lg font-black text-white font-mono">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center">
+                            <span class="text-[10px] font-mono uppercase text-purple-400 block">Filtered</span>
+                            <span id="cult-cands-count-filtered" class="text-lg font-black text-purple-400 font-mono">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center">
+                            <span class="text-[10px] font-mono uppercase text-slate-400 block">🎨 Drawing</span>
+                            <span id="cult-cands-count-drawing" class="text-lg font-black text-white font-mono">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center">
+                            <span class="text-[10px] font-mono uppercase text-slate-400 block">🎵 Song</span>
+                            <span id="cult-cands-count-song" class="text-lg font-black text-white font-mono">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center">
+                            <span class="text-[10px] font-mono uppercase text-slate-400 block">💃 Dance</span>
+                            <span id="cult-cands-count-dance" class="text-lg font-black text-white font-mono">0</span>
+                        </div>
+                        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-center">
+                            <span class="text-[10px] font-mono uppercase text-slate-400 block">📜 Recital</span>
+                            <span id="cult-cands-count-recital" class="text-lg font-black text-white font-mono">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Roster Table Container -->
+                    <div class="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden">
+                        <div class="max-h-[580px] overflow-y-auto overflow-x-auto w-full custom-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[850px]">
+                                <thead class="bg-slate-950 border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 sticky top-0 shadow-sm z-10">
+                                    <tr>
+                                        <th class="p-4 w-[90px]">Track No</th>
+                                        <th class="p-4 w-[130px]">Competition</th>
+                                        <th class="p-4">Candidate & Institute</th>
+                                        <th class="p-4">Age Group</th>
+                                        <th class="p-4">Gender</th>
+                                        <th class="p-4">District</th>
+                                        <th class="p-4 text-center">Scoring Status</th>
+                                        <th class="p-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cult-candidates-tbody" class="divide-y divide-slate-800">
+                                    <tr>
+                                        <td colspan="8" class="p-8 text-center text-slate-500 font-mono text-xs">
+                                            Loading candidates roster...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 2: STAGE & JUDGE CONTROL -->
+                <div id="cult-panel-stages" class="hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                        <div>
+                            <h3 class="text-lg font-black text-white uppercase tracking-tight">Stage Master Control</h3>
+                            <p class="text-xs text-slate-400">Assign Judge 1 (Head Judge) & Judge 2 from staff, and lock/unlock scoring panels.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <a href="cult-judge.html" target="_blank" class="bg-purple-900/40 hover:bg-purple-800 text-purple-300 hover:text-white border border-purple-700/60 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-sm">
+                                <span>⚖️</span> Cultural Judge Terminal ↗
+                            </a>
+                            <a href="cult-display.html" target="_blank" class="bg-indigo-900/40 hover:bg-indigo-800 text-indigo-300 hover:text-white border border-indigo-700/60 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-sm">
+                                <span>📺</span> Stage Display Screen ↗
+                            </a>
+                        </div>
+                    </div>
+                    <div id="cult-stages-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 4 Competition Cards injected dynamically by JS -->
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 3: LIVE SCORES MONITOR -->
+                <div id="cult-panel-live" class="hidden space-y-6">
+                    <!-- Competition Switcher Pills -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 mr-1">Competition:</span>
+                            <button type="button" class="cult-live-comp-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white cursor-pointer" data-comp="drawing">🎨 Drawing</button>
+                            <button type="button" class="cult-live-comp-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-900 text-slate-400 hover:text-white cursor-pointer" data-comp="song">🎵 Song</button>
+                            <button type="button" class="cult-live-comp-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-900 text-slate-400 hover:text-white cursor-pointer" data-comp="dance">💃 Dance</button>
+                            <button type="button" class="cult-live-comp-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-900 text-slate-400 hover:text-white cursor-pointer" data-comp="recital">📜 Recital</button>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-4">
+                            <div class="text-xs font-mono"><span class="text-slate-400">Total:</span> <span id="cult-live-count-total" class="font-bold text-white">0</span></div>
+                            <div class="text-xs font-mono"><span class="text-slate-400">Completed (2/2):</span> <span id="cult-live-count-completed" class="font-bold text-emerald-400">0</span></div>
+                            <div class="text-xs font-mono"><span class="text-slate-400">Pending:</span> <span id="cult-live-count-pending" class="font-bold text-amber-400">0</span></div>
+                            <button type="button" id="btn-cult-trigger-wipe-scores" class="bg-red-950/60 hover:bg-red-800 text-red-400 hover:text-white border border-red-800 text-xs font-bold py-1.5 px-3 rounded-xl shadow transition-colors flex items-center gap-1.5 cursor-pointer ml-auto">
+                                <span>🗑️</span> <span>Delete All Scores</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search & Filter Bar -->
+                    <div class="flex items-center gap-4">
+                        <div class="relative flex-1">
+                            <input type="text" id="cult-live-search" placeholder="Search candidate by name, track #, or district..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-brand-500">
+                        </div>
+                    </div>
+
+                    <!-- Live Table -->
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+                        <div class="overflow-x-auto max-h-[550px] custom-scrollbar">
+                            <table class="w-full text-left border-collapse min-w-[750px]">
+                                <thead class="bg-slate-950 sticky top-0 shadow-sm border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-500 z-10">
+                                    <tr>
+                                        <th class="p-4">Track</th>
+                                        <th class="p-4">Candidate</th>
+                                        <th class="p-4">Group</th>
+                                        <th class="p-4">Gender</th>
+                                        <th class="p-4">District</th>
+                                        <th class="p-4 text-center">J1 (/50)</th>
+                                        <th class="p-4 text-center" id="cult-live-th-j2">J2 (/50)</th>
+                                        <th class="p-4 text-center" id="cult-live-th-total">Total (/100)</th>
+                                        <th class="p-4 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cult-live-tbody" class="divide-y divide-slate-800">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 4: RESULTS & RANKINGS -->
+                <div id="cult-panel-results" class="hidden space-y-6">
+                    <div class="bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-800 shadow-sm">
+                        <h3 class="text-lg font-black text-white uppercase tracking-tight mb-4 flex items-center gap-2">
+                            <span>🏆</span> Calculate Official Results & Podiums
+                        </h3>
+
+                        <!-- Filter Controls -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Competition</label>
+                                <select id="cult-res-comp-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white font-bold text-sm focus:border-brand-500 focus:outline-none">
+                                    <option value="drawing">🎨 Drawing</option>
+                                    <option value="song">🎵 Song (Music)</option>
+                                    <option value="dance">💃 Dance</option>
+                                    <option value="recital">📜 Recital</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Age Group</label>
+                                <select id="cult-res-group-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white font-bold text-sm focus:border-brand-500 focus:outline-none">
+                                    <option value="">-- All Age Groups --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Gender</label>
+                                <select id="cult-res-gender-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white font-bold text-sm focus:border-brand-500 focus:outline-none">
+                                    <option value="">-- All Genders --</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">District (Optional)</label>
+                                <select id="cult-res-district-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white font-bold text-sm focus:border-brand-500 focus:outline-none">
+                                    <option value="">-- All Districts --</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Settings & Action Buttons -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-800">
+                            <label class="relative inline-flex items-center cursor-pointer select-none">
+                                <input type="checkbox" id="cult-setting-tie-j1" checked class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-800 rounded-full peer peer-checked:bg-brand-600 transition-colors after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-full"></div>
+                                <span class="ml-2.5 text-xs text-slate-300 font-bold">Tie-break by Judge 1 (Head Judge) marks</span>
+                            </label>
+
+                            <div class="flex flex-wrap items-center gap-3">
+                                <button type="button" id="btn-cult-calc-results" class="bg-brand-600 hover:bg-brand-500 text-white font-black text-xs uppercase px-5 py-3 rounded-xl shadow transition-colors flex items-center gap-2 cursor-pointer">
+                                    <span>📊</span> <span>Calculate Standings</span>
+                                </button>
+                                <button type="button" id="btn-cult-export-csv" disabled class="bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs uppercase px-4 py-3 rounded-xl border border-slate-700 transition-colors flex items-center gap-2 cursor-pointer">
+                                    <span>📥</span> <span>Export CSV</span>
+                                </button>
+                                <button type="button" id="btn-cult-publish-results" disabled class="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black text-xs uppercase px-5 py-3 rounded-xl shadow transition-colors flex items-center gap-2 cursor-pointer">
+                                    <span>🏅</span> <span>Publish Podium</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Standings Table Container -->
+                    <div id="cult-results-table-container" class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+                        <p class="text-slate-500 text-center py-12 font-mono text-sm">Select filters above and click "Calculate Standings" to preview ranks and medals.</p>
+                    </div>
+                </div>
+
+                <!-- SUB-PANEL 6: PUBLISHED PODIUMS EXPLORER -->
+                <div id="cult-panel-podiums" class="space-y-6 hidden">
+                    <!-- Top Toolbar -->
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-slate-900 border border-slate-800 p-5 sm:p-6 rounded-2xl gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xl">🏛️</span>
+                                <h3 class="text-xl font-black text-white uppercase tracking-tight">Official Published Podiums</h3>
+                                <span class="bg-emerald-950/60 border border-emerald-800 text-emerald-400 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-widest flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Vault Live
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-400">Explore, download CSV, or retract/delete official podium results published to public displays.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                            <!-- Filter by Competition -->
+                            <div class="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 text-xs text-slate-300">
+                                <span class="text-slate-500 font-bold uppercase text-[10px]">Filter:</span>
+                                <select id="cult-podiums-filter-comp" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer">
+                                    <option value="ALL">All Competitions</option>
+                                    <option value="drawing">🎨 Drawing</option>
+                                    <option value="song">🎵 Song (Music)</option>
+                                    <option value="dance">💃 Dance</option>
+                                    <option value="recital">📜 Recital</option>
+                                </select>
+                            </div>
+                            <!-- Refresh Button -->
+                            <button type="button" id="btn-cult-podiums-refresh" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-sm cursor-pointer">
+                                <span>🔄</span> Refresh
+                            </button>
+                            <!-- Wipe All Podiums Button -->
+                            <button type="button" id="btn-cult-podiums-wipe-all" class="bg-red-950/60 hover:bg-red-900 text-red-300 hover:text-white border border-red-800/80 px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-2 shadow-sm cursor-pointer">
+                                <span>⚠️</span> Delete All Podiums
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Podiums List Grid -->
+                    <div id="cult-podiums-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Selected Podium Details View -->
+                    <div id="cult-podium-details" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 hidden shadow-lg relative overflow-hidden">
+                        <!-- Injected by JS -->
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -718,6 +1095,82 @@
         </div>
     </div>
 
+    <!-- MODAL: WIPE CULTURAL CANDIDATES -->
+    <div id="modal-cult-wipe-cands" class="fixed inset-0 bg-slate-950/95 z-[105] hidden items-center justify-center p-4">
+        <div class="bg-slate-900 p-6 md:p-8 rounded-3xl border border-red-900/50 shadow-2xl w-full max-w-lg text-center">
+            <div class="w-16 h-16 bg-red-950/50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/30 text-3xl">
+                🗑️
+            </div>
+            <h3 class="text-2xl font-black text-white mb-1 uppercase tracking-tight">Delete Cultural Candidates</h3>
+            <p class="text-xs text-slate-400 mb-6">This will permanently delete candidate profiles and associated scores from the database.</p>
+
+            <div class="text-left space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Scope / Target</label>
+                    <select id="cult-wipe-cands-scope" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-bold focus:outline-none focus:border-red-500 cursor-pointer">
+                        <option value="all">⚠️ ALL 4 Competitions (Drawing, Song, Dance, Recital)</option>
+                        <option value="drawing">🎨 Drawing Competition Only</option>
+                        <option value="song">🎵 Song (Music) Competition Only</option>
+                        <option value="dance">💃 Dance Competition Only</option>
+                        <option value="recital">📜 Recital Competition Only</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Type "confirm" to unlock</label>
+                    <input type="text" id="input-confirm-cult-wipe-cands" placeholder="confirm" class="w-full bg-slate-950 border border-red-900/50 rounded-xl px-4 py-3 text-white text-center font-mono font-bold uppercase tracking-widest focus:outline-none focus:border-red-500">
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button type="button" id="btn-cancel-cult-wipe-cands" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 rounded-xl transition-colors text-xs uppercase tracking-wider cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="btn-execute-cult-wipe-cands" disabled class="flex-1 bg-red-700 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white font-black py-3.5 rounded-xl transition-colors text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-red-950/50">
+                    Delete Candidates
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: WIPE CULTURAL SCORES -->
+    <div id="modal-cult-wipe-scores" class="fixed inset-0 bg-slate-950/95 z-[105] hidden items-center justify-center p-4">
+        <div class="bg-slate-900 p-6 md:p-8 rounded-3xl border border-red-900/50 shadow-2xl w-full max-w-lg text-center">
+            <div class="w-16 h-16 bg-red-950/50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-red-500/30 text-3xl">
+                ⚠️
+            </div>
+            <h3 class="text-2xl font-black text-white mb-1 uppercase tracking-tight">Delete Cultural Scores</h3>
+            <p class="text-xs text-slate-400 mb-6">Permanently wipes submitted 2-judge scores and resets candidates back to "Pending". Candidate profiles remain intact.</p>
+
+            <div class="text-left space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Scope / Target</label>
+                    <select id="cult-wipe-scores-scope" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-bold focus:outline-none focus:border-red-500 cursor-pointer">
+                        <option value="all">⚠️ ALL 4 Competitions (Drawing, Song, Dance, Recital)</option>
+                        <option value="drawing">🎨 Drawing Competition Only</option>
+                        <option value="song">🎵 Song (Music) Competition Only</option>
+                        <option value="dance">💃 Dance Competition Only</option>
+                        <option value="recital">📜 Recital Competition Only</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Type "confirm" to unlock</label>
+                    <input type="text" id="input-confirm-cult-wipe-scores" placeholder="confirm" class="w-full bg-slate-950 border border-red-900/50 rounded-xl px-4 py-3 text-white text-center font-mono font-bold uppercase tracking-widest focus:outline-none focus:border-red-500">
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button type="button" id="btn-cancel-cult-wipe-scores" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-bold py-3.5 rounded-xl transition-colors text-xs uppercase tracking-wider cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="btn-execute-cult-wipe-scores" disabled class="flex-1 bg-red-700 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white font-black py-3.5 rounded-xl transition-colors text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-red-950/50">
+                    Delete Scores
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Full Screen Candidate QR Scanner Modal Pop-up -->
     <div id="modal-slot-qr" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-[110] hidden flex-col justify-between p-3 sm:p-6 overflow-y-auto">
         <!-- Top Nav Bar -->
@@ -790,7 +1243,7 @@
     </div>
 
     <script>
-        const views = ['home', 'staff-provisioning', 'data-importer', 'stage-manager', 'mat-control', 'live-dashboard', 'results-engine', 'candidate-manager', 'results-explorer'];
+        const views = ['home', 'staff-provisioning', 'data-importer', 'stage-manager', 'mat-control', 'live-dashboard', 'results-engine', 'candidate-manager', 'results-explorer', 'cultural-hub'];
         
         views.forEach(view => {
             const navBtn = document.getElementById(`nav-${view}`);
