@@ -25,6 +25,7 @@ let currentJudgeUid = null;
 let currentJudgeProfile = null;
 let assignedStage = null; // { comp, seat: 'j1' | 'j2', isLocked: false, ... }
 let activeTargetCandidate = null; // Candidate profile object
+let isCurrentCandidateLocked = false;
 let unsubscribeStageListener = null;
 
 // QR Scanner state
@@ -347,6 +348,7 @@ async function setTargetCandidate(candidate) {
     if (nameEl) nameEl.textContent = candidate.name;
     if (metaEl) metaEl.textContent = `${candidate.groupName || 'Unassigned'} · ${candidate.gender || '-'} · ${candidate.district || '-'}`;
 
+    isCurrentCandidateLocked = false;
     // Check if this judge already scored this candidate
     if (prevScoreBadge) prevScoreBadge.classList.add('hidden');
     try {
@@ -356,11 +358,13 @@ async function setTargetCandidate(candidate) {
             const myScoreField = `${assignedStage.seat}_score`;
             if (scoreData[myScoreField] !== undefined) {
                 const prev = parseFloat(scoreData[myScoreField]);
+                isCurrentCandidateLocked = true;
                 if (prevScoreBadge) {
-                    prevScoreBadge.textContent = `Your Saved Score: ${prev.toFixed(1)} / 50`;
+                    prevScoreBadge.textContent = `🔒 Saved & Locked: ${prev.toFixed(1)} / 50`;
+                    prevScoreBadge.className = "text-[10px] sm:text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-300 text-amber-800";
                     prevScoreBadge.classList.remove('hidden');
                 }
-                if (marksInput && !marksInput.value) {
+                if (marksInput) {
                     marksInput.value = prev.toFixed(1);
                 }
             }
@@ -370,14 +374,17 @@ async function setTargetCandidate(candidate) {
     playBeep(987.77, 0.08); // B5 confirmation beep
     updateScoringInputState();
     validateCurrentMarks();
-    setTimeout(() => {
-        marksInput?.focus();
-        marksInput?.select();
-    }, 50);
+    if (!isCurrentCandidateLocked) {
+        setTimeout(() => {
+            marksInput?.focus();
+            marksInput?.select();
+        }, 50);
+    }
 }
 
 function clearTargetCandidate() {
     activeTargetCandidate = null;
+    isCurrentCandidateLocked = false;
     const card = document.getElementById('target-candidate-card');
     const inputTrack = document.getElementById('input-track-lookup');
     const marksInput = document.getElementById('input-marks-value');
@@ -399,14 +406,14 @@ function updateScoringInputState() {
     const hasCandidate = !!activeTargetCandidate;
 
     if (marksInput) {
-        marksInput.disabled = !hasCandidate;
+        marksInput.disabled = !hasCandidate || isCurrentCandidateLocked;
         if (!hasCandidate) {
             marksInput.classList.remove('input-error');
         }
     }
 
     adjustBtns.forEach(btn => {
-        btn.disabled = !hasCandidate;
+        btn.disabled = !hasCandidate || isCurrentCandidateLocked;
     });
 }
 
@@ -517,6 +524,19 @@ function validateCurrentMarks() {
         return;
     }
 
+    if (isCurrentCandidateLocked) {
+        marksInput.classList.remove('input-error');
+        marksInput.disabled = true;
+        if (validationMsg) {
+            validationMsg.textContent = "🔒 Score is locked in the vault. Only an Administrator can edit or reset.";
+            validationMsg.className = "text-xs text-amber-600 mt-2 font-bold font-mono";
+        }
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "🔒 Score Locked (Already Submitted)";
+        btnSubmit.className = "w-full bg-slate-200 text-slate-500 font-black py-3 sm:py-3.5 rounded-xl text-sm sm:text-base uppercase tracking-wider transition-colors shadow-none cursor-not-allowed border border-slate-300";
+        return;
+    }
+
     if (assignedStage?.isLocked) {
         marksInput.classList.remove('input-error');
         if (validationMsg) {
@@ -597,6 +617,10 @@ function validateCurrentMarks() {
 // ============================================================================
 async function submitCandidateScore() {
     if (!activeTargetCandidate || !assignedStage) return;
+    if (isCurrentCandidateLocked) {
+        alert("🔒 Security Restriction: This candidate has already been scored and locked. Only an Administrator can modify or reset submitted scores.");
+        return;
+    }
 
     const btnSubmit = document.getElementById('btn-submit-cult-score');
     const marksInput = document.getElementById('input-marks-value');
@@ -624,6 +648,13 @@ async function submitCandidateScore() {
         // Fetch existing score to combine totals
         const existingScoreDoc = await getDoc(scoreRef);
         let existingData = existingScoreDoc.exists() ? existingScoreDoc.data() : {};
+
+        if (existingData[`${seat}_score`] !== undefined) {
+            alert("🔒 Security Restriction: A score for this candidate was already recorded in the vault. Re-submission is blocked.");
+            isCurrentCandidateLocked = true;
+            validateCurrentMarks();
+            return;
+        }
 
         const updatePayload = {
             competition: comp,
@@ -676,6 +707,7 @@ async function submitCandidateScore() {
             candUpdate['status'] = 'completed';
         }
         await updateDoc(candRef, candUpdate);
+        isCurrentCandidateLocked = true;
 
         // Success Haptic & Chime
         playSuccessChime();

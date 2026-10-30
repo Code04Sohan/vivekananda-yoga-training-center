@@ -18,160 +18,339 @@
         }
     </script>
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
+        /* TV & Broadcast Fluid Geometry */
+        :root {
+            --tv-safe-padding: clamp(8px, 1.5vw, 24px);
         }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #020617;
+
+        /* Fluid Typography and Card Heights */
+        .podium-hero-gold {
+            min-height: clamp(110px, 22vh, 230px);
         }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+        .podium-hero-side {
+            min-height: clamp(90px, 18vh, 190px);
+        }
+
+        /* Hide scrollbars for broadcast look */
+        ::-webkit-scrollbar { display: none; }
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Smooth Marquee Ticker */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .marquee-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 28s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-100%); }
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col selection:bg-purple-600 selection:text-white">
+<body class="bg-slate-950 text-slate-100 font-sans h-screen w-screen overflow-hidden flex flex-col selection:bg-purple-600 selection:text-white select-none">
 
-    <!-- TOP HEADER / CONTROL BAR -->
-    <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-30 shadow-md">
-        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🎭</span>
+    <!-- TOP BROADCAST AUTO-CYCLE COUNTDOWN PROGRESS BAR -->
+    <div id="cult-progress-bar" class="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-purple-500 via-pink-500 to-emerald-400 z-50 w-0 transition-all duration-[7000ms] ease-linear"></div>
+
+    <!-- STEALTH CONFIGURATION MODAL (Opened via Cog Button or 'S' Key) -->
+    <div id="cult-settings-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/95 backdrop-blur-md p-4">
+        <div class="bg-slate-900 border border-slate-700 p-6 sm:p-8 rounded-3xl shadow-2xl w-full max-w-xl text-center">
+            <div class="w-12 h-12 bg-purple-950/80 border border-purple-800 text-purple-300 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-3">
+                ⚙️
+            </div>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight mb-1">Display Broadcast Config</h2>
+            <p class="text-xs text-slate-400 mb-6">Select the competition and filters to broadcast on this screen.</p>
+
+            <form id="cult-config-form" class="space-y-4 text-left">
                 <div>
-                    <h1 class="text-xl font-black text-white tracking-tight uppercase flex items-center gap-2">
-                        <span>MYST Cultural Championship</span>
-                        <span class="bg-purple-950 border border-purple-800 text-purple-300 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Official Display</span>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Competition</label>
+                    <select id="disp-comp-select" class="w-full bg-slate-950 border border-slate-700 text-white font-bold text-sm rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500 cursor-pointer">
+                        <option value="drawing">🎨 Drawing</option>
+                        <option value="song">🎵 Song (Music)</option>
+                        <option value="dance">💃 Dance</option>
+                        <option value="recital">📜 Recital</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Age Group</label>
+                        <select id="disp-group-select" class="w-full bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="">-- All Age Groups --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Gender</label>
+                        <select id="disp-gender-select" class="w-full bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-purple-500 cursor-pointer">
+                            <option value="">-- All Genders --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">District / Region</label>
+                    <select id="disp-district-select" class="w-full bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-purple-500 cursor-pointer">
+                        <option value="">-- All Districts --</option>
+                    </select>
+                </div>
+
+                <div class="pt-2 text-[11px] text-slate-400 font-mono bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                    <p class="font-bold text-slate-300 uppercase mb-1">🎮 Quick Keyboard Shortcuts:</p>
+                    <div class="grid grid-cols-2 gap-1 text-[10px]">
+                        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">F</kbd> Toggle Fullscreen</span>
+                        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">S</kbd> Settings Drawer</span>
+                        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">Space</kbd> Pause/Resume Cycle</span>
+                        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">◄ ►</kbd> Prev / Next Page</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 flex gap-3">
+                    <button type="button" id="btn-close-settings" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 rounded-xl transition-colors text-xs uppercase tracking-wider cursor-pointer">
+                        Cancel
+                    </button>
+                    <button type="button" id="btn-apply-settings" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-black py-3 rounded-xl transition-colors text-xs uppercase tracking-wider shadow-lg shadow-purple-900/50 cursor-pointer">
+                        Apply & Broadcast
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- BROADCAST HEADER BAR -->
+    <header class="bg-slate-900/90 border-b border-slate-800/80 px-4 sm:px-6 py-2.5 flex items-center justify-between shrink-0 shadow-md backdrop-blur-sm z-20">
+        <!-- Left: Brand & Stage Info -->
+        <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-purple-950/80 border border-purple-800/80 flex items-center justify-center text-xl sm:text-2xl shrink-0 shadow-inner" id="disp-comp-icon">
+                🎭
+            </div>
+            <div class="min-w-0">
+                <div class="flex items-center gap-2">
+                    <h1 class="text-sm sm:text-lg md:text-xl font-black text-white tracking-tight uppercase truncate" id="disp-broadcast-title">
+                        MYST CULTURAL CHAMPIONSHIP
                     </h1>
-                    <p class="text-xs text-slate-400">Live Stage Results for Drawing · Song · Dance · Recital</p>
+                    <span id="disp-badge-official" class="hidden sm:inline-flex bg-purple-950 border border-purple-800 text-purple-300 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                        OFFICIAL DISPLAY
+                    </span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-slate-400 font-medium truncate">
+                    <span id="disp-filter-subtitle" class="text-purple-300 font-bold">Drawing · All Groups · All Genders</span>
+                    <span class="text-slate-600">•</span>
+                    <span id="disp-status-text" class="text-[11px] font-mono text-emerald-400 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Stream Active
+                    </span>
                 </div>
             </div>
+        </div>
 
-            <!-- Filter Controls -->
-            <div class="flex flex-wrap items-center gap-2.5">
-                <select id="disp-comp-select" class="bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2 focus:outline-none focus:border-purple-500 cursor-pointer">
-                    <option value="drawing">🎨 Drawing</option>
-                    <option value="song">🎵 Song (Music)</option>
-                    <option value="dance">💃 Dance</option>
-                    <option value="recital">📜 Recital</option>
-                </select>
+        <!-- Right: Cycle Controls, Clock & Stealth Trigger -->
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <!-- Cycle Pause / Play Indicator Badge -->
+            <button type="button" id="btn-toggle-pause" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer" title="Press Space to Pause/Resume Auto-cycle">
+                <span id="cycle-play-icon" class="text-emerald-400">▶</span>
+                <span id="cycle-play-text" class="text-slate-300 font-mono text-[11px]">AUTO-CYCLE</span>
+            </button>
 
-                <select id="disp-group-select" class="bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2 focus:outline-none focus:border-purple-500 cursor-pointer">
-                    <option value="">-- All Age Groups --</option>
-                </select>
-
-                <select id="disp-gender-select" class="bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2 focus:outline-none focus:border-purple-500 cursor-pointer">
-                    <option value="">-- All Genders --</option>
-                </select>
-
-                <select id="disp-district-select" class="bg-slate-950 border border-slate-700 text-white font-bold text-xs rounded-xl px-3.5 py-2 focus:outline-none focus:border-purple-500 cursor-pointer">
-                    <option value="">-- All Districts --</option>
-                </select>
-
-                <button type="button" id="btn-toggle-fullscreen" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ml-1" title="Toggle Fullscreen">
-                    ⛶ Fullscreen
-                </button>
+            <!-- Current Time -->
+            <div id="disp-clock" class="hidden md:block font-mono font-bold text-xs text-slate-400 bg-slate-950/60 px-3 py-1.5 rounded-xl border border-slate-800">
+                --:--:--
             </div>
+
+            <!-- Fullscreen Button -->
+            <button type="button" id="btn-toggle-fullscreen" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white p-2 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer" title="Toggle Fullscreen (F)">
+                <span class="hidden sm:inline">⛶ Fullscreen</span>
+                <span class="sm:hidden">⛶</span>
+            </button>
+
+            <!-- Stealth Settings Button (Visible on Hover/Focus) -->
+            <button type="button" id="btn-open-settings" class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white p-2 rounded-xl transition-all opacity-40 hover:opacity-100 cursor-pointer" title="Display Settings (S)">
+                ⚙️
+            </button>
         </div>
     </header>
 
-    <!-- MAIN DISPLAY CANVAS -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-8 space-y-8">
+    <!-- MAIN BROADCAST ARENA (Split-Screen Grid) -->
+    <main class="flex-1 w-full min-h-0 flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-5 p-2 sm:p-4 overflow-hidden">
 
-        <!-- STATUS BAR -->
-        <div class="flex items-center justify-between text-xs font-mono text-slate-400 border-b border-slate-800 pb-3">
-            <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="disp-status-text">Connected to MYST Vault · Live Updates Active</span>
-            </div>
-            <div id="disp-timestamp" class="text-slate-500">Last Synced: --:--:--</div>
-        </div>
-
-        <!-- TOP 3 PODIUM HERO SECTION -->
-        <div id="disp-podium-section" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-            <!-- 2nd Place Silver -->
-            <div class="order-2 md:order-1 bg-slate-900 border-2 border-slate-400/30 rounded-3xl p-6 text-center shadow-lg relative flex flex-col justify-between">
-                <div class="text-4xl mb-2">🥈</div>
-                <div class="text-xs font-black uppercase tracking-widest text-slate-300">2nd Place · Silver</div>
-                <div class="my-4">
-                    <h3 class="text-xl font-black text-white" id="podium-2-name">--</h3>
-                    <p class="text-xs font-mono text-slate-400" id="podium-2-track">Track #--</p>
-                    <p class="text-[11px] text-slate-500 mt-1" id="podium-2-meta">--</p>
+        <!-- ============================================================= -->
+        <!-- LEFT PANEL (38% Width): 3D PODIUM HERO STAGE                  -->
+        <!-- ============================================================= -->
+        <section class="w-full lg:w-[38%] xl:w-[35%] flex flex-col justify-between shrink-0 min-h-0 bg-slate-900/60 border border-slate-800/80 rounded-3xl p-3 sm:p-4 md:p-5 shadow-2xl backdrop-blur-sm">
+            <!-- Podium Header -->
+            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2 mb-2 shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="text-xl">🏆</span>
+                    <h2 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Official Top 3 Podium</h2>
                 </div>
-                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3">
-                    <span class="text-2xl font-black font-mono text-slate-200" id="podium-2-score">--</span>
-                    <span class="text-xs text-slate-500" id="podium-2-max">/ 100</span>
-                </div>
+                <span class="text-[10px] font-mono font-bold text-yellow-400 bg-yellow-950/40 border border-yellow-800/60 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                    Medalists
+                </span>
             </div>
 
-            <!-- 1st Place Gold (Prominent Center) -->
-            <div class="order-1 md:order-2 bg-gradient-to-b from-yellow-950/40 via-slate-900 to-slate-900 border-2 border-yellow-500/60 rounded-3xl p-6 md:p-8 text-center shadow-2xl relative flex flex-col justify-between md:-translate-y-3">
-                <div class="text-5xl mb-2 animate-bounce">🥇</div>
-                <div class="text-xs font-black uppercase tracking-widest text-yellow-400">1st Place · Champion Gold</div>
-                <div class="my-4">
-                    <h3 class="text-2xl font-black text-white" id="podium-1-name">--</h3>
-                    <p class="text-sm font-mono text-yellow-300 font-bold" id="podium-1-track">Track #--</p>
-                    <p class="text-xs text-slate-400 mt-1" id="podium-1-meta">--</p>
+            <!-- 3D Podium Hero Cards (Vertical Stack Scaled for Viewport) -->
+            <div class="flex-1 flex flex-col justify-around gap-2.5 min-h-0 py-1">
+                <!-- 1st Place Gold (Hero Card) -->
+                <div class="podium-hero-gold bg-gradient-to-r from-yellow-950/60 via-slate-900 to-amber-950/40 border-2 border-yellow-500/80 rounded-2xl p-3 sm:p-4 shadow-xl shadow-yellow-950/30 flex items-center justify-between gap-3 relative overflow-hidden group">
+                    <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 pointer-events-none">🥇</div>
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-yellow-500/20 border-2 border-yellow-400 flex items-center justify-center text-3xl sm:text-4xl shrink-0 shadow-inner">
+                            🥇
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-yellow-400 flex items-center gap-1">
+                                <span>1ST PLACE</span> · CHAMPION
+                            </span>
+                            <h3 class="text-base sm:text-xl font-black text-white truncate group-hover:text-yellow-300 transition-colors" id="podium-1-name">
+                                -- Awaiting --
+                            </h3>
+                            <div class="flex items-center gap-2 text-xs mt-0.5">
+                                <span class="font-mono font-bold text-yellow-400" id="podium-1-track">Track #--</span>
+                                <span class="text-slate-600">·</span>
+                                <span class="text-slate-400 truncate text-[11px]" id="podium-1-meta">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950/90 border border-yellow-500/50 rounded-xl px-3 py-2 text-right shrink-0 shadow-inner">
+                        <div class="text-xl sm:text-2xl font-black font-mono text-yellow-400" id="podium-1-score">--</div>
+                        <div class="text-[10px] text-yellow-600 font-mono font-bold" id="podium-1-max">/ 100</div>
+                    </div>
                 </div>
-                <div class="bg-slate-950 border border-yellow-500/40 rounded-2xl p-4 shadow-inner">
-                    <span class="text-3xl font-black font-mono text-yellow-400" id="podium-1-score">--</span>
-                    <span class="text-sm text-yellow-600 font-mono" id="podium-1-max">/ 100</span>
+
+                <!-- 2nd Place Silver -->
+                <div class="podium-hero-side bg-slate-900 border-2 border-slate-400/40 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 relative overflow-hidden">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-slate-800 border border-slate-400 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+                            🥈
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-300">
+                                2ND PLACE · SILVER
+                            </span>
+                            <h3 class="text-sm sm:text-lg font-black text-white truncate" id="podium-2-name">
+                                -- Awaiting --
+                            </h3>
+                            <div class="flex items-center gap-2 text-[11px] mt-0.5">
+                                <span class="font-mono font-bold text-slate-300" id="podium-2-track">Track #--</span>
+                                <span class="text-slate-600">·</span>
+                                <span class="text-slate-400 truncate text-[10px]" id="podium-2-meta">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950/90 border border-slate-700 rounded-xl px-3 py-1.5 text-right shrink-0 shadow-inner">
+                        <div class="text-lg sm:text-xl font-black font-mono text-slate-200" id="podium-2-score">--</div>
+                        <div class="text-[9px] text-slate-500 font-mono" id="podium-2-max">/ 100</div>
+                    </div>
+                </div>
+
+                <!-- 3rd Place Bronze -->
+                <div class="podium-hero-side bg-slate-900 border-2 border-amber-700/50 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 relative overflow-hidden">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-slate-800 border border-amber-600 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+                            🥉
+                        </div>
+                        <div class="min-w-0">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-amber-500">
+                                3RD PLACE · BRONZE
+                            </span>
+                            <h3 class="text-sm sm:text-lg font-black text-white truncate" id="podium-3-name">
+                                -- Awaiting --
+                            </h3>
+                            <div class="flex items-center gap-2 text-[11px] mt-0.5">
+                                <span class="font-mono font-bold text-amber-400" id="podium-3-track">Track #--</span>
+                                <span class="text-slate-600">·</span>
+                                <span class="text-slate-400 truncate text-[10px]" id="podium-3-meta">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-950/90 border border-amber-800/60 rounded-xl px-3 py-1.5 text-right shrink-0 shadow-inner">
+                        <div class="text-lg sm:text-xl font-black font-mono text-amber-400" id="podium-3-score">--</div>
+                        <div class="text-[9px] text-slate-500 font-mono" id="podium-3-max">/ 100</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================= -->
+        <!-- RIGHT PANEL (62% Width): ROTATING PAGINATED LEADERBOARD       -->
+        <!-- ============================================================= -->
+        <section class="flex-1 min-w-0 flex flex-col bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <!-- Leaderboard Navigation & Pagination Bar -->
+            <div class="p-3 sm:p-4 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between shrink-0 gap-3">
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-lg">📋</span>
+                    <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider truncate">
+                        Official Standings Leaderboard
+                    </h3>
+                    <span id="disp-total-ranked" class="text-[11px] font-mono font-bold text-purple-400 bg-purple-950/40 border border-purple-800/60 px-2.5 py-0.5 rounded-full shrink-0">
+                        0 Ranked
+                    </span>
+                </div>
+
+                <!-- Page Navigator -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <button type="button" id="btn-page-prev" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer" title="Previous Page">
+                        ◄
+                    </button>
+                    <span id="disp-page-indicator" class="text-xs font-mono font-bold text-slate-300 px-2">
+                        Page 1 of 1
+                    </span>
+                    <button type="button" id="btn-page-next" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer" title="Next Page">
+                        ►
+                    </button>
                 </div>
             </div>
 
-            <!-- 3rd Place Bronze -->
-            <div class="order-3 md:order-3 bg-slate-900 border-2 border-amber-700/40 rounded-3xl p-6 text-center shadow-lg relative flex flex-col justify-between">
-                <div class="text-4xl mb-2">🥉</div>
-                <div class="text-xs font-black uppercase tracking-widest text-amber-500">3rd Place · Bronze</div>
-                <div class="my-4">
-                    <h3 class="text-xl font-black text-white" id="podium-3-name">--</h3>
-                    <p class="text-xs font-mono text-slate-400" id="podium-3-track">Track #--</p>
-                    <p class="text-[11px] text-slate-500 mt-1" id="podium-3-meta">--</p>
-                </div>
-                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-3">
-                    <span class="text-2xl font-black font-mono text-amber-400" id="podium-3-score">--</span>
-                    <span class="text-xs text-slate-500" id="podium-3-max">/ 100</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- COMPLETE STANDINGS LEADERBOARD TABLE -->
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-xl">
-            <div class="p-5 border-b border-slate-800 flex items-center justify-between">
-                <h3 class="text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <span>📋</span> Official Standings Leaderboard
-                </h3>
-                <span id="disp-total-ranked" class="text-xs font-mono font-bold text-purple-400">0 Candidates Ranked</span>
-            </div>
-
-            <div class="overflow-x-auto max-h-[500px] custom-scrollbar">
-                <table class="w-full text-left border-collapse min-w-[750px]">
-                    <thead class="bg-slate-950 sticky top-0 shadow-sm border-b border-slate-800 text-xs uppercase tracking-wider text-slate-500 z-10">
-                        <tr>
-                            <th class="p-4">Rank</th>
-                            <th class="p-4">Track</th>
-                            <th class="p-4">Candidate Name</th>
-                            <th class="p-4">Age Group</th>
-                            <th class="p-4">District</th>
-                            <th class="p-4">Institution</th>
-                            <th class="p-4 text-center">J1 (/50)</th>
-                            <th class="p-4 text-center" id="disp-th-j2">J2 (/50)</th>
-                            <th class="p-4 text-right" id="disp-th-total">Total (/100)</th>
+            <!-- Standings Table (Rigid 7-Row Height) -->
+            <div class="flex-1 overflow-hidden min-h-0 flex flex-col">
+                <table class="w-full text-left border-collapse table-fixed h-full">
+                    <thead class="bg-slate-950 border-b border-slate-800 text-[10px] sm:text-xs uppercase tracking-wider text-slate-400 font-bold shrink-0">
+                        <tr class="h-8 sm:h-10">
+                            <th class="p-2 sm:p-3 w-[10%] text-center">Rank</th>
+                            <th class="p-2 sm:p-3 w-[12%] font-mono">Track</th>
+                            <th class="p-2 sm:p-3 w-[36%]">Candidate Name</th>
+                            <th class="p-2 sm:p-3 w-[18%]">District / School</th>
+                            <th class="p-2 sm:p-3 w-[8%] text-center">J1</th>
+                            <th class="p-2 sm:p-3 w-[8%] text-center" id="disp-th-j2">J2</th>
+                            <th class="p-2 sm:p-3 w-[12%] text-right font-mono" id="disp-th-total">Total</th>
                         </tr>
                     </thead>
-                    <tbody id="disp-leaderboard-tbody" class="divide-y divide-slate-800">
+                    <tbody id="disp-leaderboard-tbody" class="divide-y divide-slate-800/80 text-xs sm:text-sm font-bold">
                         <tr>
-                            <td colspan="9" class="p-12 text-center text-slate-500 font-mono text-sm">
-                                Loading published results...
+                            <td colspan="7" class="p-12 text-center text-slate-500 font-mono text-sm">
+                                ⏳ Connecting live broadcast node...
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-        </div>
+        </section>
     </main>
+
+    <!-- FOOTER TICKER -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-1.5 px-4 text-xs font-medium text-slate-400 marquee-container shrink-0">
+        <div class="marquee-content uppercase tracking-widest flex gap-8">
+            <span>🎭 MYST Cultural Championship</span>
+            <span>•</span>
+            <span>🌟 Performance & Arts Division</span>
+            <span>•</span>
+            <span>✨ Drawing · Song · Dance · Recital</span>
+            <span>•</span>
+            <span>🏆 Official Live Arena Broadcast</span>
+            <span>•</span>
+            <span>Press 'S' for Settings · 'F' for Fullscreen · Space to Pause Auto-cycle</span>
+        </div>
+    </footer>
 
     <!-- ENTRY SCRIPT -->
     <script type="module" src="./scripts/cult-display.js"></script>
 </body>
 </html>
-
