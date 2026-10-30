@@ -3,10 +3,16 @@
 // Single Database Architecture with Lifecycle Integration
 // ============================================================================
 
-import { collection, doc, updateDoc, writeBatch, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { collection, doc, updateDoc, writeBatch, getDocs, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { db } from './firebase-config.js';
 
 let allCandidates = [];
+let unsubscribeCandidates = null;
+
+// Export memory cache to eliminate redundant reads across admin modules
+export function getCachedCandidates() {
+    return allCandidates;
+}
 
 export function initCandidateManager() {
     const tbody = document.getElementById('candidate-manager-tbody');
@@ -18,11 +24,11 @@ export function initCandidateManager() {
     
     if (!tbody) return;
 
-    // Load candidates once when the view initializes
-    loadCandidates();
+    // 1. Establish persistent real-time delta listener (160 initial reads, 1 read per change)
+    bindCandidatesRealtime();
 
     if (btnRefresh) {
-        btnRefresh.addEventListener('click', loadCandidates);
+        btnRefresh.addEventListener('click', handleManualRefresh);
     }
 
     // 2. Attach Listeners to Inputs & Dropdowns
@@ -55,38 +61,74 @@ export function initCandidateManager() {
     setupFactoryReset();
 }
 
-async function loadCandidates() {
+function bindCandidatesRealtime() {
+    if (unsubscribeCandidates) unsubscribeCandidates();
+
     const tbody = document.getElementById('candidate-manager-tbody');
-    const btnRefresh = document.getElementById('btn-refresh-candidates');
     const filterCat = document.getElementById('filter-candidate-category');
     const filterGen = document.getElementById('filter-candidate-gender');
     const filterDist = document.getElementById('filter-candidate-district');
 
-    if (btnRefresh) {
-        btnRefresh.innerHTML = `<span class="mr-2 w-4 h-4 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></span> REFRESHING...`;
-        btnRefresh.disabled = true;
+    if (allCandidates.length === 0 && tbody) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500 font-mono text-xs">
+            <span class="inline-block w-3.5 h-3.5 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mr-2"></span>
+            Syncing live candidate vault...
+        </td></tr>`;
     }
 
-    try {
-        const snapshot = await getDocs(collection(db, 'candidates'));
+    unsubscribeCandidates = onSnapshot(collection(db, 'candidates'), (snapshot) => {
         allCandidates = [];
         snapshot.forEach(docSnap => {
             allCandidates.push({ id: docSnap.id, ...docSnap.data() });
         });
-        
-        // Auto-populate dropdowns based on actual data
-        populateFilters(allCandidates, filterCat, filterGen, filterDist);
-        
-        // Render with current filters applied
+
+        // Auto-populate filter dropdowns based on actual live data
+        if (filterCat && filterGen && filterDist) {
+            populateFilters(allCandidates, filterCat, filterGen, filterDist);
+        }
+
+        // Render table with current filters applied
         applyFilters();
-    } catch (error) {
-        console.error("Failed to load candidates:", error);
-        alert("Error loading candidates from database.");
-    } finally {
-        if (btnRefresh) {
+
+        updateSyncBadge(true);
+    }, (error) => {
+        console.error("Live candidate stream error:", error);
+        updateSyncBadge(false);
+    });
+}
+
+function handleManualRefresh() {
+    const btnRefresh = document.getElementById('btn-refresh-candidates');
+    if (!btnRefresh) return;
+
+    btnRefresh.innerHTML = `<span class="mr-2 w-3.5 h-3.5 border-2 border-slate-300 border-t-transparent rounded-full animate-spin"></span> SYNCING...`;
+    btnRefresh.disabled = true;
+
+    setTimeout(() => {
+        // Re-evaluates active filters from in-memory cache at ZERO Firestore read cost
+        if (!unsubscribeCandidates) {
+            bindCandidatesRealtime();
+        } else {
+            applyFilters();
+        }
+
+        btnRefresh.innerHTML = `<span class="mr-2 text-emerald-400">✓</span> SYNCED (LIVE)`;
+        setTimeout(() => {
             btnRefresh.innerHTML = `<span class="mr-2">🔄</span> REFRESH LIST`;
             btnRefresh.disabled = false;
-        }
+        }, 800);
+    }, 200);
+}
+
+function updateSyncBadge(isLive) {
+    const badge = document.getElementById('cand-sync-badge');
+    if (!badge) return;
+    if (isLive) {
+        badge.innerHTML = `<span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> LIVE SYNC`;
+        badge.className = "ml-3 text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-full inline-flex items-center gap-1.5";
+    } else {
+        badge.innerHTML = `<span class="w-1.5 h-1.5 bg-red-400 rounded-full"></span> OFFLINE`;
+        badge.className = "ml-3 text-[10px] font-black uppercase tracking-widest text-red-400 bg-red-950/40 border border-red-800/60 px-2.5 py-1 rounded-full inline-flex items-center gap-1.5";
     }
 }
 
