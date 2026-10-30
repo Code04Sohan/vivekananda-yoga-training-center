@@ -34,14 +34,18 @@ const COMP_ICONS = {
     recital: '📜'
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+let isCultDisplayInitialized = false;
+
+export function initCultDisplay() {
+    if (isCultDisplayInitialized) return;
     initDisplayControls();
     initSettingsModal();
     initKeyboardShortcuts();
     startClock();
     requestScreenWakeLock();
     bindDisplaySync();
-});
+    isCultDisplayInitialized = true;
+}
 
 // ==========================================
 // 1. BROADCAST CONTROLS & SETTINGS MODAL
