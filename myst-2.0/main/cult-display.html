@@ -107,6 +107,18 @@
             <h2 class="text-2xl font-black text-white uppercase tracking-tight mb-1">Display Broadcast Config</h2>
             <p class="text-xs text-slate-400 mb-6">Select the competition and filters to broadcast on this screen.</p>
 
+            <!-- Live vs Podium Mode Toggle -->
+            <div class="flex justify-center mb-5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+                <button type="button" id="btn-mode-live"
+                    class="flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-purple-600 text-white transition-all shadow-md cursor-pointer">
+                    🔴 Live On-Stage
+                </button>
+                <button type="button" id="btn-mode-podium"
+                    class="flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-slate-400 hover:text-white transition-all cursor-pointer">
+                    🏆 Standings & Podium
+                </button>
+            </div>
+
             <form id="cult-config-form" class="space-y-4 text-left">
                 <div>
                     <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Competition</label>
@@ -204,8 +216,14 @@
 
         <!-- Right: Cycle Controls, Clock & Stealth Trigger -->
         <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <!-- Mode Switcher Pill Button (Hotkeys: L / P) -->
+            <button type="button" id="btn-toggle-mode" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-purple-950/80 border border-purple-800 text-purple-300 hover:border-purple-600 transition-colors cursor-pointer" title="Switch between Live Scoring and Podium Standings (Hotkeys: L / P)">
+                <span id="mode-icon" class="text-red-500 animate-pulse">🔴</span>
+                <span id="mode-text" class="font-mono text-[11px]">LIVE STAGE</span>
+            </button>
+
             <!-- Cycle Pause / Play Indicator Badge -->
-            <button type="button" id="btn-toggle-pause" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer" title="Press Space to Pause/Resume Auto-cycle">
+            <button type="button" id="btn-toggle-pause" class="hidden flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider bg-slate-950 border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer" title="Press Space to Pause/Resume Auto-cycle">
                 <span id="cycle-play-icon" class="text-emerald-400">▶</span>
                 <span id="cycle-play-text" class="text-slate-300 font-mono text-[11px]">AUTO-CYCLE</span>
             </button>
@@ -229,7 +247,167 @@
     </header>
 
     <!-- MAIN BROADCAST ARENA (Split-Screen Grid) -->
-    <main class="flex-1 w-full min-h-0 flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-5 p-2 sm:p-4 overflow-hidden">
+    <main class="flex-1 w-full min-h-0 flex flex-col p-2 sm:p-4 overflow-hidden relative">
+
+        <!-- ============================================================= -->
+        <!-- VIEW 1: LIVE ON-STAGE REALITY ARENA (Default Mode)            -->
+        <!-- ============================================================= -->
+        <div id="view-cult-live" class="flex-1 w-full min-h-0 flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-5 overflow-hidden relative">
+            <!-- Dynamic Graphical Atmosphere Layer (SVG + CSS Backdrops) -->
+            <div id="live-stage-bg" class="absolute inset-0 pointer-events-none transition-all duration-700 overflow-hidden z-0 rounded-3xl"></div>
+
+            <!-- STAGE CONTENT GRID -->
+            <div class="relative z-10 flex-1 w-full min-h-0 flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-5 overflow-hidden">
+
+                <!-- LEFT SECTION (68% - 70% Width): HERO ON-STAGE ARENA -->
+                <section class="flex-1 min-w-0 flex flex-col justify-between bg-slate-900/80 border border-slate-800/80 rounded-3xl p-3.5 sm:p-5 shadow-2xl backdrop-blur-md relative overflow-hidden">
+                    <!-- Top Status Banner -->
+                    <div class="flex items-center justify-between pb-2.5 border-b border-slate-800/80 shrink-0">
+                        <div class="flex items-center gap-2 sm:gap-2.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+                            <span class="text-xs sm:text-sm font-black text-white uppercase tracking-wider flex items-center gap-2">
+                                <span>ON STAGE NOW</span>
+                                <span id="live-comp-pill" class="bg-purple-950 border border-purple-800 text-purple-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">🎨 Drawing Arena</span>
+                            </span>
+                        </div>
+                        <span id="live-stage-status-badge" class="text-[10px] sm:text-xs font-mono font-bold text-amber-400 bg-amber-950/40 border border-amber-800/60 px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <span id="live-stage-status-text">Performance in Progress</span>
+                        </span>
+                    </div>
+
+                    <!-- Performer Profile & Reality Scorecards -->
+                    <div id="live-active-performer" class="my-auto py-2 flex flex-col justify-around gap-3 sm:gap-4 min-h-0">
+                        <!-- Performer Identity Card -->
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-slate-950/75 border-2 border-purple-500/40 rounded-2xl p-3.5 sm:p-4 shadow-xl relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 text-8xl opacity-10 pointer-events-none select-none" id="live-watermark-icon">🎭</div>
+                            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+                                <!-- Chest Number Badge -->
+                                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-indigo-700 border-2 border-purple-400 flex flex-col items-center justify-center shrink-0 shadow-lg shadow-purple-950/50">
+                                    <span class="text-[8px] uppercase font-black tracking-widest text-purple-200">CHEST</span>
+                                    <span class="text-lg sm:text-2xl font-black font-mono text-white tracking-tight" id="live-performer-track">#--</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                        <span class="bg-purple-900/60 text-purple-200 border border-purple-700/60 text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider" id="live-performer-group">All Groups</span>
+                                        <span class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-0.5 rounded uppercase" id="live-performer-gender">All Genders</span>
+                                    </div>
+                                    <h2 class="text-lg sm:text-2xl font-black text-white uppercase tracking-tight truncate leading-tight" id="live-performer-name">
+                                        Awaiting Performer...
+                                    </h2>
+                                    <p class="text-[11px] sm:text-xs font-semibold text-slate-400 truncate mt-0.5 flex items-center gap-1.5" id="live-performer-institution">
+                                        <span>📍</span> <span id="live-performer-district">District / School</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Live Reality-Show Scorecards (Dynamic 1 or 2 Judges) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="live-judges-container">
+                            <!-- Judge 1 Card -->
+                            <div id="live-j1-card" class="bg-slate-950/90 border-2 border-slate-700 rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between shadow-xl transition-all duration-500 relative overflow-hidden">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm">⚖️</span>
+                                        <span class="text-xs font-black uppercase tracking-wider text-slate-300" id="live-j1-label">Judge 1 (Head)</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-slate-400 font-bold truncate max-w-[120px]" id="live-j1-name">--</span>
+                                </div>
+                                <div class="flex items-center justify-between py-1">
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-2xl sm:text-3xl font-black font-mono text-slate-400 transition-colors duration-300" id="live-j1-score">--.-</span>
+                                        <span class="text-[10px] sm:text-xs font-mono font-bold text-slate-500">/ 50</span>
+                                    </div>
+                                    <div id="live-j1-badge" class="text-[9px] sm:text-[10px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">
+                                        ⏳ Evaluating
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Judge 2 Card (Hidden for 1-Judge panels) -->
+                            <div id="live-j2-card" class="bg-slate-950/90 border-2 border-slate-700 rounded-2xl p-3 sm:p-3.5 flex flex-col justify-between shadow-xl transition-all duration-500 relative overflow-hidden">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-sm">⚖️</span>
+                                        <span class="text-xs font-black uppercase tracking-wider text-slate-300" id="live-j2-label">Judge 2 (Panel)</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono text-slate-400 font-bold truncate max-w-[120px]" id="live-j2-name">--</span>
+                                </div>
+                                <div class="flex items-center justify-between py-1">
+                                    <div class="flex items-baseline gap-1">
+                                        <span class="text-2xl sm:text-3xl font-black font-mono text-slate-400 transition-colors duration-300" id="live-j2-score">--.-</span>
+                                        <span class="text-[10px] sm:text-xs font-mono font-bold text-slate-500">/ 50</span>
+                                    </div>
+                                    <div id="live-j2-badge" class="text-[9px] sm:text-[10px] font-mono font-bold px-2.5 py-1 rounded-full uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">
+                                        ⏳ Evaluating
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grand Total Banner -->
+                        <div id="live-total-card" class="bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-2 border-slate-700 rounded-2xl p-3 sm:p-4 flex items-center justify-between shadow-2xl transition-all duration-500">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-purple-950/80 border border-purple-700/80 flex items-center justify-center text-xl sm:text-2xl shrink-0" id="live-total-icon">
+                                    🎯
+                                </div>
+                                <div>
+                                    <span class="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-400" id="live-total-label">Grand Total Award</span>
+                                    <p class="text-[10px] sm:text-xs text-slate-400 font-medium" id="live-total-status">Waiting for official scores...</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="flex items-baseline justify-end gap-1">
+                                    <span class="text-2xl sm:text-4xl font-black font-mono text-white tracking-tight" id="live-total-score">--.-</span>
+                                    <span class="text-xs sm:text-sm font-mono font-bold text-slate-400" id="live-total-max">/ 100</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Standby Stage Notice (Hidden when performer active) -->
+                    <div id="live-stage-standby" class="hidden my-auto py-10 text-center flex-col items-center justify-center">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-purple-950/60 border-2 border-purple-500/40 flex items-center justify-center text-3xl sm:text-4xl mb-3 shadow-xl shadow-purple-950/40 animate-pulse mx-auto">
+                            🎭
+                        </div>
+                        <h3 class="text-lg sm:text-2xl font-black text-white uppercase tracking-tight mb-1">Stage Standby</h3>
+                        <p class="text-xs sm:text-sm text-slate-400 max-w-sm mx-auto">Next performer is preparing. Scores will appear live as judges evaluate.</p>
+                    </div>
+
+                    <!-- Bottom Shortcuts Reminder -->
+                    <div class="pt-2 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800/60 shrink-0">
+                        <span>Press <kbd class="px-1 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">L</kbd> Live Stage · <kbd class="px-1 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">P</kbd> Standings</span>
+                        <span>Press <kbd class="px-1 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">S</kbd> Settings · <kbd class="px-1 py-0.5 rounded bg-slate-800 text-purple-300 font-bold">F</kbd> Fullscreen</span>
+                    </div>
+                </section>
+
+                <!-- RIGHT SECTION (30% - 32% Width): RECENT PERFORMERS REEL (NO UPCOMING QUEUE) -->
+                <section class="w-full lg:w-[32%] xl:w-[30%] flex flex-col bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl shrink-0 min-h-0">
+                    <div class="p-3 sm:p-3.5 border-b border-slate-800 bg-slate-950/70 flex items-center justify-between shrink-0">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-base sm:text-lg">⭐</span>
+                            <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider truncate">
+                                Recent Performers
+                            </h3>
+                        </div>
+                        <span id="live-recent-count" class="text-[10px] sm:text-[11px] font-mono font-bold text-purple-400 bg-purple-950/40 border border-purple-800/60 px-2.5 py-0.5 rounded-full shrink-0">
+                            0 Recorded
+                        </span>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto p-2 sm:p-2.5 space-y-2 min-h-0 custom-scrollbar" id="live-recent-list">
+                        <div class="p-8 text-center text-slate-500 font-mono text-xs">
+                            ⏳ Connecting live scores...
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- VIEW 2: 3D PODIUM & OFFICIAL STANDINGS LEADERBOARD            -->
+        <!-- ============================================================= -->
+        <div id="view-cult-podium" class="hidden flex-1 w-full min-h-0 flex flex-col lg:flex-row gap-3 sm:gap-4 md:gap-5 overflow-hidden">
 
         <!-- ============================================================= -->
         <!-- LEFT PANEL (38% Width): 3D PODIUM HERO STAGE                  -->
@@ -383,6 +561,7 @@
                 </table>
             </div>
         </section>
+        </div>
     </main>
 
     <!-- FOOTER TICKER -->

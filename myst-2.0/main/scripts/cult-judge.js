@@ -253,6 +253,18 @@ function updateTerminalStageUI() {
         }
     }
 
+    // Stage Sync Alert for Judge 2
+    const bannerSync = document.getElementById('banner-stage-sync');
+    const syncNameEl = document.getElementById('sync-cand-name');
+    if (bannerSync && syncNameEl) {
+        if (assignedStage?.seat === 'j2' && assignedStage?.activeCandidate && assignedStage.activeCandidate.trackNo !== activeTargetCandidate?.trackNo) {
+            syncNameEl.textContent = `#${assignedStage.activeCandidate.trackNo} ${assignedStage.activeCandidate.name}`;
+            bannerSync.classList.remove('hidden');
+        } else {
+            bannerSync.classList.add('hidden');
+        }
+    }
+
     // Panel Lock Control
     if (assignedStage.isLocked) {
         if (bannerLocked) bannerLocked.classList.remove('hidden');
@@ -307,6 +319,15 @@ function initCandidateSearch() {
     if (btnClearTarget) {
         btnClearTarget.addEventListener('click', () => {
             clearTargetCandidate();
+        });
+    }
+
+    const btnSyncStage = document.getElementById('btn-sync-stage-cand');
+    if (btnSyncStage) {
+        btnSyncStage.addEventListener('click', () => {
+            if (assignedStage?.activeCandidate?.trackNo) {
+                lookupCandidateByTrack(assignedStage.activeCandidate.trackNo);
+            }
         });
     }
 }
@@ -371,6 +392,27 @@ async function setTargetCandidate(candidate) {
         }
     } catch (e) {}
 
+    // Broadcast active candidate to live stage if Head Judge or Solo Judge
+    if (assignedStage && (assignedStage.seat === 'j1' || assignedStage.panelSize === 1)) {
+        try {
+            const stageRef = doc(db, 'cult_stages', assignedStage.comp);
+            await updateDoc(stageRef, {
+                activeCandidate: {
+                    trackNo: candidate.trackNo,
+                    name: candidate.name,
+                    groupName: candidate.groupName || '',
+                    gender: candidate.gender || '',
+                    district: candidate.district || '',
+                    institution: candidate.institution || '',
+                    panelSize: assignedStage.panelSize !== undefined ? parseInt(assignedStage.panelSize) : (assignedStage.comp === 'song' ? 1 : 2),
+                    calledAt: new Date().toISOString()
+                }
+            });
+        } catch (e) {
+            console.warn("Could not broadcast active candidate to stage:", e);
+        }
+    }
+
     playBeep(987.77, 0.08); // B5 confirmation beep
     updateScoringInputState();
     validateCurrentMarks();
@@ -383,6 +425,17 @@ async function setTargetCandidate(candidate) {
 }
 
 function clearTargetCandidate() {
+    if (assignedStage && (assignedStage.seat === 'j1' || assignedStage.panelSize === 1)) {
+        try {
+            const stageRef = doc(db, 'cult_stages', assignedStage.comp);
+            updateDoc(stageRef, {
+                activeCandidate: null
+            }).catch(e => console.warn("Could not clear active candidate on stage:", e));
+        } catch (e) {
+            console.warn("Could not clear active candidate on stage:", e);
+        }
+    }
+
     activeTargetCandidate = null;
     isCurrentCandidateLocked = false;
     const card = document.getElementById('target-candidate-card');

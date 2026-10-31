@@ -212,6 +212,20 @@
                             <span class="text-[10px] font-mono text-slate-400 uppercase font-semibold">QR Scan or Track No</span>
                         </div>
 
+                        <!-- STAGE SYNC BANNER (For Judge 2 when Head Judge calls a candidate) -->
+                        <div id="banner-stage-sync" class="hidden mb-3 bg-purple-50 border-2 border-purple-300 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-2 shadow-xs">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="text-base sm:text-lg">🎭</span>
+                                <div class="min-w-0 text-left">
+                                    <span class="text-[10px] uppercase font-black tracking-wider text-purple-700 block">On Stage Now</span>
+                                    <span id="sync-cand-name" class="text-xs sm:text-sm font-black text-purple-950 truncate block">#-- Candidate Name</span>
+                                </div>
+                            </div>
+                            <button type="button" id="btn-sync-stage-cand" class="bg-purple-600 hover:bg-purple-700 text-white font-black text-xs px-3 py-1.5 rounded-lg shadow-sm shrink-0 uppercase tracking-wider transition-all cursor-pointer">
+                                ⚡ Load
+                            </button>
+                        </div>
+
                         <!-- Action Bar: Scan Button & Manual Input -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
                             <button type="button" id="btn-open-candidate-qr" class="w-full bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold py-3 px-4 rounded-xl shadow-md hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 text-xs sm:text-sm uppercase tracking-wider border border-indigo-400/30 active:scale-[0.98] cursor-pointer">

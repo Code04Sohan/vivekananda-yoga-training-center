@@ -133,12 +133,12 @@ service cloud.firestore {
       allow update: if isAdmin() || isJudge();
     }
 
-    // 12. Cultural Stages (Stage assignments & Admin panel lock)
+    // 12. Cultural Stages (Stage assignments, Admin panel lock & Live active performer)
     match /cult_stages/{comp} {
-      // Authenticated judges and staff monitor assignment and lock status
+      // Authenticated judges, staff and TV display nodes monitor assignment, lock status and active candidate
       allow read: if isAuthenticated();
-      // Only Admins can assign Judge 1 & Judge 2 or toggle stage lock
-      allow write: if isAdmin();
+      // Admins manage assignments/locks; Judges and Stage Managers can broadcast active candidate on stage
+      allow write: if isAdmin() || isJudge() || isStageMgr();
     }
 
     // 13. Cultural Scores (2-Judge Scorecards & Live Monitor)
