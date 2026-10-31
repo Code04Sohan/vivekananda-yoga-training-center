@@ -127,6 +127,13 @@ function initAuthFlow() {
         });
     }
 
+    const btnStageStandby = document.getElementById('btn-cult-stage-standby');
+    if (btnStageStandby) {
+        btnStageStandby.addEventListener('click', () => {
+            clearStageToStandby(true);
+        });
+    }
+
     // Auth State Observer
     onAuthStateChanged(auth, async (user) => {
         const overlay = document.getElementById('cult-auth-overlay');
@@ -424,18 +431,7 @@ async function setTargetCandidate(candidate) {
     }
 }
 
-function clearTargetCandidate() {
-    if (assignedStage && (assignedStage.seat === 'j1' || assignedStage.panelSize === 1)) {
-        try {
-            const stageRef = doc(db, 'cult_stages', assignedStage.comp);
-            updateDoc(stageRef, {
-                activeCandidate: null
-            }).catch(e => console.warn("Could not clear active candidate on stage:", e));
-        } catch (e) {
-            console.warn("Could not clear active candidate on stage:", e);
-        }
-    }
-
+function resetLocalJudgeForm() {
     activeTargetCandidate = null;
     isCurrentCandidateLocked = false;
     const card = document.getElementById('target-candidate-card');
@@ -443,7 +439,10 @@ function clearTargetCandidate() {
     const marksInput = document.getElementById('input-marks-value');
 
     if (card) card.classList.add('hidden');
-    if (inputTrack) inputTrack.value = '';
+    if (inputTrack) {
+        inputTrack.value = '';
+        inputTrack.focus();
+    }
     if (marksInput) {
         marksInput.value = '';
         marksInput.classList.remove('input-error');
@@ -451,6 +450,42 @@ function clearTargetCandidate() {
 
     updateScoringInputState();
     validateCurrentMarks();
+}
+
+async function clearStageToStandby(promptConfirm = false) {
+    if (!assignedStage) return;
+
+    if (assignedStage.seat === 'j2' && assignedStage.panelSize !== 1) {
+        alert("Only the Head Judge (Judge 1) or Administrator can set the stage to Standby.");
+        return;
+    }
+
+    if (promptConfirm && !confirm("Put the TV broadcast stage to Standby (Intermission)?")) {
+        return;
+    }
+
+    try {
+        const stageRef = doc(db, 'cult_stages', assignedStage.comp);
+        await updateDoc(stageRef, {
+            activeCandidate: null
+        });
+    } catch (e) {
+        console.warn("Could not clear active candidate on stage:", e);
+    }
+
+    resetLocalJudgeForm();
+}
+
+function clearTargetCandidate() {
+    // If the candidate was already submitted and locked, clicking ✕ just clears the judge's tablet,
+    // leaving their celebrated score on the TV screen until the next candidate is called!
+    if (isCurrentCandidateLocked) {
+        resetLocalJudgeForm();
+        return;
+    }
+
+    // If candidate was selected by accident (unscored), clear both tablet and stage
+    clearStageToStandby(false);
 }
 
 function updateScoringInputState() {
@@ -796,7 +831,7 @@ function initModalControls() {
                 successModal.classList.add('hidden');
                 successModal.classList.remove('flex');
             }
-            clearTargetCandidate();
+            resetLocalJudgeForm(); // Decoupled: resets tablet locally, but leaves celebrated candidate on TV stage!
         });
     }
 

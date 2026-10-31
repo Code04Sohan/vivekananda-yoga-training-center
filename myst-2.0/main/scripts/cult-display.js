@@ -32,6 +32,7 @@ let currentDisplayMode = localStorage.getItem('myst_cult_display_mode') || 'live
 let unsubscribeStageLive = null;
 let unsubscribeActiveScore = null;
 let unsubscribeRecentPerformers = null;
+let currentActiveTrackNo = null;
 
 const COMP_ICONS = {
     drawing: '🎨',
@@ -782,10 +783,15 @@ function bindLiveStageSync() {
         const j2Name = stageData?.j2_name || 'Judge 2';
         updateJudgeLabels(panelSize, j1Name, j2Name);
 
-        renderActivePerformer(activeCand, panelSize);
+        const isDifferentCandidate = (activeCand?.trackNo || null) !== currentActiveTrackNo;
+        currentActiveTrackNo = activeCand?.trackNo || null;
+
+        renderActivePerformer(activeCand, panelSize, isDifferentCandidate);
 
         if (activeCand?.trackNo) {
-            listenToActiveCandidateScore(comp, activeCand.trackNo, panelSize);
+            if (isDifferentCandidate) {
+                listenToActiveCandidateScore(comp, activeCand.trackNo, panelSize);
+            }
         } else {
             if (unsubscribeActiveScore) unsubscribeActiveScore();
             resetActiveScoreDisplay(panelSize);
@@ -847,7 +853,7 @@ function updateJudgeLabels(panelSize, j1Name, j2Name) {
     }
 }
 
-function renderActivePerformer(candidate, panelSize) {
+function renderActivePerformer(candidate, panelSize, isNewPerformer = false) {
     const activeSection = document.getElementById('live-active-performer');
     const standbySection = document.getElementById('live-stage-standby');
 
@@ -858,14 +864,26 @@ function renderActivePerformer(candidate, panelSize) {
     const distEl = document.getElementById('live-performer-district');
 
     if (!candidate) {
+        currentActiveTrackNo = null;
         if (activeSection) activeSection.classList.add('hidden');
         if (standbySection) { standbySection.classList.remove('hidden'); standbySection.classList.add('flex'); }
         resetActiveScoreDisplay(panelSize);
         return;
     }
 
-    if (activeSection) activeSection.classList.remove('hidden');
     if (standbySection) { standbySection.classList.add('hidden'); standbySection.classList.remove('flex'); }
+    if (activeSection) {
+        activeSection.classList.remove('hidden');
+        if (isNewPerformer) {
+            activeSection.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+            activeSection.style.opacity = '0';
+            activeSection.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                activeSection.style.opacity = '1';
+                activeSection.style.transform = 'scale(1)';
+            }, 30);
+        }
+    }
 
     if (trackEl) trackEl.textContent = `#${candidate.trackNo || '--'}`;
     if (nameEl) nameEl.textContent = candidate.name || 'Performer';
@@ -1146,16 +1164,22 @@ function renderRecentPerformers(completedList) {
         else if (idx === 1) medalBadge = '🥈';
         else if (idx === 2) medalBadge = '🥉';
 
+        const isCurrentlyOnStage = currentActiveTrackNo && String(item.trackNo) === String(currentActiveTrackNo);
+        const cardBorderClass = isCurrentlyOnStage 
+            ? 'border-purple-500/80 bg-purple-950/30 shadow-md shadow-purple-950/40' 
+            : 'border-slate-800/80 bg-slate-950/60 hover:border-purple-500/40';
+
         return `
-            <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-3 hover:border-purple-500/40 transition-colors">
+            <div class="${cardBorderClass} border rounded-xl p-2.5 sm:p-3 flex items-center justify-between gap-3 transition-colors">
                 <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center font-mono font-black text-xs text-purple-300 shrink-0">
+                    <div class="w-8 h-8 rounded-lg ${isCurrentlyOnStage ? 'bg-purple-900 border-purple-500 text-purple-200' : 'bg-slate-800 border-slate-700 text-purple-300'} border flex items-center justify-center font-mono font-black text-xs shrink-0">
                         #${item.trackNo || '-'}
                     </div>
                     <div class="min-w-0">
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 flex-wrap">
                             <h4 class="text-xs sm:text-sm font-black text-white truncate">${item.candidateName || 'Candidate'}</h4>
                             ${medalBadge ? `<span class="text-xs">${medalBadge}</span>` : ''}
+                            ${isCurrentlyOnStage ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-900/60 text-purple-300 border border-purple-700/60">Stage Result</span>` : ''}
                         </div>
                         <p class="text-[10px] text-slate-400 truncate">${item.groupName || ''} · ${item.district || '-'}</p>
                     </div>

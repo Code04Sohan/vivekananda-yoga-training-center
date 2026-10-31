@@ -413,13 +413,18 @@ function renderAllStageControls() {
             </div>
 
             <!-- Footer Save Actions -->
-            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
                 <span class="text-[10px] font-mono text-slate-500">
                     ${state.updatedAt ? `Saved: ${new Date(state.updatedAt).toLocaleTimeString()}` : 'Not configured'}
                 </span>
-                <button type="button" class="btn-save-stage bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs uppercase px-4 py-2 rounded-lg transition-colors cursor-pointer" data-comp="${comp.id}">
-                    Save Assignment
-                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="btn-standby-stage bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs uppercase px-3 py-2 rounded-lg transition-colors cursor-pointer border border-slate-700" data-comp="${comp.id}" title="Reset live TV stage to Standby">
+                        ⏸ Standby
+                    </button>
+                    <button type="button" class="btn-save-stage bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs uppercase px-4 py-2 rounded-lg transition-colors cursor-pointer" data-comp="${comp.id}">
+                        Save Assignment
+                    </button>
+                </div>
             </div>
         `;
 
@@ -444,6 +449,13 @@ function renderAllStageControls() {
     });
 
     // Attach listeners
+    container.querySelectorAll('.btn-standby-stage').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const comp = e.currentTarget.dataset.comp;
+            await resetStageToStandby(comp);
+        });
+    });
+
     container.querySelectorAll('.btn-save-stage').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const comp = e.currentTarget.dataset.comp;
@@ -493,6 +505,18 @@ async function saveStageConfig(comp) {
     } catch (err) {
         console.error("Save stage error:", err);
         alert("Failed to save stage configuration.");
+    }
+}
+
+async function resetStageToStandby(comp) {
+    if (!confirm(`Reset the live TV display for [${comp.toUpperCase()}] to Standby?`)) return;
+    try {
+        const stageRef = doc(db, 'cult_stages', comp);
+        await updateDoc(stageRef, { activeCandidate: null });
+        alert(`✅ [${comp.toUpperCase()}] live stage reset to Standby successfully!`);
+    } catch (err) {
+        console.error("Standby reset error:", err);
+        alert("Failed to reset stage: " + err.message);
     }
 }
 
