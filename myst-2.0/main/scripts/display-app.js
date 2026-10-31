@@ -52,7 +52,13 @@ export function initDisplay() {
 function bindSettingsUI() {
     const modal = document.getElementById('settings-modal');
 
+    const syncSettingsFields = () => {
+        const slotsSelect = document.getElementById('select-podium-slots');
+        if (slotsSelect) slotsSelect.value = getPodiumSlotsPerPage().toString();
+    };
+
     document.getElementById('btn-open-settings').addEventListener('click', () => {
+        syncSettingsFields();
         modal.classList.remove('hidden'); modal.classList.add('flex');
     });
 
@@ -85,10 +91,19 @@ function bindSettingsUI() {
         currentMatId = document.getElementById('select-mat').value;
         currentCategoryId = document.getElementById('select-result-category').value;
 
+        const slotsSelect = document.getElementById('select-podium-slots');
+        if (slotsSelect) {
+            const chosenSlots = parseInt(slotsSelect.value, 10);
+            if ([5, 6, 7, 8, 10].includes(chosenSlots)) {
+                localStorage.setItem('myst_yoga_podium_slots', chosenSlots);
+            }
+        }
+
         modal.classList.add('hidden'); modal.classList.remove('flex');
 
         if (currentMode === 'live' && currentMatId) {
             document.getElementById('view-podium').classList.add('hidden');
+            document.getElementById('view-podium').classList.remove('flex');
             document.getElementById('view-live-scoring').classList.remove('hidden');
             document.getElementById('view-live-scoring').classList.add('flex');
 
@@ -108,6 +123,7 @@ function bindSettingsUI() {
         }
         else if (currentMode === 'podium' && currentCategoryId) {
             document.getElementById('view-live-scoring').classList.add('hidden');
+            document.getElementById('view-live-scoring').classList.remove('flex');
             document.getElementById('view-podium').classList.remove('hidden');
             document.getElementById('view-podium').classList.add('flex');
 
@@ -124,6 +140,30 @@ function bindSettingsUI() {
             renderPodiumView();
         }
     });
+
+    // Podium Manual Navigation Buttons
+    document.getElementById('btn-podium-prev')?.addEventListener('click', () => {
+        if (!currentRemainingList || currentRemainingList.length === 0) return;
+        stopPagination();
+        const slotsPerPage = getPodiumSlotsPerPage();
+        const totalPages = Math.ceil(currentRemainingList.length / slotsPerPage);
+        currentPodiumPage = (currentPodiumPage - 1 + totalPages) % totalPages;
+        isPodiumPaused = true;
+        renderPodiumPage(currentRemainingList);
+    });
+
+    document.getElementById('btn-podium-next')?.addEventListener('click', () => {
+        if (!currentRemainingList || currentRemainingList.length === 0) return;
+        stopPagination();
+        const slotsPerPage = getPodiumSlotsPerPage();
+        const totalPages = Math.ceil(currentRemainingList.length / slotsPerPage);
+        currentPodiumPage = (currentPodiumPage + 1) % totalPages;
+        isPodiumPaused = true;
+        renderPodiumPage(currentRemainingList);
+    });
+
+    // Initialize initial fields on boot
+    syncSettingsFields();
 }
 
 // ==========================================
@@ -191,13 +231,22 @@ function listenToQueue() {
     });
 }
 
-// HELPER: Pad array to exactly 5 elements
-function padToFive(arr) {
+// HELPER: Pad array to exactly N elements (default 5)
+function padToN(arr, n = 5) {
     const result = [...(arr || [])];
-    while (result.length < 5) {
+    while (result.length < n) {
         result.push(null);
     }
-    return result.slice(0, 5);
+    return result.slice(0, n);
+}
+
+function padToFive(arr) {
+    return padToN(arr, 5);
+}
+
+function getPodiumSlotsPerPage() {
+    const saved = parseInt(localStorage.getItem('myst_yoga_podium_slots'), 10);
+    return [5, 6, 7, 8, 10].includes(saved) ? saved : 5;
 }
 
 // ==========================================
@@ -485,17 +534,43 @@ function renderPodiumView() {
     const fillPodium = (num, athlete) => {
         const nameEl = document.getElementById(`podium-${num}-name`);
         const scoreEl = document.getElementById(`podium-${num}-score`);
+        const trackEl = document.getElementById(`podium-${num}-track`);
+        const metaEl = document.getElementById(`podium-${num}-meta`);
+
         if (athlete) {
             const athleteName = athlete.name || 'Unknown';
-            nameEl.innerText = athleteName;
-            nameEl.setAttribute('data-tooltip', athleteName);
-            nameEl.setAttribute('title', athleteName);
-            scoreEl.innerText = `${athlete.finalScore} PTS`;
+            if (nameEl) {
+                nameEl.innerText = athleteName;
+                nameEl.setAttribute('data-tooltip', athleteName);
+                nameEl.setAttribute('title', athleteName);
+            }
+            if (scoreEl) {
+                scoreEl.innerText = athlete.finalScore !== undefined ? `${athlete.finalScore}` : '--';
+            }
+            if (trackEl) {
+                const trk = athlete.trackNo || athlete.chestNo || athlete.id;
+                trackEl.innerText = trk ? `Track #${trk}` : 'Track #--';
+            }
+            if (metaEl) {
+                const metaParts = [athlete.division, athlete.district].filter(Boolean);
+                const metaStr = metaParts.length > 0 ? metaParts.join(' · ') : '-';
+                metaEl.innerText = metaStr;
+                metaEl.setAttribute('data-tooltip', metaStr);
+                metaEl.setAttribute('title', metaStr);
+            }
         } else {
-            nameEl.innerText = "--";
-            nameEl.removeAttribute('data-tooltip');
-            nameEl.removeAttribute('title');
-            scoreEl.innerText = "--";
+            if (nameEl) {
+                nameEl.innerText = "-- Awaiting --";
+                nameEl.removeAttribute('data-tooltip');
+                nameEl.removeAttribute('title');
+            }
+            if (scoreEl) scoreEl.innerText = "--";
+            if (trackEl) trackEl.innerText = "Track #--";
+            if (metaEl) {
+                metaEl.innerText = "--";
+                metaEl.removeAttribute('data-tooltip');
+                metaEl.removeAttribute('title');
+            }
         }
     };
 
@@ -503,7 +578,12 @@ function renderPodiumView() {
     fillPodium(2, standings.find(s => s.rank === 2));
     fillPodium(3, standings.find(s => s.rank === 3));
 
-    currentRemainingList = standings.filter(s => s.rank > 3);
+    const totalRankedEl = document.getElementById('podium-total-ranked');
+    if (totalRankedEl) {
+        totalRankedEl.textContent = `${standings.length} Ranked`;
+    }
+
+    currentRemainingList = standings;
     currentPodiumPage = 0;
     isPodiumPaused = false;
     
@@ -515,16 +595,19 @@ function renderPodiumPage(remainingList) {
     const pageInfo = document.getElementById('podium-page-info');
     const pauseBadge = document.getElementById('podium-pause-badge');
     
+    if (!listBody) return;
     listBody.innerHTML = '';
 
-    if (remainingList.length === 0) {
-        listBody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-600 italic">No remaining standings.</td></tr>`;
+    if (!remainingList || remainingList.length === 0) {
+        listBody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500 font-mono text-sm italic">No standings available for this category.</td></tr>`;
         if (pageInfo) pageInfo.textContent = "Page 1 of 1";
         return;
     }
 
-    const totalPages = Math.ceil(remainingList.length / ITEMS_PER_PAGE);
+    const slotsPerPage = getPodiumSlotsPerPage();
+    const totalPages = Math.max(1, Math.ceil(remainingList.length / slotsPerPage));
     if (currentPodiumPage >= totalPages) currentPodiumPage = 0;
+    if (currentPodiumPage < 0) currentPodiumPage = totalPages - 1;
 
     if (pageInfo) {
         pageInfo.textContent = `Page ${currentPodiumPage + 1} of ${totalPages}`;
@@ -535,40 +618,69 @@ function renderPodiumPage(remainingList) {
         else pauseBadge.classList.add('hidden');
     }
 
-    const startIndex = currentPodiumPage * ITEMS_PER_PAGE;
-    const rawPageItems = remainingList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-    const pageItems = padToFive(rawPageItems);
+    const startIndex = currentPodiumPage * slotsPerPage;
+    const rawPageItems = remainingList.slice(startIndex, startIndex + slotsPerPage);
+    const pageItems = padToN(rawPageItems, slotsPerPage);
+
+    const rowHeightPercent = (100 / slotsPerPage).toFixed(2);
+    const isDense = slotsPerPage >= 7;
+    const pyClass = isDense ? "py-0.5 md:py-1" : "py-1 md:py-1.5";
+    const nameFontClass = isDense ? "text-xs md:text-sm" : "text-xs md:text-base";
+    const rankFontClass = isDense ? "text-[11px] md:text-xs" : "text-xs md:text-sm";
+    const scoreFontClass = isDense ? "text-xs md:text-sm" : "text-xs md:text-base";
 
     pageItems.forEach(s => {
         if (!s) {
             listBody.innerHTML += `
-                <tr class="border-b border-gray-800/10 h-[20%]">
-                    <td class="py-1 px-2 md:px-4 md:pl-6 text-gray-900 w-[12%]">-</td>
-                    <td class="py-1 px-2 md:px-4 text-gray-900 w-[40%]">-</td>
-                    <td class="py-1 px-2 md:px-4 text-gray-900 w-[18%]">-</td>
-                    <td class="py-1 px-2 md:px-4 text-gray-900 w-[15%]">-</td>
-                    <td class="py-1 px-2 md:px-4 md:pr-6 text-gray-900 w-[15%]">-</td>
+                <tr class="border-b border-gray-800/20 text-gray-800 select-none" style="height: ${rowHeightPercent}%;">
+                    <td class="${pyClass} px-2 md:px-3 text-center w-[10%]">-</td>
+                    <td class="${pyClass} px-2 md:px-3 text-center w-[12%]">-</td>
+                    <td class="${pyClass} px-2 md:px-3 w-[36%]">-</td>
+                    <td class="${pyClass} px-2 md:px-3 text-center w-[15%]">-</td>
+                    <td class="${pyClass} px-2 md:px-3 text-center w-[14%]">-</td>
+                    <td class="${pyClass} px-2 md:px-3 md:pr-4 text-right w-[13%]">-</td>
                 </tr>
             `;
             return;
         }
+
+        const isPodium = s.rank <= 3;
+        const medalBadge = s.rank === 1 ? '🥇' : s.rank === 2 ? '🥈' : s.rank === 3 ? '🥉' : `#${s.rank}`;
+        const rowBg = s.rank === 1 
+            ? 'bg-yellow-950/20 text-white border-yellow-500/30' 
+            : s.rank === 2 
+            ? 'bg-gray-800/50 text-white border-gray-700/50' 
+            : s.rank === 3 
+            ? 'bg-amber-950/20 text-white border-amber-800/30' 
+            : 'text-gray-300 border-gray-800/40';
+
         const nameText = s.name || 'Unknown';
+        const trkVal = s.trackNo || s.chestNo || s.id;
+        const trkText = trkVal ? `#${trkVal}` : '-';
         const divText = s.division || '';
         const distText = s.district || '';
         const scoreText = s.finalScore !== undefined ? s.finalScore : '-';
+
         listBody.innerHTML += `
-            <tr class="hover:bg-gray-800 transition-colors h-[20%] border-b border-gray-800/40">
-                <td class="py-1 md:py-1.5 px-2 md:px-4 md:pl-6 font-black text-gray-500 w-[12%] text-xs md:text-sm">#${s.rank}</td>
-                <td class="py-1 md:py-1.5 px-2 md:px-4 font-bold text-gray-200 w-[40%] text-xs md:text-base">
+            <tr class="${rowBg} hover:bg-gray-800/80 transition-colors border-b" style="height: ${rowHeightPercent}%;">
+                <td class="${pyClass} px-2 md:px-3 text-center font-black ${rankFontClass} w-[10%]">
+                    ${medalBadge}
+                </td>
+                <td class="${pyClass} px-2 md:px-3 font-mono font-bold text-purple-400 text-xs sm:text-sm text-center w-[12%]">
+                    ${esc(trkText)}
+                </td>
+                <td class="${pyClass} px-2 md:px-3 font-bold text-gray-100 ${nameFontClass} w-[36%]">
                     <span class="block truncate cursor-default" data-tooltip="${esc(nameText)}" title="${esc(nameText)}">${esc(nameText)}</span>
                 </td>
-                <td class="py-1 md:py-1.5 px-2 md:px-4 text-center text-blue-400 text-[10px] md:text-xs font-bold uppercase w-[18%]">
+                <td class="${pyClass} px-2 md:px-3 text-center text-blue-400 text-[10px] md:text-xs font-bold uppercase w-[15%]">
                     <span class="block truncate cursor-default" data-tooltip="${esc(divText)}" title="${esc(divText)}">${esc(divText || '-')}</span>
                 </td>
-                <td class="py-1 md:py-1.5 px-2 md:px-4 text-center text-gray-400 text-[10px] md:text-xs w-[15%]">
+                <td class="${pyClass} px-2 md:px-3 text-center text-gray-400 text-[10px] md:text-xs w-[14%]">
                     <span class="block truncate cursor-default" data-tooltip="${esc(distText)}" title="${esc(distText)}">${esc(distText || '-')}</span>
                 </td>
-                <td class="py-1 md:py-1.5 px-2 md:px-4 md:pr-6 text-right text-gray-100 font-mono font-bold text-xs md:text-base w-[15%]">${scoreText}</td>
+                <td class="${pyClass} px-2 md:px-3 md:pr-4 text-right font-mono font-black ${scoreFontClass} text-emerald-400 w-[13%]">
+                    ${scoreText}
+                </td>
             </tr>
         `;
     });
@@ -671,6 +783,28 @@ function initKeyboardShortcuts() {
                 document.getElementById('btn-mode-live')?.click();
                 document.getElementById('btn-apply-settings')?.click();
                 break;
+            case 'ArrowLeft':
+                if (currentMode === 'podium' && currentRemainingList && currentRemainingList.length > 0) {
+                    e.preventDefault();
+                    stopPagination();
+                    const slotsPerPage = getPodiumSlotsPerPage();
+                    const totalPages = Math.ceil(currentRemainingList.length / slotsPerPage);
+                    currentPodiumPage = (currentPodiumPage - 1 + totalPages) % totalPages;
+                    isPodiumPaused = true;
+                    renderPodiumPage(currentRemainingList);
+                }
+                break;
+            case 'ArrowRight':
+                if (currentMode === 'podium' && currentRemainingList && currentRemainingList.length > 0) {
+                    e.preventDefault();
+                    stopPagination();
+                    const slotsPerPage = getPodiumSlotsPerPage();
+                    const totalPages = Math.ceil(currentRemainingList.length / slotsPerPage);
+                    currentPodiumPage = (currentPodiumPage + 1) % totalPages;
+                    isPodiumPaused = true;
+                    renderPodiumPage(currentRemainingList);
+                }
+                break;
             case 'Escape':
                 closeSettingsModal();
                 break;
@@ -695,6 +829,8 @@ function toggleSettingsModal() {
     const modal = document.getElementById('settings-modal');
     if (!modal) return;
     if (modal.classList.contains('hidden')) {
+        const slotsSelect = document.getElementById('select-podium-slots');
+        if (slotsSelect) slotsSelect.value = getPodiumSlotsPerPage().toString();
         modal.classList.remove('hidden');
         modal.classList.add('flex');
     } else {

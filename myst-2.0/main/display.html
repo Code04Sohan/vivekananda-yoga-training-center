@@ -27,10 +27,13 @@
             100% { transform: translateX(-100%); }
         }
 
-        /* Responsive Podium Visual Heights (Scales proportionally on Laptops, TVs & Giant Displays) */
-        .podium-1 { height: clamp(80px, 16vh, 180px); }
-        .podium-2 { height: clamp(60px, 12vh, 130px); }
-        .podium-3 { height: clamp(45px, 9vh, 100px); }
+        /* Fluid Podium Hero Card Heights for Viewport Scaling */
+        .podium-hero-gold {
+            min-height: clamp(85px, 15vh, 160px);
+        }
+        .podium-hero-side {
+            min-height: clamp(70px, 12vh, 130px);
+        }
 
         /* Hide scrollbars for TV Broadcast Look */
         ::-webkit-scrollbar { display: none; }
@@ -94,11 +97,24 @@
                 </div>
 
                 <div id="settings-podium" class="space-y-4 hidden">
-                    <p class="text-gray-400 text-sm">Select Published Result Category</p>
-                    <select id="select-result-category"
-                        class="w-full bg-gray-950 border border-purple-500 text-white rounded-lg px-4 py-3 text-lg font-bold outline-none cursor-pointer">
-                        <option value="">-- Fetching Published Results... --</option>
-                    </select>
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">Select Published Result Category</p>
+                        <select id="select-result-category"
+                            class="w-full bg-gray-950 border border-purple-500 text-white rounded-lg px-4 py-3 text-lg font-bold outline-none cursor-pointer">
+                            <option value="">-- Fetching Published Results... --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm mb-1">Leaderboard Slots Per Page</p>
+                        <select id="select-podium-slots"
+                            class="w-full bg-gray-950 border border-purple-500/70 text-white rounded-lg px-4 py-2.5 text-base font-bold outline-none cursor-pointer">
+                            <option value="5">5 Rows / Page (Spacious)</option>
+                            <option value="6">6 Rows / Page</option>
+                            <option value="7">7 Rows / Page</option>
+                            <option value="8">8 Rows / Page (Recommended for 1080p)</option>
+                            <option value="10">10 Rows / Page (Ultra Compact)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="mt-8 flex gap-4">
@@ -117,6 +133,7 @@
                         <span><kbd class="px-1.5 py-0.5 rounded bg-gray-800 text-blue-300 font-bold">1 - 4</kbd> Mat Switch</span>
                         <span><kbd class="px-1.5 py-0.5 rounded bg-gray-800 text-purple-300 font-bold">P</kbd> Podium Mode</span>
                         <span><kbd class="px-1.5 py-0.5 rounded bg-gray-800 text-blue-300 font-bold">L</kbd> Live Mode</span>
+                        <span><kbd class="px-1.5 py-0.5 rounded bg-gray-800 text-purple-300 font-bold">◄ / ►</kbd> Page Flip</span>
                     </div>
                 </div>
                 
@@ -246,59 +263,157 @@
 
             </div>
 
-            <!-- --------------------------------------- -->
-            <!-- MODE 2: PODIUM RESULTS VIEW             -->
-            <!-- --------------------------------------- -->
-            <div id="view-podium" class="w-full h-full hidden flex-col">
-                <div class="flex justify-center items-end gap-3 sm:gap-6 md:gap-8 mb-2 sm:mb-3 mt-1 shrink-0">
-                    <div class="w-28 sm:w-36 md:w-52 flex flex-col items-center min-w-0">
-                        <div id="podium-2-name" class="font-black text-xs sm:text-base md:text-xl text-center mb-0.5 text-gray-300 w-full truncate cursor-default">--</div>
-                        <div id="podium-2-score" class="font-bold text-[10px] sm:text-xs md:text-sm text-gray-500 mb-1 sm:mb-2 tracking-widest uppercase">-- pts</div>
-                        <div class="w-full bg-gradient-to-b from-gray-300 to-gray-500 rounded-t-lg podium-2 flex items-start justify-center pt-1.5 sm:pt-2 md:pt-3 border-t-4 border-gray-200">
-                            <span class="text-2xl sm:text-3xl md:text-5xl font-black text-gray-800">2</span>
-                        </div>
-                    </div>
-                    <div class="w-36 sm:w-44 md:w-60 flex flex-col items-center min-w-0">
-                        <div class="text-2xl sm:text-3xl md:text-4xl mb-0.5 sm:mb-1">👑</div>
-                        <div id="podium-1-name" class="font-black text-sm sm:text-lg md:text-2xl text-center mb-0.5 text-yellow-400 w-full truncate cursor-default">--</div>
-                        <div id="podium-1-score" class="font-bold text-xs sm:text-sm md:text-base text-yellow-600 mb-1 sm:mb-2 tracking-widest uppercase">-- pts</div>
-                        <div class="w-full bg-gradient-to-b from-yellow-400 to-yellow-600 rounded-t-lg podium-1 flex items-start justify-center pt-2 sm:pt-3 md:pt-4 border-t-4 border-yellow-200 relative z-10">
-                            <span class="text-4xl sm:text-5xl md:text-7xl font-black text-yellow-900">1</span>
-                        </div>
-                    </div>
-                    <div class="w-28 sm:w-36 md:w-52 flex flex-col items-center min-w-0">
-                        <div id="podium-3-name" class="font-black text-xs sm:text-base md:text-xl text-center mb-0.5 text-orange-400 w-full truncate cursor-default">--</div>
-                        <div id="podium-3-score" class="font-bold text-[10px] sm:text-xs md:text-sm text-gray-500 mb-1 sm:mb-2 tracking-widest uppercase">-- pts</div>
-                        <div class="w-full bg-gradient-to-b from-orange-400 to-orange-600 rounded-t-lg podium-3 flex items-start justify-center pt-1.5 sm:pt-2 md:pt-3 border-t-4 border-orange-300">
-                            <span class="text-2xl sm:text-3xl md:text-5xl font-black text-orange-900">3</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- ------------------------------------------------------------- -->
+            <!-- MODE 2: SPLIT HERO PODIUM & OFFICIAL STANDINGS LEADERBOARD     -->
+            <!-- ------------------------------------------------------------- -->
+            <div id="view-podium" class="w-full h-full hidden flex-col lg:flex-row gap-3 sm:gap-4 md:gap-5 overflow-hidden">
 
-                <div class="bg-gray-900 rounded-2xl border border-gray-800 shadow-md overflow-hidden flex-grow flex flex-col min-h-0">
-                    <div class="bg-black/80 py-1 sm:py-1.5 px-4 flex justify-between items-center border-b border-gray-800 shrink-0">
-                        <h3 class="text-gray-400 font-bold tracking-widest uppercase text-xs md:text-sm">Official Leaderboard</h3>
+                <!-- LEFT PANEL: 3D HERO PODIUM STAGE (35% Width on Desktop/TV) -->
+                <section class="w-full lg:w-[36%] xl:w-[34%] flex flex-col justify-between shrink-0 min-h-0 bg-gray-900/80 border border-gray-800 rounded-3xl p-3 sm:p-4 md:p-5 shadow-2xl backdrop-blur-sm">
+                    <!-- Podium Header -->
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-2 mb-2 shrink-0">
                         <div class="flex items-center gap-2">
-                            <span id="podium-page-info" class="text-[11px] font-mono font-bold text-purple-400">Page 1</span>
-                            <span id="podium-pause-badge" class="hidden text-[10px] font-black uppercase text-amber-400 bg-amber-950/40 border border-amber-800/60 px-2 py-0.5 rounded">PAUSED</span>
+                            <span class="text-xl">🏆</span>
+                            <h2 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider">Official Top 3 Podium</h2>
+                        </div>
+                        <span class="text-[10px] font-mono font-bold text-yellow-400 bg-yellow-950/40 border border-yellow-800/60 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                            Medalists
+                        </span>
+                    </div>
+
+                    <!-- 3D Podium Hero Cards (Vertical Stack Scaled for Viewport) -->
+                    <div class="flex-1 flex flex-col justify-between gap-2.5 min-h-0 py-1">
+                        <!-- 1st Place Gold (Hero Card) -->
+                        <div class="podium-hero-gold bg-gradient-to-r from-yellow-950/50 via-gray-900 to-amber-950/30 border-2 border-yellow-500/80 rounded-2xl p-3 sm:p-3.5 shadow-xl shadow-yellow-950/30 flex items-center justify-between gap-3 relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 pointer-events-none select-none">🥇</div>
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-yellow-500/20 border-2 border-yellow-400 flex items-center justify-center text-3xl sm:text-4xl shrink-0 shadow-inner">
+                                    🥇
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="text-[10px] font-black uppercase tracking-widest text-yellow-400 flex items-center gap-1">
+                                        <span>1ST PLACE</span> · CHAMPION
+                                    </span>
+                                    <h3 class="text-base sm:text-lg md:text-xl font-black text-white truncate group-hover:text-yellow-300 transition-colors cursor-default" id="podium-1-name">
+                                        -- Awaiting --
+                                    </h3>
+                                    <div class="flex items-center gap-2 text-xs mt-0.5">
+                                        <span class="font-mono font-bold text-yellow-400" id="podium-1-track">Track #--</span>
+                                        <span class="text-gray-600">·</span>
+                                        <span class="text-gray-400 truncate text-[11px]" id="podium-1-meta">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-950/90 border border-yellow-500/50 rounded-xl px-3 py-2 text-right shrink-0 shadow-inner">
+                                <div class="text-xl sm:text-2xl font-black font-mono text-yellow-400" id="podium-1-score">--</div>
+                                <div class="text-[10px] text-yellow-600 font-mono font-bold uppercase">PTS</div>
+                            </div>
+                        </div>
+
+                        <!-- 2nd Place Silver -->
+                        <div class="podium-hero-side bg-gray-900 border-2 border-gray-400/50 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 relative overflow-hidden">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gray-800 border border-gray-400 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+                                    🥈
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="text-[9px] font-black uppercase tracking-widest text-gray-300">
+                                        2ND PLACE · SILVER
+                                    </span>
+                                    <h3 class="text-sm sm:text-base md:text-lg font-black text-white truncate cursor-default" id="podium-2-name">
+                                        -- Awaiting --
+                                    </h3>
+                                    <div class="flex items-center gap-2 text-[11px] mt-0.5">
+                                        <span class="font-mono font-bold text-gray-300" id="podium-2-track">Track #--</span>
+                                        <span class="text-gray-600">·</span>
+                                        <span class="text-gray-400 truncate text-[10px]" id="podium-2-meta">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-950/90 border border-gray-700 rounded-xl px-3 py-1.5 text-right shrink-0 shadow-inner">
+                                <div class="text-lg sm:text-xl font-black font-mono text-gray-200" id="podium-2-score">--</div>
+                                <div class="text-[9px] text-gray-500 font-mono font-bold uppercase">PTS</div>
+                            </div>
+                        </div>
+
+                        <!-- 3rd Place Bronze -->
+                        <div class="podium-hero-side bg-gray-900 border-2 border-amber-700/50 rounded-2xl p-3 sm:p-3.5 shadow-lg flex items-center justify-between gap-3 relative overflow-hidden">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gray-800 border border-amber-600 flex items-center justify-center text-2xl sm:text-3xl shrink-0">
+                                    🥉
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="text-[9px] font-black uppercase tracking-widest text-amber-500">
+                                        3RD PLACE · BRONZE
+                                    </span>
+                                    <h3 class="text-sm sm:text-base md:text-lg font-black text-white truncate cursor-default" id="podium-3-name">
+                                        -- Awaiting --
+                                    </h3>
+                                    <div class="flex items-center gap-2 text-[11px] mt-0.5">
+                                        <span class="font-mono font-bold text-amber-400" id="podium-3-track">Track #--</span>
+                                        <span class="text-gray-600">·</span>
+                                        <span class="text-gray-400 truncate text-[10px]" id="podium-3-meta">--</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-950/90 border border-amber-800/60 rounded-xl px-3 py-1.5 text-right shrink-0 shadow-inner">
+                                <div class="text-lg sm:text-xl font-black font-mono text-amber-400" id="podium-3-score">--</div>
+                                <div class="text-[9px] text-amber-600 font-mono font-bold uppercase">PTS</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex-grow overflow-hidden relative min-h-0">
-                        <table class="w-full h-full text-left border-collapse table-fixed">
-                            <thead class="bg-gray-950 text-gray-500 uppercase text-[9px] sm:text-[10px] md:text-xs tracking-widest z-10 shadow-sm h-8 md:h-10 shrink-0 border-b border-gray-800">
+                </section>
+
+                <!-- RIGHT PANEL: ROTATING PAGINATED OFFICIAL LEADERBOARD (65% Width) -->
+                <section class="flex-1 min-w-0 flex flex-col bg-gray-900 border border-gray-800 rounded-3xl overflow-hidden shadow-2xl">
+                    <!-- Leaderboard Navigation & Pagination Bar -->
+                    <div class="p-3 sm:p-3.5 border-b border-gray-800 bg-black/60 flex items-center justify-between shrink-0 gap-3">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="text-base sm:text-lg">📋</span>
+                            <h3 class="text-xs sm:text-sm font-black text-white uppercase tracking-wider truncate">
+                                Official Leaderboard
+                            </h3>
+                            <span id="podium-total-ranked" class="text-[10px] sm:text-[11px] font-mono font-bold text-purple-400 bg-purple-950/40 border border-purple-800/60 px-2 py-0.5 rounded-full shrink-0">
+                                0 Ranked
+                            </span>
+                            <span id="podium-pause-badge" class="hidden text-[10px] font-black uppercase text-amber-400 bg-amber-950/40 border border-amber-800/60 px-2 py-0.5 rounded shrink-0">
+                                PAUSED
+                            </span>
+                        </div>
+
+                        <!-- Page Navigator -->
+                        <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                            <button type="button" id="btn-podium-prev" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer" title="Previous Page">
+                                ◄
+                            </button>
+                            <span id="podium-page-info" class="text-xs font-mono font-bold text-purple-400 px-1 sm:px-2">
+                                Page 1 of 1
+                            </span>
+                            <button type="button" id="btn-podium-next" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 flex items-center justify-center text-xs font-bold transition-colors cursor-pointer" title="Next Page">
+                                ►
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Leaderboard Table Container (Rigid Viewport Height) -->
+                    <div class="flex-1 overflow-hidden min-h-0 flex flex-col">
+                        <table class="w-full text-left border-collapse table-fixed h-full">
+                            <thead class="bg-gray-950 border-b border-gray-800 text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-400 font-bold shrink-0 h-8 sm:h-9">
                                 <tr>
-                                    <th class="py-1.5 md:py-2 px-2 md:px-4 md:pl-6 w-[12%]">Rank</th>
-                                    <th class="py-1.5 md:py-2 px-2 md:px-4 w-[40%]">Athlete Name</th>
-                                    <th class="py-1.5 md:py-2 px-2 md:px-4 w-[18%] text-center">Division</th>
-                                    <th class="py-1.5 md:py-2 px-2 md:px-4 w-[15%] text-center">District</th>
-                                    <th class="py-1.5 md:py-2 px-2 md:px-4 md:pr-6 w-[15%] text-right">Final Score</th>
+                                    <th class="py-1 px-2 md:px-3 w-[10%] text-center">Rank</th>
+                                    <th class="py-1 px-2 md:px-3 w-[12%] text-center font-mono">Track</th>
+                                    <th class="py-1 px-2 md:px-3 w-[36%]">Athlete Name</th>
+                                    <th class="py-1 px-2 md:px-3 w-[15%] text-center">Division</th>
+                                    <th class="py-1 px-2 md:px-3 w-[14%] text-center">District</th>
+                                    <th class="py-1 px-2 md:px-3 md:pr-4 w-[13%] text-right font-mono">Score</th>
                                 </tr>
                             </thead>
-                            <tbody id="podium-list-tbody" class="text-xs sm:text-sm md:text-base font-bold divide-y divide-gray-800 h-full">
+                            <tbody id="podium-list-tbody" class="divide-y divide-gray-800/60 font-bold h-full">
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </section>
+
             </div>
 
         </main>
