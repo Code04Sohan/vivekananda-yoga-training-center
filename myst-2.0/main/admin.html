@@ -177,6 +177,7 @@
                                 <option value="JUDGE">Judge</option>
                                 <option value="STAGE_MGR">STAGE_MGR</option>
                                 <option value="ADMIN">Admin</option>
+                                <option value="DISPLAY">Display Node (TV / Projector)</option>
                             </select>
                             <button onclick="addNewStaff()" class="w-full bg-brand-600 hover:bg-brand-500 text-white text-sm font-bold py-3.5 rounded-xl shadow mt-4 transition-colors tracking-wider uppercase">Link Account</button>
                         </div>
@@ -204,7 +205,12 @@
             <section id="view-candidate-manager" class="max-w-7xl mx-auto relative z-10" style="display: none;">
                 
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-slate-800 pb-4">
-                    <h2 class="text-3xl font-black text-white tracking-tighter mb-4 md:mb-0">Master Candidate List</h2>
+                    <div class="flex items-center mb-4 md:mb-0">
+                        <h2 class="text-3xl font-black text-white tracking-tighter">Master Candidate List</h2>
+                        <span id="cand-sync-badge" class="ml-3 text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 px-2.5 py-1 rounded-full inline-flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span> LIVE SYNC
+                        </span>
+                    </div>
                     <div class="flex space-x-3">
                         <button id="btn-refresh-candidates" class="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white text-xs font-bold py-2.5 px-5 rounded-lg shadow transition-colors flex items-center">
                             <span class="mr-2">🔄</span> REFRESH LIST
@@ -871,6 +877,7 @@
                                         <th class="p-4 text-center" id="cult-live-th-j2">J2 (/50)</th>
                                         <th class="p-4 text-center" id="cult-live-th-total">Total (/100)</th>
                                         <th class="p-4 text-center">Status</th>
+                                        <th class="p-4 text-center w-[160px]">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="cult-live-tbody" class="divide-y divide-slate-800">
@@ -1166,6 +1173,67 @@
                 </button>
                 <button type="button" id="btn-execute-cult-wipe-scores" disabled class="flex-1 bg-red-700 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white font-black py-3.5 rounded-xl transition-colors text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-red-950/50">
                     Delete Scores
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT CULTURAL SCORE (ADMIN AUDIT) -->
+    <div id="modal-cult-edit-score" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-[120] hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-6 shadow-2xl relative">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-2xl">✏️</span>
+                    <div>
+                        <h3 class="text-base font-black text-white uppercase tracking-tight">Edit Candidate Score</h3>
+                        <p class="text-[10px] text-slate-400 font-mono">Administrator Audit Override</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeCultScoreEditor()" class="text-slate-400 hover:text-white text-base font-bold p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer">✕</button>
+            </div>
+
+            <!-- Candidate Profile Info -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 mb-5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <span id="cult-edit-track" class="font-mono font-black text-lg bg-brand-950/80 text-brand-300 border border-brand-800 px-3 py-1 rounded-xl shrink-0">#--</span>
+                    <div class="min-w-0">
+                        <div id="cult-edit-name" class="font-black text-white text-sm truncate">Candidate Name</div>
+                        <div id="cult-edit-meta" class="text-[11px] text-slate-400 font-medium truncate mt-0.5">Group · Gender · District</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Score Edit Fields -->
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex justify-between items-center">
+                        <span>Judge 1 Marks (Max 50)</span>
+                        <span id="cult-edit-j1-judge-name" class="text-[10px] text-slate-500 font-mono font-normal">--</span>
+                    </label>
+                    <input type="number" step="0.1" min="0" max="50" id="cult-edit-input-j1" placeholder="0.0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-black text-lg focus:outline-none focus:border-brand-500 transition-colors text-center">
+                </div>
+
+                <div id="cult-edit-j2-container">
+                    <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex justify-between items-center">
+                        <span>Judge 2 Marks (Max 50)</span>
+                        <span id="cult-edit-j2-judge-name" class="text-[10px] text-slate-500 font-mono font-normal">--</span>
+                    </label>
+                    <input type="number" step="0.1" min="0" max="50" id="cult-edit-input-j2" placeholder="0.0" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-white font-mono font-black text-lg focus:outline-none focus:border-brand-500 transition-colors text-center">
+                </div>
+
+                <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 flex justify-between items-center">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Calculated Total</span>
+                    <span id="cult-edit-total-preview" class="font-mono font-black text-2xl text-yellow-400">--</span>
+                </div>
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="flex space-x-3">
+                <button type="button" onclick="closeCultScoreEditor()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition-colors cursor-pointer">
+                    Cancel
+                </button>
+                <button type="button" id="btn-cult-save-score-edit" onclick="saveCultScoreEdit()" class="flex-1 bg-brand-600 hover:bg-brand-500 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-colors cursor-pointer shadow-md">
+                    Save Changes
                 </button>
             </div>
         </div>

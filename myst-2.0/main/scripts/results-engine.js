@@ -5,15 +5,17 @@
 
 import { collection, getDocs, getDoc, doc, setDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { db } from './firebase-config.js';
+import { getCachedCandidates } from './candidate-manager.js';
 
 let currentCalculatedStandings = [];
 let currentTarget = {};
+let filtersPopulated = false;
 
 export function initResultsEngine() {
     const btnCalc = document.getElementById('btn-calculate-results');
     const btnPublish = document.getElementById('btn-publish-results');
 
-    // Auto-populate the dropdowns when the tab is clicked
+    // Auto-populate the dropdowns when the tab is clicked (uses memory cache, 0 reads)
     document.getElementById('nav-results-engine')?.addEventListener('click', () => {
         populateResultFilters();
     });
@@ -22,29 +24,63 @@ export function initResultsEngine() {
     if (btnPublish) btnPublish.addEventListener('click', publishGroupResults);
 }
 
-// 1. Populate filters (Group, Gender, District)
-async function populateResultFilters() {
+// 1. Populate filters (Group, Gender, District) with Multi-Tier Zero-Cost Caching
+async function populateResultFilters(forceRefresh = false) {
+    if (filtersPopulated && !forceRefresh) {
+        return; // Already populated in memory, zero Firestore reads!
+    }
+
     try {
-        const snap = await getDocs(collection(db, 'candidates'));
         const cats = new Set(), gens = new Set(), dists = new Set();
         
-        snap.forEach(doc => {
-            const data = doc.data();
-            if (data.groupName || data.group) cats.add(data.groupName || data.group);
-            if (data.gender) gens.add(data.gender);
-            if (data.state || data.district) dists.add(data.state || data.district);
-        });
+        // TIER 1: Use live memory cache from candidate-manager (0 Firestore reads)
+        const cachedCands = getCachedCandidates();
+        if (cachedCands && cachedCands.length > 0) {
+            cachedCands.forEach(data => {
+                if (data.groupName || data.group) cats.add(data.groupName || data.group);
+                if (data.gender) gens.add(data.gender);
+                if (data.state || data.district) dists.add(data.state || data.district);
+            });
+        }
+
+        // TIER 2: If candidate cache is empty, read single metadata document (1 Firestore read)
+        if (cats.size === 0) {
+            const metaDoc = await getDoc(doc(db, 'system_metadata', 'filters'));
+            if (metaDoc.exists()) {
+                const meta = metaDoc.data();
+                (meta.groups || []).forEach(g => cats.add(g));
+                (meta.genders || []).forEach(g => gens.add(g));
+                (meta.districts || []).forEach(d => dists.add(d));
+            }
+        }
+
+        // TIER 3: Fallback only if metadata document does not exist
+        if (cats.size === 0) {
+            const snap = await getDocs(collection(db, 'candidates'));
+            snap.forEach(doc => {
+                const data = doc.data();
+                if (data.groupName || data.group) cats.add(data.groupName || data.group);
+                if (data.gender) gens.add(data.gender);
+                if (data.state || data.district) dists.add(data.state || data.district);
+            });
+        }
 
         const fillSelect = (id, set, defaultText) => {
             const el = document.getElementById(id);
             if(!el) return;
+            const currentVal = el.value;
             el.innerHTML = `<option value="">-- ${defaultText} --</option>`;
             [...set].sort().forEach(item => el.innerHTML += `<option value="${item}">${item}</option>`);
+            if (currentVal && set.has(currentVal)) el.value = currentVal;
         };
 
         fillSelect('res-category-select', cats, 'Select Group');
         fillSelect('res-gender-select', gens, 'Select Gender');
         fillSelect('res-district-select', dists, 'All Districts (Optional)');
+
+        if (cats.size > 0 || gens.size > 0) {
+            filtersPopulated = true;
+        }
     } catch (error) {
         console.error("Error loading result filters:", error);
     }
@@ -63,16 +99,30 @@ async function calculateGroupResults() {
     btnCalc.innerText = "⏳ Processing Olympic Math...";
 
     try {
-        const qCands = query(collection(db, 'candidates'), where('gender', '==', gen));
-        const candSnap = await getDocs(qCands);
-        
         const targetCandidates = {};
-        candSnap.forEach(d => {
-            const data = d.data();
-            const groupMatch = (data.groupName === cat || data.group === cat);
-            const distMatch = !dist || (data.state === dist || data.district === dist);
-            if (groupMatch && distMatch) targetCandidates[d.id] = data;
-        });
+        const cachedCands = getCachedCandidates();
+
+        // TIER 1: Match directly from live in-memory candidate cache (0 Firestore reads!)
+        if (cachedCands && cachedCands.length > 0) {
+            cachedCands.forEach(c => {
+                const genMatch = c.gender === gen;
+                const groupMatch = (c.groupName === cat || c.group === cat);
+                const distMatch = !dist || (c.state === dist || c.district === dist);
+                if (genMatch && groupMatch && distMatch) {
+                    targetCandidates[c.id || c.trackNo] = c;
+                }
+            });
+        } else {
+            // TIER 2: Fallback query if candidate cache was not initialized
+            const qCands = query(collection(db, 'candidates'), where('gender', '==', gen));
+            const candSnap = await getDocs(qCands);
+            candSnap.forEach(d => {
+                const data = d.data();
+                const groupMatch = (data.groupName === cat || data.group === cat);
+                const distMatch = !dist || (data.state === dist || data.district === dist);
+                if (groupMatch && distMatch) targetCandidates[d.id] = data;
+            });
+        }
 
         if (Object.keys(targetCandidates).length === 0) {
             alert("No athletes found for this specific filter.");

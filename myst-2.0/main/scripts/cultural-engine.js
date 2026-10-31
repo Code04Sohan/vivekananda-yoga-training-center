@@ -413,13 +413,18 @@ function renderAllStageControls() {
             </div>
 
             <!-- Footer Save Actions -->
-            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
                 <span class="text-[10px] font-mono text-slate-500">
                     ${state.updatedAt ? `Saved: ${new Date(state.updatedAt).toLocaleTimeString()}` : 'Not configured'}
                 </span>
-                <button type="button" class="btn-save-stage bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs uppercase px-4 py-2 rounded-lg transition-colors cursor-pointer" data-comp="${comp.id}">
-                    Save Assignment
-                </button>
+                <div class="flex items-center gap-2">
+                    <button type="button" class="btn-standby-stage bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold text-xs uppercase px-3 py-2 rounded-lg transition-colors cursor-pointer border border-slate-700" data-comp="${comp.id}" title="Reset live TV stage to Standby">
+                        ⏸ Standby
+                    </button>
+                    <button type="button" class="btn-save-stage bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs uppercase px-4 py-2 rounded-lg transition-colors cursor-pointer" data-comp="${comp.id}">
+                        Save Assignment
+                    </button>
+                </div>
             </div>
         `;
 
@@ -444,6 +449,13 @@ function renderAllStageControls() {
     });
 
     // Attach listeners
+    container.querySelectorAll('.btn-standby-stage').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const comp = e.currentTarget.dataset.comp;
+            await resetStageToStandby(comp);
+        });
+    });
+
     container.querySelectorAll('.btn-save-stage').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const comp = e.currentTarget.dataset.comp;
@@ -496,6 +508,18 @@ async function saveStageConfig(comp) {
     }
 }
 
+async function resetStageToStandby(comp) {
+    if (!confirm(`Reset the live TV display for [${comp.toUpperCase()}] to Standby?`)) return;
+    try {
+        const stageRef = doc(db, 'cult_stages', comp);
+        await updateDoc(stageRef, { activeCandidate: null });
+        alert(`✅ [${comp.toUpperCase()}] live stage reset to Standby successfully!`);
+    } catch (err) {
+        console.error("Standby reset error:", err);
+        alert("Failed to reset stage: " + err.message);
+    }
+}
+
 async function updateStageLock(comp, isLocked) {
     try {
         const stageRef = doc(db, 'cult_stages', comp);
@@ -534,6 +558,9 @@ function initLiveScoresMonitor() {
             filterLiveScoresTable();
         });
     }
+
+    document.getElementById('cult-edit-input-j1')?.addEventListener('input', updateCultEditTotalPreview);
+    document.getElementById('cult-edit-input-j2')?.addEventListener('input', updateCultEditTotalPreview);
 }
 
 let cachedLiveCandidates = [];
@@ -594,7 +621,7 @@ function renderLiveScoresTable() {
     if (thTotal) thTotal.innerHTML = panelSize === 1 ? 'Total (/50)' : 'Total (/100)';
 
     if (cachedLiveCandidates.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-slate-500 font-mono text-sm">No candidates imported yet for this competition. Go to CSV Importer to upload.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="text-center p-8 text-slate-500 font-mono text-sm">No candidates imported yet for this competition. Go to CSV Importer to upload.</td></tr>`;
         if (countTotal) countTotal.textContent = '0';
         if (countCompleted) countCompleted.textContent = '0';
         if (countPending) countPending.textContent = '0';
@@ -654,6 +681,15 @@ function renderLiveScoresTable() {
                     ${totalVal !== null ? `${totalVal} <span class="text-[10px] text-slate-500">/${panelSize === 1 ? '50' : '100'}</span>` : '−'}
                 </td>
                 <td class="p-4 text-center">${badgeHtml}</td>
+                <td class="p-4 text-center">
+                    ${j1Val !== null || j2Val !== null 
+                        ? `<div class="flex items-center justify-center gap-1.5">
+                            <button type="button" onclick="openCultScoreEditor('${cand.trackNo}')" class="px-2.5 py-1 text-xs font-bold bg-brand-900/50 hover:bg-brand-800 text-brand-300 border border-brand-700/80 rounded-lg transition-colors cursor-pointer shadow-xs">Edit</button>
+                            <button type="button" onclick="confirmResetCultScore('${cand.trackNo}')" class="px-2.5 py-1 text-xs font-bold bg-red-950/60 hover:bg-red-800 text-red-300 border border-red-800/80 rounded-lg transition-colors cursor-pointer shadow-xs" title="Void score and allow judge to re-score">Reset</button>
+                        </div>`
+                        : `<span class="text-xs text-slate-600 font-mono italic">Unscored</span>`
+                    }
+                </td>
             </tr>
         `;
     });
@@ -673,6 +709,207 @@ function filterLiveScoresTable() {
         row.style.display = text.includes(queryStr) ? '' : 'none';
     });
 }
+
+// ============================================================================
+// 5.1 CULTURAL SCORE AUDIT OVERRIDE (ADMIN EDIT & VOID)
+// ============================================================================
+let editingScoreTarget = null; // { comp, trackNo, cand, score, panelSize }
+
+function openCultScoreEditor(trackNo) {
+    const comp = currentSelectedCompForScores;
+    const cand = cachedLiveCandidates.find(c => String(c.trackNo) === String(trackNo));
+    if (!cand) return alert("Candidate not found in local cache.");
+
+    const score = cachedLiveScores[trackNo] || {};
+    const stage = stageStateMap[comp] || {};
+    const panelSize = stage.panelSize !== undefined ? parseInt(stage.panelSize) : (comp === 'song' ? 1 : 2);
+
+    editingScoreTarget = { comp, trackNo, cand, score, panelSize };
+
+    // Fill candidate details in modal
+    const trackEl = document.getElementById('cult-edit-track');
+    const nameEl = document.getElementById('cult-edit-name');
+    const metaEl = document.getElementById('cult-edit-meta');
+    const j1Input = document.getElementById('cult-edit-input-j1');
+    const j2Input = document.getElementById('cult-edit-input-j2');
+    const j2Container = document.getElementById('cult-edit-j2-container');
+    const j1JudgeName = document.getElementById('cult-edit-j1-judge-name');
+    const j2JudgeName = document.getElementById('cult-edit-j2-judge-name');
+
+    if (trackEl) trackEl.textContent = `#${trackNo}`;
+    if (nameEl) nameEl.textContent = cand.name;
+    if (metaEl) metaEl.textContent = `${cand.groupName || '-'} · ${cand.gender || '-'} · ${cand.district || '-'} (${comp.toUpperCase()})`;
+
+    if (j1Input) j1Input.value = score.j1_score !== undefined ? parseFloat(score.j1_score).toFixed(1) : '';
+    if (j2Input) j2Input.value = score.j2_score !== undefined ? parseFloat(score.j2_score).toFixed(1) : '';
+
+    if (j1JudgeName) j1JudgeName.textContent = score.j1_name ? `Judge: ${score.j1_name}` : 'Judge 1';
+    if (j2JudgeName) j2JudgeName.textContent = score.j2_name ? `Judge: ${score.j2_name}` : 'Judge 2';
+
+    if (j2Container) {
+        if (panelSize === 1) j2Container.classList.add('hidden');
+        else j2Container.classList.remove('hidden');
+    }
+
+    updateCultEditTotalPreview();
+
+    const modal = document.getElementById('modal-cult-edit-score');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+}
+
+function closeCultScoreEditor() {
+    editingScoreTarget = null;
+    const modal = document.getElementById('modal-cult-edit-score');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+function updateCultEditTotalPreview() {
+    if (!editingScoreTarget) return;
+    const j1Input = document.getElementById('cult-edit-input-j1');
+    const j2Input = document.getElementById('cult-edit-input-j2');
+    const previewEl = document.getElementById('cult-edit-total-preview');
+
+    const j1Val = parseFloat(j1Input?.value);
+    const j2Val = parseFloat(j2Input?.value);
+    const panelSize = editingScoreTarget.panelSize;
+
+    if (isNaN(j1Val) || j1Val < 0) {
+        if (previewEl) previewEl.textContent = `-- / ${panelSize === 1 ? '50' : '100'}`;
+        return;
+    }
+
+    if (panelSize === 1) {
+        if (previewEl) previewEl.textContent = `${j1Val.toFixed(1)} / 50`;
+    } else {
+        if (isNaN(j2Val) || j2Val < 0) {
+            if (previewEl) previewEl.textContent = `${j1Val.toFixed(1)} (Partial) / 100`;
+        } else {
+            const tot = j1Val + j2Val;
+            if (previewEl) previewEl.textContent = `${tot.toFixed(1)} / 100`;
+        }
+    }
+}
+
+async function saveCultScoreEdit() {
+    if (!editingScoreTarget) return;
+    const { comp, trackNo, cand, score, panelSize } = editingScoreTarget;
+
+    const j1Input = document.getElementById('cult-edit-input-j1');
+    const j2Input = document.getElementById('cult-edit-input-j2');
+    const btnSave = document.getElementById('btn-cult-save-score-edit');
+
+    const j1Val = parseFloat(j1Input.value);
+    if (isNaN(j1Val) || j1Val < 0 || j1Val > 50) {
+        return alert("Please enter a valid score between 0.0 and 50.0 for Judge 1.");
+    }
+
+    let j2Val = null;
+    if (panelSize === 2) {
+        j2Val = parseFloat(j2Input.value);
+        if (isNaN(j2Val) || j2Val < 0 || j2Val > 50) {
+            return alert("Please enter a valid score between 0.0 and 50.0 for Judge 2.");
+        }
+    }
+
+    if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.innerText = "⏳ Saving...";
+    }
+
+    try {
+        const docId = `${comp}_${trackNo}`;
+        const scoreRef = doc(db, 'cult_scores', docId);
+        const candRef = doc(db, 'cult_candidates', docId);
+
+        const updatePayload = {
+            competition: comp,
+            trackNo: trackNo,
+            panelSize: panelSize,
+            candidateName: cand.name || '',
+            groupName: cand.groupName || '',
+            gender: cand.gender || '',
+            district: cand.district || '',
+            institution: cand.institution || '',
+            j1_score: j1Val,
+            admin_edited: true,
+            admin_editedAt: new Date().toISOString(),
+            lastUpdated: new Date().toISOString()
+        };
+
+        if (panelSize === 1) {
+            updatePayload.total_score = j1Val;
+            updatePayload.max_score = 50;
+            updatePayload.status = 'completed';
+        } else {
+            updatePayload.j2_score = j2Val;
+            updatePayload.total_score = j1Val + j2Val;
+            updatePayload.max_score = 100;
+            updatePayload.status = 'completed';
+        }
+
+        await setDoc(scoreRef, updatePayload, { merge: true });
+
+        const candUpdate = {
+            j1_status: true,
+            status: 'completed'
+        };
+        if (panelSize === 2) {
+            candUpdate.j2_status = true;
+        }
+        await updateDoc(candRef, candUpdate);
+
+        closeCultScoreEditor();
+        alert(`✅ Score updated successfully for Candidate #${trackNo} (${cand.name}).`);
+    } catch (err) {
+        console.error("Save score error:", err);
+        alert(`Failed to save edited score: ${err.message}`);
+    } finally {
+        if (btnSave) {
+            btnSave.disabled = false;
+            btnSave.innerText = "Save Changes";
+        }
+    }
+}
+
+async function confirmResetCultScore(trackNo) {
+    const comp = currentSelectedCompForScores;
+    const cand = cachedLiveCandidates.find(c => String(c.trackNo) === String(trackNo));
+    const candName = cand ? cand.name : `Track #${trackNo}`;
+
+    const proceed = confirm(`⚠️ Are you sure you want to VOID and RESET the score for Candidate #${trackNo} (${candName})?\n\n` +
+        `• This will permanently delete the score from the database.\n` +
+        `• The candidate status will return to "Pending (Unscored)".\n` +
+        `• Cultural Judges will be unlocked and able to score this candidate again.\n\n` +
+        `Do you want to proceed?`);
+
+    if (!proceed) return;
+
+    try {
+        const docId = `${comp}_${trackNo}`;
+        await deleteDoc(doc(db, 'cult_scores', docId));
+        await updateDoc(doc(db, 'cult_candidates', docId), {
+            status: 'pending',
+            j1_status: false,
+            j2_status: false
+        });
+        alert(`✅ Candidate #${trackNo} (${candName}) has been reset to Unscored.\nJudges can now re-score this candidate.`);
+    } catch (err) {
+        console.error("Reset score error:", err);
+        alert(`Failed to reset score: ${err.message}`);
+    }
+}
+
+// Window bindings for HTML onClick
+window.openCultScoreEditor = openCultScoreEditor;
+window.closeCultScoreEditor = closeCultScoreEditor;
+window.saveCultScoreEdit = saveCultScoreEdit;
+window.confirmResetCultScore = confirmResetCultScore;
 
 // ============================================================================
 // 6. RESULTS & RANKINGS ENGINE

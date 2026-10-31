@@ -25,6 +25,7 @@ let currentJudgeUid = null;
 let currentJudgeProfile = null;
 let assignedStage = null; // { comp, seat: 'j1' | 'j2', isLocked: false, ... }
 let activeTargetCandidate = null; // Candidate profile object
+let isCurrentCandidateLocked = false;
 let unsubscribeStageListener = null;
 
 // QR Scanner state
@@ -123,6 +124,13 @@ function initAuthFlow() {
                 await signOut(auth);
                 window.location.reload();
             }
+        });
+    }
+
+    const btnStageStandby = document.getElementById('btn-cult-stage-standby');
+    if (btnStageStandby) {
+        btnStageStandby.addEventListener('click', () => {
+            clearStageToStandby(true);
         });
     }
 
@@ -252,6 +260,18 @@ function updateTerminalStageUI() {
         }
     }
 
+    // Stage Sync Alert for Judge 2
+    const bannerSync = document.getElementById('banner-stage-sync');
+    const syncNameEl = document.getElementById('sync-cand-name');
+    if (bannerSync && syncNameEl) {
+        if (assignedStage?.seat === 'j2' && assignedStage?.activeCandidate && assignedStage.activeCandidate.trackNo !== activeTargetCandidate?.trackNo) {
+            syncNameEl.textContent = `#${assignedStage.activeCandidate.trackNo} ${assignedStage.activeCandidate.name}`;
+            bannerSync.classList.remove('hidden');
+        } else {
+            bannerSync.classList.add('hidden');
+        }
+    }
+
     // Panel Lock Control
     if (assignedStage.isLocked) {
         if (bannerLocked) bannerLocked.classList.remove('hidden');
@@ -308,6 +328,15 @@ function initCandidateSearch() {
             clearTargetCandidate();
         });
     }
+
+    const btnSyncStage = document.getElementById('btn-sync-stage-cand');
+    if (btnSyncStage) {
+        btnSyncStage.addEventListener('click', () => {
+            if (assignedStage?.activeCandidate?.trackNo) {
+                lookupCandidateByTrack(assignedStage.activeCandidate.trackNo);
+            }
+        });
+    }
 }
 
 async function lookupCandidateByTrack(trackNo) {
@@ -347,6 +376,7 @@ async function setTargetCandidate(candidate) {
     if (nameEl) nameEl.textContent = candidate.name;
     if (metaEl) metaEl.textContent = `${candidate.groupName || 'Unassigned'} · ${candidate.gender || '-'} · ${candidate.district || '-'}`;
 
+    isCurrentCandidateLocked = false;
     // Check if this judge already scored this candidate
     if (prevScoreBadge) prevScoreBadge.classList.add('hidden');
     try {
@@ -356,34 +386,63 @@ async function setTargetCandidate(candidate) {
             const myScoreField = `${assignedStage.seat}_score`;
             if (scoreData[myScoreField] !== undefined) {
                 const prev = parseFloat(scoreData[myScoreField]);
+                isCurrentCandidateLocked = true;
                 if (prevScoreBadge) {
-                    prevScoreBadge.textContent = `Your Saved Score: ${prev.toFixed(1)} / 50`;
+                    prevScoreBadge.textContent = `🔒 Saved & Locked: ${prev.toFixed(1)} / 50`;
+                    prevScoreBadge.className = "text-[10px] sm:text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-amber-100 border border-amber-300 text-amber-800";
                     prevScoreBadge.classList.remove('hidden');
                 }
-                if (marksInput && !marksInput.value) {
+                if (marksInput) {
                     marksInput.value = prev.toFixed(1);
                 }
             }
         }
     } catch (e) {}
 
+    // Broadcast active candidate to live stage if Head Judge or Solo Judge
+    if (assignedStage && (assignedStage.seat === 'j1' || assignedStage.panelSize === 1)) {
+        try {
+            const stageRef = doc(db, 'cult_stages', assignedStage.comp);
+            await updateDoc(stageRef, {
+                activeCandidate: {
+                    trackNo: candidate.trackNo,
+                    name: candidate.name,
+                    groupName: candidate.groupName || '',
+                    gender: candidate.gender || '',
+                    district: candidate.district || '',
+                    institution: candidate.institution || '',
+                    panelSize: assignedStage.panelSize !== undefined ? parseInt(assignedStage.panelSize) : (assignedStage.comp === 'song' ? 1 : 2),
+                    calledAt: new Date().toISOString()
+                }
+            });
+        } catch (e) {
+            console.warn("Could not broadcast active candidate to stage:", e);
+        }
+    }
+
     playBeep(987.77, 0.08); // B5 confirmation beep
     updateScoringInputState();
     validateCurrentMarks();
-    setTimeout(() => {
-        marksInput?.focus();
-        marksInput?.select();
-    }, 50);
+    if (!isCurrentCandidateLocked) {
+        setTimeout(() => {
+            marksInput?.focus();
+            marksInput?.select();
+        }, 50);
+    }
 }
 
-function clearTargetCandidate() {
+function resetLocalJudgeForm() {
     activeTargetCandidate = null;
+    isCurrentCandidateLocked = false;
     const card = document.getElementById('target-candidate-card');
     const inputTrack = document.getElementById('input-track-lookup');
     const marksInput = document.getElementById('input-marks-value');
 
     if (card) card.classList.add('hidden');
-    if (inputTrack) inputTrack.value = '';
+    if (inputTrack) {
+        inputTrack.value = '';
+        inputTrack.focus();
+    }
     if (marksInput) {
         marksInput.value = '';
         marksInput.classList.remove('input-error');
@@ -393,20 +452,56 @@ function clearTargetCandidate() {
     validateCurrentMarks();
 }
 
+async function clearStageToStandby(promptConfirm = false) {
+    if (!assignedStage) return;
+
+    if (assignedStage.seat === 'j2' && assignedStage.panelSize !== 1) {
+        alert("Only the Head Judge (Judge 1) or Administrator can set the stage to Standby.");
+        return;
+    }
+
+    if (promptConfirm && !confirm("Put the TV broadcast stage to Standby (Intermission)?")) {
+        return;
+    }
+
+    try {
+        const stageRef = doc(db, 'cult_stages', assignedStage.comp);
+        await updateDoc(stageRef, {
+            activeCandidate: null
+        });
+    } catch (e) {
+        console.warn("Could not clear active candidate on stage:", e);
+    }
+
+    resetLocalJudgeForm();
+}
+
+function clearTargetCandidate() {
+    // If the candidate was already submitted and locked, clicking ✕ just clears the judge's tablet,
+    // leaving their celebrated score on the TV screen until the next candidate is called!
+    if (isCurrentCandidateLocked) {
+        resetLocalJudgeForm();
+        return;
+    }
+
+    // If candidate was selected by accident (unscored), clear both tablet and stage
+    clearStageToStandby(false);
+}
+
 function updateScoringInputState() {
     const marksInput = document.getElementById('input-marks-value');
     const adjustBtns = document.querySelectorAll('.btn-score-adjust');
     const hasCandidate = !!activeTargetCandidate;
 
     if (marksInput) {
-        marksInput.disabled = !hasCandidate;
+        marksInput.disabled = !hasCandidate || isCurrentCandidateLocked;
         if (!hasCandidate) {
             marksInput.classList.remove('input-error');
         }
     }
 
     adjustBtns.forEach(btn => {
-        btn.disabled = !hasCandidate;
+        btn.disabled = !hasCandidate || isCurrentCandidateLocked;
     });
 }
 
@@ -517,6 +612,19 @@ function validateCurrentMarks() {
         return;
     }
 
+    if (isCurrentCandidateLocked) {
+        marksInput.classList.remove('input-error');
+        marksInput.disabled = true;
+        if (validationMsg) {
+            validationMsg.textContent = "🔒 Score is locked in the vault. Only an Administrator can edit or reset.";
+            validationMsg.className = "text-xs text-amber-600 mt-2 font-bold font-mono";
+        }
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "🔒 Score Locked (Already Submitted)";
+        btnSubmit.className = "w-full bg-slate-200 text-slate-500 font-black py-3 sm:py-3.5 rounded-xl text-sm sm:text-base uppercase tracking-wider transition-colors shadow-none cursor-not-allowed border border-slate-300";
+        return;
+    }
+
     if (assignedStage?.isLocked) {
         marksInput.classList.remove('input-error');
         if (validationMsg) {
@@ -597,6 +705,10 @@ function validateCurrentMarks() {
 // ============================================================================
 async function submitCandidateScore() {
     if (!activeTargetCandidate || !assignedStage) return;
+    if (isCurrentCandidateLocked) {
+        alert("🔒 Security Restriction: This candidate has already been scored and locked. Only an Administrator can modify or reset submitted scores.");
+        return;
+    }
 
     const btnSubmit = document.getElementById('btn-submit-cult-score');
     const marksInput = document.getElementById('input-marks-value');
@@ -624,6 +736,13 @@ async function submitCandidateScore() {
         // Fetch existing score to combine totals
         const existingScoreDoc = await getDoc(scoreRef);
         let existingData = existingScoreDoc.exists() ? existingScoreDoc.data() : {};
+
+        if (existingData[`${seat}_score`] !== undefined) {
+            alert("🔒 Security Restriction: A score for this candidate was already recorded in the vault. Re-submission is blocked.");
+            isCurrentCandidateLocked = true;
+            validateCurrentMarks();
+            return;
+        }
 
         const updatePayload = {
             competition: comp,
@@ -676,6 +795,7 @@ async function submitCandidateScore() {
             candUpdate['status'] = 'completed';
         }
         await updateDoc(candRef, candUpdate);
+        isCurrentCandidateLocked = true;
 
         // Success Haptic & Chime
         playSuccessChime();
@@ -711,7 +831,7 @@ function initModalControls() {
                 successModal.classList.add('hidden');
                 successModal.classList.remove('flex');
             }
-            clearTargetCandidate();
+            resetLocalJudgeForm(); // Decoupled: resets tablet locally, but leaves celebrated candidate on TV stage!
         });
     }
 

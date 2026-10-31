@@ -23,6 +23,7 @@ import { initJudgePanel } from './judge-panel.js';
 // --- NEW: IMPORT DISPLAY ENGINE ---
 import { initDisplay } from './display-app.js';
 import { initCulturalEngine } from './cultural-engine.js';
+import { initCultDisplay } from './cult-display.js';
 
 export function initAuth() {
     const loginForm = document.getElementById('login-form');
@@ -91,7 +92,9 @@ async function verifyUserRole(uid, errorElement) {
         const role = userSnap.data().role;
 
         // --- SMART PAGE DETECTION ---
-        const isDisplayPage = window.location.pathname.includes('display.html');
+        const isCultDisplayPage = window.location.pathname.includes('cult-display.html');
+        const isYogaDisplayPage = window.location.pathname.includes('display.html') && !isCultDisplayPage;
+        const isAnyDisplayPage = isYogaDisplayPage || isCultDisplayPage;
         const isJudgePage = window.location.pathname.includes('judge.html');
 
         // Hide all sidebar buttons by default
@@ -107,7 +110,7 @@ async function verifyUserRole(uid, errorElement) {
         if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
 
             // SECURITY: If Admin logs in on Judge or Display page, kick them to Admin Dashboard
-            if (isJudgePage || isDisplayPage) { window.location.href = 'index.html'; return; }
+            if (isJudgePage || isAnyDisplayPage) { window.location.href = 'index.html'; return; }
 
             // Standard Admin Boot
             allNavButtons.forEach(btn => btn.style.display = 'block');
@@ -126,7 +129,7 @@ async function verifyUserRole(uid, errorElement) {
         } else if (role === 'STAGE_MGR') {
 
             // SECURITY: Kick Stage Managers to Admin Dashboard
-            if (isJudgePage || isDisplayPage) { window.location.href = 'index.html'; return; }
+            if (isJudgePage || isAnyDisplayPage) { window.location.href = 'index.html'; return; }
 
             const navStageManager = document.getElementById('nav-stage-manager');
             if (navStageManager) navStageManager.style.display = 'block';
@@ -153,13 +156,27 @@ async function verifyUserRole(uid, errorElement) {
         } else if (role === 'DISPLAY') {
 
             // SECURITY: Kick Display accounts to Display Screen
-            if (!isDisplayPage) { window.location.href = 'display.html'; return; }
-
-            if (!isSystemBooted) {
-                initDisplay();
-                isSystemBooted = true;
+            if (!isAnyDisplayPage) {
+                const target = localStorage.getItem('myst_last_display') || 'display.html';
+                window.location.href = target;
+                return;
             }
-            unlockDashboard();
+
+            if (isYogaDisplayPage) {
+                localStorage.setItem('myst_last_display', 'display.html');
+                if (!isSystemBooted) {
+                    initDisplay();
+                    isSystemBooted = true;
+                }
+                unlockDashboard();
+            } else if (isCultDisplayPage) {
+                localStorage.setItem('myst_last_display', 'cult-display.html');
+                if (!isSystemBooted) {
+                    initCultDisplay();
+                    isSystemBooted = true;
+                }
+                unlockDashboard();
+            }
 
         } else {
             throw new Error("Insufficient Permissions");

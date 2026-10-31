@@ -83,6 +83,7 @@ function renderStaffUI() {
                         <option value="JUDGE" ${user.role === 'JUDGE' ? 'selected' : ''}>Judge</option>
                         <option value="STAGE_MGR" ${user.role === 'STAGE_MGR' ? 'selected' : ''}>STAGE_MGR</option>
                         <option value="ADMIN" ${user.role === 'ADMIN' ? 'selected' : ''}>Admin</option>
+                        <option value="DISPLAY" ${user.role === 'DISPLAY' ? 'selected' : ''}>Display Node</option>
                     </select>
                 </td>
                 <td class="p-3 text-right align-top space-x-2">
@@ -100,6 +101,7 @@ function renderStaffUI() {
             let roleBadge = '';
             if (user.role === 'ADMIN') roleBadge = '<span class="ml-2 px-2 py-0.5 bg-blue-900/50 text-blue-300 text-[10px] rounded border border-blue-700">ADMIN</span>';
             else if (user.role === 'STAGE_MGR') roleBadge = '<span class="ml-2 px-2 py-0.5 bg-purple-900/50 text-purple-300 text-[10px] rounded border border-purple-700">STAGE CO</span>';
+            else if (user.role === 'DISPLAY') roleBadge = '<span class="ml-2 px-2 py-0.5 bg-cyan-900/50 text-cyan-300 text-[10px] rounded border border-cyan-700 font-bold">DISPLAY</span>';
             else roleBadge = '<span class="ml-2 px-2 py-0.5 bg-green-900/50 text-green-300 text-[10px] rounded border border-green-700">JUDGE</span>';
 
             if (isSelf) roleBadge += ' <span class="ml-1 px-2 py-0.5 bg-gray-700 text-white text-[10px] rounded border border-gray-500 font-black">YOU</span>';
